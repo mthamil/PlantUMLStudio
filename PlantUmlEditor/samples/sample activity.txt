@@ -1,0 +1,22 @@
+@startuml img/activity_img20.png
+
+(*) --> "Verify the reservation"
+
+--> <>B1
+-> [incorrect] "Send To Airport"
+--> (*)
+--> [correct] "Get preferences"
+--> ===Y1===
+
+===Y1=== --> <>B2
+[nobagage] --> ===Y2===
+[bagage] --> "Receive the Baggages"
+--> ===Y2===
+
+===Y1=== --> "Print the Boadingboard"
+--> ===Y2===
+
+--> GiveTravelDocumentation
+--> (*)
+
+@enduml

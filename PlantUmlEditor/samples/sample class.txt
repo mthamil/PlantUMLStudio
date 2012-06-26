@@ -1,0 +1,11 @@
+@startuml img/classes04.png
+
+package "Classic Collections" #DDDDDD
+Object <|-- ArrayList
+end package
+package net.sourceforge.plantuml
+Object <|-- Demo1
+Demo1 *- Demo2
+end package
+
+@enduml

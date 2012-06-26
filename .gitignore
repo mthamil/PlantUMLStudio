@@ -1,6 +1,7 @@
 _NCrunch_*
 _ReSharper.*
 *.ncrunchsolution
+*.ncrunchproject
 *.user
 *.suo
 */obj/*

@@ -1,0 +1,42 @@
+﻿<Window x:Class="PlantUmlEditor.Controls.ScrollableMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:acb="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
+        Title="ScrollableMessageBox" 
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ThreeDBorderWindow"
+        Height="448" Width="570"
+        acb:HideCloseButtonBehavior.HideCloseButton="True">
+    
+    <Window.Resources>
+        <Style x:Key="SubmitButton" TargetType="Button">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".70*"/>
+            <RowDefinition Height=".15*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=Caption}" TextWrapping="Wrap"/>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1" >
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=Message}" 
+                 IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+        </ScrollViewer>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Name="AffirmativeButton" Style="{StaticResource SubmitButton}" Margin="5,0,10,0" Click="AffirmativeButton_Click"
+                    Content="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=AffirmativeButtonText}"/>
+            
+            <Button Name="NegativeButton" Style="{StaticResource SubmitButton}" Margin="0,0,15,0" Click="NegativeButton_Click"
+                    Content="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=NegativeButtonText}"
+                    Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=NegativeButtonVisibility}"/>
+        </StackPanel>
+    </Grid>
+</Window>

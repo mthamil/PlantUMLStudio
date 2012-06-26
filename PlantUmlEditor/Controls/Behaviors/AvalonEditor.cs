@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Windows;
 using System.Xml;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
@@ -53,54 +51,17 @@ namespace PlantUmlEditor.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			if (!contentEditors.Contains(editor))
+			TextEditorContentBehavior contentBehavior;
+			if (!contentBehaviors.TryGetValue(editor, out contentBehavior))
 			{
-				contentEditors.Add(editor);
-				contentDocumentMap[editor.Document] = editor;
-				editor.Document.TextChanged += contentEditor_TextChanged;
+				contentBehavior = new TextEditorContentBehavior(editor);
+				contentBehaviors[editor] = contentBehavior;
 			}
 
-			// If the change came from the editor itself, don't update.
-			if (!contentTextChangedEditors.Contains(editor))
-			{
-				contentChangedEditors.Add(editor);
-				var newValue = e.NewValue as string;
-				editor.Document.Text = newValue;
-			}
-			else
-			{
-				contentTextChangedEditors.Remove(editor);
-			}
+			contentBehavior.UpdateContent(e.NewValue as string);
 		}
 
-		static void contentEditor_TextChanged(object sender, EventArgs e)
-		{
-			var document = sender as TextDocument;
-			if (document == null)
-				return;
-
-			var editor = contentDocumentMap[document];
-			if (!contentChangedEditors.Contains(editor))
-				contentTextChangedEditors.Add(editor);
-			else
-				contentChangedEditors.Remove(editor);
-
-;			SetContent(editor, document.Text);
-		}
-
-		private static readonly ICollection<TextEditor> contentEditors = new HashSet<TextEditor>();
-
-		/// <summary>
-		/// Maps documents to their parent editors.
-		/// </summary>
-		private static readonly IDictionary<TextDocument, TextEditor> contentDocumentMap = new Dictionary<TextDocument, TextEditor>();
-
-		/// <summary>
-		/// Prevents double updates by tracking whether a change came from the text editor itself.
-		/// </summary>
-		private static readonly ICollection<TextEditor> contentTextChangedEditors = new HashSet<TextEditor>();
-
-		private static readonly ICollection<TextEditor> contentChangedEditors = new HashSet<TextEditor>();
+		private static readonly IDictionary<TextEditor, TextEditorContentBehavior> contentBehaviors = new Dictionary<TextEditor, TextEditorContentBehavior>();
 
 		#endregion Content
 
@@ -139,54 +100,17 @@ namespace PlantUmlEditor.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			if (!contentIndexEditors.Contains(editor))
+			TextEditorContentIndexBehavior contentIndexBehavior;
+			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexBehavior))
 			{
-				contentIndexEditors.Add(editor);
-				contentIndexCaretMap[editor.TextArea.Caret] = editor;
-				editor.TextArea.Caret.PositionChanged += caret_PositionChanged;
+				contentIndexBehavior = new TextEditorContentIndexBehavior(editor);
+				contentIndexBehaviors[editor] = contentIndexBehavior;
 			}
 
-			// If the change came from the editor itself, don't update.
-			if (!contentIndexPositionChangedEditors.Contains(editor))
-			{
-				contentIndexChangedEditors.Add(editor);
-				var newValue = (int)e.NewValue;
-				editor.TextArea.Caret.Offset = newValue;
-			}
-			else
-			{
-				contentIndexPositionChangedEditors.Remove(editor);
-			}
+			contentIndexBehavior.UpdateIndex((int)e.NewValue);
 		}
 
-		static void caret_PositionChanged(object sender, EventArgs e)
-		{
-			var caret = sender as Caret;
-			if (caret == null)
-				return;
-
-			var editor = contentIndexCaretMap[caret];
-			if (!contentIndexChangedEditors.Contains(editor))
-				contentIndexPositionChangedEditors.Add(editor);
-			else
-				contentIndexChangedEditors.Remove(editor);
-
-			SetContentIndex(editor, caret.Offset);
-		}
-
-		private static readonly ICollection<TextEditor> contentIndexEditors = new HashSet<TextEditor>();
-
-		/// <summary>
-		/// Maps carets to their parent editors.
-		/// </summary>
-		private static readonly IDictionary<Caret, TextEditor> contentIndexCaretMap = new Dictionary<Caret, TextEditor>();
-
-		/// <summary>
-		/// Prevents double updates by tracking whether a change came from the text editor itself.
-		/// </summary>
-		private static readonly ICollection<TextEditor> contentIndexPositionChangedEditors = new HashSet<TextEditor>();
-
-		private static readonly ICollection<TextEditor> contentIndexChangedEditors = new HashSet<TextEditor>();
+		private static readonly IDictionary<TextEditor, TextEditorContentIndexBehavior> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexBehavior>();
 
 		#endregion ContentIndex
 

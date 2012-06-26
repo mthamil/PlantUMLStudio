@@ -49,26 +49,34 @@
                             <ContextMenu x:Name="SnippetsMenu" ItemsSource="{Binding Snippets}">
 
                                 <ContextMenu.ItemTemplateSelector>
-                                    <xtn:TypeMappedDataTemplateSelector>
-                                        <xtn:TypeMappedDataTemplateSelector.DataTemplates>
+                                    <xtn:TypeBasedDataTemplateSelector>
+                                        <xtn:TypeBasedDataTemplateSelector.DataTemplates>
                                             <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
                                                 <TextBlock Text="{Binding Name}"/>
                                             </DataTemplate>
                                             <HierarchicalDataTemplate DataType="{x:Type vm:SnippetCategoryViewModel}" ItemsSource="{Binding Snippets}">
                                                 <TextBlock Text="{Binding Name}"/>
                                             </HierarchicalDataTemplate>
-                                        </xtn:TypeMappedDataTemplateSelector.DataTemplates>
-                                    </xtn:TypeMappedDataTemplateSelector>            
+                                        </xtn:TypeBasedDataTemplateSelector.DataTemplates>
+                                    </xtn:TypeBasedDataTemplateSelector>            
                                 </ContextMenu.ItemTemplateSelector>
 
-                                <ContextMenu.ItemContainerStyle>
-                                    <Style TargetType="{x:Type MenuItem}">
-                                        <Setter Property="Command" Value="{Binding SelectCommand}"/>
-                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext}"/>
-                                    </Style>
-                                </ContextMenu.ItemContainerStyle>
+                                <ContextMenu.ItemContainerStyleSelector>
+                                    <xtn:TypeBasedStyleSelector>
+                                        <xtn:TypeBasedStyleSelector.Styles>
+                                            <xtn:StyleMapEntry DataType="{x:Type vm:SnippetViewModel}">
+                                                <xtn:StyleMapEntry.Style>
+                                                    <Style TargetType="{x:Type MenuItem}">
+                                                        <Setter Property="Command" Value="{Binding SelectCommand}"/>
+                                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext}"/>
+                                                    </Style>
+                                                </xtn:StyleMapEntry.Style>
+                                            </xtn:StyleMapEntry>
+                                        </xtn:TypeBasedStyleSelector.Styles>
+                                    </xtn:TypeBasedStyleSelector>
+                                </ContextMenu.ItemContainerStyleSelector>
 
-                                </ContextMenu>
+                            </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
 

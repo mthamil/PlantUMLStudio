@@ -107,6 +107,8 @@
     <Compile Include="Controls\Behaviors\AvalonEditor.cs" />
     <Compile Include="Controls\Behaviors\DoubleClickCommandBehavior.cs" />
     <Compile Include="Controls\Behaviors\DataGridCellUnderCursor.cs" />
+    <Compile Include="Controls\Behaviors\TextEditorContentBehavior.cs" />
+    <Compile Include="Controls\Behaviors\TextEditorContentIndexBehavior.cs" />
     <Compile Include="Controls\Behaviors\HideCloseButtonBehavior.cs" />
     <Compile Include="Controls\Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
     <Compile Include="Controls\Behaviors\TextBoxWatermark.cs" />
@@ -143,7 +145,8 @@
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MarkupExtensions\TypeMappedDataTemplateSelector.cs" />
+    <Compile Include="View\MarkupExtensions\TypeBasedStyleSelector.cs" />
+    <Compile Include="View\MarkupExtensions\TypeBasedDataTemplateSelector.cs" />
     <Compile Include="View\MarkupExtensions\ViewModelLocator.cs" />
     <Page Include="Controls\ProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -12,14 +12,14 @@ namespace PlantUmlEditor.View.MarkupExtensions
 	/// A markup extension that allows definition of a data template selector that is composed of multiple individual
 	/// data templates and is keyed off of the templates' data types.
 	/// </summary>
-	public class TypeMappedDataTemplateSelector : MarkupExtension
+	public class TypeBasedDataTemplateSelector : MarkupExtension
 	{
 		/// <summary>
 		/// Initializes a new selector.
 		/// </summary>
-		public TypeMappedDataTemplateSelector()
+		public TypeBasedDataTemplateSelector()
 		{
-			_selector = new Lazy<DataTemplateSelector>(() => new DataTemplateTypeMapSelector(DataTemplates));
+			_selector = new Lazy<DataTemplateSelector>(() => new TypeMapDataTemplateSelector(DataTemplates));
 		}
 
 		#region Overrides of MarkupExtension
@@ -48,13 +48,13 @@ namespace PlantUmlEditor.View.MarkupExtensions
 	/// A data template selector that is composed of multiple individual data templates and is keyed off of
 	/// the templates' data types.
 	/// </summary>
-	public class DataTemplateTypeMapSelector : DataTemplateSelector
+	public class TypeMapDataTemplateSelector : DataTemplateSelector
 	{
 		/// <summary>
 		/// Initializes a new data template selector.
 		/// </summary>
 		/// <param name="dataTemplates">The data templates to select from</param>
-		public DataTemplateTypeMapSelector(IEnumerable<DataTemplate> dataTemplates)
+		public TypeMapDataTemplateSelector(IEnumerable<DataTemplate> dataTemplates)
 		{
 			_dataTemplateMap = dataTemplates.ToDictionary(k => (Type)k.DataType, v => v);
 		}

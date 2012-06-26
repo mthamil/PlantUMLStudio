@@ -1,20 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using PlantUmlEditor.Model;
-using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities;
-using Utilities.Concurrency;
 
 namespace PlantUmlEditor.View
 {
@@ -29,14 +21,6 @@ namespace PlantUmlEditor.View
         public DiagramViewControl()
         {
             InitializeComponent();
-
-            foreach (MenuItem topLevelMenu in AddContextMenu.Items)
-            {
-                foreach (MenuItem itemMenu in topLevelMenu.Items)
-                {
-                    itemMenu.Click += MenuItem_Click;
-                }
-            }
         }
 
         public event Action<DiagramFile> OnBeforeSave;
@@ -53,7 +37,9 @@ namespace PlantUmlEditor.View
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (DesignerProperties.GetIsInDesignMode(this))
-                return;     
+                return;
+
+			SnippetsMenu.DataContext = DataContext;
 
             if (_lastMenuItemClicked != default(Weak<MenuItem>))
             {
@@ -66,7 +52,7 @@ namespace PlantUmlEditor.View
         {
             // Trick: Open the context menu automatically whenever user
             // clicks the "Add" button
-            AddContextMenu.IsOpen = true;
+			SnippetsMenu.IsOpen = true;
 
             // If user last added a particular diagram items, say Use case
             // item, then auto open the usecase menu so that user does not
@@ -77,26 +63,6 @@ namespace PlantUmlEditor.View
                 MenuItem parentMenu = (_lastMenuItemClicked.Target.Parent as MenuItem);
                 parentMenu.IsSubmenuOpen = true;
             }
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            _lastMenuItemClicked = e.Source as MenuItem;
-            AddCode((e.Source as MenuItem).Tag as string);
-        }
-
-        private void AddCode(string code)
-        {
-            ContentEditor.SelectionLength = 0;
-
-            var formattedCode = code.Replace("\\r", Environment.NewLine) 
-                + Environment.NewLine
-                + Environment.NewLine;
-
-            Clipboard.SetText(formattedCode);
-            ContentEditor.Paste();
-
-            ((DiagramEditorViewModel)DataContext).SaveCommand.Execute(null);
         }
 
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
@@ -115,6 +81,5 @@ namespace PlantUmlEditor.View
         {
             Clipboard.SetText(CurrentDiagram.ImageFilePath);
         }
-
     }
 }

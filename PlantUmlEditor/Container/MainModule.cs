@@ -18,8 +18,8 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.Register(c => new DefaultSnippets().Snippets)
-				.Named<IEnumerable<SnippetCategory>>("DefaultSnippets")
+			builder.Register(c => new DefaultSnippets().SnippetCategories)
+				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
 				.SingleInstance();
 
 			builder.RegisterType<DiagramFileReader>().As<IDiagramReader>();
@@ -43,7 +43,7 @@ namespace PlantUmlEditor.Container
 			builder.Register<Func<DiagramViewModel, DiagramEditorViewModel>>(c =>
 			{
 				// Have to resolve these outside of the lambda.
-				var snippets = c.ResolveNamed<IEnumerable<SnippetCategory>>("DefaultSnippets");
+				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
 				var renderer = c.Resolve<IDiagramRenderer>();
 				var compiler = c.Resolve<IDiagramCompiler>();
 				return diagram =>

@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
+    xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
+    xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     DataContextChanged="UserControl_DataContextChanged" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584">
@@ -31,6 +33,7 @@
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
                                    ab:AvalonEditor.Content="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ab:AvalonEditor.ContentIndex="{Binding ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    ab:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    ShowLineNumbers="True">
                 <avalonEdit:TextEditor.InputBindings>
@@ -43,21 +46,29 @@
                     <Button Content="_Save &amp; Refresh" Height="Auto" x:Name="SaveDiagram" Padding="20, 0, 20, 0" Command="{Binding SaveCommand}" Margin="0,0,7,0"/>
                     <Button Height="Auto" x:Name="AddStuff" Width="Auto" Padding="20, 0, 20, 0" Click="AddStuff_Click" Content="_Snippets..." >
                         <Button.ContextMenu>
-                            <ContextMenu x:Name="AddContextMenu" ItemsSource="{Binding Snippets}">
+                            <ContextMenu x:Name="SnippetsMenu" ItemsSource="{Binding Snippets}">
 
-                                <ContextMenu.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Snippets}">
-                                        <TextBlock Text="{Binding Name}"/>
-                                    </HierarchicalDataTemplate>                 
-                                </ContextMenu.ItemTemplate>
+                                <ContextMenu.ItemTemplateSelector>
+                                    <xtn:TypeMappedDataTemplateSelector>
+                                        <xtn:TypeMappedDataTemplateSelector.DataTemplates>
+                                            <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </DataTemplate>
+                                            <HierarchicalDataTemplate DataType="{x:Type vm:SnippetCategoryViewModel}" ItemsSource="{Binding Snippets}">
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </HierarchicalDataTemplate>
+                                        </xtn:TypeMappedDataTemplateSelector.DataTemplates>
+                                    </xtn:TypeMappedDataTemplateSelector>            
+                                </ContextMenu.ItemTemplateSelector>
 
                                 <ContextMenu.ItemContainerStyle>
                                     <Style TargetType="{x:Type MenuItem}">
-                                        <Setter Property="Tag" Value="{Binding Code}"/>
+                                        <Setter Property="Command" Value="{Binding SelectCommand}"/>
+                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext}"/>
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
 
-                            </ContextMenu>
+                                </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
 

@@ -19,14 +19,14 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramEditorViewModel : ViewModelBase
 	{
-		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IEnumerable<SnippetCategory> snippets, 
+		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IEnumerable<SnippetCategoryViewModel> snippets, 
 			IDiagramRenderer diagramRenderer, IDiagramCompiler diagramCompiler, ITimer refreshTimer, TaskScheduler taskScheduler)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
 
 			_snippets = Property.New(this, p => p.Snippets, OnPropertyChanged);
-			Snippets = new ObservableCollection<SnippetCategory>(snippets);
+			Snippets = new ObservableCollection<SnippetCategoryViewModel>(snippets);
 
 			_diagramRenderer = diagramRenderer;
 			_diagramCompiler = diagramCompiler;
@@ -35,6 +35,9 @@ namespace PlantUmlEditor.ViewModel
 
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 			_content.Value = diagramViewModel.Diagram.Content;
+
+			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
+			_contentIndex.Value = 0;
 
 			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
 			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
@@ -80,6 +83,15 @@ namespace PlantUmlEditor.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// The current index into the content.
+		/// </summary>
+		public int ContentIndex
+		{
+			get { return _contentIndex.Value; }
+			set { _contentIndex.Value = value; }
+		}
+
 		void refreshTimer_Elapsed(object sender, EventArgs e)
 		{
 			Save();
@@ -110,7 +122,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Diagram code snippets.
 		/// </summary>
-		public IEnumerable<SnippetCategory> Snippets
+		public IEnumerable<SnippetCategoryViewModel> Snippets
 		{
 			get { return _snippets.Value; }
 			private set { _snippets.Value = value; }
@@ -233,10 +245,11 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _closeCommand;
 
 		private readonly Property<string> _content;
+		private readonly Property<int> _contentIndex;
 		private readonly Property<bool> _autoRefresh;
 		private readonly Property<int> _refreshIntervalSeconds;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
-		private readonly Property<IEnumerable<SnippetCategory>> _snippets;
+		private readonly Property<IEnumerable<SnippetCategoryViewModel>> _snippets;
 
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramCompiler _diagramCompiler;

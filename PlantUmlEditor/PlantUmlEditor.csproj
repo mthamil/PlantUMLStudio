@@ -128,7 +128,6 @@
     <Compile Include="Model\PlantUmlDiagramCompiler.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippet.cs" />
-    <Compile Include="Model\SnippetCategory.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\Commands\SaveDiagramCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
@@ -137,12 +136,14 @@
     <Compile Include="ViewModel\DiagramViewModel.cs" />
     <Compile Include="ViewModel\IDiagramReader.cs" />
     <Compile Include="ViewModel\RenderedDiagramViewModel.cs" />
+    <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />
     <Compile Include="View\DiagramViewControl.xaml.cs">
       <DependentUpon>DiagramViewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\MarkupExtensions\TypeMappedDataTemplateSelector.cs" />
     <Compile Include="View\MarkupExtensions\ViewModelLocator.cs" />
     <Page Include="Controls\ProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>

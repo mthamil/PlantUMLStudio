@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Xml;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
@@ -51,15 +53,15 @@ namespace PlantUmlEditor.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			if (!editors.Contains(editor))
+			if (!contentEditors.Contains(editor))
 			{
-				editors.Add(editor);
-				documentMap[editor.Document] = editor;
-				editor.Document.TextChanged += editor_TextChanged;
+				contentEditors.Add(editor);
+				contentDocumentMap[editor.Document] = editor;
+				editor.Document.TextChanged += contentEditor_TextChanged;
 			}
 
 			// If the change came from the editor itself, don't update.
-			if (!textChangedEditors.Contains(editor))
+			if (!contentTextChangedEditors.Contains(editor))
 			{
 				contentChangedEditors.Add(editor);
 				var newValue = e.NewValue as string;
@@ -67,40 +69,126 @@ namespace PlantUmlEditor.Controls.Behaviors
 			}
 			else
 			{
-				textChangedEditors.Remove(editor);
+				contentTextChangedEditors.Remove(editor);
 			}
 		}
 
-		static void editor_TextChanged(object sender, EventArgs e)
+		static void contentEditor_TextChanged(object sender, EventArgs e)
 		{
 			var document = sender as TextDocument;
 			if (document == null)
 				return;
 
-			var editor = documentMap[document];
+			var editor = contentDocumentMap[document];
 			if (!contentChangedEditors.Contains(editor))
-				textChangedEditors.Add(editor);
+				contentTextChangedEditors.Add(editor);
 			else
 				contentChangedEditors.Remove(editor);
 
 ;			SetContent(editor, document.Text);
 		}
 
-		private static readonly ICollection<TextEditor> editors = new HashSet<TextEditor>();
+		private static readonly ICollection<TextEditor> contentEditors = new HashSet<TextEditor>();
 
 		/// <summary>
 		/// Maps documents to their parent editors.
 		/// </summary>
-		private static readonly IDictionary<TextDocument, TextEditor> documentMap = new Dictionary<TextDocument, TextEditor>();
+		private static readonly IDictionary<TextDocument, TextEditor> contentDocumentMap = new Dictionary<TextDocument, TextEditor>();
 
 		/// <summary>
 		/// Prevents double updates by tracking whether a change came from the text editor itself.
 		/// </summary>
-		private static readonly ICollection<TextEditor> textChangedEditors = new HashSet<TextEditor>();
+		private static readonly ICollection<TextEditor> contentTextChangedEditors = new HashSet<TextEditor>();
 
 		private static readonly ICollection<TextEditor> contentChangedEditors = new HashSet<TextEditor>();
 
 		#endregion Content
+
+		#region ContentIndex
+
+		/// <summary>
+		/// Gets the content index.
+		/// </summary>
+		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
+		public static int GetContentIndex(TextEditor textEditor)
+		{
+			return (int)textEditor.GetValue(ContentIndexProperty);
+		}
+
+		/// <summary>
+		/// Sets the content index.
+		/// </summary>
+		public static void SetContentIndex(TextEditor textEditor, int value)
+		{
+			textEditor.SetValue(ContentIndexProperty, value);
+		}
+
+		/// <summary>
+		/// The ContentIndex property.
+		/// </summary>
+		public static readonly DependencyProperty ContentIndexProperty =
+			DependencyProperty.RegisterAttached(
+			"ContentIndex",
+			typeof(int),
+			typeof(AvalonEditor),
+			new UIPropertyMetadata(-1, OnContentIndexChanged));
+
+		private static void OnContentIndexChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var editor = dependencyObject as TextEditor;
+			if (editor == null)
+				return;
+
+			if (!contentIndexEditors.Contains(editor))
+			{
+				contentIndexEditors.Add(editor);
+				contentIndexCaretMap[editor.TextArea.Caret] = editor;
+				editor.TextArea.Caret.PositionChanged += caret_PositionChanged;
+			}
+
+			// If the change came from the editor itself, don't update.
+			if (!contentIndexPositionChangedEditors.Contains(editor))
+			{
+				contentIndexChangedEditors.Add(editor);
+				var newValue = (int)e.NewValue;
+				editor.TextArea.Caret.Offset = newValue;
+			}
+			else
+			{
+				contentIndexPositionChangedEditors.Remove(editor);
+			}
+		}
+
+		static void caret_PositionChanged(object sender, EventArgs e)
+		{
+			var caret = sender as Caret;
+			if (caret == null)
+				return;
+
+			var editor = contentIndexCaretMap[caret];
+			if (!contentIndexChangedEditors.Contains(editor))
+				contentIndexPositionChangedEditors.Add(editor);
+			else
+				contentIndexChangedEditors.Remove(editor);
+
+			SetContentIndex(editor, caret.Offset);
+		}
+
+		private static readonly ICollection<TextEditor> contentIndexEditors = new HashSet<TextEditor>();
+
+		/// <summary>
+		/// Maps carets to their parent editors.
+		/// </summary>
+		private static readonly IDictionary<Caret, TextEditor> contentIndexCaretMap = new Dictionary<Caret, TextEditor>();
+
+		/// <summary>
+		/// Prevents double updates by tracking whether a change came from the text editor itself.
+		/// </summary>
+		private static readonly ICollection<TextEditor> contentIndexPositionChangedEditors = new HashSet<TextEditor>();
+
+		private static readonly ICollection<TextEditor> contentIndexChangedEditors = new HashSet<TextEditor>();
+
+		#endregion ContentIndex
 
 		#region HighlightingDefinition
 
@@ -133,6 +221,9 @@ namespace PlantUmlEditor.Controls.Behaviors
 
 		private static void OnHighlightingDefinitionChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
+			if (DesignerProperties.GetIsInDesignMode(dependencyObject))
+				return;
+
 			var editor = dependencyObject as TextEditor;
 			if (editor == null)
 				return;

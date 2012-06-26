@@ -5,7 +5,8 @@
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors" xmlns:Model="clr-namespace:PlantUmlEditor.Model" DataContextChanged="UserControl_DataContextChanged" 
+    xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
+    DataContextChanged="UserControl_DataContextChanged" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584">
     

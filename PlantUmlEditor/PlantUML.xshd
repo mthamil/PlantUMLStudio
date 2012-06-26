@@ -122,12 +122,12 @@
 
     <!-- Fat head arrows -->
     <Rule fontWeight="bold" foreground="DarkGreen">
-      (-+\|&gt;|&lt;\|-+)
+      -+\|&gt;|&lt;\|-+
     </Rule>
 
     <!-- Cardinalities -->
     <Rule fontWeight="bold" foreground="DarkCyan">
-      (-\+|\+-|\*-|-\*)
+      -\+|\+-|\*-|-\*
     </Rule>
 
   </RuleSet>

@@ -1,0 +1,1330 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<title>PlantUML Editor: A WPF editor for coding UML diagrams
+</title><link rel="stylesheet" type="text/css" href="http://www.codeproject.com/App_Themes/NetCommunity/CodeProject.css" />
+    <style type="text/css">
+        .style1
+        {
+            text-decoration: underline;
+        }
+    </style>
+    </head>
+<body>
+
+    <p>
+        <img alt="Screenshot of PlantUML Editor" src="plantumleditor/screenshot.png" /></p>
+    <p>
+        Download code and installer from:
+        <a href="http://code.google.com/p/plantumleditor/">
+        http://code.google.com/p/plantumleditor/</a></p>
+    <p>
+        Please read the pre-requisites carefully.</p>
+    <h2>
+        Introduction</h2>
+    <p>
+        PlantUML Editor, built using WPF and .NET 3.5, is an IDE for drawing UML diagram 
+        using the amazing <a href="http://plantuml.sourceforge.net">PlantUML</a> tool. If you have used 
+        PlantUML before, you know you can code UML diagrams super fast without 
+        struggling with a designer environment. Especially those who use Visio to draw UML 
+        diagrams (God forbid!), you will be at heaven. This is a super fast way to get 
+        your diagrams up and ready for show. You can *write* UML diagrams in plain 
+        English, following a simple syntax and get diagrams generated on-the-fly.</p>
+    <p>
+        This editor really saves time designing UML diagrams. I have to produce quick 
+        diagrams to convey ideas quickly to Architects, Designers and Developers 
+        everyday. So, I use this tool to write some quick diagrams at the speed of 
+        coding, and the diagrams get generated on the fly. Instead of writing a long 
+        mail explaining some complex operation or some business process in English, I 
+        can quickly write it in the editor in almost plain English, and get a nice 
+        looking activity/sequence diagram generated instantly. Making major changes is 
+        also as easy as doing search-replace and copy-pasting blocks here and there. You 
+        don&#39;t get such agility in any conventional mouse-based UML designers.&nbsp;</p>
+
+    <h2>
+        How does it work</h2>
+    <p>
+        Here&#39;s a quick screencast how it works:</p>
+    <p>
+    <img alt="PlantUML Screencast" src="http://plantumleditor.googlecode.com/files/PlantUmlScreencast3.gif" />
+    </p>
+    <h2>
+        How to install it</h2>
+    <p>
+        First install <a href="http://www.graphviz.org/">GraphViz</a>. Then create an 
+        environment variable named <code>GRAPHVIZ_DOT</code> that points to the location where 
+        GraphViz has stored the dot.exe. For example, <code>C:\Program Files 
+        (x86)\Graphviz2.26.3\bin\dot.exe</code></p>
+    <p>
+        Graphviz is used by plantuml to render the diagrams. </p>
+    <p>
+        Then you can just download the installer that I made and install it. It has plantuml 
+        java jar embedded as well.</p>
+    <h2>
+        The code</h2>
+    <p>
+        It&#39;s a single WPF project with some utility classes that you can reuse in your 
+        projects. The Utilities has a <code>BackgroundWork</code> class 
+        which is used to perform background tasks in WPF. It&#39;s more powerful than .NET&#39;s 
+        default <code>BackgroundWorker</code> component or
+        <code>Dispatcher</code> because you can get more control over how 
+        the background tasks run, wait until all background work is finished, abort a 
+        work etc. I will write about the BackgroundWork library separately.</p>
+    <p>
+    <img src="plantumleditor/solutiontree.png" alt="PlantUML Editor Solution Tree" />
+        &nbsp;</p>
+    <p>
+        The <code>MainWindow.xaml</code> is the main window that you see 
+        on screenshot. It hosts the left side file list and the right side welcome 
+        panel. The editor and the diagram image is in the <code>
+        DiagramViewControl.xaml</code> that takes care of showing and editing of a 
+        particular diagram.</p>
+    <p>
+        This is my second WPF app I ever made, so have mercy.</p>
+    <p>
+        Let&#39;s look at the cool stuffs to take out from the code.</p>
+    <h3>
+        The theme </h3>
+    <p>
+        You must be salivating to get your hands on the theme for this project. I was 
+        too :) I must say I have taken a lot of inspiration (and code copy and paste) 
+        from the famous <a href="http://www.vertigo.com/familyshow.aspx">Family.Show</a> 
+        project and tailored it to fit the need. Then I got the background image from 
+        some example of Expression blend.</p>
+    <p>
+        You should look at the Skins\Black\BlackResource.xaml to get an idea how such 
+        custom themes are built. The amount of wisdom in this file is mind boggling.</p>
+    <h3>
+        Listbox with preview of file content and diagram </h3>
+    <p>
+        The left side listbox shows preview of content from the actual file and the 
+        generated diagram. First you have to define a custom template for ListBox items:</p>
+    <pre>
+&lt;ListBox Grid.Row="1" 
+	Width="Auto"
+	ItemContainerStyle="{DynamicResource ListBoxItemStyle1}"
+	SelectionMode="Extended" 
+	Background="#64404040"
+	ItemsSource="{StaticResource DesignTimeDiagramFiles}" 
+	x:Name="DiagramFileListBox" 
+	SelectedValuePath="DiagramFilePath" 
+	IsSynchronizedWithCurrentItem="True" 
+	HorizontalContentAlignment="Stretch"                              
+	Foreground="Ivory" 
+	BorderBrush="{x:Null}" 
+	Margin="0,0,0,10"
+	ScrollViewer.CanContentScroll="True"
+	VirtualizingStackPanel.IsVirtualizing="True"
+	VirtualizingStackPanel.VirtualizationMode="Recycling"
+	VerticalAlignment="Stretch" 
+	MouseDoubleClick="DiagramFileListBox_MouseDoubleClick" 
+	SelectionChanged="DiagramFileListBox_SelectionChanged" &gt;
+	  &lt;ListBox.ItemTemplate&gt;
+		&lt;DataTemplate&gt;
+		  &lt;DataTemplate.Resources&gt;                                        
+		  &lt;/DataTemplate.Resources&gt;
+		  &lt;Border Padding="0,2,0,2" 
+				  CornerRadius="2" 
+				  x:Name="DiagramItem" 
+				  HorizontalAlignment="Stretch" 
+				  VerticalAlignment="Top"&gt;
+			&lt;StackPanel&gt;
+			  &lt;WrapPanel HorizontalAlignment="Stretch" 
+						 Margin="0,0,10,0"&gt;
+				<b>&lt;Image MaxWidth="64" 
+					   MaxHeight="100"  
+					   Source="{Binding Path=ImageFilePath, Converter={StaticResource uriToImageConverter}}" 
+					   Margin="3, 5, 10, 0" VerticalAlignment="Top"&gt;&lt;/Image&gt;</b>
+				&lt;StackPanel&gt;
+				  &lt;TextBlock Text="{Binding Path=DiagramFileNameOnly}"  /&gt;
+<b>				  &lt;TextBlock Foreground="White" 
+							 TextWrapping="WrapWithOverflow" 
+							 Text="{Binding Path=Preview}" 
+							 TextTrimming="CharacterEllipsis" 
+							 MaxHeight="100" 
+							 ClipToBounds="True" 
+							 VerticalAlignment="Top" /&gt;
+</b>				&lt;/StackPanel&gt;                      
+			  &lt;/WrapPanel&gt;
+			  &lt;Separator Foreground="Green" Opacity="0.5" /&gt;
+			&lt;/StackPanel&gt;
+		  &lt;/Border&gt;
+		&lt;/DataTemplate&gt;
+	  &lt;/ListBox.ItemTemplate&gt;
+	&lt;/ListBox&gt;
+    
+    </pre>
+    <p>
+        Here the <code>ListBox</code>&#39;s <code>ItemSource</code> 
+        attribute is bound to a design time data source that I will talk about soon. 
+        Basically it is bound to a collection of <code>DiagramFile</code> 
+        class which holds information about a diagram file - the path, path to the 
+        diagram image, preview of the actual content etc. </p>
+    <p>
+        The Image is bound to the path of the diagram image. In order to preview the 
+        diagram, I had to create a custom converter. Otherwise the Image holds a lock on 
+        the image file and does not let it to be changed. Here&#39;s the code of the 
+        converter:</p>
+    <pre>
+public class UriToCachedImageConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        if (value == null)
+            return null;
+
+        if (!string.IsNullOrEmpty(value.ToString()))
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(value.ToString());
+            // OMAR: Trick #6
+            // Unless we use this option, the image file is locked and cannot be modified.
+            // Looks like WPF holds read lock on the images. Very bad.
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            // Unless we use this option, an image cannot be refrehsed. It loads from 
+            // cache. Looks like WPF caches every image it loads in memory. Very bad.
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            try
+            {
+                bi.EndInit();
+                return bi;
+            }
+            catch
+            {
+                return default(BitmapImage);
+            }
+        }
+
+        return null;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException("Two way conversion is not supported.");
+    }
+}    
+    </pre>
+    <p>
+        It solves two problems. First, it does not hold a lock on the file so that the 
+        file can be changed while you edit the diagram. Secondly, it looks like WPF has 
+        some kind of internal cache and it holds the image in the cache. You cannot 
+        refresh the image and make it load from source. So, you have to do the
+        <code>BitmapCreateOptions.IgnoreImageCache</code> trick to make 
+        it work.</p>
+    <p>
+        On the code behind, the grid is loaded in a background thread when the 
+        application starts. Also when you change the path in the top-left corner 
+        location box, the grid is refreshed. It looks for all the text files in the 
+        given folder and check if any of the text file is in plantuml format. If it is, 
+        then it loads it in the list.</p>
+    <pre>
+private void LoadDiagramFiles(string path, Action loaded)
+{
+    _DiagramFiles.Clear();
+    
+    this.StartProgress("Loading diagrams...");
+
+    BackgroundWork.DoWork<List<DiagramFile>>(
+        () =>
+        {
+            var diagrams = new List<DiagramFile>();
+    
+            foreach (string file in Directory.GetFiles(path))
+            {
+                string content = File.ReadAllText(file);
+                if (content.Length > 0)
+                {
+                    string firstLine = content.Substring(0, 
+                        content.IndexOf(Environment.NewLine[0]));
+                    if (firstLine.StartsWith("@startuml"))
+                    {
+                        string imageFileName = firstLine.Substring(content.IndexOf(' ') + 1)
+                            .TrimStart('"').TrimEnd('"');
+
+                        diagrams.Add(new DiagramFile{
+                                              Content = content,
+                                              DiagramFilePath = file,
+                                              ImageFilePath =
+                                          System.IO.Path.IsPathRooted(imageFileName) ? 
+                                            System.IO.Path.GetFullPath(imageFileName)
+                                            : System.IO.Path.GetFullPath(
+                                                System.IO.Path.Combine(path, imageFileName))
+                                          });
+                    }
+                }
+            }
+
+            return diagrams;
+        },
+        (diagrams) =>
+        {                   
+            this._DiagramFiles = new ObservableCollection<DiagramFile>(diagrams);
+            this.DiagramFileListBox.ItemsSource = this._DiagramFiles;
+            this.StopProgress("Diagrams loaded.");
+            loaded();
+        },
+        (exception) =>
+        {
+            MessageBox.Show(this, exception.Message, "Error loading files", 
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            this.StopProgress(exception.Message);
+        });
+}</pre>
+    <p>
+        Here you will see one use of my <code>BackgroundWork</code> 
+        class. I am using it to load the files from the given path in a separate thread 
+        so the UI remains responsive. The first callback is for doing the work on a 
+        separate thread. Here I am building a new collection of diagram files. I cannot 
+        change the existing collection which is already bound to the ListBox because 
+        that would trigger an update on the <code>ListBox</code> and .NET 
+        would not allow that to happen from a seaprate thread. So, once the new 
+        collection is built, the second callback is fired which is the
+        <code>onSuccess</code> callback. It executes on the UI thread and 
+        here I can re-bind the <code>ListBox</code>.</p>
+    <p>
+        Here&#39;s the <code>DiagramFile</code> class which holds information 
+        about each diagram:</p>
+    <pre>
+public class DiagramFile
+{
+    public string DiagramFilePath { get; set; }
+    public string ImageFilePath { get; set; }
+    public string Content { get; set; }
+
+    public string Preview
+    {
+        get
+        {
+            // Ignore first @startuml line and select non-empty lines
+            return Content.Length &gt; 100 ? Content.Substring(0, 100) : Content;
+        }
+    }
+
+    public string DiagramFileNameOnly
+    {
+        get
+        {
+            return Path.GetFileName(this.DiagramFilePath);
+        }
+    }
+
+    public string ImageFileNameOnly
+    {
+        get
+        {
+            return Path.GetFileName(this.ImageFilePath);
+        }
+    }
+
+    public override bool Equals(object obj)
+    {
+        var diagram = obj as DiagramFile;
+        return diagram.DiagramFilePath == this.DiagramFilePath;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.DiagramFilePath.GetHashCode();
+    }
+}</pre>
+    <p>
+        It&#39;s a simple entity class to hold information about a plantuml formatted 
+        diagram. For example, a diagram in plantuml would look like this:</p>
+    <pre>
+@startuml img/sequence_img014.png
+participant User
+
+User -&gt; A: DoWork
+activate A
+
+	A -&gt; A: Internal call
+	activate A
+
+		A -&gt; B: &lt;&lt; createRequest &gt;&gt;
+		activate B
+			B --&gt; A: RequestCreated
+		deactivate B
+	deactivate A
+	A -&gt; User: Done
+deactivate A
+
+@enduml  </pre>
+    <p>
+        When you render it using plantuml, it looks like this:</p>
+    <p>
+        <img alt="" src="plantumleditor/sample_diagram.png" /></p>
+    <p>
+        Now this is loaded at run time. How does the design time environment show 
+        realistic data in the <code>ListBox</code>?</p>
+    <h3>
+        Live rendering of data in design time inside ListBox</h3>
+    <p>
+        In WPF, you have to create a <code>
+        ObservableCollection&lt;YourClass&gt;</code> and then create a 
+        <code>StaticResource</code> out of 
+        it to show the result of binding at design time. For example, here I am showing 
+        the result of binding diagrams to the <code>ListBox</code> and 
+        the tabs:</p>
+    <p>
+        <img alt="Design time view of data in WPF" src="plantumleditor/DesignTimeView.png" /></p>
+    <p>
+        Here&#39;s how you do it. First create an <code>ObservableCollection</code> 
+        out of your entity class and in the constructor, populate it with dummy data.</p>
+    <pre>
+public class DiagramFiles : ObservableCollection&lt;DiagramFile&gt;
+    {
+        public DiagramFiles()
+        {
+            this.Add(new DiagramFile()
+            {
+                Content = 
+@"@startuml cpe.png
+actor EndUser
+participant SaaS
+participant CPE
+.
+.
+.
+@enduml",
+                DiagramFilePath = "test.txt",
+                ImageFilePath = "http://plantuml.sourceforge.net/img/sequence_img009.png"
+            });
+
+            this.Add(new DiagramFile()
+            {
+                Content = 
+@"@startuml btconnectjourney.png
+actor User
+participant AOOJ
+participant SaaS
+participant DnP
+.
+.
+.
+@enduml",
+                DiagramFilePath = "test2.txt",
+                ImageFilePath = "http://plantuml.sourceforge.net/img/activity_img06.png"
+            });
+        }
+    }  </pre>
+    <p>
+        Then you build it and you need to create a static resource for it. First you 
+        need to add a namespace reference inside the <code>&lt;Window&gt;</code> 
+        decalaration.</p>
+    <pre>
+&lt;Window
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:sys="clr-namespace:System;assembly=mscorlib"
+x:Class="PlantUmlEditor.MainWindow"
+xmlns:plantuml="clr-namespace:PlantUmlEditor"
+xmlns:DesignTimeData="clr-namespace:PlantUmlEditor.DesignTimeData"  </pre>
+    <p>
+        Then inside the ResourceDictionary of the Window, you create a tag to declare a 
+        static resource:</p>
+    <pre>
+&lt;Window.Resources&gt;
+    &lt;ResourceDictionary&gt;
+      &lt;DesignTimeData:DiagramFiles x:Key="DesignTimeDiagramFiles" /&gt;    </pre>
+    <p>
+        That&#39;s it. You can then bind <code>ItemSource</code> attribute of 
+        controls to this static resource.</p>
+    <h3>
+        Smooth auto collapse grid column to give more space</h3>
+    <p>
+        You might have noticed that, when you go into editing mode by clicking on the 
+        diagram text box, the left column smoothly collapses to give you more editing 
+        space. You can do this by using a custom animation to reduce the width of the 
+        left column. </p>
+    <p>
+        First name the column so that you can refer to it from animation:</p>
+    <pre>
+&lt;Grid.ColumnDefinitions&gt;
+          &lt;ColumnDefinition Width="300" 
+          x:Name="LeftColumn" /&gt;
+          &lt;ColumnDefinition Width="Auto" 
+          MinWidth="10" /&gt;
+          &lt;ColumnDefinition Width="*" /&gt;
+&lt;/Grid.ColumnDefinitions&gt;    
+    </pre>
+    <p>
+        Then create two <span class="style1">Storyboards</span>, one for collapsing and 
+        one for expanding. You will have to create a custom animation here because by 
+        default there&#39;s no animation class available to animate a Grid&#39;s
+        <span class="style1">Width</span> or <span class="style1">Height</span> property 
+        which are of <span class="style1">GridLength</span> data type. I have used the 
+        great example from this article, which saved a lot of time:
+        <a href="http://www.codeproject.com/KB/WPF/GridLengthAnimation.aspx">
+        http://www.codeproject.com/KB/WPF/GridLengthAnimation.aspx</a></p>
+    <p>
+        Here&#39;s how the animation class looks like:</p>
+    <pre>
+// Source: http://www.codeproject.com/KB/WPF/GridLengthAnimation.aspx
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Media.Animation;
+using System.Windows;
+using System.Diagnostics;
+
+namespace PlantUmlEditor.CustomAnimation
+{
+    internal class GridLengthAnimation : AnimationTimeline
+    {
+        static GridLengthAnimation()
+        {
+            FromProperty = DependencyProperty.Register("From", typeof(GridLength),
+                typeof(GridLengthAnimation));
+
+            ToProperty = DependencyProperty.Register("To", typeof(GridLength), 
+                typeof(GridLengthAnimation));
+        }
+
+        public override Type TargetPropertyType
+        {
+            get 
+            {
+                return typeof(GridLength);
+            }
+        }
+
+        protected override System.Windows.Freezable CreateInstanceCore()
+        {
+            return new GridLengthAnimation();
+        }
+
+        public static readonly DependencyProperty FromProperty;
+        public GridLength From
+        {
+            get
+            {
+                return (GridLength)GetValue(GridLengthAnimation.FromProperty);
+            }
+            set
+            {
+                SetValue(GridLengthAnimation.FromProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty ToProperty;
+        public GridLength To
+        {
+            get
+            {
+                return (GridLength)GetValue(GridLengthAnimation.ToProperty);
+            }
+            set
+            {
+                SetValue(GridLengthAnimation.ToProperty, value);
+            }
+        }
+
+        public override object GetCurrentValue(object defaultOriginValue, 
+            object defaultDestinationValue, AnimationClock animationClock)
+        {
+            double fromVal = ((GridLength)GetValue(GridLengthAnimation.FromProperty)).Value;
+            double toVal = ((GridLength)GetValue(GridLengthAnimation.ToProperty)).Value;
+            
+            if (fromVal &gt; toVal)
+            {
+                return new GridLength((1 - animationClock.CurrentProgress.Value) * (fromVal - toVal) + toVal, GridUnitType.Pixel);
+            }
+            else
+                return new GridLength(animationClock.CurrentProgress.Value * (toVal - fromVal) + fromVal, GridUnitType.Pixel);
+        }
+    }
+}
+    </pre>
+    <p>
+        Once the class is compiled, add a reference to the namespace inside
+        <span class="style1">&lt;Window&gt;</span> tag and then you can use it inside 
+        storyboards.</p>
+    <pre>
+      &lt;Storyboard x:Key="CollapseTheDiagramListBox"&gt;
+        &lt;customAnimation:GridLengthAnimation 
+        Storyboard.TargetProperty="Width" 
+        Storyboard.TargetName="LeftColumn" 
+        From="{Binding Path=Width, ElementName=LeftColumn}" 
+        To="120" 
+        Duration="0:0:0.5" 
+        AutoReverse="False"
+        AccelerationRatio="0.8"/&gt;
+      &lt;/Storyboard&gt;
+      &lt;Storyboard x:Key="ExpandTheDiagramListBox" &gt;
+        &lt;customAnimation:GridLengthAnimation 
+        Storyboard.TargetProperty="Width" 
+        Storyboard.TargetName="LeftColumn" 
+        From="{Binding Path=Width, ElementName=LeftColumn}" 
+        Duration="0:0:0.5" 
+        AutoReverse="False"
+        AccelerationRatio="0.8"/&gt;
+      &lt;/Storyboard&gt;    </pre>
+    <p>
+        These animations are triggered from the code. Whenever you click on the editor 
+        text box, the <span class="style1">GotFocus</span> event gets fired on the 
+        usercontrol that wraps the text box. On the event, I start the animation. 
+        Similarly when you leave the editing environment and click on the
+        <span class="style1">ListBox</span>, the
+        <span class="style1">LostFocus</span> event is fired and I run the Expand 
+        animation.</p>
+    <pre>private void DiagramView_GotFocus(object sender, RoutedEventArgs e)
+{            
+    if (this.LeftColumn.ActualWidth &gt; this.LeftColumnLastWidthBeforeAnimation.Value)
+        this.LeftColumnLastWidthBeforeAnimation = new GridLength(this.LeftColumn.ActualWidth);
+    ((Storyboard)this.Resources["CollapseTheDiagramListBox"]).Begin(this, true);                        
+}
+private void DiagramView_LostFocus(object sender, RoutedEventArgs e)
+{
+    var storyboard = ((Storyboard)this.Resources["ExpandTheDiagramListBox"]);
+    (storyboard.Children[0] as GridLengthAnimation).To = this.LeftColumnLastWidthBeforeAnimation;
+    storyboard.Begin(this, true);
+}</pre>
+    <p>
+        As you see, it&#39;s not straightforward. When the column is collapsed, you need to 
+        remember the Width of the column before you start collapsing, so that you can 
+        restore it to its original width when it is expanded.</p>
+    <h3>
+        The cool tabs</h3>
+    <p>
+        The default tabs in WPF are so uncool. As soon as you put the
+        <span class="style1">TabControl</span> on your form, your hard effort in making 
+        amazing UI goes to the drain. So, I have customized the appearance of the tabs 
+        using custom templates. </p>
+    <pre>
+&lt;Style TargetType="{x:Type TabItem}"&gt;
+&lt;Setter Property="Template"&gt;
+  &lt;Setter.Value&gt;
+    &lt;ControlTemplate TargetType="{x:Type TabItem}"&gt;
+      &lt;Grid&gt;
+        &lt;Border 
+        Name="Border"
+        Background="Gray"
+        BorderBrush="Black" 
+        BorderThickness="1,1,1,1"                   
+        CornerRadius="6,6,0,0" &gt;
+          &lt;ContentPresenter x:Name="ContentSite"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Center"
+          ContentSource="Header"
+          Margin="12,2,12,2"/&gt;
+        &lt;/Border&gt;
+      &lt;/Grid&gt;
+      &lt;ControlTemplate.Triggers&gt;
+        &lt;Trigger Property="IsSelected" 
+        Value="True"&gt;                  
+          &lt;Setter TargetName="Border" 
+          Property="Background" 
+          Value="black" /&gt;
+          &lt;Setter Property="Foreground" 
+          Value="White" /&gt;                  
+          &lt;Setter TargetName="Border" 
+          Property="BorderThickness" 
+          Value="4,4,4,1" /&gt;
+        &lt;/Trigger&gt;
+        &lt;Trigger Property="IsSelected" 
+        Value="False"&gt;
+          &lt;Setter TargetName="Border" 
+          Property="Background" 
+          Value="gray" /&gt;
+          &lt;Setter Property="Foreground" 
+          Value="black" /&gt;
+          &lt;Setter TargetName="Border" 
+          Property="Opacity" 
+          Value="0.4" /&gt;
+        &lt;/Trigger&gt;
+      &lt;/ControlTemplate.Triggers&gt;
+    &lt;/ControlTemplate&gt;
+  &lt;/Setter.Value&gt;
+&lt;/Setter&gt;
+&lt;/Style&gt;    
+    </pre>
+    <p>
+        Next, like the <span class="style1">ListBox</span>, the
+        <span class="style1">TabControl</span> is bound to the same design time 
+        collection, so that you can see how the tabs look like on the design view. 
+        Inside the <span class="style1">TabControl</span>, the <span class="style1">
+        DiagramViewControl</span> is hosted, which delivers the editing and preview 
+        features for a single diagram. The <span class="style1">DataContext</span> 
+        property of the <span class="style1">DiagramViewControl</span> is mapped to the
+        <span class="style1">SelectedItem</span> property of the tabs so that it gets 
+        the active tab&#39;s associated <span class="style1">DiagramFile</span> object. So, 
+        if you change tab, the <span class="style1">DataContext</span> property of
+        <span class="style1">DiagramViewControl</span> changes as well to show the 
+        correct tab&#39;s data. </p>
+    <pre>
+&lt;TabControl 
+        Grid.Column="2" 
+        Name="DiagramTabs" 
+        Background="{x:Null}" 
+        Visibility="Hidden"
+        ItemsSource="{StaticResource DesignTimeDiagramFiles}"&gt;
+          
+          &lt;TabControl.ItemTemplate&gt;
+            &lt;DataTemplate&gt;
+              &lt;TextBlock Text="{Binding Path=DiagramFileNameOnly}"  /&gt;
+            &lt;/DataTemplate&gt;
+          &lt;/TabControl.ItemTemplate&gt;
+          
+          &lt;TabControl.ContentTemplate&gt;
+            &lt;DataTemplate&gt;
+              &lt;plantuml:DiagramViewControl x:Name="DiagramView"
+              DataContext="{Binding Path=SelectedItem, ElementName=DiagramTabs, Mode=TwoWay}" 
+              HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch" 
+              OnAfterSave="DiagramViewControl_OnAfterSave" 
+              OnBeforeSave="DiagramViewControl_OnBeforeSave" 
+              OnClose="DiagramViewControl_OnClose"
+              GotFocus="DiagramView_GotFocus"
+              LostFocus="DiagramView_LostFocus"&gt;                
+              &lt;/plantuml:DiagramViewControl&gt;                            
+            &lt;/DataTemplate&gt;
+          &lt;/TabControl.ContentTemplate&gt;          
+        &lt;/TabControl&gt;    
+    </pre>
+    <p>
+        Notice the two way binding. It&#39;s because any changes made inside the
+        <span class="style1">DiagramViewControl</span> on the content is reflected to 
+        the associated <span class="style1">DiagramFile</span> object as well.</p>
+    <p>
+        Now you will notice, when you double click a file on the <span class="style1">
+        ListBox</span>, a new tab is created dynamically to show that particular 
+        diagram. At run time, the TabControl is attached to another <span class="style1">
+        ObservableCollection&lt;DiagramFile&gt;</span> called <span class="style1">
+        OpenDiagrams</span>. All you need to do is, add a <span class="style1">
+        DiagramFile</span> object to this collection and a new tab pops up. Joy of data 
+        binding!</p>
+    <pre>
+private void DiagramFileListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+{
+    var diagramFile = this.DiagramFileListBox.SelectedItem as DiagramFile;
+    this.OpenDiagramFile(diagramFile);
+}
+
+private void OpenDiagramFile(DiagramFile diagramFile)
+{
+    if (!_OpenDiagrams.Contains(diagramFile))
+    {
+        _OpenDiagrams.Add(diagramFile);
+
+        this.DiagramTabs.ItemsSource = _OpenDiagrams;
+        this.DiagramTabs.Visibility = Visibility.Visible;
+        this.WelcomePanel.Visibility = Visibility.Hidden;
+    }
+    
+    this.DiagramTabs.SelectedItem = diagramFile;            
+}    
+    </pre>
+    <p>
+        That&#39;s it!</p>
+    <h3>
+        Diagram Editor - powerful code editor </h3>
+    <p>
+        The code editor uses the
+        <a href="http://www.codeproject.com/KB/edit/AvalonEdit.aspx">
+        ICSharpCode.AvalonEdit</a> control, mostly because it supports block indenting, 
+        which is not available in WPF&#39;s default text editors. Using this control is 
+        pretty straightforward. Add the reference to the DLL, declare the namespace 
+        inside &lt;UserControl&gt; tag and then use it like this:</p>
+    <pre>
+&lt;avalonEdit:TextEditor 
+      x:Name="ContentEditor" 
+      Grid.Row="0" 
+      HorizontalAlignment="Stretch" 
+      VerticalAlignment="Stretch" 
+      FontFamily="Consolas" 
+      FontSize="11pt"
+      Background="Black"
+      Foreground="LightYellow"
+      Opacity="0.8"
+      Text=""
+      Padding="10"
+      TextChanged="ContentEditor_TextChanged"&gt;        
+      &lt;/avalonEdit:TextEditor&gt;  </pre>
+    <p>
+        That&#39;s it. The only caveat is it does not support binding the Text property to a 
+        string. So, I could not find it to the <span class="style1">DiagramFile.Content</span> 
+        property to show and reflect changes in the text. So, I did this from the
+        <span class="style1">DataContextChanged</span> event of the <span class="style1">
+        UserControl</span>, which gets fired whenever the <span class="style1">
+        DataContext</span> is changed to some other object. </p>
+    <pre>
+private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+{
+    if (e.NewValue != null)
+    {
+        var newDiagram = (e.NewValue as DiagramFile);
+        ContentEditor.Text = newDiagram.Content;
+        ContentEditor.Tag = newDiagram.DiagramFilePath;
+    }                
+}    </pre>
+    <p>
+        This keep the <span class="style1">DataContext</span> of the text editor control 
+        in sync with the <span class="style1">DataContext</span> of the usercontrol.</p>
+    <h3>
+        Diagram image preview with zoom support</h3>
+    <p>
+        You can use the <span class="style1">Image</span> control in WPF to show image 
+        from local file, from a URL or from a MemoryStream. The Image control is super 
+        powerful. It has complex transformation support. You can zoom, twist, transform 
+        images many ways. You can also bind the transformation to other WPF controls. 
+        For example, you can bind a Scaling transformation to a slider, so that when you 
+        slide the slider up and down, the image zooms in and out.</p>
+    <pre>
+&lt;Image.ContextMenu&gt;
+    &lt;ContextMenu x:Name="ImageContextMenu" Style="{DynamicResource ContextMenuStyle}"&gt;
+        &lt;MenuItem Style="{DynamicResource MenuItemStyle}" 
+                  Header="Copy to Clipboard" 
+                  Click="CopyToClipboard_Click"&gt;&lt;/MenuItem&gt;
+        &lt;MenuItem Style="{DynamicResource MenuItemStyle}" 
+                  Header="Open in explorer" 
+                  Click="OpenInExplorer_Click"&gt;&lt;/MenuItem&gt;                
+    &lt;/ContextMenu&gt;
+    &lt;/Image.ContextMenu&gt;
+    &lt;Image.RenderTransform&gt;
+      &lt;TransformGroup&gt;
+        &lt;ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
+        ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/&gt;
+      &lt;/TransformGroup&gt;
+    &lt;/Image.RenderTransform&gt;
+&lt;/Image&gt;    
+    </pre>
+    <p>
+        Here you see, I have bound the <span class="style1">ScaleTransform</span> to the
+        <span class="style1">ZoomSlider</span> control&#39;s value.</p>
+    <p>
+        Whenever you save the diagram, it&#39;s generated again using plantuml and then the 
+        diagram image is refreshed. Since we have to use a custom value converter to 
+        bind the image to a path, we miss the auto refresh ability. The Image control no 
+        longer listens on the file for change. So, we have to force a refresh on the 
+        image using custom code:</p>
+    <pre>
+BindingOperations.GetBindingExpression(DiagramImage, Image.SourceProperty).UpdateTarget();    </pre>
+    <p>
+        However, doing this only does not refresh the Image. WPF has its internal cache 
+        where it remembers the images based on Uri. So, the custom value converter has 
+        to be changed to stop caching:</p>
+    <pre>
+public class UriToCachedImageConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        if (value == null)
+            return null;
+
+        if (!string.IsNullOrEmpty(value.ToString()))
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(value.ToString());
+            // OMAR: Trick #6
+            // Unless we use this option, the image file is locked and cannot be modified.
+            // Looks like WPF holds read lock on the images. Very bad.
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            // Unless we use this option, an image cannot be refrehsed. It loads from 
+            // cache. Looks like WPF caches every image it loads in memory. Very bad.
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+    
+    </pre>
+    <p>
+        You can read the comment to understand the pain I went through and you won&#39;t 
+        have to go through anymore.</p>
+    <h3>
+        Diagram image show in explorer </h3>
+    <p>
+        Since is a simple trick, but worth mentioning. You can right click on the image 
+        and select &quot;Show in explorer&quot; which would launch Windows Explorer where the 
+        image is already selected. You can immediately copy and paste the file or do any 
+        other file operations. This is done by this:</p>
+    <pre>
+private void OpenInExplorer_Click(object sender, RoutedEventArgs e)
+{
+    Process
+        .Start("explorer.exe","/select," + this.CurrentDiagram.ImageFilePath)
+        .Dispose();
+}    
+    </pre>
+    <p>
+        Simple but handy feature.</p>
+    <h3>
+        Auto refresh and render diagram in background </h3>
+    <p>
+        When you keep typing on the code editor, it keeps refreshing the diagram every 
+        10 seconds. This is where my BackgroundWork class comes handy. I can check if 
+        any background work is already running. If not, I can queue a work to happen 
+        after 10 seconds, in a separate thread.</p>
+    <pre>
+private void ContentEditor_TextChanged(object sender, EventArgs e)
+{
+    if (AutoRefreshCheckbox.IsChecked.Value)
+    {
+        if (!BackgroundWork.IsWorkQueued())
+        {
+            BackgroundWork.DoWorkAfter(SaveAndRefreshDiagram, 
+                                       TimeSpan.FromSeconds(
+                                           int.Parse(RefreshSecondsTextBox.Text)));
+        }
+    }
+}    
+    </pre>
+    <p>
+        This prevents multiple diagram generation request from getting queued and 
+        running into race conditions.</p>
+    <p>
+        The diagram is generated by running the plantuml command line program. It takes 
+        the path of a diagram text file and generates the diagram image specified inside 
+        the diagram text file.</p>
+    <pre>
+BackgroundWork.WaitForAllWork(TimeSpan.FromSeconds(20));
+BackgroundWork.DoWork(
+    () =&gt;
+    {
+        // Save the diagram content
+        File.WriteAllText(diagramFileName, content);
+
+        // Use plantuml to generate the graph again                    
+        using (var process = new Process())
+        {
+            var startInfo = new ProcessStartInfo();
+            startInfo.FileName = plantUmlPath;
+            startInfo.Arguments = "\"" + diagramFileName + "\"";
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden; // OMAR: Trick #5
+            startInfo.CreateNoWindow = true; // OMAR: Trick #5
+            process.StartInfo = startInfo;
+            if (process.Start())
+            {
+                process.WaitForExit(10000);
+            }
+        }
+    },
+    () =&gt;
+    {
+        BindingOperations.GetBindingExpression(DiagramImage, Image.SourceProperty).UpdateTarget();
+
+        OnAfterSave(this.CurrentDiagram);
+    },
+    (exception) =&gt;
+    {
+        OnAfterSave(this.CurrentDiagram);
+        MessageBox.Show(Window.GetWindow(this), exception.Message, "Error running PlantUml",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+    });    
+    </pre>
+    <p>
+        First it waits for all background work to complete. Then it starts running the 
+        planuml process in a separate thread. The program is run without any window so 
+        that it does not take the focus away from your code editor. When diagram is 
+        successfully generated, the diagram image is refreshed.</p>
+    <h3>
+        Running Java program as exe</h3>
+    <p>
+        I have used the fantastic <a href="http://jsmooth.sourceforge.net/">JSmooth</a> 
+        utility to create an exe out of plantuml jar. It has sophisticated JVM detection 
+        ability built-in. The exe wrapper it creates detects the right JVM and then runs 
+        the jar.</p>
+    <p>
+        <img alt="" src="plantumleditor/jsmooth.png" /></p>
+    <p>
+        You can embed the jar inside the generated exe to create a single exe file that 
+        automatically extracts and runs the jar.
+        &nbsp;</p>
+    <h3>
+        Show the right ContextMenu automatically from a button click</h3>
+    <p>
+        There&#39;s a &quot;Add&quot; button which, when clicked, shows a context menu 
+        programmatically.</p>
+    <p>
+        <img alt="" src="plantumleditor/contextmenu.png" /></p>
+    <p>
+        That&#39;s not it. It also remembers which submenu you clicked last time and it 
+        automatically opens that submenu saving you one click. When you are on a use 
+        case diagram and adding use case elements, it&#39;s likely you will keep on adding 
+        use case items. Clicking on &quot;use case&quot; and then selecting an item from it is 
+        cumbersome. The intelligent context menu saves you from making that unnecessary 
+        click.</p>
+    <pre>
+private void AddStuff_Click(object sender, RoutedEventArgs e)
+{
+    // Trick: Open the context menu automatically whenever user
+    // clicks the "Add" button
+    AddContextMenu.IsOpen = true;
+
+    // If user last added a particular diagram items, say Use case
+    // item, then auto open the usecase menu so that user does not
+    // have to click on use case again. Saves time when you are adding
+    // a lot of items for the same diagram
+    if (_LastMenuItemClicked != default(WeakReference&lt;MenuItem&gt;))
+    {
+        MenuItem parentMenu = (_LastMenuItemClicked.Target.Parent as MenuItem);
+        parentMenu.IsSubmenuOpen = true;
+    }
+}    </pre>
+    <p>
+        Here the context menu is programmatically opened by using <span class="style1">
+        IsOpen</span> property. However, right after opening it, I am checking what was 
+        the last submenu item that was clicked and I open that automatically as well.</p>
+    <p>
+        If you look at the xaml for the button, you would notice, there&#39;s no click 
+        handler. There are so many submenus and grand-child menus that it&#39;s hard to add 
+        a event handler from the markup. </p>
+    <pre>
+          &lt;Button Style="{DynamicResource RedButtonStyle}" 
+          Height="Auto" 
+          x:Name="AddStuff" 
+          Width="Auto" 
+          Padding="20, 0, 20, 0"
+          Click="AddStuff_Click" 
+          Content="_Add..." &gt;
+            &lt;Button.ContextMenu&gt;
+              &lt;ContextMenu x:Name="AddContextMenu" Style="{DynamicResource ContextMenuStyle}"&gt;                
+                &lt;MenuItem Style="{DynamicResource MenuItemStyle}" Header="Use Case"&gt;
+                  &lt;MenuItem Style="{DynamicResource MenuItemStyle}" Header="Actor"&gt;
+                    &lt;MenuItem.Tag&gt;
+                      &lt;![CDATA[
+actor :Last actor: as Men &lt;&lt; Human &gt;&gt;
+	]]&gt;
+                    &lt;/MenuItem.Tag&gt;
+                  &lt;/MenuItem&gt;    
+    </pre>
+    <p>
+        Instead I programmatically traverse the menu hierarchy and add a click handler 
+        to it.</p>
+    <pre>
+public DiagramViewControl()
+{
+    InitializeComponent();
+
+    foreach (MenuItem topLevelMenu in AddContextMenu.Items)
+    {
+        foreach (MenuItem itemMenu in topLevelMenu.Items)
+        {
+            itemMenu.Click += new RoutedEventHandler(MenuItem_Click);
+        }
+    }
+}    
+    </pre>
+    <p>
+        Inside the menu click handler, I have set the <span class="style1">LastMenuItemClicked</span> variable to 
+        remember which menu item was last clicked.</p>
+    <pre>
+private void MenuItem_Click(object sender, RoutedEventArgs e)
+{
+    this._LastMenuItemClicked = e.Source as MenuItem;
+    this.AddCode((e.Source as MenuItem).Tag as string);
+}    </pre>
+    <p>
+        Now those who know me, you know very well that I am careful about
+        <a href="http://www.codeproject.com/KB/COM/safecomwrapper.aspx">strong refs</a> 
+        and
+        <a href="http://msmvps.com/blogs/omar/archive/2009/03/14/memory-leak-with-delegates-and-workflow-foundation.aspx">
+        memory leaks</a>. I would not do such nasty things like holding reference to an 
+        UI element in a private variable, or trying to access controls at parent scope 
+        from anonmous delegates. That&#39;s evil! So, I use strongly typed
+        <span class="style1">WeakReference&lt;T&gt;</span> class to hold reference to UI 
+        elements and pass the weak refs to the delegates.</p>
+    <p>
+        For example, you can see use of weak reference to anonymous delegates:</p>
+        
+    <pre>
+WeakReference&lt;ListBox&gt; listbox = this.DiagramFileListBox;
+this.LoadDiagramFiles(this.DiagramLocationTextBox.Text, 
+  () =&gt; 
+  {
+      var diagramOnList = this._DiagramFiles.First(d =&gt; d.DiagramFilePath == diagramFileName);
+      ListBox diagramListBox = listbox;
+      diagramListBox.SelectedItem = diagramOnList;
+      this.OpenDiagramFile(diagramOnList);
+  });  </pre>
+    <p>
+        I have a handy <span class="style1">WeakReference&lt;T&gt;</span> class at my disposal which 
+        supports implicit conversion to and from any class. It makes it easy to use the 
+        reference as if it can take any class and can become anyclass. As you see in the 
+        above code example, there&#39;s no cast to ListBox data type anywhere. It behaves 
+        almost like a implicit pointer.</p>
+    <p>
+        So, here it is:</p>
+    <h3>
+        The strongly typed WeakReference&lt;T&gt; with implicit operator conversion</h3>
+    <p>
+        I have taken this from the great         <a href="http://damieng.com/blog/2006/08/01/implementingweakreferencet">Damien</a>&#39;s 
+        blog and made some enhacements to it:</p>
+    <pre>
+using System;
+using System.Runtime.InteropServices;
+
+public class WeakReference&lt;T&gt; : IDisposable        
+{
+    private GCHandle handle;
+    private bool trackResurrection;
+
+    public WeakReference(T target)
+        : this(target, false)
+    {
+    }
+
+    public WeakReference(T target, bool trackResurrection)
+    {
+        this.trackResurrection = trackResurrection;
+        this.Target = target;
+    }
+
+    ~WeakReference()
+    {
+        Dispose();
+    }
+
+    public void Dispose()
+    {
+        handle.Free();
+        GC.SuppressFinalize(this);
+    }
+
+    public virtual bool IsAlive
+    {
+        get { return (handle.Target != null); }
+    }
+
+    public virtual bool TrackResurrection
+    {
+        get { return this.trackResurrection; }
+    }
+
+    public virtual T Target
+    {
+        get
+        {
+            object o = handle.Target;
+            if ((o == null) || (!(o is T)))
+                return default(T);
+            else
+                return (T)o;
+        }
+        set
+        {
+            handle = GCHandle.Alloc(value,
+              this.trackResurrection ? GCHandleType.WeakTrackResurrection : GCHandleType.Weak);
+        }
+    }
+
+    public static implicit operator WeakReference&lt;T&gt;(T obj)  
+    {
+        return new WeakReference&lt;T&gt;(obj);
+    }
+
+    public static implicit operator T(WeakReference&lt;T&gt; weakRef)  
+    {
+        return weakRef.Target;
+    }
+}    </pre>
+    <p>
+        I have added the implicit operator conversions to make use of
+        <span class="style1">WeakReference&lt;T&gt;</span> more convenient.</p>
+    <h3>
+        Stuffing lots of data in MenuItem</h3>
+    <p>
+        You must have noticed my clever use of <span class="style1">Tag</span> property? If not, then here&#39;s it is 
+        again. I am storing the UML snippet inside the <span class="style1">Tag</span> of each menu item this way:</p>
+    <pre>
+&lt;MenuItem Style="{DynamicResource MenuItemStyle}" Header="Note beside usecase"&gt;
+&lt;MenuItem.Tag&gt;
+  &lt;![CDATA[
+note right of (Use)\r
+  A note can also\r
+  be on several lines\r
+end note
+	]]&gt;
+  &lt;/MenuItem.Tag&gt;
+&lt;/MenuItem&gt;
+    </pre>
+    <p>
+        When a menu item is clicked, I can read the UML snippet from the Tag and then 
+        use it to inject into the code editor. I am using Clipboard to copy the UML 
+        snippet and then paste it inside the editor. This way it preserves the 
+        indenting.</p>
+    <pre>
+private void MenuItem_Click(object sender, RoutedEventArgs e)
+{
+    this._LastMenuItemClicked = e.Source as MenuItem;
+    this.AddCode((e.Source as MenuItem).Tag as string);
+}
+
+private void AddCode(string code)
+{
+    ContentEditor.SelectionLength = 0;
+
+    var formattedCode = code.Replace("\\r", Environment.NewLine) 
+        + Environment.NewLine
+        + Environment.NewLine;
+
+    Clipboard.SetText(formattedCode);
+    ContentEditor.Paste();
+
+    this.SaveAndRefreshDiagram();
+}</pre>
+    <p>
+        Anyone know a better way to do this?</p>
+    <h3>
+        Auto updater</h3>
+    <p>
+        What&#39;s a smart client without an auto updater? When you launch this app, it 
+        starts a background thread to check if there&#39;s any update submitted for this 
+        app. Now this application is uploaded into Google Code site. So, I need to check 
+        if there&#39;s a newer version of the installer file. I do this by making a Web 
+        Request to the download URL and check the Last-Modified response header. Then I 
+        compare it with the last modification date of the exe running on your computer. 
+        If they are off by one day, then we have an update.</p>
+    <pre>
+public static bool HasUpdate(string downloadUrl)
+{
+    HttpWebRequest request = WebRequest.Create(downloadUrl) as HttpWebRequest;
+    using (var response = request.GetResponse())
+    {
+        var lastModifiedDate = default(DateTime);
+        if (DateTime.TryParse(response.Headers["Last-Modified"], out lastModifiedDate))
+        {
+            var path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var localFileDateTime = File.GetLastWriteTime(path);
+
+            return (localFileDateTime &lt; lastModifiedDate.AddDays(-1));
+        }
+    }
+
+    return false;
+}    </pre>
+    <p>
+        When there&#39;s a new update available, the following function downloads the latest 
+        file and stores in a local file to run it.</p>
+    <pre>
+public static void DownloadLatestUpdate(string downloadUrl, string localPath)
+{
+    DownloadedLocation = localPath;
+    using (WebClient client = new WebClient())
+    {
+        client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(client_DownloadFileCompleted);
+        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+        client.DownloadFileAsync(new Uri(downloadUrl), localPath);
+    }
+}    </pre>
+    <p>
+        The <span class="style1">WebClient</span> class has an asynchronous version of
+        <span class="style1">DownloadFile</span> to download files in a separate thread and the notification 
+        of progress and download complete/cancel is given via the event handlers. </p>
+    <p>
+        You will find this code in <span class="style1">UpdateChecker</span> which is a 
+        reusable class that you can use in your projects too. The way I use it from the
+        <span class="style1">MainWindow</span> is:</p>
+    <pre>
+// Check if there's a newer version of the app
+BackgroundWork.DoWork&lt;bool&gt;(() =&gt; 
+{
+    return UpdateChecker.HasUpdate(Settings.Default.DownloadUrl);
+}, (hasUpdate) =&gt;
+{
+    if (hasUpdate)
+    {
+        if (MessageBox.Show(Window.GetWindow(me),
+            "There's a newer version available. Do you want to download and install?",
+            "New version available",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Information) == MessageBoxResult.Yes)
+        {
+            BackgroundWork.DoWork(() =&gt; {
+                var tempPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    Settings.Default.SetupExeName);
+
+                UpdateChecker.DownloadLatestUpdate(Settings.Default.DownloadUrl, tempPath);
+            }, () =&gt; { },
+                (x) =&gt;
+                {
+                    MessageBox.Show(Window.GetWindow(me),
+                        "Download failed. When you run next time, it will try downloading again.",
+                        "Download failed",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                });
+        }
+    }
+},
+(x) =&gt; { });    </pre>
+    <p>
+        When the download is in progress, the <span class="style1">
+        DownloadProgressChanged</span> event is fired and when the download 
+        completes/cancels, it fires the <span class="style1">DownloadCompleted</span> 
+        event. The completed event handler takes care of finishing the installation.</p>
+    <pre>
+UpdateChecker.DownloadCompleted = new Action&lt;AsyncCompletedEventArgs&gt;((e) =&gt;
+{
+    Dispatcher.BeginInvoke(new Action(() =&gt;
+    {
+        if (e.Cancelled || e.Error != default(Exception))
+        {
+            MessageBox.Show(Window.GetWindow(me),
+                        "Download failed. When you run next time, it will try downloading again.",
+                        "Download failed",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+        }
+        else
+        {
+            Process.Start(UpdateChecker.DownloadedLocation).Dispose();
+            this.Close();
+        }
+    }));
+});
+
+UpdateChecker.DownloadProgressChanged = new Action&lt;DownloadProgressChangedEventArgs&gt;((e) =&gt;
+{
+    Dispatcher.BeginInvoke(new Action(() =&gt;
+    {
+        this.StartProgress("New version downloaded " + e.ProgressPercentage + "%");
+    }));
+});   </pre>
+    <p>
+        When download completes, it runs the installer and quits the application so that 
+        the installer can install the latest version over it. </p>
+    <h2>
+        The installer</h2>
+    <p>Visual Studio still does not offer creating setup projects which produces a 
+        single exe or msi file which has a bootstrapper to detect .NET framework 
+        version, download and install if needed and then run the real msi. So, I had to 
+        use the famouse <a href="http://dotnetinstaller.codeplex.com/">dotnetInstaller</a>. 
+        But getting it to detect .NET framework 3.5 was a challenge. It does not come 
+        with built-in support. Moreover, creating a single exe with self-extracting 
+        installer is not so straighforward. Here&#39;s my take.</p>
+    <p>First you have to add a custom component to your configuration file in order to 
+        get .NET framework detected. The solution is given here:
+        <a href="http://dotnetinstaller.codeplex.com/Thread/View.aspx?ThreadId=80420">
+        http://dotnetinstaller.codeplex.com/Thread/View.aspx?ThreadId=80420</a></p>
+    <p>Then you have to add a msi component that points to the msi file. But there&#39;s a 
+        trick to the file path.</p>
+    <p>
+        <img src="plantumleditor/dotnetinstaller.png" alt="dotnetInstaller path trick" /></p>
+    <p>
+        You have to provide the path in this format. And you have to add a Embed File 
+        underneath the .msi component you added and set the path exactly like this:</p>
+    <p>
+        <img src="plantumleditor/dotnetinstaller_embed.png" alt="dotnetInstaller path trick" /></p>
+    <p>
+        Notice the targetfilepath is blank.</p>
+    <p>
+        Then you need to create a folder, where you will copy the dotnetinstaller.exe 
+        file, the .msi file. Both of the file needs to be in same folder. And then Make 
+        the project to prepare the single installer.</p>
+    <h2>
+        Conclusion</h2>
+    <p>
+        This editor really saves time designing UML diagrams. I have to produce quick 
+        diagrams to convey ideas quickly to Architects, Designers and Developers 
+        everyday. So, I use this tool to write some quick diagrams at the speed of 
+        coding, and the diagrams get generated on the fly. Instead of writing a long 
+        mail explaining some operations or some process in English, I can quickly write 
+        the text in the editor and get a nice looking activity/sequence diagram 
+        produced. Making major changes is also as easy as doing search replace and 
+        copy-pasting blocks here and there. You don&#39;t get such agility in any 
+        conventional mouse-based UML designers. Hope you find this tool useful and 
+        if you do, please spread the love.&nbsp;</p>
+
+</body>
+</html>
+    

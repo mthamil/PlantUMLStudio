@@ -22,7 +22,7 @@ namespace PlantUmlEditor.Controls.Behaviors
 			{
 				_indexBindingChanged = true;
 
-				if (index <= _editor.Text.Length)
+				if (index <= _editor.Text.Length)	 // TODO: Really fix this.
 					_editor.TextArea.Caret.Offset = index;
 			}
 			else

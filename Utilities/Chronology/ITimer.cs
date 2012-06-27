@@ -18,9 +18,28 @@ namespace Utilities.Chronology
 		void Start();
 
 		/// <summary>
+		/// Attempts to start a timer. Returns false if the timer
+		/// was already started.
+		/// </summary>
+		/// <returns>False if the timer was already started</returns>
+		bool TryStart();
+
+		/// <summary>
 		/// Call to stop the timer
 		/// </summary>
 		void Stop();
+
+		/// <summary>
+		/// Attempts to stop a timer. Returns false if the timer
+		/// was already stopped.
+		/// </summary>
+		/// <returns>False if the timer was already stopped</returns>
+		bool TryStop();
+
+		/// <summary>
+		/// Whether a timer is running.
+		/// </summary>
+		bool Started { get; }
 
 		/// <summary>
 		/// This event is raised when the timer has elapsed

@@ -31,8 +31,18 @@ namespace Utilities.Chronology
 		{
 			lock (syncObject)
 			{
+				if (!TryStart())
+					throw new InvalidOperationException("Timer is already started.");
+			}
+		}
+
+		/// <see cref="ITimer.TryStart"/>
+		public bool TryStart()
+		{
+			lock (syncObject)
+			{
 				if (running)
-					throw new InvalidOperationException();
+					return false;
 
 				if (interval.TotalMilliseconds <= Int32.MaxValue)
 				{
@@ -45,7 +55,7 @@ namespace Utilities.Chronology
 					largeIntervalRemaining = timer.Interval = Int32.MaxValue;
 				}
 
-				timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
+				timer.Elapsed += timer_Elapsed;
 				try
 				{
 					timer.Start();
@@ -53,9 +63,11 @@ namespace Utilities.Chronology
 				}
 				catch (Exception)
 				{
-					timer.Elapsed -= new ElapsedEventHandler(timer_Elapsed);
+					timer.Elapsed -= timer_Elapsed;
 					throw;
 				}
+
+				return true;
 			}
 		}
 
@@ -67,14 +79,38 @@ namespace Utilities.Chronology
 		{
 			lock (syncObject)
 			{
+				if (!TryStop())
+					throw new InvalidOperationException("Timer is already stopped.");
+			}
+		}
+
+		/// <see cref="ITimer.TryStop"/>
+		public bool TryStop()
+		{
+			lock (syncObject)
+			{
 				if (!running)
-					throw new InvalidOperationException();
+					return false;
 
 				largeIntervalRemaining = 0;
 
 				timer.Elapsed -= new ElapsedEventHandler(timer_Elapsed);
 				timer.Stop();
 				running = false;
+
+				return true;
+			}
+		}
+
+		/// <see cref="ITimer.Started"/>
+		public bool Started
+		{
+			get 
+			{
+				lock (syncObject)
+				{
+					return running;
+				}
 			}
 		}
 

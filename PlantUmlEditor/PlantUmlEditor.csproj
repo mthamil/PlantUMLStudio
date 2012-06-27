@@ -119,6 +119,7 @@
     <Compile Include="Controls\MVVMMessageBox.cs" />
     <Compile Include="Controls\ScrollableMessageBox.xaml.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
+    <Compile Include="Converters\DiagramTabNameConverter.cs" />
     <Compile Include="Converters\DirectoryInfoUriConverter.cs" />
     <Compile Include="Converters\DirectoryInfoConverter.cs" />
     <Compile Include="Converters\NullToFalseValueConverter.cs" />

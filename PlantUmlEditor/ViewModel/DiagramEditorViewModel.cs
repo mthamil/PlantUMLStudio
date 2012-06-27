@@ -39,6 +39,8 @@ namespace PlantUmlEditor.ViewModel
 			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
 			_contentIndex.Value = 0;
 
+			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
+
 			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
 			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
 
@@ -71,6 +73,8 @@ namespace PlantUmlEditor.ViewModel
 			{
 				if (_content.TrySetValue(value))
 				{
+					IsModified = true;
+
 					if (AutoRefresh)
 					{
 						if (!_refreshDiagramTimerStarted)
@@ -90,6 +94,15 @@ namespace PlantUmlEditor.ViewModel
 		{
 			get { return _contentIndex.Value; }
 			set { _contentIndex.Value = value; }
+		}
+
+		/// <summary>
+		/// Whether content has been modified since the last save.
+		/// </summary>
+		public bool IsModified
+		{
+			get { return _isModified.Value; }
+			set { _isModified.Value = value; }
 		}
 
 		void refreshTimer_Elapsed(object sender, EventArgs e)
@@ -142,13 +155,13 @@ namespace PlantUmlEditor.ViewModel
 				_refreshTimer.Stop();
 			_refreshDiagramTimerStarted = false;
 			
-			var diagramFileName = DiagramViewModel.Diagram.DiagramFilePath;
+			var diagramFile = new FileInfo(DiagramViewModel.Diagram.DiagramFilePath);
 
 			// Create a backup if this is the first time the diagram being modified
 			// after opening
 			if (_firstSaveAfterOpen)
 			{
-				File.Copy(diagramFileName, diagramFileName.Replace(new FileInfo(diagramFileName).Extension, ".bak"), true);
+				diagramFile.CopyTo(diagramFile.FullName + ".bak", true);
 				_firstSaveAfterOpen = false;
 			}
 
@@ -170,7 +183,7 @@ namespace PlantUmlEditor.ViewModel
 				// Save the diagram content using UTF-8 encoding to support 
 				// various international characters, which ASCII won't support
 				// and Unicode won't make it cross platform
-				File.WriteAllText(diagramFileName, Content, Encoding.UTF8);
+				File.WriteAllText(diagramFile.FullName, Content, Encoding.UTF8);
 
 				_diagramCompiler.Compile(DiagramViewModel.Diagram);
 			}, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
@@ -179,6 +192,7 @@ namespace PlantUmlEditor.ViewModel
 			{
 				_saveExecuting = false;
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
+				IsModified = false;
 				//OnAfterSave(DiagramViewModel.Diagram);
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
@@ -246,6 +260,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<string> _content;
 		private readonly Property<int> _contentIndex;
+		private readonly Property<bool> _isModified;
 		private readonly Property<bool> _autoRefresh;
 		private readonly Property<int> _refreshIntervalSeconds;
 		private readonly Property<DiagramViewModel> _diagramViewModel;

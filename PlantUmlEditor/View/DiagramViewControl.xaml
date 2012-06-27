@@ -32,8 +32,8 @@
             <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
-                                   ab:AvalonEditor.Content="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   ab:AvalonEditor.ContentIndex="{Binding ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ab:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ab:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    ab:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    ShowLineNumbers="True">
                 <avalonEdit:TextEditor.InputBindings>
@@ -68,7 +68,7 @@
                                                 <xtn:StyleMapEntry.Style>
                                                     <Style TargetType="{x:Type MenuItem}">
                                                         <Setter Property="Command" Value="{Binding SelectCommand}"/>
-                                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext}"/>
+                                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CodeEditor}"/>
                                                     </Style>
                                                 </xtn:StyleMapEntry.Style>
                                             </xtn:StyleMapEntry>

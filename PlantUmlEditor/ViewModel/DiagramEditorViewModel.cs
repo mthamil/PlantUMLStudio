@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -11,6 +12,7 @@ using Utilities.Chronology;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
+using Utilities.Reflection;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -33,13 +35,8 @@ namespace PlantUmlEditor.ViewModel
 			_refreshTimer = refreshTimer;
 			_taskScheduler = taskScheduler;
 
-			_content = Property.New(this, p => p.Content, OnPropertyChanged);
-			_content.Value = diagramViewModel.Diagram.Content;
-
-			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
-			_contentIndex.Value = 0;
-
-			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
+			CodeEditor.Content = diagramViewModel.Diagram.Content;
+			CodeEditor.PropertyChanged += _codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
 
 			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
 			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
@@ -55,54 +52,35 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The code editor.
+		/// </summary>
+		public CodeEditorViewModel CodeEditor
+		{
+			get { return _codeEditor; }
+		}
+
+		void _codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == modifiedPropertyName)
+			{
+				if (AutoRefresh)
+				{
+					if (_codeEditor.IsModified)
+						_refreshTimer.TryStart();
+					else
+						_refreshTimer.TryStop();
+				}
+			}
+		}
+		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
+
+		/// <summary>
 		/// Whether to automatically refresh.
 		/// </summary>
 		public bool AutoRefresh
 		{
 			get { return _autoRefresh.Value; }
 			set { _autoRefresh.Value = value; }
-		}
-
-		/// <summary>
-		/// The content being edited.
-		/// </summary>
-		public string Content
-		{
-			get { return _content.Value; }
-			set 
-			{
-				if (_content.TrySetValue(value))
-				{
-					IsModified = true;
-
-					if (AutoRefresh)
-					{
-						if (!_refreshDiagramTimerStarted)
-						{
-							_refreshDiagramTimerStarted = true;
-							_refreshTimer.Start();
-						}
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// The current index into the content.
-		/// </summary>
-		public int ContentIndex
-		{
-			get { return _contentIndex.Value; }
-			set { _contentIndex.Value = value; }
-		}
-
-		/// <summary>
-		/// Whether content has been modified since the last save.
-		/// </summary>
-		public bool IsModified
-		{
-			get { return _isModified.Value; }
-			set { _isModified.Value = value; }
 		}
 
 		void refreshTimer_Elapsed(object sender, EventArgs e)
@@ -151,9 +129,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private void Save()
 		{
-			if (_refreshDiagramTimerStarted)
-				_refreshTimer.Stop();
-			_refreshDiagramTimerStarted = false;
+			_refreshTimer.TryStop();
 			
 			var diagramFile = new FileInfo(DiagramViewModel.Diagram.DiagramFilePath);
 
@@ -165,7 +141,7 @@ namespace PlantUmlEditor.ViewModel
 				_firstSaveAfterOpen = false;
 			}
 
-			DiagramViewModel.Diagram.Content = Content;
+			DiagramViewModel.Diagram.Content = CodeEditor.Content;
 
 			if (_saveExecuting)
 				return;
@@ -177,13 +153,13 @@ namespace PlantUmlEditor.ViewModel
 			{
 				// A Bug in PlantUML which is having problem detecting encoding if the
 				// first line is not an empty line.
-				if (!Char.IsWhiteSpace(Content, 0))
-					Content = Environment.NewLine + Content;
+				if (!Char.IsWhiteSpace(CodeEditor.Content, 0))
+					CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
 
 				// Save the diagram content using UTF-8 encoding to support 
 				// various international characters, which ASCII won't support
 				// and Unicode won't make it cross platform
-				File.WriteAllText(diagramFile.FullName, Content, Encoding.UTF8);
+				File.WriteAllText(diagramFile.FullName, CodeEditor.Content, Encoding.UTF8);
 
 				_diagramCompiler.Compile(DiagramViewModel.Diagram);
 			}, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
@@ -192,7 +168,7 @@ namespace PlantUmlEditor.ViewModel
 			{
 				_saveExecuting = false;
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
-				IsModified = false;
+				CodeEditor.IsModified = false;
 				//OnAfterSave(DiagramViewModel.Diagram);
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
@@ -252,19 +228,17 @@ namespace PlantUmlEditor.ViewModel
 		private bool _disposed;
 
 		private bool _firstSaveAfterOpen;
-		private bool _refreshDiagramTimerStarted;
 		private bool _saveExecuting;
 
 		private readonly ICommand _saveCommand;
 		private readonly ICommand _closeCommand;
 
-		private readonly Property<string> _content;
-		private readonly Property<int> _contentIndex;
-		private readonly Property<bool> _isModified;
 		private readonly Property<bool> _autoRefresh;
 		private readonly Property<int> _refreshIntervalSeconds;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
 		private readonly Property<IEnumerable<SnippetCategoryViewModel>> _snippets;
+
+		private readonly CodeEditorViewModel _codeEditor = new CodeEditorViewModel();
 
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramCompiler _diagramCompiler;

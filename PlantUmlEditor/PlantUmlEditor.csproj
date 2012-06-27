@@ -132,6 +132,7 @@
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippet.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
+    <Compile Include="ViewModel\CodeEditorViewModel.cs" />
     <Compile Include="ViewModel\Commands\SaveDiagramCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramFileReader.cs" />

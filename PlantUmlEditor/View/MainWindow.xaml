@@ -338,7 +338,7 @@
                                                     <TextBlock.Text>
                                                         <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
                                                             <Binding Path="DiagramViewModel.Diagram.DiagramFileNameOnly"/>
-                                                            <Binding Path="IsModified"/>
+                                                            <Binding Path="CodeEditor.IsModified"/>
                                                         </MultiBinding>
                                                     </TextBlock.Text>
                                                 </TextBlock>

@@ -55,7 +55,7 @@ namespace PlantUmlEditor.ViewModel
 		{
 			_snippet = snippet;
 			SelectCommand = new RelayCommand(editor => 
-				Select((DiagramEditorViewModel)editor));
+				Select((CodeEditorViewModel)editor));
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand SelectCommand { get; private set; }
 
-		private void Select(DiagramEditorViewModel editor)
+		private void Select(CodeEditorViewModel editor)
 		{
 			var formattedCode = Code.Replace("\\r", Environment.NewLine);
 			editor.Content = editor.Content.Insert(editor.ContentIndex, formattedCode);

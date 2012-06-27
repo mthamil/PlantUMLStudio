@@ -12,6 +12,6 @@ namespace PlantUmlEditor.Model
 		/// </summary>
 		/// <param name="diagram">The diagram to render</param>
 		/// <returns>A rendered image</returns>
-		ImageSource Render(DiagramFile diagram);
+		ImageSource Render(Diagram diagram);
 	}
 }

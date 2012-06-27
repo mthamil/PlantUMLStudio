@@ -30,7 +30,7 @@ namespace PlantUmlEditor.Container
 
 			builder.Register(c => TaskScheduler.Default);
 
-			builder.Register<Func<DiagramFile, DiagramViewModel>>(c =>
+			builder.Register<Func<Diagram, DiagramViewModel>>(c =>
 			{
 				var diagramRenderer = c.Resolve<IDiagramRenderer>();
 				return diagram => new DiagramViewModel 

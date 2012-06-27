@@ -11,6 +11,6 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Reads a diagram from a file.
 		/// </summary>
-		DiagramFile Read(FileInfo file);
+		Diagram Read(FileInfo file);
 	}
 }

@@ -10,7 +10,7 @@ namespace PlantUmlEditor.ViewModel
 		#region Implementation of IDiagramReader
 
 		/// <see cref="IDiagramReader.Read"/>
-		public DiagramFile Read(FileInfo file)
+		public Diagram Read(FileInfo file)
 		{
 			string content;
 			using (var reader = new StreamReader(file.OpenRead()))
@@ -33,7 +33,7 @@ namespace PlantUmlEditor.ViewModel
 						? Path.GetFullPath(imageFileName)
 						: Path.GetFullPath(Path.Combine(file.DirectoryName, imageFileName));
 
-					return new DiagramFile
+					return new Diagram
 					{
 						Content = content,
 						DiagramFilePath = file.FullName,

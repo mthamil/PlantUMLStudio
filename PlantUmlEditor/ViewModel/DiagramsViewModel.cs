@@ -17,7 +17,7 @@ namespace PlantUmlEditor.ViewModel
 	public class DiagramsViewModel : ViewModelBase
 	{
 		public DiagramsViewModel(IDiagramReader diagramReader, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
-			Func<DiagramFile, DiagramViewModel> diagramFactory, TaskScheduler taskScheduler)
+			Func<Diagram, DiagramViewModel> diagramFactory, TaskScheduler taskScheduler)
 		{
 			_diagramReader = diagramReader;
 			_editorFactory = editorFactory;
@@ -182,7 +182,7 @@ namespace PlantUmlEditor.ViewModel
 			//StartProgress("Loading diagrams...");
 			var loadTask = Task.Factory.StartNew(() =>
 			{
-				var diagrams = new List<DiagramFile>();
+				var diagrams = new List<Diagram>();
 
 				FileInfo[] files = DiagramLocation.GetFiles("*.txt");
 				int numberOfFiles = files.Length;
@@ -254,7 +254,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly IDiagramReader _diagramReader;
 		private readonly Func<DiagramViewModel, DiagramEditorViewModel> _editorFactory;
-		private readonly Func<DiagramFile, DiagramViewModel> _diagramFactory;
+		private readonly Func<Diagram, DiagramViewModel> _diagramFactory;
 		private readonly TaskScheduler _taskScheduler;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}

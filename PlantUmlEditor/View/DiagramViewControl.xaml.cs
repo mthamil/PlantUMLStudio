@@ -23,10 +23,10 @@ namespace PlantUmlEditor.View
             InitializeComponent();
         }
 
-        public event Action<DiagramFile> OnBeforeSave;
-        public event Action<DiagramFile> OnAfterSave;
+        public event Action<Diagram> OnBeforeSave;
+        public event Action<Diagram> OnAfterSave;
 
-        private DiagramFile CurrentDiagram
+        private Diagram CurrentDiagram
         {
             get
             {

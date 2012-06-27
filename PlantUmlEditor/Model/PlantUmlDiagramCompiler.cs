@@ -11,7 +11,7 @@ namespace PlantUmlEditor.Model
 	public class PlantUmlDiagramCompiler : IDiagramCompiler
 	{
 		/// <see cref="IDiagramCompiler.Compile"/>
-		public void Compile(DiagramFile diagram)
+		public void Compile(Diagram diagram)
 		{
 			if (!PlantUmlExecutable.Exists)
 			{

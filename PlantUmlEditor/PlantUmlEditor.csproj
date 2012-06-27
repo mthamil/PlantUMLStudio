@@ -175,7 +175,7 @@
   <ItemGroup>
     <Compile Include="DesignTimeData\DiagramFiles.cs" />
     <Compile Include="CustomAnimation\GridLengthAnimation.cs" />
-    <Compile Include="Model\DiagramFile.cs" />
+    <Compile Include="Model\Diagram.cs" />
     <Compile Include="Controls\ProgressBar.xaml.cs">
       <DependentUpon>ProgressBar.xaml</DependentUpon>
     </Compile>

@@ -30,7 +30,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The underlying diagram.
 		/// </summary>
-		public DiagramFile Diagram
+		public Diagram Diagram
 		{
 			get { return _diagram.Value; }
 			set { _diagram.Value = value; }
@@ -52,7 +52,7 @@ namespace PlantUmlEditor.ViewModel
 			return Diagram.GetHashCode();
 		}
 
-		private readonly Property<DiagramFile> _diagram;
+		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
 	}
 }

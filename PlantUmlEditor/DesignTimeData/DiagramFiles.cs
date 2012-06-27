@@ -3,11 +3,11 @@ using PlantUmlEditor.Model;
 
 namespace PlantUmlEditor.DesignTimeData
 {
-    public class DiagramFiles : ObservableCollection<DiagramFile>
+    public class DiagramFiles : ObservableCollection<Diagram>
     {
         public DiagramFiles()
         {
-            this.Add(new DiagramFile()
+            this.Add(new Diagram()
             {
                 Content = 
 @"@startuml cpe.png
@@ -37,7 +37,7 @@ deactivate CPE
                 ImageFilePath = "http://plantuml.sourceforge.net/img/sequence_img009.png"
             });
 
-            this.Add(new DiagramFile()
+            this.Add(new Diagram()
             {
                 Content = 
 @"@startuml btconnectjourney.png

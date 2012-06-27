@@ -35,7 +35,7 @@ namespace PlantUmlEditor.View
 		/// </summary>
 		/// <param name="diagram">
 		/// </param>
-		protected void DiagramViewControl_OnAfterSave(DiagramFile diagram)
+		protected void DiagramViewControl_OnAfterSave(Diagram diagram)
 		{
 			StopProgress("Saved.");
 		}
@@ -44,7 +44,7 @@ namespace PlantUmlEditor.View
 		/// </summary>
 		/// <param name="diagram">
 		/// </param>
-		protected void DiagramViewControl_OnBeforeSave(DiagramFile diagram)
+		protected void DiagramViewControl_OnBeforeSave(Diagram diagram)
 		{
 			StartProgress("Saving and generating diagram...");
 		}

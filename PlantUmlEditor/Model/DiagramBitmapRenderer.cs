@@ -9,7 +9,7 @@ namespace PlantUmlEditor.Model
 	public class DiagramBitmapRenderer : IDiagramRenderer
 	{
 		/// <see cref="IDiagramRenderer.Render"/>
-		public ImageSource Render(DiagramFile diagram)
+		public ImageSource Render(Diagram diagram)
 		{
 			return (ImageSource)new UriToCachedImageConverter().Convert(diagram.ImageFilePath, null, null, null);
 		}

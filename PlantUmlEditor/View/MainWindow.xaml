@@ -17,6 +17,7 @@
     
     <Window.Resources>
         <ResourceDictionary>
+            
             <convert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <convert:UriConverter x:Key="UriConverter"/>
             <convert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
@@ -94,7 +95,7 @@
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                     
                                 <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" x:Name="contentPresenter" 
-                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                     
                             </Border>
                 
@@ -153,7 +154,7 @@
                             <Grid>
                                 <Border Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
                                     <DockPanel>
-                                        <Button Content="X" Height="18" Width="18" DockPanel.Dock="Right" Margin="1,1,3,1"
+                                        <Button Content="X" FontWeight="Bold" FontFamily="Segoe UI" Height="20" Width="20" DockPanel.Dock="Right" Margin="1,1,3,1"
                                                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" VerticalAlignment="Center"
                                                 Command="{Binding CloseCommand}"/>
                                         <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" Margin="12,2,12,2" ContentSource="Header"/>
@@ -179,18 +180,8 @@
                 </Setter>
             </Style>
 
-            <!--<DataTemplate DataType="{x:Type vm:LabInsertViewModel}" >
-                <vw:LabInsertView />
-            </DataTemplate>-->
             <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramsViewModel}" x:Key="DiagramsViewModelLocator" />
 
-            <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
-                <vw:DiagramViewControl 
-                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      OnAfterSave="DiagramViewControl_OnAfterSave" 
-                      OnBeforeSave="DiagramViewControl_OnBeforeSave">
-                </vw:DiagramViewControl>
-            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
   
@@ -268,28 +259,27 @@
                 <!-- This is the location box -->
                 <StackPanel Grid.Row="0" Margin="5,5,5,5">
                 <TextBlock Text="Location:"/>
-                  <Grid>
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="30" />                                    
-                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />                                    
+                        </Grid.ColumnDefinitions>
                       
-                    <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
-                            ab:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
-                            Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
+                                 ab:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
+                                 Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ctrls:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
-                                      Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
-                                      InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
-                                      Mode="Directory"/>
+                        <ctrls:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
+                                          Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
+                                          InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
+                                          Mode="Directory"/>
                       
-                    <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
-                  </Grid>                            
+                        <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
+
+                    </Grid>                            
                 </StackPanel>
             
-                <!--
-                This is the diagram file listbox
-                -->
+                <!-- This is the diagram file listbox -->
                 <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended" x:Name="DiagramFileListBox" 
                         IsSynchronizedWithCurrentItem="True" 
                         HorizontalContentAlignment="Stretch"    
@@ -352,19 +342,31 @@
             <GridSplitter Grid.Column="1" Height="100" VerticalAlignment="Center" Width="3" HorizontalAlignment="Center" Grid.Row="0" Background="#66808080" />
         
             <!-- This is the tabs on right column -->
-            <TabControl Grid.Column="2" Name="DiagramTabs" Background="{x:Null}"
+            <TabControl Grid.Column="2" Background="{x:Null}"
                         ItemsSource="{Binding OpenDiagrams}" 
                         SelectedItem="{Binding OpenDiagram}"
                         Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
-                <TabControl.ItemContainerStyle>
+
+                    <TabControl.ContentTemplate>
+                        <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
+                            <vw:DiagramViewControl 
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                  OnAfterSave="DiagramViewControl_OnAfterSave" 
+                                  OnBeforeSave="DiagramViewControl_OnBeforeSave">
+                            </vw:DiagramViewControl>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+
+                    <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource CustomTabStyle}">
                         <Setter Property="Header" Value="{Binding DiagramViewModel.Diagram.DiagramFileNameOnly}"/>
                         <Setter Property="Content" Value="{Binding}"/>
                     </Style>
-                </TabControl.ItemContainerStyle>      
+                </TabControl.ItemContainerStyle>
+
             </TabControl>
         
-            <!-- This is the welcome panel with fancy messages -->
+            <!-- This is the welcome panel -->
             <Border x:Name="WelcomePanel" 
                     Grid.Column="2" 
                     HorizontalAlignment="Stretch" 
@@ -395,25 +397,24 @@
         
           </Grid>
       
-        <!-- This is the bottom row containing status message and progress bar -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <!-- This is the bottom row containing status message and progress bar -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
           
-            <TextBlock Grid.Column="0" Grid.Row="0" x:Name="StatusMessage" Width="Auto" HorizontalAlignment="Left">
-                <Run Text="Ready."/>
-            </TextBlock>
-            <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Black" 
-                         Minimum="0" Maximum="100" Width="215" 
-                         IsIndeterminate="True" Visibility="Hidden" Grid.ColumnSpan="2" HorizontalAlignment="Right" />
-        </Grid>      
+                <TextBlock Grid.Column="0" Grid.Row="0" x:Name="StatusMessage" Width="Auto" HorizontalAlignment="Left">
+                    <Run Text="Ready."/>
+                </TextBlock>
+                <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Black" 
+                             Minimum="0" Maximum="100" Width="215" 
+                             IsIndeterminate="True" Visibility="Hidden" Grid.ColumnSpan="2" HorizontalAlignment="Right" />
+            </Grid>      
       
-    </Grid>
-        <vw:DiagramViewControl HorizontalAlignment="Left" Margin="1297,256,0,0" x:Name="diagramViewControl1" VerticalAlignment="Top" />
+        </Grid>
     </Grid>
 </Window>

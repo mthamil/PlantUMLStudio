@@ -8,6 +8,9 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class CodeEditorViewModel : ViewModelBase
 	{
+		/// <summary>
+		/// Initializes a new code editor.
+		/// </summary>
 		public CodeEditorViewModel()
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);

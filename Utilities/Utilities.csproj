@@ -76,7 +76,6 @@
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemTimersTimer.cs" />
     <Compile Include="Concurrency\IProgress.cs" />
-    <Compile Include="Concurrency\ParallelWork.cs" />
     <Compile Include="Concurrency\Progress.cs" />
     <Compile Include="Concurrency\ReaderWriterLockSlimExtensions.cs" />
     <Compile Include="Concurrency\Tasks.cs" />

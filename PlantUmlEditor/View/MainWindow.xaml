@@ -407,7 +407,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="0" x:Name="StatusMessage" Width="Auto" HorizontalAlignment="Left">
                     <Run Text="{Binding Progress.Message, TargetNullValue=Ready.}"/>
                 </TextBlock>
-                <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Black" 
+                <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Gray" 
                              Minimum="0" Maximum="100" Width="215" Grid.ColumnSpan="2" HorizontalAlignment="Right" 
                              IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
                              Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"

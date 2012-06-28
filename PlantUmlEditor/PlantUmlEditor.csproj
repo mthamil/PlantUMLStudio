@@ -139,6 +139,8 @@
     <Compile Include="ViewModel\DiagramsViewModel.cs" />
     <Compile Include="ViewModel\DiagramViewModel.cs" />
     <Compile Include="ViewModel\IDiagramReader.cs" />
+    <Compile Include="ViewModel\IProgressViewModel.cs" />
+    <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\RenderedDiagramViewModel.cs" />
     <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />
     <Compile Include="View\DiagramViewControl.xaml.cs">

@@ -16,14 +16,13 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramsViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramReader diagramReader, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
-			Func<Diagram, DiagramViewModel> diagramFactory, TaskScheduler taskScheduler)
+		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
+			Func<Diagram, DiagramViewModel> diagramFactory)
 		{
 			Progress = progressViewModel;
-			_diagramReader = diagramReader;
+			_diagramIO = diagramIO;
 			_editorFactory = editorFactory;
 			_diagramFactory = diagramFactory;
-			_taskScheduler = taskScheduler;
 
 			_diagrams = Property.New(this, p => Diagrams, OnPropertyChanged);
 			_diagrams.Value = new ObservableCollection<DiagramViewModel>();
@@ -188,27 +187,7 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			progress.Report(Tuple.Create((int?)0, "Loading diagrams..."));
-			var loadTask = Task.Factory.StartNew(() =>
-			{
-				var diagrams = new List<Diagram>();
-
-				FileInfo[] files = DiagramLocation.GetFiles("*.txt");
-				int numberOfFiles = files.Length;
-				int processed = 0;
-				foreach (FileInfo file in files)
-				{
-					var diagram = _diagramReader.Read(file);
-					if (diagram != null)
-						diagrams.Add(diagram);
-					//Thread.Sleep(1000);
-					processed++;
-					progress.Report(Tuple.Create(
-						(int?)(processed / (double)numberOfFiles * 100),
-						String.Format("Loading {0} of {1}", processed, numberOfFiles)));
-				}
-
-				return diagrams;
-			}, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+			var loadTask = _diagramIO.ReadDiagramsAsync(DiagramLocation, progress);
 
 			loadTask.ContinueWith(t =>
 			{
@@ -248,10 +227,9 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _loadDiagramsCommand;
 		private readonly ICommand _openDiagramCommand;
 
-		private readonly IDiagramReader _diagramReader;
+		private readonly IDiagramIOService _diagramIO;
 		private readonly Func<DiagramViewModel, DiagramEditorViewModel> _editorFactory;
 		private readonly Func<Diagram, DiagramViewModel> _diagramFactory;
-		private readonly TaskScheduler _taskScheduler;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

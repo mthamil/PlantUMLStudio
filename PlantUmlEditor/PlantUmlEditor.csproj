@@ -101,8 +101,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Container\MainModule.cs" />
+    <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
+    <Compile Include="Container\PresentationModule.cs" />
     <Compile Include="Controls\Behaviors\CollectionViewSourceItemFilter.cs" />
     <Compile Include="Controls\Behaviors\AvalonEditor.cs" />
     <Compile Include="Controls\Behaviors\DoubleClickCommandBehavior.cs" />
@@ -127,7 +128,9 @@
     <Compile Include="Converters\UriConverter.cs" />
     <Compile Include="Model\DefaultSnippets.cs" />
     <Compile Include="Model\DiagramBitmapRenderer.cs" />
+    <Compile Include="Model\DiagramIOService.cs" />
     <Compile Include="Model\IDiagramCompiler.cs" />
+    <Compile Include="Model\IDiagramIOService.cs" />
     <Compile Include="Model\PlantUmlDiagramCompiler.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippet.cs" />
@@ -135,10 +138,8 @@
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
     <Compile Include="ViewModel\Commands\SaveDiagramCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
-    <Compile Include="ViewModel\DiagramFileReader.cs" />
     <Compile Include="ViewModel\DiagramsViewModel.cs" />
     <Compile Include="ViewModel\DiagramViewModel.cs" />
-    <Compile Include="ViewModel\IDiagramReader.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\RenderedDiagramViewModel.cs" />

@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
@@ -11,33 +10,25 @@ using Utilities.Chronology;
 namespace PlantUmlEditor.Container
 {
 	/// <summary>
-	/// Configures the application's container.
+	/// Configures presentation related objects.
 	/// </summary>
-	public class MainModule : Module
+	public class PresentationModule : Module
 	{
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
+			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel>()
+				.SingleInstance();
+
 			builder.Register(c => new DefaultSnippets().SnippetCategories)
 				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
 				.SingleInstance();
 
-			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel>()
-				.SingleInstance();
-
-			builder.RegisterType<DiagramFileReader>().As<IDiagramReader>();
-			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
-			builder.RegisterType<PlantUmlDiagramCompiler>().As<IDiagramCompiler>()
-				.WithProperty(c => c.GraphVizLocation, Settings.Default.GraphVizLocation)
-				.WithProperty(c => c.PlantUmlExecutable, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.exe")));
-
-			builder.Register(c => TaskScheduler.Default);
-
 			builder.Register<Func<Diagram, DiagramViewModel>>(c =>
 			{
 				var diagramRenderer = c.Resolve<IDiagramRenderer>();
-				return diagram => new DiagramViewModel 
-				{ 
+				return diagram => new DiagramViewModel
+				{
 					Diagram = diagram,
 					DiagramImage = diagramRenderer.Render(diagram)	// Perform an initial render of the diagram.
 				};
@@ -48,7 +39,7 @@ namespace PlantUmlEditor.Container
 				// Have to resolve these outside of the lambda.
 				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
 				var renderer = c.Resolve<IDiagramRenderer>();
-				var compiler = c.Resolve<IDiagramCompiler>();
+				var diagramIO = c.Resolve<IDiagramIOService>();
 				var progress = c.Resolve<IProgressViewModel>();
 				return diagram =>
 					new DiagramEditorViewModel(
@@ -56,9 +47,8 @@ namespace PlantUmlEditor.Container
 						progress,
 						snippets,
 						renderer,
-						compiler,
-						new SystemTimersTimer(),
-						TaskScheduler.Default)
+						diagramIO,
+						new SystemTimersTimer())
 					{
 						RefreshIntervalSeconds = 5,
 						AutoRefresh = true

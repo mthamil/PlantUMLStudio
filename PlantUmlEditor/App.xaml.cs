@@ -19,7 +19,8 @@ namespace PlantUmlEditor
 			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
 			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterModule<MainModule>();
+			containerBuilder.RegisterModule<CoreModule>();
+			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
 		}
 

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,11 +27,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="progressViewModel">Reports progress of editor tasks</param>
 		/// <param name="snippets">Available code snippets</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
-		/// <param name="diagramCompiler">Creates diagram images</param>
+		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="refreshTimer">Determines how soon after a change a diagram will be autosaved</param>
-		/// <param name="taskScheduler">Executes background tasks</param>
 		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IProgressViewModel progressViewModel, IEnumerable<SnippetCategoryViewModel> snippets, 
-			IDiagramRenderer diagramRenderer, IDiagramCompiler diagramCompiler, ITimer refreshTimer, TaskScheduler taskScheduler)
+			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, ITimer refreshTimer)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
@@ -43,9 +40,8 @@ namespace PlantUmlEditor.ViewModel
 			Snippets = new ObservableCollection<SnippetCategoryViewModel>(snippets);
 
 			_diagramRenderer = diagramRenderer;
-			_diagramCompiler = diagramCompiler;
+			_diagramIO = diagramIO;
 			_refreshTimer = refreshTimer;
-			_taskScheduler = taskScheduler;
 
 			CodeEditor.Content = diagramViewModel.Diagram.Content;
 			CodeEditor.PropertyChanged += _codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
@@ -142,21 +138,27 @@ namespace PlantUmlEditor.ViewModel
 		private void Save()
 		{
 			_refreshTimer.TryStop();
-			
-			var diagramFile = new FileInfo(DiagramViewModel.Diagram.DiagramFilePath);
-
-			// Create a backup if this is the first time the diagram being modified
-			// after opening
-			if (_firstSaveAfterOpen)
-			{
-				diagramFile.CopyTo(diagramFile.FullName + ".bak", true);
-				_firstSaveAfterOpen = false;
-			}
-
-			DiagramViewModel.Diagram.Content = CodeEditor.Content;
 
 			if (_saveExecuting)
 				return;
+
+			_saveExecuting = true;
+
+			// PlantUML seems to have a problem detecting encoding if the
+			// first line is not an empty line.
+			if (!Char.IsWhiteSpace(CodeEditor.Content, 0))
+				CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
+
+			DiagramViewModel.Diagram.Content = CodeEditor.Content;
+
+			// Create a backup if this is the first time the diagram being modified
+			// after opening.
+			bool makeBackup = false;
+			if (_firstSaveAfterOpen)
+			{
+				makeBackup = true;
+				_firstSaveAfterOpen = false;
+			}
 
 			Progress.HasDiscreteProgress = false;
 			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
@@ -166,22 +168,7 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			progress.Report(Tuple.Create((int?)100, "Saving and generating diagram..."));
-
-			_saveExecuting = true;
-			var saveTask = Task.Factory.StartNew(() =>
-			{
-				// A Bug in PlantUML which is having problem detecting encoding if the
-				// first line is not an empty line.
-				if (!Char.IsWhiteSpace(CodeEditor.Content, 0))
-					CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
-				//Thread.Sleep(4000);
-				// Save the diagram content using UTF-8 encoding to support 
-				// various international characters, which ASCII won't support
-				// and Unicode won't make it cross platform
-				File.WriteAllText(diagramFile.FullName, CodeEditor.Content, Encoding.UTF8);
-
-				_diagramCompiler.Compile(DiagramViewModel.Diagram);
-			}, CancellationToken.None, TaskCreationOptions.None, _taskScheduler);
+			var saveTask = _diagramIO.SaveAsync(DiagramViewModel.Diagram, makeBackup);
 
 			saveTask.ContinueWith(t =>
 			{
@@ -263,9 +250,8 @@ namespace PlantUmlEditor.ViewModel
 		private readonly CodeEditorViewModel _codeEditor = new CodeEditorViewModel();
 
 		private readonly IDiagramRenderer _diagramRenderer;
-		private readonly IDiagramCompiler _diagramCompiler;
+		private readonly IDiagramIOService _diagramIO;
 		private readonly ITimer _refreshTimer;
-		private readonly TaskScheduler _taskScheduler;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

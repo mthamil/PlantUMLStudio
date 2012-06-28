@@ -17,7 +17,8 @@
     
     <Window.Resources>
         <ResourceDictionary>
-            
+
+            <convert:BooleanToVisibilityValueConverter x:Key="BooleanToVisibilityValueConverter"/>
             <convert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <convert:UriConverter x:Key="UriConverter"/>
             <convert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
@@ -39,6 +40,7 @@
             </convert:ComposingConverter>
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter"/>
+            <convert:NotConverter x:Key="NotConverter"/>
 
             <DesignTimeData:DiagramFiles x:Key="DesignTimeDiagramFiles" />
       
@@ -151,256 +153,246 @@
 
         </ResourceDictionary>
     </Window.Resources>
-  
-  
+
+
     <Grid x:Name="LayoutRoot">
         <Rectangle HorizontalAlignment="Stretch" x:Name="background" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
     
         <!-- First split the whole form into 3 rows, one for header, one for body and one for footer -->
-        <Grid Height="Auto" x:Name="MainGrid3Rows" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
+        <Grid Height="Auto" x:Name="MainGrid3Rows" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5"
+              DataContext="{Binding Source={StaticResource DiagramsViewModelLocator}, Path=ViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
       
-          <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
-            <WrapPanel>
-              <TextBlock FontFamily="Segoe" 
-                  VerticalAlignment="Top" 
-                  FontStretch="Condensed" 
-                  FontWeight="Thin" 
-                  Margin="7,0,0,0"> 
-                <Run FontSize="36" Foreground="#FF9C9C9C" Text="Plant"/>
-                <Run FontSize="36" Foreground="Black" Text="UML"/>
-                <Run Foreground="DarkGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />            
-              </TextBlock>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
+                <WrapPanel>
+                    <TextBlock FontFamily="Segoe" VerticalAlignment="Top" FontStretch="Condensed" FontWeight="Thin" Margin="7,0,0,0"> 
+                        <Run FontSize="36" Foreground="#FF9C9C9C" Text="Plant"/>
+                        <Run FontSize="36" Foreground="Black" Text="UML"/>
+                        <Run Foreground="DarkGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />            
+                    </TextBlock>
             
-              <TextBlock Foreground="Black" 
-                  VerticalAlignment="Center"
-                  FontSize="16" 
-                  FontFamily="Segoe" 
-                  FontStretch="Condensed" 
-                  FontWeight="Thin" 
-                  Margin="10"
-                  Text="by"/>
-              <TextBlock            
-                  Background="{x:Null}"
-                  Foreground="#55FFFFFF" 
-                  VerticalAlignment="Center"
-                  FontSize="16" 
-                  FontFamily="Segoe" 
-                  FontStretch="Condensed" 
-                  FontWeight="Thin" >
-                <Hyperlink Foreground="Black" x:Name="NameHyperlink" Click="NameHyperlink_Click" 
-                           NavigateUri="http://msmvps.com/blogs/omar">Omar AL Zabir</Hyperlink>
-              </TextBlock>
-            </WrapPanel>
-          </StackPanel>
+                    <TextBlock Foreground="Black" 
+                                VerticalAlignment="Center"
+                                FontSize="16" 
+                                FontFamily="Segoe" 
+                                FontStretch="Condensed" 
+                                FontWeight="Thin" 
+                                Margin="10"
+                                Text="by"/>
+                    <TextBlock            
+                                Background="{x:Null}"
+                                Foreground="#55FFFFFF" 
+                                VerticalAlignment="Center"
+                                FontSize="16" 
+                                FontFamily="Segoe" 
+                                FontStretch="Condensed" 
+                                FontWeight="Thin" >
+                        <Hyperlink Foreground="Black" x:Name="NameHyperlink" Click="NameHyperlink_Click" 
+                                   NavigateUri="http://msmvps.com/blogs/omar">Omar AL Zabir</Hyperlink>
+                    </TextBlock>
+                </WrapPanel>
+            </StackPanel>
       
-          <!--
-          Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
-          and the right column for the tabs
-          -->
-          <Grid Height="Auto" x:Name="MiddleGrid3Columns" Width="Auto" Grid.Row="1" Grid.Column="0" Margin="4"
-                DataContext="{Binding Source={StaticResource DiagramsViewModelLocator}, Path=ViewModel}">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="300" x:Name="LeftColumn" />
-              <ColumnDefinition Width="Auto" MinWidth="10" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-        
-            <!-- This is the left column controls -->
-            <Border Grid.Column="0" Background="{x:Null}" CornerRadius="0,0,0,0" >
-              <Grid>
+              <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
+                   and the right column for the tabs -->
+            <Grid Height="Auto" x:Name="MiddleGrid3Columns" Width="Auto" Grid.Row="1" Grid.Column="0" Margin="4">
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition />
+                    <ColumnDefinition Width="300" x:Name="LeftColumn" />
+                    <ColumnDefinition Width="Auto" MinWidth="10" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+        
+                <!-- This is the left column controls -->
+                <Border Grid.Column="0" Background="{x:Null}" CornerRadius="0,0,0,0" >
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
             
-                <Grid.RowDefinitions>
-                  <RowDefinition Height="Auto"/>
-                  <RowDefinition Height="300*" />
-                  <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions> 
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="Auto"/>
+                      <RowDefinition Height="300*" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions> 
             
-                <!-- This is the location box -->
-                <StackPanel Grid.Row="0" Margin="5,5,5,5">
-                <TextBlock Text="Location:"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="30" />                                    
-                        </Grid.ColumnDefinitions>
+                    <!-- This is the location box -->
+                    <StackPanel Grid.Row="0" Margin="5,5,5,5">
+                    <TextBlock Text="Location:"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="30" />                                    
+                            </Grid.ColumnDefinitions>
                       
-                        <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
-                                 ab:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
-                                 Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
+                                     ab:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
+                                     Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <ctrls:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
-                                          Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
-                                          InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
-                                          Mode="Directory"/>
+                            <ctrls:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
+                                              Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
+                                              InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
+                                              Mode="Directory"/>
                       
-                        <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
+                            <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
 
-                    </Grid>                            
-                </StackPanel>
-            
-                <!-- This is the diagram file listbox -->
-                <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended" x:Name="DiagramFileListBox" 
-                        IsSynchronizedWithCurrentItem="True" 
-                        HorizontalContentAlignment="Stretch"    
-                        Background="GhostWhite"
-                        Foreground="Black" 
-                        BorderBrush="{x:Null}" 
-                        Margin="0,0,0,10"
-                        ScrollViewer.CanContentScroll="True"
-                        VirtualizingStackPanel.IsVirtualizing="True"
-                        VirtualizingStackPanel.VirtualizationMode="Recycling"
-                        VerticalAlignment="Stretch" 
-                        MouseDoubleClick="DiagramFileListBox_MouseDoubleClick"
-                        SelectedItem="{Binding CurrentDiagram}"
-                        ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-                        ItemsSource="{Binding Diagrams}" >
-                    
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="0,2,0,2" 
-                                        CornerRadius="2" 
-                                        x:Name="DiagramItem" 
-                                        HorizontalAlignment="Stretch" 
-                                        VerticalAlignment="Top">
-                                    <StackPanel>
-                                        <WrapPanel HorizontalAlignment="Stretch"  Margin="0,0,10,0">
-                                            <Image MaxWidth="64" MaxHeight="100" 
-                                                   Source="{Binding DiagramImage}" 
-                                                   Margin="3, 5, 10, 0" VerticalAlignment="Top"/>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Diagram.DiagramFileNameOnly}"  />
-                                                <TextBlock 
-                                                    Foreground="Black" 
-                                                    TextWrapping="WrapWithOverflow" 
-                                                    Text="{Binding Diagram.Preview}" 
-                                                    TextTrimming="CharacterEllipsis" 
-                                                    MaxHeight="100" 
-                                                    ClipToBounds="True" 
-                                                    VerticalAlignment="Top" />
-                                            </StackPanel>                      
-                                        </WrapPanel>
-                                        <Separator Foreground="Green" Opacity="0.5" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    
-                </ListBox>
-            
-                <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                  <ctrls:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
-                                    InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
-                                    Mode="Save" Filter="Diagram text files (*.txt)|*.txt"/>
-                  <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
-                  <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
-                </StackPanel>
-            
-              </Grid>
-            </Border>
-        
-            <GridSplitter Grid.Column="1" Height="100" VerticalAlignment="Center" Width="3" HorizontalAlignment="Center" Grid.Row="0" Background="#66808080" />
-        
-            <!-- This is the tabs on right column -->
-            <TabControl Grid.Column="2" Background="{x:Null}"
-                        ItemsSource="{Binding OpenDiagrams}" 
-                        SelectedItem="{Binding OpenDiagram}"
-                        Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
-
-                <TabControl.ContentTemplate>
-                    <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
-                        <vw:DiagramViewControl 
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                OnAfterSave="DiagramViewControl_OnAfterSave" 
-                                OnBeforeSave="DiagramViewControl_OnBeforeSave">
-                        </vw:DiagramViewControl>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-
-                <TabControl.ItemContainerStyle>
-                    <Style TargetType="{x:Type TabItem}">
-                        <Setter Property="Content" Value="{Binding}"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type TabItem}">
-
-                                    <Grid>
-                                        <Border Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
-                                            <DockPanel>
-                                                <TextBlock VerticalAlignment="Center" Margin="12,2,12,2">
-                                                    <TextBlock.Text>
-                                                        <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
-                                                            <Binding Path="DiagramViewModel.Diagram.DiagramFileNameOnly"/>
-                                                            <Binding Path="CodeEditor.IsModified"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-
-                                                <Button Content="X" FontWeight="Bold" FontFamily="Segoe UI" Height="20" Width="20" DockPanel.Dock="Right" Margin="1,1,3,1"
-                                                        HorizontalAlignment="Center" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" VerticalAlignment="Center"
-                                                        Command="{Binding CloseCommand}"/>
-                                            </DockPanel>
-                                        </Border>
-                                    </Grid>
-
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsSelected"  Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
-                                            <Setter Property="Foreground" Value="Black" />
-                                            <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="False">
-                                            <Setter TargetName="Border" Property="Background" Value="Gray" />
-                                            <Setter Property="Foreground" Value="Black" />
-                                            <Setter TargetName="Border" Property="Opacity" Value="0.4" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </TabControl.ItemContainerStyle>
-
-            </TabControl>
-        
-            <!-- This is the welcome panel -->
-            <Border x:Name="WelcomePanel" 
-                    Grid.Column="2" 
-                    HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch"
-                    BorderBrush="{x:Null}" 
-                    CornerRadius="0,0,0,0"
-                    Visibility="{Binding OpenDiagram, Converter={StaticResource ReverseNullToVisibilityConverter}}">
-                <Grid>
-                    <Rectangle HorizontalAlignment="Stretch" 
-                                VerticalAlignment="Stretch" 
-                                Fill="GhostWhite" 
-                                Opacity="0.6" 
-                                RadiusX="0" 
-                                RadiusY="0" 
-                                StrokeThickness="1" />
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="0,11,0,10">
-                            <Run Text="Welcome to PlantUML Designer"/>
-                        </TextBlock>
-                        <Separator HorizontalAlignment="Stretch" Height="1" />
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontSize="14" VerticalAlignment="Center">
-                            Enter the path of the folder on the location text box to load the diagrams from a folder.                
-                            Or you can just click on "Create New Diagram" to start creating a new diagram.                
-                        </TextBlock>
+                        </Grid>                            
                     </StackPanel>
-                </Grid>                    
-            </Border>
+            
+                    <!-- This is the diagram file listbox -->
+                    <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended" x:Name="DiagramFileListBox" 
+                            IsSynchronizedWithCurrentItem="True" 
+                            HorizontalContentAlignment="Stretch"    
+                            Background="GhostWhite"
+                            Foreground="Black" 
+                            BorderBrush="{x:Null}" 
+                            Margin="0,0,0,10"
+                            ScrollViewer.CanContentScroll="True"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VerticalAlignment="Stretch" 
+                            MouseDoubleClick="DiagramFileListBox_MouseDoubleClick"
+                            SelectedItem="{Binding CurrentDiagram}"
+                            ItemContainerStyle="{StaticResource ListBoxItemStyle}"
+                            ItemsSource="{Binding Diagrams}" >
+                    
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0,2,0,2" 
+                                            CornerRadius="2" 
+                                            x:Name="DiagramItem" 
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Top">
+                                        <StackPanel>
+                                            <WrapPanel HorizontalAlignment="Stretch"  Margin="0,0,10,0">
+                                                <Image MaxWidth="64" MaxHeight="100" 
+                                                       Source="{Binding DiagramImage}" 
+                                                       Margin="3, 5, 10, 0" VerticalAlignment="Top"/>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Diagram.DiagramFileNameOnly}"  />
+                                                    <TextBlock 
+                                                        Foreground="Black" 
+                                                        TextWrapping="WrapWithOverflow" 
+                                                        Text="{Binding Diagram.Preview}" 
+                                                        TextTrimming="CharacterEllipsis" 
+                                                        MaxHeight="100" 
+                                                        ClipToBounds="True" 
+                                                        VerticalAlignment="Top" />
+                                                </StackPanel>                      
+                                            </WrapPanel>
+                                            <Separator Foreground="Green" Opacity="0.5" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                    
+                    </ListBox>
+            
+                    <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
+                      <ctrls:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
+                                        InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
+                                        Mode="Save" Filter="Diagram text files (*.txt)|*.txt"/>
+                      <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
+                      <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
+                    </StackPanel>
+            
+                  </Grid>
+                </Border>
         
-          </Grid>
+                <GridSplitter Grid.Column="1" Height="100" VerticalAlignment="Center" Width="3" HorizontalAlignment="Center" Grid.Row="0" Background="#66808080" />
+        
+                <!-- This is the tabs on right column -->
+                <TabControl Grid.Column="2" Background="{x:Null}"
+                            ItemsSource="{Binding OpenDiagrams}" 
+                            SelectedItem="{Binding OpenDiagram}"
+                            Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
+
+                    <TabControl.ContentTemplate>
+                        <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
+                            <vw:DiagramViewControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="Content" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type TabItem}">
+
+                                        <Grid>
+                                            <Border Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
+                                                <DockPanel>
+                                                    <TextBlock VerticalAlignment="Center" Margin="12,2,12,2">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
+                                                                <Binding Path="DiagramViewModel.Diagram.DiagramFileNameOnly"/>
+                                                                <Binding Path="CodeEditor.IsModified"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+
+                                                    <Button Content="X" FontWeight="Bold" FontFamily="Segoe UI" Height="20" Width="20" DockPanel.Dock="Right" Margin="1,1,3,1"
+                                                            HorizontalAlignment="Center" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" VerticalAlignment="Center"
+                                                            Command="{Binding CloseCommand}"/>
+                                                </DockPanel>
+                                            </Border>
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected"  Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                                <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="False">
+                                                <Setter TargetName="Border" Property="Background" Value="Gray" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                                <Setter TargetName="Border" Property="Opacity" Value="0.4" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+
+                </TabControl>
+        
+                <!-- This is the welcome panel -->
+                <Border x:Name="WelcomePanel" 
+                        Grid.Column="2" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch"
+                        BorderBrush="{x:Null}" 
+                        CornerRadius="0,0,0,0"
+                        Visibility="{Binding OpenDiagram, Converter={StaticResource ReverseNullToVisibilityConverter}}">
+                    <Grid>
+                        <Rectangle HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch" 
+                                    Fill="GhostWhite" 
+                                    Opacity="0.6" 
+                                    RadiusX="0" 
+                                    RadiusY="0" 
+                                    StrokeThickness="1" />
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="0,11,0,10">
+                                <Run Text="Welcome to PlantUML Designer"/>
+                            </TextBlock>
+                            <Separator HorizontalAlignment="Stretch" Height="1" />
+                            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontSize="14" VerticalAlignment="Center">
+                                Enter the path of the folder on the location text box to load the diagrams from a folder.                
+                                Or you can just click on "Create New Diagram" to start creating a new diagram.                
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>                    
+                </Border>
+        
+            </Grid>
       
             <!-- This is the bottom row containing status message and progress bar -->
             <Grid Grid.Row="2">
@@ -413,11 +405,13 @@
                 </Grid.RowDefinitions>
           
                 <TextBlock Grid.Column="0" Grid.Row="0" x:Name="StatusMessage" Width="Auto" HorizontalAlignment="Left">
-                    <Run Text="Ready."/>
+                    <Run Text="{Binding Progress.Message, TargetNullValue=Ready.}"/>
                 </TextBlock>
                 <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Black" 
-                             Minimum="0" Maximum="100" Width="215" 
-                             IsIndeterminate="True" Visibility="Hidden" Grid.ColumnSpan="2" HorizontalAlignment="Right" />
+                             Minimum="0" Maximum="100" Width="215" Grid.ColumnSpan="2" HorizontalAlignment="Right" 
+                             IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                             Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"
+                             Visibility="{Binding Progress.InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
             </Grid>      
       
         </Grid>

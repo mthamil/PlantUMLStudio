@@ -16,9 +16,10 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramsViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IDiagramReader diagramReader, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
+		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramReader diagramReader, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
 			Func<Diagram, DiagramViewModel> diagramFactory, TaskScheduler taskScheduler)
 		{
+			Progress = progressViewModel;
 			_diagramReader = diagramReader;
 			_editorFactory = editorFactory;
 			_diagramFactory = diagramFactory;
@@ -86,11 +87,11 @@ namespace PlantUmlEditor.ViewModel
 				{
 					var newFilePath = value.LocalPath;
 					string contents = String.Format(
-							"@startuml \"{0}\"" + Environment.NewLine
-							+ Environment.NewLine
-							+ Environment.NewLine
-							+ "@enduml",
-							Path.GetFileNameWithoutExtension(newFilePath) + ".png");
+							"@startuml \"{0}.png\"{1}{2}{3}@enduml",
+							Path.GetFileNameWithoutExtension(newFilePath), 
+							Environment.NewLine,
+							Environment.NewLine,
+							Environment.NewLine);
 					File.WriteAllText(newFilePath, contents);
 
 					_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
@@ -179,7 +180,14 @@ namespace PlantUmlEditor.ViewModel
 			if (!IsDiagramLocationValid)
 				return Tasks.FromResult(_diagrams.Value);
 
-			//StartProgress("Loading diagrams...");
+			Progress.HasDiscreteProgress = true;
+			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
+			{
+				Progress.PercentComplete = p.Item1;
+				Progress.Message = p.Item2;
+			});
+
+			progress.Report(Tuple.Create((int?)0, "Loading diagrams..."));
 			var loadTask = Task.Factory.StartNew(() =>
 			{
 				var diagrams = new List<Diagram>();
@@ -192,10 +200,11 @@ namespace PlantUmlEditor.ViewModel
 					var diagram = _diagramReader.Read(file);
 					if (diagram != null)
 						diagrams.Add(diagram);
-
+					//Thread.Sleep(1000);
 					processed++;
-					//onprogress(string.Format("Loading {0} of {1}", processed, numberOfFiles),
-					//            (int)(processed / (double)numberOfFiles * 100));
+					progress.Report(Tuple.Create(
+						(int?)(processed / (double)numberOfFiles * 100),
+						String.Format("Loading {0} of {1}", processed, numberOfFiles)));
 				}
 
 				return diagrams;
@@ -204,7 +213,10 @@ namespace PlantUmlEditor.ViewModel
 			loadTask.ContinueWith(t =>
 			{
 				if (t.Exception != null)
+				{
+					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
 					throw t.Exception.InnerException;
+				}
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 
@@ -213,32 +225,16 @@ namespace PlantUmlEditor.ViewModel
 				foreach (var diagramFile in t.Result)
 					_diagrams.Value.Add(_diagramFactory(diagramFile));
 
+				progress.Report(Tuple.Create((int?)null, "Diagrams loaded."));
+
 				return _diagrams.Value;
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
-
-			//Start<List<DiagramFile>>.Work(onprogress =>
-			//{
-				
-			//})
-			//.OnProgress((msg, progress) => { }) //StartProgress(msg, progress); })
-			//.OnComplete(diagrams =>
-			//{
-			//	foreach (var diagramFile in diagrams)
-			//	{
-			//		_diagrams.Value.Add(new DiagramViewModel { Diagram = diagramFile });
-			//	}
-
-				//StopProgress("Diagrams loaded.");
-				//loaded();
-			//})
-			//.OnException((exception) =>
-			//{
-				//MessageBox.Show(this, exception.Message, "Error loading files",
-				//                MessageBoxButton.OK, MessageBoxImage.Error);
-				//StopProgress(exception.Message);
-			//})
-			//.Run();
 		}
+
+		/// <summary>
+		/// Contains current task progress information.
+		/// </summary>
+		public IProgressViewModel Progress { get; private set; }
 
 		private readonly Property<DiagramViewModel> _currentDiagram;
 		private readonly Property<ICollection<DiagramViewModel>> _diagrams;

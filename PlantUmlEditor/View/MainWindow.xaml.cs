@@ -31,56 +31,6 @@ namespace PlantUmlEditor.View
 			((DiagramsViewModel)DiagramFileListBox.DataContext).OpenDiagramCommand.Execute(DiagramFileListBox.DataContext);
 		}
 
-		/// <summary>
-		/// </summary>
-		/// <param name="diagram">
-		/// </param>
-		protected void DiagramViewControl_OnAfterSave(Diagram diagram)
-		{
-			StopProgress("Saved.");
-		}
-
-		/// <summary>
-		/// </summary>
-		/// <param name="diagram">
-		/// </param>
-		protected void DiagramViewControl_OnBeforeSave(Diagram diagram)
-		{
-			StartProgress("Saving and generating diagram...");
-		}
-
-		private void StartProgress(string message)
-		{
-			StatusMessage.Text = message;
-			StatusProgressBar.IsIndeterminate = true;
-			StatusProgressBar.Visibility = Visibility.Visible;
-		}
-
-		private void StartProgress(string message, int percentage)
-		{
-			StatusMessage.Text = message;
-
-			StatusProgressBar.Use(p =>
-			{
-				p.IsIndeterminate = false;
-				p.Visibility = Visibility.Visible;
-				p.Minimum = 0;
-				p.Maximum = 100;
-				p.Value = percentage;
-			});
-		}
-
-		private void StopProgress(string message)
-		{
-			StatusMessage.Text = message;
-			StatusProgressBar.Use(p =>
-			{
-				p.Visibility = Visibility.Hidden;
-				p.IsIndeterminate = false;
-				p.Value = 0;
-			});
-		}
-
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			if (!CheckGraphViz())

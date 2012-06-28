@@ -22,6 +22,9 @@ namespace PlantUmlEditor.Container
 				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
 				.SingleInstance();
 
+			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel>()
+				.SingleInstance();
+
 			builder.RegisterType<DiagramFileReader>().As<IDiagramReader>();
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 			builder.RegisterType<PlantUmlDiagramCompiler>().As<IDiagramCompiler>()
@@ -46,9 +49,11 @@ namespace PlantUmlEditor.Container
 				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
 				var renderer = c.Resolve<IDiagramRenderer>();
 				var compiler = c.Resolve<IDiagramCompiler>();
+				var progress = c.Resolve<IProgressViewModel>();
 				return diagram =>
 					new DiagramEditorViewModel(
 						diagram,
+						progress,
 						snippets,
 						renderer,
 						compiler,

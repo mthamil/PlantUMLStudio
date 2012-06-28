@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Model;
 using Utilities.Chronology;
+using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -21,11 +22,22 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramEditorViewModel : ViewModelBase
 	{
-		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IEnumerable<SnippetCategoryViewModel> snippets, 
+		/// <summary>
+		/// Initializes a new diagram editor.
+		/// </summary>
+		/// <param name="diagramViewModel">The diagram being edited</param>
+		/// <param name="progressViewModel">Reports progress of editor tasks</param>
+		/// <param name="snippets">Available code snippets</param>
+		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
+		/// <param name="diagramCompiler">Creates diagram images</param>
+		/// <param name="refreshTimer">Determines how soon after a change a diagram will be autosaved</param>
+		/// <param name="taskScheduler">Executes background tasks</param>
+		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IProgressViewModel progressViewModel, IEnumerable<SnippetCategoryViewModel> snippets, 
 			IDiagramRenderer diagramRenderer, IDiagramCompiler diagramCompiler, ITimer refreshTimer, TaskScheduler taskScheduler)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
+			Progress = progressViewModel;
 
 			_snippets = Property.New(this, p => p.Snippets, OnPropertyChanged);
 			Snippets = new ObservableCollection<SnippetCategoryViewModel>(snippets);
@@ -41,7 +53,7 @@ namespace PlantUmlEditor.ViewModel
 			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
 			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
 
-			_saveCommand = new RelayCommand(_ => Save());
+			_saveCommand = new BoundRelayCommand<CodeEditorViewModel>(_ => Save(), p => p.IsModified, CodeEditor);
 			_closeCommand = new RelayCommand(_ => Close());
 
 			// The document has been opened first time. So, any changes
@@ -75,7 +87,7 @@ namespace PlantUmlEditor.ViewModel
 		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
 
 		/// <summary>
-		/// Whether to automatically refresh.
+		/// Whether to automatically save a diagram's changes and regenerate its image.
 		/// </summary>
 		public bool AutoRefresh
 		{
@@ -89,25 +101,25 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The auto-refresh internval.
+		/// </summary>
+		public int RefreshIntervalSeconds
+		{
+			get { return _refreshIntervalSeconds.Value; }
+			set
+			{
+				if (_refreshIntervalSeconds.TrySetValue(value))
+					_refreshTimer.Interval = TimeSpan.FromSeconds(value);
+			}
+		}
+
+		/// <summary>
 		/// The underlying diagram.
 		/// </summary>
 		public DiagramViewModel DiagramViewModel
 		{
 			get { return _diagramViewModel.Value; }
 			private set { _diagramViewModel.Value = value; }
-		}
-
-		/// <summary>
-		/// The auto-refresh internval.
-		/// </summary>
-		public int RefreshIntervalSeconds
-		{
-			get { return _refreshIntervalSeconds.Value; }
-			set 
-			{
-				if (_refreshIntervalSeconds.TrySetValue(value))
-					_refreshTimer.Interval = TimeSpan.FromSeconds(value);
-			}
 		}
 
 		/// <summary>
@@ -146,7 +158,14 @@ namespace PlantUmlEditor.ViewModel
 			if (_saveExecuting)
 				return;
 
-			//OnBeforeSave(DiagramViewModel.Diagram);
+			Progress.HasDiscreteProgress = false;
+			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
+			{
+				Progress.PercentComplete = p.Item1;
+				Progress.Message = p.Item2;
+			});
+
+			progress.Report(Tuple.Create((int?)100, "Saving and generating diagram..."));
 
 			_saveExecuting = true;
 			var saveTask = Task.Factory.StartNew(() =>
@@ -155,7 +174,7 @@ namespace PlantUmlEditor.ViewModel
 				// first line is not an empty line.
 				if (!Char.IsWhiteSpace(CodeEditor.Content, 0))
 					CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
-
+				//Thread.Sleep(4000);
 				// Save the diagram content using UTF-8 encoding to support 
 				// various international characters, which ASCII won't support
 				// and Unicode won't make it cross platform
@@ -169,18 +188,16 @@ namespace PlantUmlEditor.ViewModel
 				_saveExecuting = false;
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
 				CodeEditor.IsModified = false;
-				//OnAfterSave(DiagramViewModel.Diagram);
+				progress.Report(Tuple.Create((int?)null, "Saved."));
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
 			saveTask.ContinueWith(t =>
 			{
 				_saveExecuting = false;
-				//OnAfterSave(DiagramViewModel.Diagram);
 				if (t.Exception != null)
 				{
+					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
 					throw t.Exception.InnerException;
-					//MessageBox.Show(Window.GetWindow(this), t.Exception.Message, "Error running PlantUml",
-					//				MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 		}
@@ -209,6 +226,11 @@ namespace PlantUmlEditor.ViewModel
 			if (localEvent != null)
 				localEvent(this, EventArgs.Empty);
 		}
+
+		/// <summary>
+		/// Contains current task progress information.
+		/// </summary>
+		public IProgressViewModel Progress { get; private set; }
 
 		/// <see cref="ViewModelBase.Dispose(bool)"/>
 		protected override void Dispose(bool disposing)

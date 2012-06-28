@@ -24,22 +24,22 @@
             </Grid.RowDefinitions>
       
             <Grid Grid.Row="0" VerticalAlignment="Stretch" Opacity="0.8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height=".90*"/>
-                <RowDefinition Height=".10*" MinHeight="40"/>
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".90*"/>
+                    <RowDefinition Height=".10*" MinHeight="40"/>
+                </Grid.RowDefinitions>
         
-            <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
+                <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
                                    ab:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    ab:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    ab:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    ShowLineNumbers="True">
-                <avalonEdit:TextEditor.InputBindings>
-                    <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
-                </avalonEdit:TextEditor.InputBindings>
-            </avalonEdit:TextEditor>
+                    <avalonEdit:TextEditor.InputBindings>
+                        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+                    </avalonEdit:TextEditor.InputBindings>
+                </avalonEdit:TextEditor>
         
             <Border Grid.Row="1" Height="40">
                 <WrapPanel Margin="4">
@@ -95,35 +95,35 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Visible" 
                     ScrollViewer.VerticalScrollBarVisibility="Visible">
           
-            <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanContentScroll="True" 
-                            HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
-                            Background="White" Opacity="0.9" >
+                <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanContentScroll="True" 
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
+                              Background="White" Opacity="0.9" >
             
-                <Image x:Name="DiagramImage" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                        Source="{Binding DiagramViewModel.DiagramImage, Mode=OneWay}" 
-                        Stretch="None">
+                    <Image x:Name="DiagramImage" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                           Source="{Binding DiagramViewModel.DiagramImage, Mode=OneWay}" 
+                           Stretch="None">
               
-                <Image.ContextMenu>
-                    <ContextMenu x:Name="ImageContextMenu">
-                        <MenuItem Header="Copy to Clipboard" 
-                                    Click="CopyToClipboard_Click"></MenuItem>
-                        <MenuItem Header="Open in explorer" 
-                                    Click="OpenInExplorer_Click"></MenuItem>
-                        <MenuItem Header="Copy path" 
-                                    Click="CopyPath_Click"></MenuItem>
-                    </ContextMenu>
-                </Image.ContextMenu>
+                    <Image.ContextMenu>
+                        <ContextMenu x:Name="ImageContextMenu">
+                            <MenuItem Header="Copy to Clipboard" 
+                                        Click="CopyToClipboard_Click"></MenuItem>
+                            <MenuItem Header="Open in explorer" 
+                                        Click="OpenInExplorer_Click"></MenuItem>
+                            <MenuItem Header="Copy path" 
+                                        Click="CopyPath_Click"></MenuItem>
+                        </ContextMenu>
+                    </Image.ContextMenu>
               
-                <Image.RenderTransform>
-                    <TransformGroup>
-                    <ScaleTransform 
-                        ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
-                        ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
-                    </TransformGroup>
-                </Image.RenderTransform>
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                        <ScaleTransform 
+                            ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
+                            ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
               
-                </Image>
-            </ScrollViewer>
+                    </Image>
+                </ScrollViewer>
             </Border>
         </Grid>
     </Border>

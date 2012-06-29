@@ -26,7 +26,7 @@ namespace PlantUmlEditor.Container
 		/// A registration builder allowing further configuration of the component.
 		/// </returns>
 		public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> WithProperty<TLimit, TReflectionActivatorData, TStyle, TValue>(
-			this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration, Expression<Func<TLimit, TValue>> property, object propertyValue)
+			this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration, Expression<Func<TLimit, TValue>> property, TValue propertyValue)
 			where TReflectionActivatorData : ReflectionActivatorData
 		{
 			return registration.WithProperty(Reflect.PropertyOf(property).Name, propertyValue);

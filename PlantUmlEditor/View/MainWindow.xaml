@@ -7,8 +7,8 @@
     xmlns:convert="clr-namespace:PlantUmlEditor.Converters" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
-    xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors"
-    xmlns:ctrls="clr-namespace:PlantUmlEditor.Controls" 
+    xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
+    xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen" 
@@ -17,6 +17,9 @@
     
     <Window.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
             <convert:BooleanToVisibilityValueConverter x:Key="BooleanToVisibilityValueConverter"/>
             <convert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
@@ -229,13 +232,13 @@
                             </Grid.ColumnDefinitions>
                       
                             <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
-                                     ab:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
+                                     attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                      Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                            <ctrls:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
-                                              Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
-                                              InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
-                                              Mode="Directory"/>
+                            <ctrl:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
+                                             Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
+                                             InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
+                                             Mode="Directory"/>
                       
                             <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
 
@@ -244,20 +247,20 @@
             
                     <!-- This is the diagram file listbox -->
                     <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended" x:Name="DiagramFileListBox" 
-                            IsSynchronizedWithCurrentItem="True" 
-                            HorizontalContentAlignment="Stretch"    
-                            Background="GhostWhite"
-                            Foreground="Black" 
-                            BorderBrush="{x:Null}" 
-                            Margin="0,0,0,10"
-                            ScrollViewer.CanContentScroll="True"
-                            VirtualizingStackPanel.IsVirtualizing="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            VerticalAlignment="Stretch" 
-                            MouseDoubleClick="DiagramFileListBox_MouseDoubleClick"
-                            SelectedItem="{Binding CurrentDiagram}"
-                            ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-                            ItemsSource="{Binding Diagrams}" >
+                             IsSynchronizedWithCurrentItem="True" 
+                             HorizontalContentAlignment="Stretch"    
+                             Background="GhostWhite"
+                             Foreground="Black" 
+                             BorderBrush="{x:Null}" 
+                             Margin="0,0,0,10"
+                             ScrollViewer.CanContentScroll="True"
+                             VirtualizingStackPanel.IsVirtualizing="True"
+                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                             VerticalAlignment="Stretch" 
+                             MouseDoubleClick="DiagramFileListBox_MouseDoubleClick"
+                             SelectedItem="{Binding CurrentDiagram}"
+                             ItemContainerStyle="{StaticResource ListBoxItemStyle}"
+                             ItemsSource="{Binding Diagrams}" >
                     
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -292,7 +295,7 @@
                     </ListBox>
             
                     <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                      <ctrls:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
+                      <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
                                         InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
                                         Mode="Save" Filter="Diagram text files (*.txt)|*.txt"/>
                       <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>

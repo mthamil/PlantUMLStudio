@@ -9,7 +9,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// Attached property that provides data binding on a text editor's Text.
@@ -51,17 +51,17 @@ namespace PlantUmlEditor.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			TextEditorContentBehavior contentBehavior;
-			if (!contentBehaviors.TryGetValue(editor, out contentBehavior))
+			TextEditorContentProperty contentProperty;
+			if (!contentBehaviors.TryGetValue(editor, out contentProperty))
 			{
-				contentBehavior = new TextEditorContentBehavior(editor);
-				contentBehaviors[editor] = contentBehavior;
+				contentProperty = new TextEditorContentProperty(editor);
+				contentBehaviors[editor] = contentProperty;
 			}
 
-			contentBehavior.UpdateContent(e.NewValue as string);
+			contentProperty.UpdateContent(e.NewValue as string);
 		}
 
-		private static readonly IDictionary<TextEditor, TextEditorContentBehavior> contentBehaviors = new Dictionary<TextEditor, TextEditorContentBehavior>();
+		private static readonly IDictionary<TextEditor, TextEditorContentProperty> contentBehaviors = new Dictionary<TextEditor, TextEditorContentProperty>();
 
 		#endregion Content
 
@@ -100,17 +100,17 @@ namespace PlantUmlEditor.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			TextEditorContentIndexBehavior contentIndexBehavior;
-			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexBehavior))
+			TextEditorContentIndexProperty contentIndexProperty;
+			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexProperty))
 			{
-				contentIndexBehavior = new TextEditorContentIndexBehavior(editor);
-				contentIndexBehaviors[editor] = contentIndexBehavior;
+				contentIndexProperty = new TextEditorContentIndexProperty(editor);
+				contentIndexBehaviors[editor] = contentIndexProperty;
 			}
 
-			contentIndexBehavior.UpdateIndex((int)e.NewValue);
+			contentIndexProperty.UpdateIndex((int)e.NewValue);
 		}
 
-		private static readonly IDictionary<TextEditor, TextEditorContentIndexBehavior> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexBehavior>();
+		private static readonly IDictionary<TextEditor, TextEditorContentIndexProperty> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexProperty>();
 
 		#endregion ContentIndex
 

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace PlantUmlEditor.Controls
+namespace Utilities.Controls
 {
     /// <summary>
     /// Some funky progress bar

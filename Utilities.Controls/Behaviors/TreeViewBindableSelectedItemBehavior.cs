@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// Since the TreeView's SelectedItem property is readonly, it is not bindable.

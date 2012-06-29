@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// 

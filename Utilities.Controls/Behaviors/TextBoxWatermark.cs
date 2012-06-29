@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// Attached property that provides a string that can be used in conjunction with the WatermarkTextBox style.

@@ -2,14 +2,14 @@
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// Manages a TextEditor's bindable content index property.
 	/// </summary>
-	internal class TextEditorContentIndexBehavior
+	internal class TextEditorContentIndexProperty
 	{
-		public TextEditorContentIndexBehavior(TextEditor editor)
+		public TextEditorContentIndexProperty(TextEditor editor)
 		{
 			_editor = editor;
 			editor.TextArea.Caret.PositionChanged += caret_PositionChanged;

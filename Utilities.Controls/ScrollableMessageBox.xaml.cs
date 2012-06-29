@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace PlantUmlEditor.Controls
+namespace Utilities.Controls
 {
 	/// <summary>
 	/// Interaction logic for ScrollableMessageBox.xaml

@@ -104,21 +104,6 @@
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
-    <Compile Include="Controls\Behaviors\CollectionViewSourceItemFilter.cs" />
-    <Compile Include="Controls\Behaviors\AvalonEditor.cs" />
-    <Compile Include="Controls\Behaviors\DoubleClickCommandBehavior.cs" />
-    <Compile Include="Controls\Behaviors\DataGridCellUnderCursor.cs" />
-    <Compile Include="Controls\Behaviors\TextEditorContentBehavior.cs" />
-    <Compile Include="Controls\Behaviors\TextEditorContentIndexBehavior.cs" />
-    <Compile Include="Controls\Behaviors\HideCloseButtonBehavior.cs" />
-    <Compile Include="Controls\Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
-    <Compile Include="Controls\Behaviors\TextBoxWatermark.cs" />
-    <Compile Include="Controls\Behaviors\TreeViewBindableSelectedItemBehavior.cs" />
-    <Compile Include="Controls\Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
-    <Compile Include="Controls\Behaviors\TreeViewItemSelectedCommandBehavior.cs" />
-    <Compile Include="Controls\FilePicker.cs" />
-    <Compile Include="Controls\MVVMMessageBox.cs" />
-    <Compile Include="Controls\ScrollableMessageBox.xaml.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
     <Compile Include="Converters\DiagramTabNameConverter.cs" />
     <Compile Include="Converters\DirectoryInfoUriConverter.cs" />
@@ -154,20 +139,10 @@
     <Compile Include="View\MarkupExtensions\TypeBasedStyleSelector.cs" />
     <Compile Include="View\MarkupExtensions\TypeBasedDataTemplateSelector.cs" />
     <Compile Include="View\MarkupExtensions\ViewModelLocator.cs" />
-    <Page Include="Controls\ProgressBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\ScrollableMessageBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\DiagramViewControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -181,9 +156,6 @@
     <Compile Include="DesignTimeData\DiagramFiles.cs" />
     <Compile Include="CustomAnimation\GridLengthAnimation.cs" />
     <Compile Include="Model\Diagram.cs" />
-    <Compile Include="Controls\ProgressBar.xaml.cs">
-      <DependentUpon>ProgressBar.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -269,6 +241,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Utilities.Controls\Utilities.Controls.csproj">
+      <Project>{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}</Project>
+      <Name>Utilities.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{573D5F8C-4C19-42C3-B84B-BC585008B505}</Project>
       <Name>Utilities</Name>

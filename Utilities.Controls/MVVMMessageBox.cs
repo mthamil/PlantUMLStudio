@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PlantUmlEditor.Controls
+namespace Utilities.Controls
 {
 	/// <summary>
     /// MessageBox class to wrap the standard windows message box and expose MVVM friendly.

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Autofac;
 using PlantUmlEditor.Container;
-using PlantUmlEditor.Controls;
+using Utilities.Controls;
 
 namespace PlantUmlEditor
 {

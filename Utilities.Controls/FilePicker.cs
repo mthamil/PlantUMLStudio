@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
 using Control = System.Windows.Controls.Control;
 
-namespace PlantUmlEditor.Controls
+namespace Utilities.Controls
 {
 	/// <summary>
 	/// Encapsulates a file dialog for use by MVVM.

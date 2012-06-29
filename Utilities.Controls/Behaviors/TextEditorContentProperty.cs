@@ -2,14 +2,14 @@
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
 	/// Manages a TextEditor's bindable content property.
 	/// </summary>
-	internal class TextEditorContentBehavior
+	internal class TextEditorContentProperty
 	{
-		public TextEditorContentBehavior(TextEditor editor)
+		public TextEditorContentProperty(TextEditor editor)
 		{
 			_editor = editor;
 			editor.Document.TextChanged += contentEditor_TextChanged;

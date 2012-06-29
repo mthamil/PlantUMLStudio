@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:attached="clr-namespace:Utilities.Controls.Behaviors">
+    
+    <!-- Template that can be applied to a TextBox to show a "watermark" string when the text is unpopulated. -->
+    <ControlTemplate TargetType="{x:Type TextBox}" x:Key="WatermarkTextBox">
+        <Grid>
+            <Border Name="Border" CornerRadius="{TemplateBinding Border.CornerRadius}" 
+                            BorderThickness="{TemplateBinding Border.BorderThickness}" BorderBrush="{TemplateBinding Border.BorderBrush}" >
+
+                <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                Margin="0"
+                                Background="{TemplateBinding Background}" 
+                                Foreground="{TemplateBinding Foreground}"
+                                FocusVisualStyle="{TemplateBinding FocusVisualStyle}" 
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontWeight="{TemplateBinding FontWeight}"
+                                FontStyle="{TemplateBinding FontStyle}"
+                                FontSize="{TemplateBinding FontSize}"
+                                ForceCursor="{TemplateBinding ForceCursor}"
+                                Cursor="{TemplateBinding Cursor}" />
+
+            </Border>
+            <TextBlock x:Name="waterMark" Opacity="0.345" TextWrapping="Wrap" Visibility="Hidden" 
+                       Background="Transparent" Margin="3,3,0,0" IsHitTestVisible="False" 
+                       FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}"
+                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(attached:TextBoxWatermark.Watermark)}"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Text" Value="" >
+                <Setter Property="Visibility" TargetName="waterMark" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+</ResourceDictionary>

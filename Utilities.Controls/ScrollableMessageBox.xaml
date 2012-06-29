@@ -1,12 +1,12 @@
-﻿<Window x:Class="PlantUmlEditor.Controls.ScrollableMessageBox"
+﻿<Window x:Class="Utilities.Controls.ScrollableMessageBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        xmlns:acb="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
+        xmlns:attached="clr-namespace:Utilities.Controls.Behaviors" 
         Title="ScrollableMessageBox" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="ThreeDBorderWindow"
         Height="448" Width="570"
-        acb:HideCloseButtonBehavior.HideCloseButton="True">
+        attached:HideCloseButtonBehavior.HideCloseButton="True">
     
     <Window.Resources>
         <Style x:Key="SubmitButton" TargetType="Button">
@@ -27,7 +27,7 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1" >
             <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=Message}" 
-                 IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+                     IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
         </ScrollViewer>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">

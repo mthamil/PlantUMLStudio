@@ -2,41 +2,41 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PlantUmlEditor.Controls.Behaviors
+namespace Utilities.Controls.Behaviors
 {
 	/// <summary>
-	/// Provides an ICommand that executes when a TreeViewItem is expanded.
+	/// Attached behavior that executes a command when a TreeViewItem is selected.
 	/// </summary>
-	public static class TreeViewItemExpandedCommandBehavior
+	public static class TreeViewItemSelectedCommandBehavior
 	{
 		/// <summary>
-		/// Gets the expanded command for a TreeViewItem.
+		/// Gets the selected command for a TreeViewItem.
 		/// </summary>
 		[AttachedPropertyBrowsableForType(typeof(TreeViewItem))]
-		public static ICommand GetExpandedCommand(TreeViewItem treeViewItem)
+		public static ICommand GetSelectedCommand(TreeViewItem treeViewItem)
 		{
-			return (ICommand)treeViewItem.GetValue(ExpandedCommandProperty);
+			return (ICommand)treeViewItem.GetValue(SelectedCommandProperty);
 		}
 
 		/// <summary>
-		/// Sets the expanded command for a TreeViewItem.
+		/// Sets the selected command for a TreeViewItem.
 		/// </summary>
-		public static void SetExpandedCommand(TreeViewItem treeViewItem, ICommand value)
+		public static void SetSelectedCommand(TreeViewItem treeViewItem, ICommand value)
 		{
-			treeViewItem.SetValue(ExpandedCommandProperty, value);
+			treeViewItem.SetValue(SelectedCommandProperty, value);
 		}
 
 		/// <summary>
 		/// The command property.
 		/// </summary>
-		public static readonly DependencyProperty ExpandedCommandProperty =
+		public static readonly DependencyProperty SelectedCommandProperty =
 			DependencyProperty.RegisterAttached(
-			"ExpandedCommand",
+			"SelectedCommand",
 			typeof(ICommand),
-			typeof(TreeViewItemExpandedCommandBehavior),
-			new UIPropertyMetadata(null, OnExpandedCommandChanged));
+			typeof(TreeViewItemSelectedCommandBehavior),
+			new UIPropertyMetadata(null, OnSelectedCommandChanged));
 
-		static void OnExpandedCommandChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
+		static void OnSelectedCommandChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
 		{
 			TreeViewItem treeViewItem = depObj as TreeViewItem;
 			if (treeViewItem == null)
@@ -48,15 +48,15 @@ namespace PlantUmlEditor.Controls.Behaviors
 
 			if ((e.NewValue != null) && (e.OldValue == null))
 			{
-				treeViewItem.Expanded += treeViewItem_Expanded;
+				treeViewItem.Selected += treeViewItem_Selected;
 			}
 			else if ((e.NewValue == null) && (e.OldValue != null))
 			{
-				treeViewItem.Expanded -= treeViewItem_Expanded;
+				treeViewItem.Selected -= treeViewItem_Selected;
 			}
 		}
 
-		static void treeViewItem_Expanded(object sender, RoutedEventArgs e)
+		static void treeViewItem_Selected(object sender, RoutedEventArgs e)
 		{
 			// Only react to the Selected event raised by the TreeViewItem
 			// whose IsSelected property was modified. Ignore all ancestors
@@ -67,9 +67,9 @@ namespace PlantUmlEditor.Controls.Behaviors
 			var treeViewItem = e.OriginalSource as TreeViewItem;
 			if (treeViewItem != null)
 			{
-				var command = GetExpandedCommand(treeViewItem);
+				var command = GetSelectedCommand(treeViewItem);
 				if (command.CanExecute(treeViewItem.DataContext))	// The command parameter is the current binding.
-					command.Execute(treeViewItem.DataContext);
+				    command.Execute(treeViewItem.DataContext);
 			}
 		}
 	}

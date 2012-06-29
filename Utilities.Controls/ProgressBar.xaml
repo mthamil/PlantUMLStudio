@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="PlantUmlEditor.Controls.ProgressBar"
+﻿<UserControl x:Class="Utilities.Controls.ProgressBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Height="40" Width="300" x:Name="ProgressControl">

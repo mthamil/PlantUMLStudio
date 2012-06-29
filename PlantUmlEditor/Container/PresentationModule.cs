@@ -5,7 +5,6 @@ using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
-using Utilities.Chronology;
 using Utilities.Mvvm;
 
 namespace PlantUmlEditor.Container

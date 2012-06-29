@@ -5,9 +5,9 @@
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
+    xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584">
     
@@ -31,9 +31,9 @@
                 <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
-                                   ab:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   ab:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   ab:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
+                                   attached:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   attached:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   attached:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    ShowLineNumbers="True">
                     
                     <avalonEdit:TextEditor.InputBindings>

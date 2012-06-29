@@ -39,7 +39,7 @@ namespace PlantUmlEditor.Model
 				int processed = 0;
 				foreach (FileInfo file in files)
 				{
-					var diagram = Read(file);
+					var diagram = ReadImpl(file);
 					if (diagram != null)
 						diagrams.Add(diagram);
 					//Thread.Sleep(500);
@@ -58,8 +58,16 @@ namespace PlantUmlEditor.Model
 			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
 		}
 
-		/// <see cref="IDiagramIOService.Read"/>
-		public Diagram Read(FileInfo file)
+		/// <see cref="IDiagramIOService.ReadAsync"/>
+		public Task<Diagram> ReadAsync(FileInfo file)
+		{
+			return Task.Factory.StartNew(() => ReadImpl(file),
+				CancellationToken.None,
+				TaskCreationOptions.None,
+				_scheduler);
+		}
+
+		private static Diagram ReadImpl(FileInfo file)
 		{
 			string content;
 			using (var reader = new StreamReader(file.OpenRead()))
@@ -67,20 +75,20 @@ namespace PlantUmlEditor.Model
 
 			if (!String.IsNullOrWhiteSpace(content))
 			{
-				//string firstLine = content.Substring(0,500);
+				// Check that the given file's content appears to be a plantUML diagram.
 				Match match = Regex.Match(content, @"@startuml\s*(?:"")*([^\r\n""]*)",
-				                          RegexOptions.IgnoreCase
-				                          | RegexOptions.Multiline
-				                          | RegexOptions.IgnorePatternWhitespace
-				                          | RegexOptions.Compiled
+										  RegexOptions.IgnoreCase
+										  | RegexOptions.Multiline
+										  | RegexOptions.IgnorePatternWhitespace
+										  | RegexOptions.Compiled
 					);
 
 				if (match.Success && match.Groups.Count > 1)
 				{
 					string imageFileName = match.Groups[1].Value;
 					var imageFilePath = Path.IsPathRooted(imageFileName)
-					                    	? Path.GetFullPath(imageFileName)
-					                    	: Path.GetFullPath(Path.Combine(file.DirectoryName, imageFileName));
+											? Path.GetFullPath(imageFileName)
+											: Path.GetFullPath(Path.Combine(file.DirectoryName, imageFileName));
 
 					return new Diagram
 					{

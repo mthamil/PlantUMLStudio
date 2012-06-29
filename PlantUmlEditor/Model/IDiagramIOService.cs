@@ -20,11 +20,11 @@ namespace PlantUmlEditor.Model
 		Task<IList<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int?, string>> progress = null);
 
 		/// <summary>
-		/// Reads a single diagram from a file.
+		/// Asynchronously reads a single diagram from a file.
 		/// </summary>
 		/// <param name="file">The diagram file to read</param>
 		/// <returns>The loaded diagram</returns>
-		Diagram Read(FileInfo file);
+		Task<Diagram> ReadAsync(FileInfo file);
 
 		/// <summary>
 		/// Asynchronously compiles and writes a diagram.

@@ -35,6 +35,14 @@ namespace PlantUmlEditor.View
 		{
 			if (!CheckGraphViz())
 			{
+				MessageBox.Show(GetWindow(this),
+					"You haven't either installed GraphViz or you haven't created " +
+					Environment.NewLine + "the environment variable name GRAPHVIZ_DOT that points to the dot.exe" +
+					Environment.NewLine + "where GraphViz is installed. Please create and re-run.",
+					"GraphViz Environment variable not found",
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+
 				Close();
 				return;
 			}
@@ -53,10 +61,12 @@ namespace PlantUmlEditor.View
 
 			if (string.IsNullOrEmpty(graphVizPath) || !File.Exists(graphVizPath))
 			{
-				var dialog = new OpenFileDialog();
-				dialog.FileName = "dot.exe";
-				dialog.DefaultExt = ".exe";
-				dialog.Filter = "dot.exe|dot.exe";
+				var dialog = new OpenFileDialog
+				{
+					FileName = "dot.exe",
+					DefaultExt = ".exe",
+					Filter = "dot.exe|dot.exe"
+				};
 
 				// See if graphviz is there in environment PATH
 				string envPath = Environment.GetEnvironmentVariable("PATH");
@@ -68,20 +78,8 @@ namespace PlantUmlEditor.View
 					Settings.Default.Save();
 					return true;
 				}
-				else
-				{
-					return false;
-				}
 
-				//MessageBox.Show(Window.GetWindow(this),
-				//    "You haven't either installed GraphViz or you haven't created " +
-				//    Environment.NewLine + "the environment variable name GRAPHVIZ_DOT that points to the dot.exe" +
-				//    Environment.NewLine + "where GraphViz is installed. Please create and re-run.",
-				//    "GraphViz Environment variable not found",
-				//    MessageBoxButton.OK,
-				//    MessageBoxImage.Warning);
-
-				//return false;
+				return false;
 			}
 
 

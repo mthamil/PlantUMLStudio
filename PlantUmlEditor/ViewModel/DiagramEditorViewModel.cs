@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
@@ -27,25 +26,23 @@ namespace PlantUmlEditor.ViewModel
 		/// Initializes a new diagram editor.
 		/// </summary>
 		/// <param name="diagramViewModel">The diagram being edited</param>
+		/// <param name="codeEditor">The code editor</param>
 		/// <param name="progressViewModel">Reports progress of editor tasks</param>
-		/// <param name="snippets">Available code snippets</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
 		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="refreshTimer">Determines how soon after a change a diagram will be autosaved</param>
-		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, IProgressViewModel progressViewModel, IEnumerable<SnippetCategoryViewModel> snippets, 
+		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, ITimer refreshTimer)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
 			Progress = progressViewModel;
 
-			_snippets = Property.New(this, p => p.Snippets, OnPropertyChanged);
-			Snippets = new ObservableCollection<SnippetCategoryViewModel>(snippets);
-
 			_diagramRenderer = diagramRenderer;
 			_diagramIO = diagramIO;
 			_refreshTimer = refreshTimer;
 
+			CodeEditor = codeEditor;
 			CodeEditor.Content = diagramViewModel.Diagram.Content;
 			CodeEditor.PropertyChanged += _codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
 
@@ -77,7 +74,8 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public CodeEditorViewModel CodeEditor
 		{
-			get { return _codeEditor; }
+			get;
+			private set;
 		}
 
 		void _codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -86,7 +84,7 @@ namespace PlantUmlEditor.ViewModel
 			{
 				if (AutoRefresh)
 				{
-					if (_codeEditor.IsModified)
+					if (CodeEditor.IsModified)
 						_refreshTimer.TryStart();
 					else
 						_refreshTimer.TryStop();
@@ -129,15 +127,6 @@ namespace PlantUmlEditor.ViewModel
 		{
 			get { return _diagramViewModel.Value; }
 			private set { _diagramViewModel.Value = value; }
-		}
-
-		/// <summary>
-		/// Diagram code snippets.
-		/// </summary>
-		public IEnumerable<SnippetCategoryViewModel> Snippets
-		{
-			get { return _snippets.Value; }
-			private set { _snippets.Value = value; }
 		}
 
 		/// <summary>
@@ -267,9 +256,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _autoRefresh;
 		private readonly Property<int> _refreshIntervalSeconds;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
-		private readonly Property<IEnumerable<SnippetCategoryViewModel>> _snippets;
-
-		private readonly CodeEditorViewModel _codeEditor = new CodeEditorViewModel();
 
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramIOService _diagramIO;

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
+using Utilities.Chronology;
 
 namespace PlantUmlEditor.Container
 {
@@ -16,6 +17,8 @@ namespace PlantUmlEditor.Container
 		protected override void Load(ContainerBuilder builder)
 		{
 			builder.Register(c => TaskScheduler.Default);
+
+			builder.RegisterType<SystemTimersTimer>().As<ITimer>();
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 			builder.RegisterType<PlantUmlDiagramCompiler>().As<IDiagramCompiler>()

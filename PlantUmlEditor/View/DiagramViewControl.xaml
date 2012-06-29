@@ -8,7 +8,6 @@
     xmlns:ab="clr-namespace:PlantUmlEditor.Controls.Behaviors" 
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
-    DataContextChanged="UserControl_DataContextChanged" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584">
     
@@ -36,50 +35,50 @@
                                    ab:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    ab:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    ShowLineNumbers="True">
+                    
                     <avalonEdit:TextEditor.InputBindings>
                         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
                     </avalonEdit:TextEditor.InputBindings>
+                    
+                    <avalonEdit:TextEditor.ContextMenu>
+                        <ContextMenu ItemsSource="{Binding CodeEditor.EditorCommands}" 
+                                     DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+
+                            <ContextMenu.ItemTemplateSelector>
+                                <xtn:TypeBasedDataTemplateSelector>
+                                    <xtn:TypeBasedDataTemplateSelector.DataTemplates>
+                                        <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                        <HierarchicalDataTemplate DataType="{x:Type vm:SnippetCategoryViewModel}" ItemsSource="{Binding Snippets}">
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </HierarchicalDataTemplate>
+                                    </xtn:TypeBasedDataTemplateSelector.DataTemplates>
+                                </xtn:TypeBasedDataTemplateSelector>
+                            </ContextMenu.ItemTemplateSelector>
+
+                            <ContextMenu.ItemContainerStyleSelector>
+                                <xtn:TypeBasedStyleSelector>
+                                    <xtn:TypeBasedStyleSelector.Styles>
+                                        <xtn:StyleMapEntry DataType="{x:Type vm:SnippetViewModel}">
+                                            <xtn:StyleMapEntry.Style>
+                                                <Style TargetType="{x:Type MenuItem}">
+                                                    <Setter Property="Command" Value="{Binding SelectCommand}"/>
+                                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CodeEditor}"/>
+                                                </Style>
+                                            </xtn:StyleMapEntry.Style>
+                                        </xtn:StyleMapEntry>
+                                    </xtn:TypeBasedStyleSelector.Styles>
+                                </xtn:TypeBasedStyleSelector>
+                            </ContextMenu.ItemContainerStyleSelector>
+
+                        </ContextMenu>
+                    </avalonEdit:TextEditor.ContextMenu>
                 </avalonEdit:TextEditor>
         
             <Border Grid.Row="1" Height="40">
                 <WrapPanel Margin="4">
                     <Button Content="_Save &amp; Refresh" Height="Auto" x:Name="SaveDiagram" Padding="20, 0, 20, 0" Command="{Binding SaveCommand}" Margin="0,0,7,0"/>
-                    <Button Height="Auto" x:Name="AddStuff" Width="Auto" Padding="20, 0, 20, 0" Click="AddStuff_Click" Content="_Snippets..." >
-                        <Button.ContextMenu>
-                            <ContextMenu x:Name="SnippetsMenu" ItemsSource="{Binding Snippets}">
-
-                                <ContextMenu.ItemTemplateSelector>
-                                    <xtn:TypeBasedDataTemplateSelector>
-                                        <xtn:TypeBasedDataTemplateSelector.DataTemplates>
-                                            <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
-                                                <TextBlock Text="{Binding Name}"/>
-                                            </DataTemplate>
-                                            <HierarchicalDataTemplate DataType="{x:Type vm:SnippetCategoryViewModel}" ItemsSource="{Binding Snippets}">
-                                                <TextBlock Text="{Binding Name}"/>
-                                            </HierarchicalDataTemplate>
-                                        </xtn:TypeBasedDataTemplateSelector.DataTemplates>
-                                    </xtn:TypeBasedDataTemplateSelector>            
-                                </ContextMenu.ItemTemplateSelector>
-
-                                <ContextMenu.ItemContainerStyleSelector>
-                                    <xtn:TypeBasedStyleSelector>
-                                        <xtn:TypeBasedStyleSelector.Styles>
-                                            <xtn:StyleMapEntry DataType="{x:Type vm:SnippetViewModel}">
-                                                <xtn:StyleMapEntry.Style>
-                                                    <Style TargetType="{x:Type MenuItem}">
-                                                        <Setter Property="Command" Value="{Binding SelectCommand}"/>
-                                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CodeEditor}"/>
-                                                    </Style>
-                                                </xtn:StyleMapEntry.Style>
-                                            </xtn:StyleMapEntry>
-                                        </xtn:TypeBasedStyleSelector.Styles>
-                                    </xtn:TypeBasedStyleSelector>
-                                </ContextMenu.ItemContainerStyleSelector>
-
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                    </Button>
-
                     <CheckBox x:Name="AutoRefreshCheckbox" Content="Refresh" VerticalAlignment="Center" IsChecked="{Binding AutoRefresh, Mode=TwoWay}" Margin="10,0,5,0"/>
                     <TextBox Text="{Binding RefreshIntervalSeconds, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MaxWidth="30" x:Name="RefreshSecondsTextBox"/>
                     <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0"/>

@@ -1,4 +1,6 @@
-﻿using Utilities.Mvvm;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
@@ -11,7 +13,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel()
+		public CodeEditorViewModel(IEnumerable<ViewModelBase> editorCommands)
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 
@@ -19,6 +21,18 @@ namespace PlantUmlEditor.ViewModel
 			_contentIndex.Value = 0;
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
+
+			_editorCommands = Property.New(this, p => p.EditorCommands, OnPropertyChanged);
+			EditorCommands = new ObservableCollection<ViewModelBase>(editorCommands);
+		}
+
+		/// <summary>
+		/// Available operations for a code editor.
+		/// </summary>
+		public ICollection<ViewModelBase> EditorCommands
+		{
+			get { return _editorCommands.Value; }
+			private set { _editorCommands.Value = value; }
 		}
 
 		/// <summary>
@@ -62,5 +76,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<string> _content;
 		private readonly Property<int> _contentIndex;
 		private readonly Property<bool> _isModified;
+
+		private readonly Property<ICollection<ViewModelBase>> _editorCommands;
 	}
 }

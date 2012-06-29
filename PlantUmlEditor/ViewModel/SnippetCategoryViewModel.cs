@@ -16,18 +16,18 @@ namespace PlantUmlEditor.ViewModel
 		public SnippetCategoryViewModel(string name)
 		{
 			Name = name;
-			Snippets = new ObservableCollection<SnippetViewModel>();
+			Snippets = new ObservableCollection<SnippetCategoryViewModel>();
 		}
 
 		/// <summary>
-		/// The name of the category.
+		/// The name of the category/snippet.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		/// The snippets in the category.
+		/// The snippets/sub-categories in the category.
 		/// </summary>
-		public ICollection<SnippetViewModel> Snippets { get; private set; }
+		public ICollection<SnippetCategoryViewModel> Snippets { get; private set; }
 
 		/// <see cref="object.Equals(object)"/>
 		public override bool Equals(object obj)
@@ -49,19 +49,15 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a code snippet.
 	/// </summary>
-	public class SnippetViewModel : ViewModelBase
+	public class SnippetViewModel : SnippetCategoryViewModel
 	{
 		public SnippetViewModel(Snippet snippet)
+			: base(snippet.Name)
 		{
 			_snippet = snippet;
 			SelectCommand = new RelayCommand(editor => 
 				Select((CodeEditorViewModel)editor));
 		}
-
-		/// <summary>
-		/// The name of the snippet.
-		/// </summary>
-		public string Name { get { return _snippet.Name; } }
 
 		/// <summary>
 		/// The code snippet.

@@ -6,6 +6,7 @@ using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
+using Utilities.Mvvm;
 
 namespace PlantUmlEditor.Container
 {
@@ -20,10 +21,7 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel>()
 				.SingleInstance();
 
-			builder.Register(c => new DefaultSnippets().SnippetCategories)
-				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
-				.SingleInstance();
-
+			// Diagram view-model factory.
 			builder.Register<Func<Diagram, DiagramViewModel>>(c =>
 			{
 				var diagramRenderer = c.Resolve<IDiagramRenderer>();
@@ -34,26 +32,25 @@ namespace PlantUmlEditor.Container
 				};
 			});
 
-			builder.Register<Func<DiagramViewModel, DiagramEditorViewModel>>(c =>
+			builder.Register(c => new DefaultSnippets().SnippetCategories)
+				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
+				.SingleInstance();
+
+			builder.Register<IEnumerable<ViewModelBase>>(c =>
 			{
-				// Have to resolve these outside of the lambda.
 				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
-				var renderer = c.Resolve<IDiagramRenderer>();
-				var diagramIO = c.Resolve<IDiagramIOService>();
-				var progress = c.Resolve<IProgressViewModel>();
-				return diagram =>
-					new DiagramEditorViewModel(
-						diagram,
-						progress,
-						snippets,
-						renderer,
-						diagramIO,
-						new SystemTimersTimer())
-					{
-						RefreshIntervalSeconds = 5,
-						AutoRefresh = true
-					};
-			});
+				var snippetRoot = new SnippetCategoryViewModel("Snippets");
+				foreach (var snippet in snippets)
+					snippetRoot.Snippets.Add(snippet);
+				return new List<ViewModelBase> { snippetRoot };
+			})
+			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu");
+
+			builder.Register(c => new CodeEditorViewModel(c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")));
+
+			builder.RegisterType<DiagramEditorViewModel>()
+				.WithProperty(p => p.RefreshIntervalSeconds, 5)
+				.WithProperty(p => p.AutoRefresh, true);
 
 			builder.RegisterType<DiagramsViewModel>()
 				.WithProperty(d => d.DiagramLocation,	// Initialize the diagram location.

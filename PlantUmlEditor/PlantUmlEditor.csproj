@@ -140,6 +140,7 @@
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramsViewModel.cs" />
     <Compile Include="ViewModel\DiagramViewModel.cs" />
+    <Compile Include="ViewModel\NamedOperationViewModel.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\RenderedDiagramViewModel.cs" />

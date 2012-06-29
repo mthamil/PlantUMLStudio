@@ -1,11 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using PlantUmlEditor.Model;
-using PlantUmlEditor.ViewModel;
 using Utilities;
 
 namespace PlantUmlEditor.View
@@ -16,19 +11,9 @@ namespace PlantUmlEditor.View
     /// </summary>
     public partial class DiagramViewControl : UserControl
     {
-        private Weak<MenuItem> _lastMenuItemClicked = default(Weak<MenuItem>);
-
         public DiagramViewControl()
         {
             InitializeComponent();
-        }
-
-        private Diagram CurrentDiagram
-        {
-            get
-            {
-				return ((DiagramEditorViewModel)DataContext).DiagramViewModel.Diagram;
-            }
         }
 
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -37,12 +22,6 @@ namespace PlantUmlEditor.View
                 return;
 
 			SnippetsMenu.DataContext = DataContext;
-
-            if (_lastMenuItemClicked != default(Weak<MenuItem>))
-            {
-                _lastMenuItemClicked.Dispose();
-                _lastMenuItemClicked = null;
-            }
         }
 
         private void AddStuff_Click(object sender, RoutedEventArgs e)
@@ -50,33 +29,6 @@ namespace PlantUmlEditor.View
             // Trick: Open the context menu automatically whenever user
             // clicks the "Add" button
 			SnippetsMenu.IsOpen = true;
-
-            // If user last added a particular diagram items, say Use case
-            // item, then auto open the usecase menu so that user does not
-            // have to click on use case again. Saves time when you are adding
-            // a lot of items for the same diagram
-            if (_lastMenuItemClicked != default(Weak<MenuItem>))
-            {
-                MenuItem parentMenu = (_lastMenuItemClicked.Target.Parent as MenuItem);
-                parentMenu.IsSubmenuOpen = true;
-            }
-        }
-
-        private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
-        {            
-            Clipboard.SetImage(DiagramImage.Source as BitmapSource);
-        }
-
-        private void OpenInExplorer_Click(object sender, RoutedEventArgs e)
-        {
-            Process
-                .Start("explorer.exe","/select," + CurrentDiagram.ImageFilePath)
-                .Dispose();
-        }
-
-        private void CopyPath_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(CurrentDiagram.ImageFilePath);
         }
     }
 }

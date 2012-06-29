@@ -104,13 +104,19 @@
                            Stretch="None">
               
                     <Image.ContextMenu>
-                        <ContextMenu x:Name="ImageContextMenu">
-                            <MenuItem Header="Copy to Clipboard" 
-                                        Click="CopyToClipboard_Click"></MenuItem>
-                            <MenuItem Header="Open in explorer" 
-                                        Click="OpenInExplorer_Click"></MenuItem>
-                            <MenuItem Header="Copy path" 
-                                        Click="CopyPath_Click"></MenuItem>
+                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                     ItemsSource="{Binding ImageCommands}">
+                            <ContextMenu.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ContextMenu.ItemTemplate>
+
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Command" Value="{Binding Operation}"/>
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
                         </ContextMenu>
                     </Image.ContextMenu>
               

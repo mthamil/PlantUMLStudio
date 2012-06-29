@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using PlantUmlEditor.Model;
 using Utilities.Chronology;
 using Utilities.Concurrency;
@@ -57,6 +60,16 @@ namespace PlantUmlEditor.ViewModel
 			_firstSaveAfterOpen = true;
 
 			_refreshTimer.Elapsed += refreshTimer_Elapsed;
+
+			ImageCommands = new List<NamedOperationViewModel>
+			{
+				new NamedOperationViewModel("Copy to Clipboard", 
+					new RelayCommand(_ => Clipboard.SetImage(DiagramViewModel.DiagramImage as BitmapSource))),	// Copy image.
+				new NamedOperationViewModel("Open in Explorer", 
+					new RelayCommand(_ => Process.Start("explorer.exe","/select," + DiagramViewModel.Diagram.ImageFilePath).Dispose())), // Open in explorer.
+				new NamedOperationViewModel("Copy Image Path", 
+					new RelayCommand(_ => Clipboard.SetText(DiagramViewModel.Diagram.ImageFilePath)))	// Copy image path.
+			};
 		}
 
 		/// <summary>
@@ -214,6 +227,15 @@ namespace PlantUmlEditor.ViewModel
 				localEvent(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// Commands available to operate on the diagram image.
+		/// </summary>
+		public IEnumerable<NamedOperationViewModel> ImageCommands
+		{
+			get;
+			private set;
+		}
+ 
 		/// <summary>
 		/// Contains current task progress information.
 		/// </summary>

@@ -1,68 +1,4 @@
 ﻿<?xml version="1.0"?>
-<!--<SyntaxDefinition name="PlantUML" extensions=".txt">
-	
-	<Properties>
-		<Property name="LineComment" value="//"/>
-	</Properties>
-	
-	<Digits name="Digits" bold="false" italic="false" color="DarkBlue"/>
-
-	<RuleSets>
-		<RuleSet ignorecase="false">
-			<Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
-			
-			<Span name="BlockComment" rule="CommentMarkerSet" bold="false" italic="false" color="Green" stopateol="false">
-				<Begin>/*</Begin>
-				<End>*/</End>
-			</Span>
-			
-			<MarkPrevious bold="true" italic="false" color="MidnightBlue">(</MarkPrevious>
-			
-			<KeyWords name="Punctuation" bold="false" italic="false" color="DarkGreen">
-				<Key word="?" />
-				<Key word="," />
-				<Key word="." />
-				<Key word=";" />
-				<Key word="(" />
-				<Key word=")" />
-				<Key word="[" />
-				<Key word="]" />
-				<Key word="{" />
-				<Key word="}" />
-				<Key word="+" />
-				<Key word="-" />
-				<Key word="/" />
-				<Key word="%" />
-				<Key word="*" />
-				<Key word="&lt;" />
-				<Key word="&gt;" />
-				<Key word="^" />
-				<Key word="=" />
-				<Key word="~" />
-				<Key word="!" />
-				<Key word="|" />
-				<Key word="&amp;" />
-			</KeyWords>
-			
-			<KeyWords name="AccessKeywords" bold="true" italic="false" color="Black">
-				<Key word="this" />
-				<Key word="base" />
-			</KeyWords>
-		</RuleSet>
-		
-		--><!--<RuleSet name="CommentMarkerSet" ignorecase="false">
-			<Delimiters>&lt;&gt;~!@%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
-			<KeyWords name="ErrorWords" bold="true" italic="false" color="Red">
-				<Key word="TODO" />
-				<Key word="FIXME" />
-			</KeyWords>
-			<KeyWords name="WarningWords" bold="true" italic="false" color="#EEE0E000">
-				<Key word="HACK" />
-				<Key word="UNDONE" />
-			</KeyWords>
-		</RuleSet>--><!--
-	</RuleSets>
-</SyntaxDefinition>-->
 <SyntaxDefinition name="PlantUML"
                   xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="Green" />
@@ -74,15 +10,6 @@
 		<Span color="Comment" begin="//" />
 		<Span color="Comment" multiline="true"
 			 begin="/\*" end="\*/" />
-
-		<!--<Span color="String">
-			<Begin>"</Begin>
-			<End>"</End>
-			<RuleSet>
-				--><!-- nested span for escape sequences --><!--
-				<Span begin="\\" end="." />
-			</RuleSet>
-		</Span>-->
 
 		<Keywords color="Keyword">
       <Word>note left</Word>

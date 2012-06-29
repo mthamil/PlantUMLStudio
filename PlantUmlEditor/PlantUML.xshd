@@ -101,6 +101,7 @@
       <Word>deactivate</Word>
       <Word>state</Word>
       <Word>partition</Word>
+      <Word>as</Word>
 		</Keywords>
 
     <Keywords fontWeight="bold" foreground="DarkRed">
@@ -110,19 +111,34 @@
       <Word>[*]</Word>
     </Keywords>
 
-    <!-- Arrows -->
+    <!-- Right Solid Arrows -->
     <Rule fontWeight="bold" foreground="DarkGreen">
-      (-+|-right-|-left-|-up-|-down-)>
+      (-+|-right-|-left-|-up-|-down-)&gt;
     </Rule>
-    
-    <!-- Arrow notes -->
-    <Rule foreground="DarkSlateBlue">
-      \[.+\]
+
+    <!-- Left Solid Arrows -->
+    <Rule fontWeight="bold" foreground="DarkGreen">
+      &lt;(-+|-right-|-left-|-up-|-down-)
+    </Rule>
+
+    <!-- Right Dashed Arrows -->
+    <Rule fontWeight="bold" foreground="DarkGreen">
+      \.+&gt;
+    </Rule>
+
+    <!-- Left Dashed Arrows -->
+    <Rule fontWeight="bold" foreground="DarkGreen">
+      &lt;\.+
     </Rule>
 
     <!-- Fat head arrows -->
     <Rule fontWeight="bold" foreground="DarkGreen">
       -+\|&gt;|&lt;\|-+
+    </Rule>
+    
+    <!-- Arrow notes -->
+    <Rule foreground="DarkSlateBlue">
+      \[.+\]
     </Rule>
 
     <!-- Cardinalities -->

@@ -259,7 +259,7 @@
                     <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
                       <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
                                         InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
-                                        Mode="Save" Filter="Diagram text files (*.txt)|*.txt"/>
+                                        Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
                       <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
                       <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                     </StackPanel>

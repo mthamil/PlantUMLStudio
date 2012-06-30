@@ -34,7 +34,7 @@ namespace PlantUmlEditor.Model
 			{
 				var diagrams = new List<Diagram>();
 
-				FileInfo[] files = directory.GetFiles("*.txt");
+				FileInfo[] files = directory.GetFiles("*.puml");
 				int numberOfFiles = files.Length;
 				int processed = 0;
 				foreach (FileInfo file in files)

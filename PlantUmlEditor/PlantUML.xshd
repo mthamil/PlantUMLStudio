@@ -12,11 +12,9 @@
 			 begin="/\*" end="\*/" />
 
 		<Keywords color="Keyword">
-      <Word>note left</Word>
-      <Word>note right</Word>
-      <Word>end note</Word>
       <Word>title</Word>
-			<Word>if</Word>
+      <Word>if</Word>
+      <Word>then</Word>
 			<Word>else</Word>
 			<Word>endif</Word>
       <Word>package</Word>
@@ -29,6 +27,8 @@
       <Word>state</Word>
       <Word>partition</Word>
       <Word>as</Word>
+      <Word>opt</Word>
+      <Word>alt</Word>
 		</Keywords>
 
     <Keywords fontWeight="bold" foreground="DarkRed">
@@ -37,6 +37,16 @@
       <Word>(*)</Word>
       <Word>[*]</Word>
     </Keywords>
+    
+    <!-- Note Start -->
+    <Rule foreground="Blue">
+      note[^\S\n](left|right)(:|[^\S\n]of)?
+    </Rule>
+
+    <!-- Note End -->
+    <Rule foreground="Blue">
+      end[^\S\n]note
+    </Rule>
 
     <!-- Right Solid Arrows -->
     <Rule fontWeight="bold" foreground="DarkGreen">

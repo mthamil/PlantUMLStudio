@@ -73,7 +73,8 @@ namespace Utilities.Controls.Behaviors
 			{ @"(^|\s+)note right", @"(^|\s+)end note" },
 			{ @"(^|\s+)package", @"(^|\s+)end package" },
 			{ @"(^|\s+)activate\s+(?<id>\w+)", @"(^|\s+)deactivate " },
-			{ @"(^|\s+)if.+then", @"(^|\s+)endif($|\s+)" }
+			{ @"(^|\s+)if.+then", @"(^|\s+)endif($|\s+)" },
+			{ @"(^|\s+)partition.+{", @"(^|\s+)}($|\s+)" }
 		};
 
 		private readonly string startTokens;

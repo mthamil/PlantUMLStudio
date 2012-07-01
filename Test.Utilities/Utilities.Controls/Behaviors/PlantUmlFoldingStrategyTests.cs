@@ -72,6 +72,11 @@ endif", new [] { new NewFolding(0, 35) } };
 @"--> [jhchjbc] if ihusjvcs then
 	jufcjsffj
 endif", new [] { new NewFolding(13, 49) } };
+
+				yield return new object[] { 
+@"partition icugucue {
+	jufcjsffj
+}", new [] { new NewFolding(0, 35) } };
 			}
 		}
 

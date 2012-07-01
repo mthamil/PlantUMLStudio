@@ -12,14 +12,6 @@ namespace Utilities.Controls.Behaviors
 	/// </summary>
 	public class PlantUmlFoldingStrategy : AbstractFoldingStrategy
 	{
-		/// <summary>
-		/// Initializes a new strategy.
-		/// </summary>
-		public PlantUmlFoldingStrategy()
-		{
-			startTokens = String.Join("|", tokens.Select(t => t.Key));
-		}
-
 		#region Overrides of AbstractFoldingStrategy
 
 		/// <see cref="AbstractFoldingStrategy.CreateNewFoldings"/>
@@ -32,11 +24,14 @@ namespace Utilities.Controls.Behaviors
 			foreach (var line in document.Lines.Where(l => l.Length > 0))	// Filter out empty lines.
 			{
 				var lineText = document.GetText(line.Offset, line.Length);	// Get the line's text content.
-				foreach (var tokenPair in tokens)
+
+				// Determine if there is a match for a start token.
+				var startMatch = TryMatchStartToken(lineText);
+				if (startMatch != null)
 				{
-					// Try to find a start token match.
-					var match = Regex.Match(lineText, tokenPair.Key);
-					if (match.Success && !Regex.IsMatch(lineText, tokenPair.Value))
+					var foldDefinition = startMatch.Item1;
+					var match = startMatch.Item2;
+					if (match.Success && !Regex.IsMatch(lineText, foldDefinition.EndPattern))
 					{
 						int startOffset = line.Offset + match.Index;
 						string foldedDisplay = lineText.Substring(match.Index, Math.Min(lineText.Length, 15));
@@ -47,8 +42,8 @@ namespace Utilities.Controls.Behaviors
 
 						openRegions.Push(new PotentialFoldRegion(startOffset, foldedDisplay)
 						{
-							StartToken = tokenPair.Key,
-							EndToken = tokenPair.Value + identifier
+							StartToken = foldDefinition.StartPattern,
+							EndToken = foldDefinition.EndPattern + identifier
 						});
 					}
 				}
@@ -58,7 +53,7 @@ namespace Utilities.Controls.Behaviors
 					if (Regex.IsMatch(lineText, openRegions.Peek().EndToken))
 					{
 						var region = openRegions.Pop();
-						foldings.Add(new NewFolding(region.Start, line.Offset + line.Length) { Name = region.StartLine + "..." });
+						foldings.Add(new NewFolding(region.StartOffset, line.Offset + line.Length) { Name = region.StartLine + "..." });
 					}
 				}
 			}
@@ -67,29 +62,65 @@ namespace Utilities.Controls.Behaviors
 
 		#endregion
 
-		private static readonly IDictionary<string, string> tokens = new Dictionary<string, string>
+		private static Tuple<FoldedRegionDefinition, Match> TryMatchStartToken(string input)
 		{
-			{ @"(^|\s+)note left", @"(^|\s+)end note" },
-			{ @"(^|\s+)note right", @"(^|\s+)end note" },
-			{ @"(^|\s+)package", @"(^|\s+)end package" },
-			{ @"(^|\s+)activate\s+(?<id>\w+)", @"(^|\s+)deactivate " },
-			{ @"(^|\s+)if.+then", @"(^|\s+)endif($|\s+)" },
-			{ @"(^|\s+)partition.+{", @"(^|\s+)}($|\s+)" }
+			var matches = startTokens.Matches(input);
+			if (matches.Count > 0 && matches[0].Success)
+			{
+				foreach (string groupName in tokens.Keys)
+				{
+					if (matches[0].Groups[groupName].Success)
+					{
+						FoldedRegionDefinition foldDefinition;
+						tokens.TryGetValue(groupName, out foldDefinition);
+						return Tuple.Create(foldDefinition, matches[0]);
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private static readonly IDictionary<string, FoldedRegionDefinition> tokens = new Dictionary<string, FoldedRegionDefinition>
+		{
+			{ "1", new FoldedRegionDefinition(@"(^|\s+)note left",				@"(^|\s+)end note") },
+			{ "2", new FoldedRegionDefinition(@"(^|\s+)note right",				@"(^|\s+)end note") },
+			{ "3", new FoldedRegionDefinition(@"(^|\s+)package",				@"(^|\s+)end package") },
+			{ "4", new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)",	@"(^|\s+)deactivate ") },
+			{ "5", new FoldedRegionDefinition(@"(^|\s+)if.+then",				@"(^|\s+)endif($|\s+)") },
+			{ "6", new FoldedRegionDefinition(@"(^|\s+)partition.+{",			@"(^|\s+)}($|\s+)") }
 		};
 
-		private readonly string startTokens;
+		/// <summary>
+		/// A pattern that can match any of the start tokens.
+		/// </summary>
+		private static readonly Regex startTokens = new Regex(String.Join("|", tokens.Select(t => String.Format(@"(?<{0}>{1})" , t.Key, t.Value.StartPattern))), 
+			RegexOptions.ExplicitCapture);
 
-		private class PotentialFoldRegion
+		private sealed class FoldedRegionDefinition
 		{
-			public PotentialFoldRegion(int start, string startLine)
+			public FoldedRegionDefinition(string startPattern, string endPattern)
 			{
-				Start = start;
+				StartPattern = startPattern;
+				EndPattern = endPattern;
+			}
+
+			public string StartPattern { get; private set; }
+			public string EndPattern { get; private set; }
+		}
+
+		private sealed class PotentialFoldRegion
+		{
+			public PotentialFoldRegion(int startOffset, string startLine)
+			{
+				StartOffset = startOffset;
 				StartLine = startLine;
 			}
 
 			public string StartToken { get; set; }
 			public string EndToken { get; set; }
-			public int Start { get; private set; }
+
+			public int StartOffset { get; private set; }
 			public string StartLine { get; private set; }
 		}
 	}

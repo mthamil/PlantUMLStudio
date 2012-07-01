@@ -67,6 +67,11 @@ endif", new List<NewFolding>() };
 @"if ihusjvcs then
 	jufcjsffj
 endif", new [] { new NewFolding(0, 35) } };
+
+				yield return new object[] { 
+@"--> [jhchjbc] if ihusjvcs then
+	jufcjsffj
+endif", new [] { new NewFolding(13, 49) } };
 			}
 		}
 

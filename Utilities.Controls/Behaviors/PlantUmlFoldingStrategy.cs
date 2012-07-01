@@ -38,10 +38,14 @@ namespace Utilities.Controls.Behaviors
 					var match = Regex.Match(lineText, tokenPair.Key);
 					if (match.Success && !Regex.IsMatch(lineText, tokenPair.Value))
 					{
+						int startOffset = line.Offset + match.Index;
+						string foldedDisplay = lineText.Substring(match.Index, Math.Min(lineText.Length, 15));
+
 						// If the start pattern specifies an identifier that must be included in the end pattern,
 						// construct the end pattern using this identifier.
 						string identifier = match.Groups["id"].Success ? match.Groups["id"].Value : string.Empty;
-						openRegions.Push(new PotentialFoldRegion(line.Offset, lineText.Substring(0, Math.Min(lineText.Length, 15)))
+
+						openRegions.Push(new PotentialFoldRegion(startOffset, foldedDisplay)
 						{
 							StartToken = tokenPair.Key,
 							EndToken = tokenPair.Value + identifier

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Xml;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
@@ -51,17 +52,17 @@ namespace Utilities.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			TextEditorContentProperty contentProperty;
-			if (!contentBehaviors.TryGetValue(editor, out contentProperty))
+			TextEditorContentBehavior contentBehavior;
+			if (!contentBehaviors.TryGetValue(editor, out contentBehavior))
 			{
-				contentProperty = new TextEditorContentProperty(editor);
-				contentBehaviors[editor] = contentProperty;
+				contentBehavior = new TextEditorContentBehavior(editor);
+				contentBehaviors[editor] = contentBehavior;
 			}
 
-			contentProperty.UpdateContent(e.NewValue as string);
+			contentBehavior.UpdateContent(e.NewValue as string);
 		}
 
-		private static readonly IDictionary<TextEditor, TextEditorContentProperty> contentBehaviors = new Dictionary<TextEditor, TextEditorContentProperty>();
+		private static readonly IDictionary<TextEditor, TextEditorContentBehavior> contentBehaviors = new Dictionary<TextEditor, TextEditorContentBehavior>();
 
 		#endregion Content
 
@@ -100,17 +101,17 @@ namespace Utilities.Controls.Behaviors
 			if (editor == null)
 				return;
 
-			TextEditorContentIndexProperty contentIndexProperty;
-			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexProperty))
+			TextEditorContentIndexBehavior contentIndexBehavior;
+			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexBehavior))
 			{
-				contentIndexProperty = new TextEditorContentIndexProperty(editor);
-				contentIndexBehaviors[editor] = contentIndexProperty;
+				contentIndexBehavior = new TextEditorContentIndexBehavior(editor);
+				contentIndexBehaviors[editor] = contentIndexBehavior;
 			}
 
-			contentIndexProperty.UpdateIndex((int)e.NewValue);
+			contentIndexBehavior.UpdateIndex((int)e.NewValue);
 		}
 
-		private static readonly IDictionary<TextEditor, TextEditorContentIndexProperty> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexProperty>();
+		private static readonly IDictionary<TextEditor, TextEditorContentIndexBehavior> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexBehavior>();
 
 		#endregion ContentIndex
 
@@ -128,7 +129,7 @@ namespace Utilities.Controls.Behaviors
 		/// <summary>
 		/// Sets the syntax highlighting definition.
 		/// </summary>
-		public static void SetHighlightingDefinition(TextEditor textEditor, string value)
+		public static void SetHighlightingDefinition(TextEditor textEditor, Uri value)
 		{
 			textEditor.SetValue(ContentProperty, value);
 		}
@@ -169,5 +170,59 @@ namespace Utilities.Controls.Behaviors
 		}
 
 		#endregion SyntaxHighlightingDefinition
+
+		#region FoldingStrategy
+
+		/// <summary>
+		/// Gets the code folding strategy.
+		/// </summary>
+		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
+		public static AbstractFoldingStrategy GetFoldingStrategy(TextEditor textEditor)
+		{
+			return (AbstractFoldingStrategy)textEditor.GetValue(ContentProperty);
+		}
+
+		/// <summary>
+		/// Sets the code folding strategy.
+		/// </summary>
+		public static void SetFoldingStrategy(TextEditor textEditor, AbstractFoldingStrategy value)
+		{
+			textEditor.SetValue(ContentProperty, value);
+		}
+
+		/// <summary>
+		/// The FoldingStrategy property.
+		/// </summary>
+		public static readonly DependencyProperty FoldingStrategyProperty =
+			DependencyProperty.RegisterAttached(
+			"FoldingStrategy",
+			typeof(AbstractFoldingStrategy),
+			typeof(AvalonEditor),
+			new UIPropertyMetadata(null, OnFoldingStrategyChanged));
+
+		private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			if (DesignerProperties.GetIsInDesignMode(dependencyObject))
+				return;
+
+			var editor = dependencyObject as TextEditor;
+			if (editor == null)
+				return;
+
+			var foldingStrategy = e.NewValue as AbstractFoldingStrategy;
+			if (foldingStrategy == null)
+				return;
+
+			FoldingStrategyBehavior foldingStrategyBehavior;
+			if (!foldingBehaviors.TryGetValue(editor, out foldingStrategyBehavior))
+			{
+				var foldingBehavior = new FoldingStrategyBehavior(editor.Document, editor.TextArea, foldingStrategy);
+				foldingBehaviors[editor] = foldingBehavior;
+			}
+		}
+
+		private static readonly IDictionary<TextEditor, FoldingStrategyBehavior> foldingBehaviors = new Dictionary<TextEditor, FoldingStrategyBehavior>();
+
+		#endregion FoldingStrategy
 	}
 }

@@ -12,6 +12,7 @@
     d:DesignHeight="462" d:DesignWidth="584">
     
     <UserControl.Resources>
+        <attached:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
     </UserControl.Resources>
   
     <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
@@ -34,6 +35,7 @@
                                    attached:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    attached:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    attached:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
+                                   attached:AvalonEditor.FoldingStrategy="{StaticResource FoldingStrategy}"
                                    ShowLineNumbers="True">
                     
                     <avalonEdit:TextEditor.InputBindings>

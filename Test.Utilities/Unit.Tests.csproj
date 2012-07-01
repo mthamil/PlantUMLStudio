@@ -54,6 +54,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
     <Compile Include="SubSpec\SubSpec.Thesis.cs" />
     <Compile Include="SubSpec\SubSpecUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities.Controls\Behaviors\PlantUmlFoldingStrategyTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />

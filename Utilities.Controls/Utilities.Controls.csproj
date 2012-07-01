@@ -60,11 +60,13 @@
     <Compile Include="Behaviors\CollectionViewSourceItemFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
+    <Compile Include="Behaviors\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
+    <Compile Include="Behaviors\PlantUmlFoldingStrategy.cs" />
     <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />
-    <Compile Include="Behaviors\TextEditorContentIndexProperty.cs" />
-    <Compile Include="Behaviors\TextEditorContentProperty.cs" />
+    <Compile Include="Behaviors\TextEditorContentIndexBehavior.cs" />
+    <Compile Include="Behaviors\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemSelectedCommandBehavior.cs" />

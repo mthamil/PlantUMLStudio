@@ -7,9 +7,9 @@ namespace Utilities.Controls.Behaviors
 	/// <summary>
 	/// Manages a TextEditor's bindable content property.
 	/// </summary>
-	internal class TextEditorContentProperty
+	internal class TextEditorContentBehavior
 	{
-		public TextEditorContentProperty(TextEditor editor)
+		public TextEditorContentBehavior(TextEditor editor)
 		{
 			_editor = editor;
 			editor.Document.TextChanged += contentEditor_TextChanged;

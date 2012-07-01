@@ -7,9 +7,9 @@ namespace Utilities.Controls.Behaviors
 	/// <summary>
 	/// Manages a TextEditor's bindable content index property.
 	/// </summary>
-	internal class TextEditorContentIndexProperty
+	internal class TextEditorContentIndexBehavior
 	{
-		public TextEditorContentIndexProperty(TextEditor editor)
+		public TextEditorContentIndexBehavior(TextEditor editor)
 		{
 			_editor = editor;
 			editor.TextArea.Caret.PositionChanged += caret_PositionChanged;

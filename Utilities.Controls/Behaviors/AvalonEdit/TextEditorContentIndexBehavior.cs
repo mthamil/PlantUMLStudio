@@ -25,7 +25,10 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				_indexBindingChanged = true;
 
 				if (0 <= index && index <= _editor.Text.Length)	 // TODO: Really fix this.
+				{
 					_editor.TextArea.Caret.Offset = index;
+					_editor.TextArea.Caret.BringCaretToView();
+				}
 			}
 			else
 			{

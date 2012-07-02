@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 
@@ -13,6 +14,7 @@ namespace Utilities.Controls.Behaviors
 		{
 			_editor = editor;
 			editor.TextArea.Caret.PositionChanged += caret_PositionChanged;
+			editor.DataContextChanged += editor_DataContextChanged;
 		}
 
 		internal void UpdateIndex(int index)
@@ -22,7 +24,7 @@ namespace Utilities.Controls.Behaviors
 			{
 				_indexBindingChanged = true;
 
-				if (index <= _editor.Text.Length)	 // TODO: Really fix this.
+				if (0 <= index && index <= _editor.Text.Length)	 // TODO: Really fix this.
 					_editor.TextArea.Caret.Offset = index;
 			}
 			else
@@ -37,19 +39,34 @@ namespace Utilities.Controls.Behaviors
 			if (caret == null)
 				return;
 
-			if (!_indexBindingChanged)
+			if (!_dataContextChanged)
 			{
-				_positionChanged = true;
-				AvalonEditor.SetContentIndex(_editor, caret.Offset);
+				if (!_indexBindingChanged)
+				{
+					_positionChanged = true;
+					AvalonEditor.SetContentIndex(_editor, caret.Offset);
+				}
+				else
+				{
+					_indexBindingChanged = false;
+				}
 			}
 			else
 			{
-				_indexBindingChanged = false;
+				_dataContextChanged = false;
 			}
+		}
+
+		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			_dataContextChanged = true;
+			_positionChanged = false;
+			_indexBindingChanged = false;
 		}
 
 		private bool _positionChanged;
 		private bool _indexBindingChanged;
+		private bool _dataContextChanged;
 
 		private readonly TextEditor _editor;
 	}

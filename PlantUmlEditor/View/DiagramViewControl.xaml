@@ -9,7 +9,8 @@
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
-    d:DesignHeight="462" d:DesignWidth="584">
+    d:DesignHeight="462" d:DesignWidth="584"
+    FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
     
     <UserControl.Resources>
         <attached:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>

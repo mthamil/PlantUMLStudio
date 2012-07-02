@@ -58,10 +58,12 @@
   <ItemGroup>
     <Compile Include="Behaviors\AvalonEditor.cs" />
     <Compile Include="Behaviors\CollectionViewSourceItemFilter.cs" />
+    <Compile Include="Behaviors\TextEditorUndoStackBehavior.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
     <Compile Include="Behaviors\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
+    <Compile Include="Behaviors\IUndoProvider.cs" />
     <Compile Include="Behaviors\PlantUmlFoldingStrategy.cs" />
     <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />

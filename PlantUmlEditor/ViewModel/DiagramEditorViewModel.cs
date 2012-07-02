@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Model;
 using Utilities.Chronology;
 using Utilities.Concurrency;
+using Utilities.Controls.Behaviors;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -20,7 +22,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a diagram editor.
 	/// </summary>
-	public class DiagramEditorViewModel : ViewModelBase
+	public class DiagramEditorViewModel : ViewModelBase, IUndoProvider
 	{
 		/// <summary>
 		/// Initializes a new diagram editor.
@@ -229,6 +231,16 @@ namespace PlantUmlEditor.ViewModel
 		/// Contains current task progress information.
 		/// </summary>
 		public IProgressViewModel Progress { get; private set; }
+
+		#region Implementation of IUndoProvider
+
+		/// <see cref="IUndoProvider.UndoStack"/>
+		public UndoStack UndoStack
+		{
+			get { return CodeEditor.UndoStack; }
+		}
+
+		#endregion
 
 		/// <see cref="ViewModelBase.Dispose(bool)"/>
 		protected override void Dispose(bool disposing)

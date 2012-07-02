@@ -30,12 +30,13 @@
                 </Grid.RowDefinitions>
         
                 <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
-                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
                                    attached:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    attached:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    attached:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
                                    attached:AvalonEditor.FoldingStrategy="{StaticResource FoldingStrategy}"
+                                   attached:AvalonEditor.BindableUndoStack="{Binding CodeEditor.UndoStack}"
                                    ShowLineNumbers="True">
                     
                     <avalonEdit:TextEditor.InputBindings>

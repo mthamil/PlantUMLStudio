@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ICSharpCode.AvalonEdit.Document;
+using Utilities.Controls.Behaviors;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 
@@ -8,7 +11,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a diagram code editor.
 	/// </summary>
-	public class CodeEditorViewModel : ViewModelBase
+	public class CodeEditorViewModel : ViewModelBase, IUndoProvider
 	{
 		/// <summary>
 		/// Initializes a new code editor.
@@ -24,6 +27,13 @@ namespace PlantUmlEditor.ViewModel
 
 			_editorCommands = Property.New(this, p => p.EditorCommands, OnPropertyChanged);
 			EditorCommands = new ObservableCollection<ViewModelBase>(editorCommands);
+
+			_undoStack.PropertyChanged += _undoStack_PropertyChanged;
+		}
+
+		void _undoStack_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			
 		}
 
 		/// <summary>
@@ -71,7 +81,19 @@ namespace PlantUmlEditor.ViewModel
 			set { _isModified.Value = value; }
 		}
 
+		#region Implementation of IUndoProvider
+
+		/// <see cref="IUndoProvider.UndoStack"/>
+		public UndoStack UndoStack
+		{
+			get { return _undoStack; }
+		}
+
+		#endregion
+
 		private string _originalContent;
+
+		private readonly UndoStack _undoStack = new UndoStack();
 
 		private readonly Property<string> _content;
 		private readonly Property<int> _contentIndex;

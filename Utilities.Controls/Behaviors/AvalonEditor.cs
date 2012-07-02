@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Xml;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -224,5 +225,55 @@ namespace Utilities.Controls.Behaviors
 		private static readonly IDictionary<TextEditor, FoldingStrategyBehavior> foldingBehaviors = new Dictionary<TextEditor, FoldingStrategyBehavior>();
 
 		#endregion FoldingStrategy
+
+		#region BinableUndoStack
+
+		/// <summary>
+		/// Gets the undo stack.
+		/// </summary>
+		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
+		public static UndoStack GetBindableUndoStack(TextEditor textEditor)
+		{
+			return (UndoStack)textEditor.GetValue(ContentProperty);
+		}
+
+		/// <summary>
+		/// Sets the undo stack.
+		/// </summary>
+		public static void SetBindableUndoStack(TextEditor textEditor, UndoStack value)
+		{
+			textEditor.SetValue(ContentProperty, value);
+		}
+
+		/// <summary>
+		/// The BindableUndoStack property.
+		/// </summary>
+		public static readonly DependencyProperty BindableUndoStackProperty =
+			DependencyProperty.RegisterAttached(
+			"BindableUndoStack",
+			typeof(UndoStack),
+			typeof(AvalonEditor),
+			new UIPropertyMetadata(null, OnBindableUndoStackChanged));
+
+		private static void OnBindableUndoStackChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var editor = dependencyObject as TextEditor;
+			if (editor == null)
+				return;
+
+			TextEditorUndoStackBehavior behavior;
+			if (!undoStackBehaviors.TryGetValue(editor, out behavior))
+			{
+				behavior = new TextEditorUndoStackBehavior(editor);
+				undoStackBehaviors[editor] = behavior;
+			}
+
+			var newUndoStack = (UndoStack)e.NewValue;
+			behavior.UpdateUndoStack(newUndoStack);
+		}
+
+		private static readonly IDictionary<TextEditor, TextEditorUndoStackBehavior> undoStackBehaviors = new Dictionary<TextEditor, TextEditorUndoStackBehavior>();
+
+		#endregion BinableUndoStack
 	}
 }

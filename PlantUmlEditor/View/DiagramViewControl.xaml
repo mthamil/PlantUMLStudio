@@ -34,6 +34,7 @@
                 <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
+                                   IsEnabled="{Binding IsIdle}"
                                    avalon:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    avalon:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"

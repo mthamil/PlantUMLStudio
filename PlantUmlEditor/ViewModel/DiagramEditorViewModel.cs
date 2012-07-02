@@ -46,12 +46,16 @@ namespace PlantUmlEditor.ViewModel
 
 			CodeEditor = codeEditor;
 			CodeEditor.Content = diagramViewModel.Diagram.Content;
-			CodeEditor.PropertyChanged += _codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
+			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
+
+			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
+				.AlsoChanges(p => p.CanSave);
+			IsIdle = true;
 
 			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
 			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
 
-			_saveCommand = new BoundRelayCommand<CodeEditorViewModel>(_ => Save(), p => p.IsModified, CodeEditor);
+			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Save(), p => p.CanSave, this);
 			_closeCommand = new RelayCommand(_ => Close());
 
 			// The document has been opened first time. So, any changes
@@ -72,28 +76,13 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// The code editor.
+		/// Whether an editor is currently busy with some task.
 		/// </summary>
-		public CodeEditorViewModel CodeEditor
+		public bool IsIdle
 		{
-			get;
-			private set;
+			get { return _isIdle.Value; }
+			set { _isIdle.Value = value; }
 		}
-
-		void _codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == modifiedPropertyName)
-			{
-				if (AutoRefresh)
-				{
-					if (CodeEditor.IsModified)
-						_refreshTimer.TryStart();
-					else
-						_refreshTimer.TryStop();
-				}
-			}
-		}
-		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
 
 		/// <summary>
 		/// Whether to automatically save a diagram's changes and regenerate its image.
@@ -106,7 +95,9 @@ namespace PlantUmlEditor.ViewModel
 
 		void refreshTimer_Elapsed(object sender, EventArgs e)
 		{
-			Save();
+			// We must begin the Save operation on the UI thread in order to update the UI 
+			// with pre-save state.
+			Task.Factory.StartNew(Save, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>
@@ -132,6 +123,14 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether an editor's content can currently be saved.
+		/// </summary>
+		public bool CanSave
+		{
+			get { return CodeEditor.IsModified && IsIdle; }
+		}
+
+		/// <summary>
 		/// Command that saves a diagram's changes.
 		/// </summary>
 		public ICommand SaveCommand
@@ -147,6 +146,7 @@ namespace PlantUmlEditor.ViewModel
 				return;
 
 			_saveExecuting = true;
+			IsIdle = false;
 
 			// PlantUML seems to have a problem detecting encoding if the
 			// first line is not an empty line.
@@ -179,12 +179,14 @@ namespace PlantUmlEditor.ViewModel
 				_saveExecuting = false;
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
 				CodeEditor.IsModified = false;
+				IsIdle = true;
 				progress.Report(Tuple.Create((int?)null, "Saved."));
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
 			saveTask.ContinueWith(t =>
 			{
 				_saveExecuting = false;
+				IsIdle = true;
 				if (t.Exception != null)
 				{
 					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
@@ -217,6 +219,33 @@ namespace PlantUmlEditor.ViewModel
 			if (localEvent != null)
 				localEvent(this, EventArgs.Empty);
 		}
+
+		/// <summary>
+		/// The code editor.
+		/// </summary>
+		public CodeEditorViewModel CodeEditor
+		{
+			get;
+			private set;
+		}
+
+		void codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == modifiedPropertyName)
+			{
+				if (AutoRefresh)
+				{
+					if (CodeEditor.IsModified)
+						_refreshTimer.TryStart();
+					else
+						_refreshTimer.TryStop();
+				}
+
+				OnPropertyChanged("CanSave");	// boooo
+			}
+		}
+		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
+
 
 		/// <summary>
 		/// Commands available to operate on the diagram image.
@@ -267,6 +296,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<bool> _autoRefresh;
 		private readonly Property<int> _refreshIntervalSeconds;
+		private readonly Property<bool> _isIdle;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
 
 		private readonly IDiagramRenderer _diagramRenderer;

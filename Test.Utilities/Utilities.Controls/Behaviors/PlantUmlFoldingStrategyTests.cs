@@ -51,9 +51,19 @@ end note", new [] { new NewFolding(0, 65), new NewFolding(23, 55) } };
 deactivate A", new [] { new NewFolding(0, 36) } };
 
 				yield return new object[] { 
+@"activate  A
+	jufcjsffj
+deactivate       A", new [] { new NewFolding(0, 43) } };
+
+				yield return new object[] { 
 @"activate A
 	jufcjsffj
 deactivate B", new List<NewFolding>() };
+
+				yield return new object[] { 
+@"activate A
+	jufcjsffj
+deactivate Adsds", new List<NewFolding>() };
 
 				yield return new object[] { 
 @"activate A jufcjsffj deactivate B", new List<NewFolding>() };

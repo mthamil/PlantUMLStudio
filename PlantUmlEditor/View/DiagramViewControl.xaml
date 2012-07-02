@@ -8,6 +8,7 @@
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
+    xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
@@ -33,11 +34,11 @@
                 <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                    FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
-                                   attached:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   attached:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   attached:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
-                                   attached:AvalonEditor.FoldingStrategy="{StaticResource FoldingStrategy}"
-                                   attached:AvalonEditor.BindableUndoStack="{Binding CodeEditor.UndoStack}"
+                                   avalon:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   avalon:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
+                                   avalon:AvalonEditor.FoldingStrategy="{StaticResource FoldingStrategy}"
+                                   avalon:AvalonEditor.BindableUndoStack="{Binding CodeEditor.UndoStack}"
                                    ShowLineNumbers="True">
                     
                     <avalonEdit:TextEditor.InputBindings>

@@ -11,7 +11,7 @@ using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
-namespace Utilities.Controls.Behaviors
+namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Attached property that provides data binding on a text editor's Text.

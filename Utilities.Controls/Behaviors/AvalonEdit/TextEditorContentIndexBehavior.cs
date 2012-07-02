@@ -3,7 +3,7 @@ using System.Windows;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace Utilities.Controls.Behaviors
+namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Manages a TextEditor's bindable content index property.

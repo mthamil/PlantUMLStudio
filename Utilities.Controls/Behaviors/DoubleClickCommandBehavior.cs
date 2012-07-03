@@ -10,28 +10,55 @@ namespace Utilities.Controls.Behaviors
 	public static class DoubleClickCommandBehavior
 	{
 		/// <summary>
-		/// Gets the command for a Control.
+		/// Gets the double click command parameter for a Control.
 		/// </summary>
 		[AttachedPropertyBrowsableForType(typeof(Control))]
-		public static ICommand GetDoubleClickCommand(Control control)
+		public static object GetCommandParameter(Control control)
 		{
-			return (ICommand)control.GetValue(DoubleClickCommandProperty);
+			return control.GetValue(CommandParameterProperty);
 		}
 
 		/// <summary>
-		/// Sets the command for a Control.
+		/// Sets the double click command parameter for a Control.
 		/// </summary>
-		public static void SetDoubleClickCommand(Control control, ICommand value)
+		public static void SetCommandParameter(Control control, object value)
 		{
-			control.SetValue(DoubleClickCommandProperty, value);
+			control.SetValue(CommandParameterProperty, value);
 		}
 
 		/// <summary>
 		/// The command property.
 		/// </summary>
-		public static readonly DependencyProperty DoubleClickCommandProperty =
+		public static readonly DependencyProperty CommandParameterProperty =
 			DependencyProperty.RegisterAttached(
-			"DoubleClickCommand",
+			"CommandParameter",
+			typeof(object),
+			typeof(DoubleClickCommandBehavior),
+			new UIPropertyMetadata(null));
+
+		/// <summary>
+		/// Gets the double click command for a Control.
+		/// </summary>
+		[AttachedPropertyBrowsableForType(typeof(Control))]
+		public static ICommand GetCommand(Control control)
+		{
+			return (ICommand)control.GetValue(CommandProperty);
+		}
+
+		/// <summary>
+		/// Sets the double click command for a Control.
+		/// </summary>
+		public static void SetCommand(Control control, ICommand value)
+		{
+			control.SetValue(CommandProperty, value);
+		}
+
+		/// <summary>
+		/// The command property.
+		/// </summary>
+		public static readonly DependencyProperty CommandProperty =
+			DependencyProperty.RegisterAttached(
+			"Command",
 			typeof(ICommand),
 			typeof(DoubleClickCommandBehavior),
 			new UIPropertyMetadata(null, OnCommandChanged));
@@ -46,30 +73,25 @@ namespace Utilities.Controls.Behaviors
 			if (newCommand == null)
 				return;
 
-			if ((e.NewValue != null) && (e.OldValue == null))
-			{
-				control.MouseDoubleClick += control_MouseDoubleClick;
-			}
-			else if ((e.NewValue == null) && (e.OldValue != null))
-			{
+			if (e.OldValue != null)
 				control.MouseDoubleClick -= control_MouseDoubleClick;
-			}
+
+			if (e.NewValue != null)
+				control.MouseDoubleClick += control_MouseDoubleClick;
 		}
 
 		static void control_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			// Only react to the event raised by the Control
-			// that was clicked. Ignore all ancestors
-			// who are merely reporting that a descendant's DoubleClick fired.
-			if (!ReferenceEquals(sender, e.OriginalSource))
+			if (!ReferenceEquals(sender, e.Source))
 				return;
 
-			var control = e.OriginalSource as Control;
+			var control = e.Source as Control;
 			if (control != null)
 			{
-				var command = GetDoubleClickCommand(control);
-				if (command.CanExecute(control.DataContext))	// The command parameter is the current binding.
-					command.Execute(control.DataContext);
+				var command = GetCommand(control);
+				var commandParameter = GetCommandParameter(control);
+				if (command.CanExecute(commandParameter))
+					command.Execute(commandParameter);
 			}
 		}
 	}

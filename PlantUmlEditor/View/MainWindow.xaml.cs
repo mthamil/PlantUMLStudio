@@ -5,11 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
-using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
-using PlantUmlEditor.ViewModel;
-using Utilities;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace PlantUmlEditor.View
@@ -24,13 +20,6 @@ namespace PlantUmlEditor.View
 		public MainWindow()
 		{
 			InitializeComponent();
-		}
-
-		private void DiagramFileListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			var diagrams = (DiagramsViewModel)DiagramFileListBox.DataContext;
-			if (diagrams.OpenDiagramCommand.CanExecute(DiagramFileListBox.DataContext))
-				diagrams.OpenDiagramCommand.Execute(DiagramFileListBox.DataContext);
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -83,7 +72,6 @@ namespace PlantUmlEditor.View
 
 				return false;
 			}
-
 
 			return true;
 		}

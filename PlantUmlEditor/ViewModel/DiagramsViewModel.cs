@@ -27,8 +27,7 @@ namespace PlantUmlEditor.ViewModel
 			_diagrams = Property.New(this, p => Diagrams, OnPropertyChanged);
 			_diagrams.Value = new ObservableCollection<DiagramViewModel>();
 
-			_currentDiagram = Property.New(this, p => p.CurrentDiagram, OnPropertyChanged)
-				.AlsoChanges(p => p.CanOpenDiagram);
+			_currentDiagram = Property.New(this, p => p.CurrentDiagram, OnPropertyChanged);
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
 			_openDiagrams.Value = new ObservableCollection<DiagramEditorViewModel>();
@@ -41,7 +40,7 @@ namespace PlantUmlEditor.ViewModel
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
-			_openDiagramCommand = new BoundRelayCommand<DiagramsViewModel>(_ => OpenDiagramForEdit(), p => p.CanOpenDiagram, this);
+			_openDiagramCommand = new RelayCommand(d => OpenDiagramForEdit((DiagramViewModel)d), d => (d as DiagramViewModel) != null);
 		}
 
 		/// <summary>
@@ -97,7 +96,7 @@ namespace PlantUmlEditor.ViewModel
 					LoadDiagrams().ContinueWith(t =>
 					{
 						CurrentDiagram = t.Result.SingleOrDefault(d => d.Diagram.DiagramFilePath == newFilePath);
-						OpenDiagramForEdit();
+						OpenDiagramForEdit(CurrentDiagram);
 					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 				}
 			}
@@ -129,14 +128,6 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Whether a diagram can be opened for editing.
-		/// </summary>
-		public bool CanOpenDiagram
-		{
-			get { return CurrentDiagram != null; }
-		}
-
-		/// <summary>
 		/// Command to open a diagram for editing.
 		/// </summary>
 		public ICommand OpenDiagramCommand
@@ -144,12 +135,12 @@ namespace PlantUmlEditor.ViewModel
 			get { return _openDiagramCommand; }
 		}
 
-		private void OpenDiagramForEdit()
+		private void OpenDiagramForEdit(DiagramViewModel diagram)
 		{
-			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.DiagramViewModel.Equals(CurrentDiagram));
+			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.DiagramViewModel.Equals(diagram));
 			if (diagramEditor == null)
 			{
-				diagramEditor = _editorFactory(CurrentDiagram);
+				diagramEditor = _editorFactory(diagram);
 				diagramEditor.Closed += diagramEditor_Closed;
 				OpenDiagrams.Add(diagramEditor);
 			}

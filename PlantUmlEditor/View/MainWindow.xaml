@@ -218,10 +218,11 @@
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling"
                              VerticalAlignment="Stretch" 
-                             MouseDoubleClick="DiagramFileListBox_MouseDoubleClick"
                              SelectedItem="{Binding CurrentDiagram}"
                              ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-                             ItemsSource="{Binding Diagrams}" >
+                             ItemsSource="{Binding Diagrams}" 
+                             attached:DoubleClickCommandBehavior.Command="{Binding OpenDiagramCommand}"
+                             attached:DoubleClickCommandBehavior.CommandParameter="{Binding CurrentDiagram}">
                     
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -257,11 +258,11 @@
                     </ListBox>
             
                     <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                      <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
+                        <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
                                         InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
                                         Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
-                      <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
-                      <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
+                        <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
+                        <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                     </StackPanel>
             
                   </Grid>

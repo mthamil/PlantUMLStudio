@@ -29,6 +29,8 @@
       <Word>as</Word>
       <Word>opt</Word>
       <Word>alt</Word>
+      <Word>title</Word>
+      <Word>end title</Word>
 		</Keywords>
 
     <Keywords fontWeight="bold" foreground="DarkRed">
@@ -40,7 +42,7 @@
     
     <!-- Note Start -->
     <Rule foreground="Blue">
-      note[^\S\n](left|right)(:|[^\S\n]of)?
+      note[^\S\n](left|right|over)(:|[^\S\n]of)?
     </Rule>
 
     <!-- Note End -->

@@ -44,7 +44,7 @@
     
     <!-- Note Start -->
     <Rule foreground="Blue">
-      note[^\S\n](left|right|over)(:|[^\S\n]of)?
+      note[^\S\n](left|right|top|bottom|over)(:|[^\S\n]of)?
     </Rule>
 
     <!-- Note End -->

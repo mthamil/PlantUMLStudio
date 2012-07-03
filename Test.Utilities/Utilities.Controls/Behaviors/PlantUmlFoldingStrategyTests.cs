@@ -90,6 +90,16 @@ endif", new [] { new NewFolding(13, 49) } };
 @"partition icugucue {
 	jufcjsffj
 }", new [] { new NewFolding(0, 35) } };
+
+				yield return new object[] { 
+@"partition icugucue {
+	jufcjsffj
+}", new [] { new NewFolding(0, 35) } };
+
+				yield return new object[] { 
+@"box ""Box"" {
+	jufcjsffj
+end box", new [] { new NewFolding(0, 32) } };
 			}
 		}
 

@@ -24,8 +24,8 @@
                 <RowDefinition Height=".03*" MinHeight="10" />
                 <RowDefinition Height=".40*"/>
             </Grid.RowDefinitions>
-      
-            <Grid Grid.Row="0" VerticalAlignment="Stretch" Opacity="0.8">
+
+            <Grid Grid.Row="0" VerticalAlignment="Stretch" Opacity="0.8" FocusManager.IsFocusScope="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height=".90*"/>
                     <RowDefinition Height=".10*" MinHeight="40"/>
@@ -82,15 +82,15 @@
                     </avalonEdit:TextEditor.ContextMenu>
                 </avalonEdit:TextEditor>
         
-            <Border Grid.Row="1" Height="40">
-                <WrapPanel Margin="4">
-                    <Button Content="_Save &amp; Refresh" Height="Auto" x:Name="SaveDiagram" Padding="20, 0, 20, 0" Command="{Binding SaveCommand}" Margin="0,0,7,0"/>
-                    <CheckBox x:Name="AutoRefreshCheckbox" Content="Refresh" VerticalAlignment="Center" IsChecked="{Binding AutoRefresh, Mode=TwoWay}" Margin="10,0,5,0"/>
-                    <TextBox Text="{Binding RefreshIntervalSeconds, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MaxWidth="30" x:Name="RefreshSecondsTextBox"/>
-                    <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>
-                </WrapPanel>
-            </Border>
+                <Border Grid.Row="1" Height="40">
+                    <WrapPanel Margin="4">
+                        <Button Content="_Save &amp; Refresh" Height="Auto" x:Name="SaveDiagram" Padding="20, 0, 20, 0" Command="{Binding SaveCommand}" Margin="0,0,7,0"/>
+                        <CheckBox x:Name="AutoRefreshCheckbox" Content="Refresh" VerticalAlignment="Center" IsChecked="{Binding AutoRefresh, Mode=TwoWay}" Margin="10,0,5,0"/>
+                        <TextBox Text="{Binding RefreshIntervalSeconds, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MaxWidth="30" x:Name="RefreshSecondsTextBox"/>
+                        <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>
+                    </WrapPanel>
+                </Border>
         
             </Grid>
 

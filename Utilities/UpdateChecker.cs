@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Net;
-using System.IO;
 using System.Globalization;
+using Utilities.Concurrency;
+using Utilities.Net;
 
 namespace Utilities
 {
+	/// <summary>
+	/// Checks for updates.
+	/// </summary>
     public class UpdateChecker
     {
+		public Uri DownloadUrl { get; set; }
 
-        public static Action<DownloadProgressChangedEventArgs> DownloadProgressChanged;
-        public static Action<System.ComponentModel.AsyncCompletedEventArgs> DownloadCompleted;
-        public static string DownloadedLocation;
-
-        public static bool HasUpdate(string versionUrl, string currentVersion)
+    	public bool HasUpdate(string versionUrl, string currentVersion)
         {
             using (WebClient client = new WebClient())
             {
@@ -25,39 +26,34 @@ namespace Utilities
                     Encoding.Unicode, serverVersionBytes));
                 return string.Compare(serverVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
             }
-            //HttpWebRequest request = WebRequest.Create(downloadUrl) as HttpWebRequest;
-            //using (var response = request.GetResponse())
-            //{
-            //    var lastModifiedDate = default(DateTime);
-            //    if (DateTime.TryParse(response.Headers["Last-Modified"], out lastModifiedDate))
-            //    {
-            //        var path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //        var localFileDateTime = File.GetLastWriteTime(path);
-
-            //        return (localFileDateTime < lastModifiedDate.AddDays(-1));
-            //    }
-            //}
         }
 
-        public static void DownloadLatestUpdate(string downloadUrl, string localPath)
+		/// <summary>
+		/// Retrieves the latest PlantUML version.
+		/// </summary>
+        public void DownloadLatestPlantUml()
         {
-            DownloadedLocation = localPath;
-            using (WebClient client = new WebClient())
-            {
-                client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(client_DownloadFileCompleted);
-                client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                client.DownloadFileAsync(new Uri(downloadUrl), localPath);
-            }
-        }
+			var localFileDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			var existingFileName = @"Thirdparty\" + Path.GetFileName(DownloadUrl.OriginalString);
+			var localFilePath = Path.Combine(localFileDirectory, existingFileName);
+			var localFile = new FileInfo(localFilePath);
+			if (localFile.Exists)
+			{
+				var backupFilePath = String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", localFile.FullName, DateTime.Now);
+				localFile.CopyTo(backupFilePath, true);
+			}
 
-        static void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            DownloadProgressChanged(e);
-        }
+			var webClient = new WebClient();
+			var progress = new Progress<DownloadProgressChangedEventArgs>(p =>
+			{
 
-        static void client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            DownloadCompleted(e);
+			});
+
+			var downloadTask = webClient.Async().DownloadFileAsync(DownloadUrl, localFilePath + ".tmp", progress);
+			downloadTask.ContinueWith(t =>
+			{
+				webClient.Dispose();
+			});
         }
     }
 }

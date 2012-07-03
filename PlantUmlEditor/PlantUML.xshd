@@ -84,7 +84,7 @@
       \[.+\]
     </Rule>
 
-    <!-- Cardinalities -->
+    <!-- Relations -->
     <Rule fontWeight="bold" foreground="DarkCyan">
       (-+(\+|\*|o))|((\+|\*|o)-+)
     </Rule>

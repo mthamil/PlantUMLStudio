@@ -28,7 +28,9 @@ namespace PlantUmlEditor.View
 
 		private void DiagramFileListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			((DiagramsViewModel)DiagramFileListBox.DataContext).OpenDiagramCommand.Execute(DiagramFileListBox.DataContext);
+			var diagrams = (DiagramsViewModel)DiagramFileListBox.DataContext;
+			if (diagrams.OpenDiagramCommand.CanExecute(DiagramFileListBox.DataContext))
+				diagrams.OpenDiagramCommand.Execute(DiagramFileListBox.DataContext);
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -20,6 +20,7 @@
       <Word>package</Word>
       <Word>end package</Word>
       <Word>interface</Word>
+      <Word>class</Word>
       <Word>actor</Word>
       <Word>participant</Word>
       <Word>activate</Word>

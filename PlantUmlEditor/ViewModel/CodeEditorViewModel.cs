@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ICSharpCode.AvalonEdit.Document;
 using Utilities.Controls.Behaviors;
+using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 

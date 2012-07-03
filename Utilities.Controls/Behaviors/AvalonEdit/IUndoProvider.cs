@@ -1,6 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Document;
 
-namespace Utilities.Controls.Behaviors
+namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Interface for an object that provides an undo stack.

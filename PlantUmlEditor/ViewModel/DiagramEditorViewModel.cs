@@ -12,6 +12,7 @@ using PlantUmlEditor.Model;
 using Utilities.Chronology;
 using Utilities.Concurrency;
 using Utilities.Controls.Behaviors;
+using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;

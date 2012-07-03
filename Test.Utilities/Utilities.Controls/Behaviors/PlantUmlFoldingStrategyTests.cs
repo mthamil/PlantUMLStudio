@@ -92,14 +92,26 @@ endif", new [] { new NewFolding(13, 49) } };
 }", new [] { new NewFolding(0, 35) } };
 
 				yield return new object[] { 
-@"partition icugucue {
+@"class C {
 	jufcjsffj
-}", new [] { new NewFolding(0, 35) } };
+}", new [] { new NewFolding(0, 24) } };
 
 				yield return new object[] { 
-@"box ""Box"" {
+@"title
 	jufcjsffj
-end box", new [] { new NewFolding(0, 32) } };
+end title", new [] { new NewFolding(0, 28) } };
+
+				yield return new object[] { 
+@"enum E {
+	jufcjsffj
+}", new [] { new NewFolding(0, 23) } };
+
+				yield return new object[] { 
+@"box ""Box""
+	jufcjsffj
+end box", new [] { new NewFolding(0, 30) } };
+
+
 			}
 		}
 

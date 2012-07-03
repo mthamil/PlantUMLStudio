@@ -90,6 +90,7 @@ namespace Utilities.Controls.Behaviors
 			{ "5", new FoldedRegionDefinition(@"(^|\s+)partition.+{",						@"(^|\s+)}($|\s+)") },
 			{ "6", new FoldedRegionDefinition(@"(^|\s+)title",								@"(^|\s+)end title($|\s+)") },
 			{ "7", new FoldedRegionDefinition(@"(^|\s+)box",								@"(^|\s+)end box($|\s+)") },
+			{ "8", new FoldedRegionDefinition(@"(^|\s+)(class|enum) +.+{",					@"(^|\s+)}($|\s+)") },
 		};
 
 		/// <summary>

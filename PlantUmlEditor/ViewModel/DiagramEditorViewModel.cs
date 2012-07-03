@@ -223,11 +223,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The code editor.
 		/// </summary>
-		public CodeEditorViewModel CodeEditor
-		{
-			get;
-			private set;
-		}
+		public CodeEditorViewModel CodeEditor { get; private set; }
 
 		void codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -241,20 +237,17 @@ namespace PlantUmlEditor.ViewModel
 						_refreshTimer.TryStop();
 				}
 
-				OnPropertyChanged("CanSave");	// boooo
+				OnPropertyChanged(canSavePropertyName);	// boooo
 			}
 		}
 		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
+		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel, bool>(p => p.CanSave).Name;
 
 
 		/// <summary>
 		/// Commands available to operate on the diagram image.
 		/// </summary>
-		public IEnumerable<NamedOperationViewModel> ImageCommands
-		{
-			get;
-			private set;
-		}
+		public IEnumerable<NamedOperationViewModel> ImageCommands { get; private set; }
  
 		/// <summary>
 		/// Contains current task progress information.

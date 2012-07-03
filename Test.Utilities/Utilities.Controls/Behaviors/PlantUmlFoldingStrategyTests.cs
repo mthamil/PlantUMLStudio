@@ -79,6 +79,11 @@ endif", new List<NewFolding>() };
 				yield return new object[] { 
 @"if ihusjvcs then
 	jufcjsffj
+endif asas", new [] { new NewFolding(0, 40) } };	// This tests that we are not TOO strict with folding.
+
+				yield return new object[] { 
+@"if ihusjvcs then
+	jufcjsffj
 endif", new [] { new NewFolding(0, 35) } };
 
 				yield return new object[] { 
@@ -111,6 +116,20 @@ end title", new [] { new NewFolding(0, 28) } };
 	jufcjsffj
 end box", new [] { new NewFolding(0, 30) } };
 
+				yield return new object[] { 
+@"package P {
+	jufcjsffj
+}", new [] { new NewFolding(0, 26) } };
+
+				yield return new object[] { 
+@"package P
+	jufcjsffj
+end package", new [] { new NewFolding(0, 34) } };
+
+				yield return new object[] { 
+@"namespace Name.space {
+	jufcjsffj
+}", new [] { new NewFolding(0, 37) } };
 
 			}
 		}

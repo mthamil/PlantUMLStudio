@@ -85,7 +85,7 @@
 
     <!-- Cardinalities -->
     <Rule fontWeight="bold" foreground="DarkCyan">
-      -\+|\+-|\*-|-\*
+      (-+(\+|\*|o))|((\+|\*|o)-+)
     </Rule>
 
   </RuleSet>

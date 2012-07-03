@@ -82,6 +82,9 @@
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\RelayCommand.cs" />
     <Compile Include="Mvvm\ViewModelBase.cs" />
+    <Compile Include="Net\AsyncWebClient.cs" />
+    <Compile Include="Net\IAsyncWebClient.cs" />
+    <Compile Include="Net\WebClientExtensions.cs" />
     <Compile Include="OldWindow.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -21,6 +21,7 @@
       <Word>end package</Word>
       <Word>interface</Word>
       <Word>class</Word>
+      <Word>enum</Word>
       <Word>actor</Word>
       <Word>participant</Word>
       <Word>activate</Word>

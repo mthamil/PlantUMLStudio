@@ -28,11 +28,11 @@ namespace Utilities.Net
 		/// <see cref="IAsyncWebClient.DownloadFileAsync"/>
 		public Task DownloadFileAsync(Uri address, string fileName, IProgress<DownloadProgressChangedEventArgs> progress)
 		{
-			var token = Guid.NewGuid();
+			var cookie = Guid.NewGuid();
 			var tcs = new TaskCompletionSource<object>();
 			AsyncCompletedEventHandler completedHandler = (o, e) =>
 			{
-				if (!Equals(e.UserState, token))
+				if (!Equals(e.UserState, cookie))
 					return;
 
 				if (e.Cancelled)
@@ -46,7 +46,7 @@ namespace Utilities.Net
 
 			DownloadProgressChangedEventHandler progressHandler = (o, e) =>
 			{
-				if (!Equals(e.UserState, token))
+				if (!Equals(e.UserState, cookie))
 					return;
 
 				progress.Report(e);
@@ -56,7 +56,7 @@ namespace Utilities.Net
 
 			return Task.Factory.StartNew(() =>
 			{
-				_webClient.DownloadFileAsync(address, fileName, token);
+				_webClient.DownloadFileAsync(address, fileName, cookie);
 
 				return tcs.Task.ContinueWith(t =>
 				{

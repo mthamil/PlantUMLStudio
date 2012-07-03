@@ -102,19 +102,9 @@ endif", new [] { new NewFolding(13, 49) } };
 }", new [] { new NewFolding(0, 24) } };
 
 				yield return new object[] { 
-@"title
-	jufcjsffj
-end title", new [] { new NewFolding(0, 28) } };
-
-				yield return new object[] { 
 @"enum E {
 	jufcjsffj
 }", new [] { new NewFolding(0, 23) } };
-
-				yield return new object[] { 
-@"box ""Box""
-	jufcjsffj
-end box", new [] { new NewFolding(0, 30) } };
 
 				yield return new object[] { 
 @"package P {
@@ -130,6 +120,26 @@ end package", new [] { new NewFolding(0, 34) } };
 @"namespace Name.space {
 	jufcjsffj
 }", new [] { new NewFolding(0, 37) } };
+
+				yield return new object[] { 
+@"title
+	jufcjsffj
+end title", new [] { new NewFolding(0, 28) } };
+
+				yield return new object[] { 
+@"title
+	jufcjsffj
+end titledfdfdf", new List<NewFolding>() };
+
+				yield return new object[] { 
+@"box ""Box""
+	jufcjsffj
+end box", new [] { new NewFolding(0, 30) } };
+
+				yield return new object[] { 
+@"box ""Box""
+	jufcjsffj
+end boxghghg", new List<NewFolding>() };
 
 			}
 		}

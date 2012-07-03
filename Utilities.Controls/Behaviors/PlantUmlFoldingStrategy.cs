@@ -83,12 +83,12 @@ namespace Utilities.Controls.Behaviors
 
 		private static readonly IDictionary<string, FoldedRegionDefinition> tokens = new Dictionary<string, FoldedRegionDefinition>
 		{
-			{ "1", new FoldedRegionDefinition(@"(^|\s+)note left",				@"(^|\s+)end note($|\s+)") },
-			{ "2", new FoldedRegionDefinition(@"(^|\s+)note right",				@"(^|\s+)end note($|\s+)") },
-			{ "3", new FoldedRegionDefinition(@"(^|\s+)package",				@"(^|\s+)end package($|\s+)") },
-			{ "4", new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)",	@"(^|\s+)deactivate +") },
-			{ "5", new FoldedRegionDefinition(@"(^|\s+)if.+then",				@"(^|\s+)endif($|\s+)") },
-			{ "6", new FoldedRegionDefinition(@"(^|\s+)partition.+{",			@"(^|\s+)}($|\s+)") }
+			{ "1", new FoldedRegionDefinition(@"(^|\s+)note (left|right|over)",	@"(^|\s+)end note($|\s+)") },
+			{ "2", new FoldedRegionDefinition(@"(^|\s+)package",				@"(^|\s+)end package($|\s+)") },
+			{ "3", new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)",	@"(^|\s+)deactivate +") },
+			{ "4", new FoldedRegionDefinition(@"(^|\s+)if.+then",				@"(^|\s+)endif($|\s+)") },
+			{ "5", new FoldedRegionDefinition(@"(^|\s+)partition.+{",			@"(^|\s+)}($|\s+)") },
+			{ "6", new FoldedRegionDefinition(@"(^|\s+)title",					@"(^|\s+)end title($|\s+)") },
 		};
 
 		/// <summary>

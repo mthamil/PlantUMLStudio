@@ -21,8 +21,9 @@ namespace Utilities.Mvvm
 		{
 			VerifyPropertyName(propertyName);
 
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			var localEvent = PropertyChanged;
+			if (localEvent != null)
+				localEvent(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#region IDisposable Members

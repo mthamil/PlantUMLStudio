@@ -42,8 +42,11 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 	jufcjsffj
 	note right
 		svjvjf
+			note over A
+				ikjhkjhfj
+			end note
 	end note
-end note", new [] { new NewFolding(0, 65), new NewFolding(23, 55) } };
+end note", new [] { new NewFolding(0, 109), new NewFolding(23, 99), new NewFolding(46, 88) } };
 
 				yield return new object[] { 
 @"activate A

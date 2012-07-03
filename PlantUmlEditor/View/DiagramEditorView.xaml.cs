@@ -2,9 +2,9 @@
 
 namespace PlantUmlEditor.View
 {
-    public partial class DiagramViewControl : UserControl
+    public partial class DiagramEditorView : UserControl
     {
-        public DiagramViewControl()
+        public DiagramEditorView()
         {
             InitializeComponent();
         }

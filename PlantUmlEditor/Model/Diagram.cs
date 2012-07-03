@@ -1,12 +1,22 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
+using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.Model
 {
 	/// <summary>
 	/// Represents a diagram.
 	/// </summary>
-    public class Diagram
+    public class Diagram : INotifyPropertyChanged
     {
+		/// <summary>
+		/// Initializes a new diagram.
+		/// </summary>
+		public Diagram()
+		{
+			_content = Property.New(this, p => p.Content, OnPropertyChanged);
+		}
+
 		/// <summary>
 		/// The diagram's full file path.
 		/// </summary>
@@ -36,19 +46,11 @@ namespace PlantUmlEditor.Model
 		/// <summary>
 		/// The diagram's content.
 		/// </summary>
-        public string Content { get; set; }
-
-		/// <summary>
-		/// A preview of part of a diagram's content.
-		/// </summary>
-        public string Preview
-        {
-            get
-            {
-                // Ignore first @startuml line and select non-empty lines
-                return Content.Length > 100 ? Content.Substring(0, 100) : Content;
-            }
-        }
+        public string Content
+		{
+			get { return _content.Value; }
+			set { _content.Value = value; }
+		}
 
 		/// <see cref="object.Equals(object)"/>
         public override bool Equals(object obj)
@@ -65,5 +67,21 @@ namespace PlantUmlEditor.Model
         {
             return DiagramFilePath.GetHashCode();
         }
+
+		#region Implementation of INotifyPropertyChanged
+
+		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void OnPropertyChanged(string propertyName)
+		{
+			var localEvent = PropertyChanged;
+			if (localEvent != null)
+				localEvent(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		#endregion
+
+		private readonly Property<string> _content;
     }
 }

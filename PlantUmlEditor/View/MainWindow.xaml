@@ -241,7 +241,7 @@
                                                         FontFamily="Consolas"
                                                         Foreground="Black" 
                                                         TextWrapping="WrapWithOverflow" 
-                                                        Text="{Binding Diagram.Preview}" 
+                                                        Text="{Binding Preview}" 
                                                         TextTrimming="CharacterEllipsis" 
                                                         MaxHeight="100" 
                                                         ClipToBounds="True" 

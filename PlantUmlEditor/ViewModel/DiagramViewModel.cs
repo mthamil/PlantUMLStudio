@@ -1,9 +1,9 @@
-using System;
+using System.ComponentModel;
 using System.Windows.Media;
-using PlantUmlEditor.Converters;
 using PlantUmlEditor.Model;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
+using Utilities.Reflection;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -12,10 +12,16 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramViewModel : ViewModelBase
 	{
-		public DiagramViewModel()
+		public DiagramViewModel(Diagram diagram)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
+			Diagram = diagram;
+			
 			_diagramImage = Property.New(this, p => DiagramImage, OnPropertyChanged);
+			_preview = Property.New(this, p => p.Preview, OnPropertyChanged);
+
+			Preview = CreatePreview(Diagram.Content);
+			Diagram.PropertyChanged += Diagram_PropertyChanged;
 		}
 
 		/// <summary>
@@ -33,8 +39,30 @@ namespace PlantUmlEditor.ViewModel
 		public Diagram Diagram
 		{
 			get { return _diagram.Value; }
-			set { _diagram.Value = value; }
+			private set { _diagram.Value = value; }
 		}
+
+		/// <summary>
+		/// A preview of part of a diagram's content.
+		/// </summary>
+		public string Preview
+		{
+			get { return _preview.Value; }
+			set { _preview.Value = value; }
+		}
+
+		private static string CreatePreview(string content)
+		{
+			// Ignore first @startuml line and select non-empty lines
+			return content.Length > 100 ? content.Substring(0, 100) : content;
+		}
+
+		void Diagram_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == contentPropertyName)
+				Preview = CreatePreview(Diagram.Content);
+		}
+		private static readonly string contentPropertyName = Reflect.PropertyOf<Diagram, string>(p => p.Content).Name;
 
 		/// <see cref="object.Equals(object)"/>
 		public override bool Equals(object obj)
@@ -54,5 +82,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
+		private readonly Property<string> _preview;
 	}
 }

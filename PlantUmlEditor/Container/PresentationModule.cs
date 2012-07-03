@@ -24,9 +24,8 @@ namespace PlantUmlEditor.Container
 			builder.Register<Func<Diagram, DiagramViewModel>>(c =>
 			{
 				var diagramRenderer = c.Resolve<IDiagramRenderer>();
-				return diagram => new DiagramViewModel
+				return diagram => new DiagramViewModel(diagram)
 				{
-					Diagram = diagram,
 					DiagramImage = diagramRenderer.Render(diagram)	// Perform an initial render of the diagram.
 				};
 			});

@@ -27,13 +27,6 @@ namespace PlantUmlEditor.ViewModel
 
 			_editorCommands = Property.New(this, p => p.EditorCommands, OnPropertyChanged);
 			EditorCommands = new ObservableCollection<ViewModelBase>(editorCommands);
-
-			_undoStack.PropertyChanged += _undoStack_PropertyChanged;
-		}
-
-		void _undoStack_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			
 		}
 
 		/// <summary>

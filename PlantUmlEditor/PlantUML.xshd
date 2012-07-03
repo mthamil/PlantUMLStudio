@@ -31,6 +31,8 @@
       <Word>alt</Word>
       <Word>title</Word>
       <Word>end title</Word>
+      <Word>box</Word>
+      <Word>end box</Word>
 		</Keywords>
 
     <Keywords fontWeight="bold" foreground="DarkRed">

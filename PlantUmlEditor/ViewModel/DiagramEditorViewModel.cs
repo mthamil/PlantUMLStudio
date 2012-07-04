@@ -33,9 +33,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="progressViewModel">Reports progress of editor tasks</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
 		/// <param name="diagramIO">Saves diagrams</param>
-		/// <param name="refreshTimer">Determines how soon after a change a diagram will be autosaved</param>
+		/// <param name="compiler">Compiles diagrams</param>
+		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
-			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, ITimer refreshTimer)
+			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, ITimer autoSaveTimer)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
@@ -43,27 +44,30 @@ namespace PlantUmlEditor.ViewModel
 
 			_diagramRenderer = diagramRenderer;
 			_diagramIO = diagramIO;
-			_refreshTimer = refreshTimer;
+			_compiler = compiler;
+			_autoSaveTimer = autoSaveTimer;
 
 			CodeEditor = codeEditor;
 			CodeEditor.Content = diagramViewModel.Diagram.Content;
 			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
 
 			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
-				.AlsoChanges(p => p.CanSave);
+				.AlsoChanges(p => p.CanSave)
+				.AlsoChanges(p => p.CanRefresh);
 			IsIdle = true;
 
-			_autoRefresh = Property.New(this, p => p.AutoRefresh, OnPropertyChanged);
-			_refreshIntervalSeconds = Property.New(this, p => p.RefreshIntervalSeconds, OnPropertyChanged);
+			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
+			_autoSaveIntervalSeconds = Property.New(this, p => p.AutoSaveIntervalSeconds, OnPropertyChanged);
 
 			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Save(), p => p.CanSave, this);
+			_refreshCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Refresh(), p => p.CanRefresh, this);
 			_closeCommand = new RelayCommand(_ => Close());
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.
 			_firstSaveAfterOpen = true;
 
-			_refreshTimer.Elapsed += refreshTimer_Elapsed;
+			_autoSaveTimer.Elapsed += autoSaveTimerElapsed;
 
 			ImageCommands = new List<NamedOperationViewModel>
 			{
@@ -88,13 +92,13 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Whether to automatically save a diagram's changes and regenerate its image.
 		/// </summary>
-		public bool AutoRefresh
+		public bool AutoSave
 		{
-			get { return _autoRefresh.Value; }
-			set { _autoRefresh.Value = value; }
+			get { return _autoSave.Value; }
+			set { _autoSave.Value = value; }
 		}
 
-		void refreshTimer_Elapsed(object sender, EventArgs e)
+		void autoSaveTimerElapsed(object sender, EventArgs e)
 		{
 			// We must begin the Save operation on the UI thread in order to update the UI 
 			// with pre-save state.
@@ -102,15 +106,15 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// The auto-refresh internval.
+		/// The auto-save internval.
 		/// </summary>
-		public int RefreshIntervalSeconds
+		public int AutoSaveIntervalSeconds
 		{
-			get { return _refreshIntervalSeconds.Value; }
+			get { return _autoSaveIntervalSeconds.Value; }
 			set
 			{
-				if (_refreshIntervalSeconds.TrySetValue(value))
-					_refreshTimer.Interval = TimeSpan.FromSeconds(value);
+				if (_autoSaveIntervalSeconds.TrySetValue(value))
+					_autoSaveTimer.Interval = TimeSpan.FromSeconds(value);
 			}
 		}
 
@@ -141,13 +145,14 @@ namespace PlantUmlEditor.ViewModel
 
 		private void Save()
 		{
-			_refreshTimer.TryStop();
+			_autoSaveTimer.TryStop();
 
 			if (_saveExecuting)
 				return;
 
 			_saveExecuting = true;
 			IsIdle = false;
+			_refreshCancellation.Cancel();
 
 			// PlantUML seems to have a problem detecting encoding if the
 			// first line is not an empty line.
@@ -197,6 +202,35 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether a diagram's image can currently be refreshed.
+		/// </summary>
+		public bool CanRefresh
+		{
+			get { return IsIdle; }
+		}
+
+		/// <summary>
+		/// Refreshes a diagram's image without saving.
+		/// </summary>
+		public ICommand RefreshCommand
+		{
+			get { return _refreshCommand; }
+		}
+
+		private void Refresh()
+		{
+			if (_saveExecuting)
+				return;
+
+			_compiler.CompileToImage(CodeEditor.Content, _refreshCancellation.Token)
+				.ContinueWith(t =>
+				{
+					if (t.Status == TaskStatus.RanToCompletion)
+						DiagramViewModel.DiagramImage = t.Result;
+				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+		}
+
+		/// <summary>
 		/// Command that closes a diagram editor.
 		/// </summary>
 		public ICommand CloseCommand
@@ -230,12 +264,12 @@ namespace PlantUmlEditor.ViewModel
 		{
 			if (e.PropertyName == modifiedPropertyName)
 			{
-				if (AutoRefresh)
+				if (AutoSave)
 				{
 					if (CodeEditor.IsModified)
-						_refreshTimer.TryStart();
+						_autoSaveTimer.TryStart();
 					else
-						_refreshTimer.TryStop();
+						_autoSaveTimer.TryStop();
 				}
 
 				OnPropertyChanged(canSavePropertyName);	// boooo
@@ -272,8 +306,8 @@ namespace PlantUmlEditor.ViewModel
 			{
 				if (disposing)
 				{
-					_refreshTimer.Elapsed -= refreshTimer_Elapsed;
-					var disposableTimer = _refreshTimer as IDisposable;
+					_autoSaveTimer.Elapsed -= autoSaveTimerElapsed;
+					var disposableTimer = _autoSaveTimer as IDisposable;
 					if (disposableTimer != null)
 						disposableTimer.Dispose();
 				}
@@ -286,16 +320,20 @@ namespace PlantUmlEditor.ViewModel
 		private bool _saveExecuting;
 
 		private readonly ICommand _saveCommand;
+		private readonly ICommand _refreshCommand;
 		private readonly ICommand _closeCommand;
 
-		private readonly Property<bool> _autoRefresh;
-		private readonly Property<int> _refreshIntervalSeconds;
+		private readonly CancellationTokenSource _refreshCancellation = new CancellationTokenSource();
+
+		private readonly Property<bool> _autoSave;
+		private readonly Property<int> _autoSaveIntervalSeconds;
 		private readonly Property<bool> _isIdle;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
 
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramIOService _diagramIO;
-		private readonly ITimer _refreshTimer;
+		private readonly IDiagramCompiler _compiler;
+		private readonly ITimer _autoSaveTimer;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

@@ -78,6 +78,8 @@
     <Compile Include="Concurrency\IProgress.cs" />
     <Compile Include="Concurrency\Progress.cs" />
     <Compile Include="Concurrency\ReaderWriterLockSlimExtensions.cs" />
+    <Compile Include="Concurrency\SynchronousSynchronizationContext.cs" />
+    <Compile Include="Concurrency\SynchronousTaskScheduler.cs" />
     <Compile Include="Concurrency\Tasks.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\RelayCommand.cs" />

@@ -42,6 +42,7 @@ namespace PlantUmlEditor.Model
 				bitmap.BeginInit();
 				bitmap.StreamSource = t.Result.Item1;
 				bitmap.EndInit();
+				bitmap.Freeze();
 				return (BitmapSource)bitmap;
 			}, TaskContinuationOptions.OnlyOnRanToCompletion);
 		}
@@ -55,7 +56,6 @@ namespace PlantUmlEditor.Model
 				Arguments = String.Format(@"-jar ""{0}"" -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagram.DiagramFilePath),
 				WindowStyle = ProcessWindowStyle.Hidden,
 				CreateNoWindow = true,
-				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 				UseShellExecute = false
 			});
@@ -95,19 +95,20 @@ namespace PlantUmlEditor.Model
 			Stream outputStream = new MemoryStream();
 			Stream errorStream = new MemoryStream();
 
-			DataReceivedEventHandler errorHandler = (o, e) =>
-			{
-				if (e.Data != null)
-				{
-					var bytes = Encoding.Default.GetBytes(e.Data);
-					errorStream.Write(bytes, 0, bytes.Length);
-				}
-			};
+			DataReceivedEventHandler errorHandler = CreateStreamHandler(errorStream);
 
 			cancellationToken.Register(() =>
 			{
-				if (!process.HasExited)
+				try
+				{
 					process.Kill();
+				}
+				catch (InvalidOperationException)
+				{
+					// This may happen if the process already exited.
+					// Calling Process.HasExited doesn't seem to be any help.
+				}
+				
 			}, true);
 
 			var tcs = new TaskCompletionSource<Tuple<Stream, Stream>>();
@@ -153,6 +154,18 @@ namespace PlantUmlEditor.Model
 			}
 
 			return tcs.Task;
+		}
+
+		private static DataReceivedEventHandler CreateStreamHandler(Stream stream)
+		{
+			return (o, e) =>
+			{
+				if (e.Data != null)
+				{
+					var bytes = Encoding.Default.GetBytes(e.Data);
+					stream.Write(bytes, 0, bytes.Length);
+				}
+			};
 		}
 
 		/// <summary>

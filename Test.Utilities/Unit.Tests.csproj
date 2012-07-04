@@ -65,6 +65,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -88,6 +89,7 @@
     <Compile Include="AssertThat.cs" />
     <Compile Include="AssertThatTests.cs" />
     <Compile Include="MethodRecordingInterceptor.cs" />
+    <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
     <Compile Include="SubSpec\SubSpec.cs" />
     <Compile Include="SubSpec\SubSpec.Thesis.cs" />
     <Compile Include="SubSpec\SubSpecUtils.cs" />
@@ -101,6 +103,10 @@
     <Compile Include="Utilities\Reflection\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlantUmlEditor\PlantUmlEditor.csproj">
+      <Project>{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}</Project>
+      <Name>PlantUmlEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities.Controls\Utilities.Controls.csproj">
       <Project>{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}</Project>
       <Name>Utilities.Controls</Name>

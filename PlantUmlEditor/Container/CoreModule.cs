@@ -21,9 +21,9 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<SystemTimersTimer>().As<ITimer>();
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
-			builder.RegisterType<PlantUmlDiagramCompiler>().As<IDiagramCompiler>()
-				.WithProperty(c => c.GraphVizLocation, Settings.Default.GraphVizLocation)
-				.WithProperty(c => c.PlantUmlExecutable, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.exe")));
+			builder.RegisterType<PlantUml>().As<IDiagramCompiler>()
+				.WithProperty(c => c.GraphVizExecutable, new FileInfo(Settings.Default.GraphVizLocation))
+				.WithProperty(c => c.PlantUmlJar, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.jar")));
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>();
 		}

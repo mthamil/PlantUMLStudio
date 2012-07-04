@@ -118,9 +118,9 @@ namespace PlantUmlEditor.Model
 				// and Unicode won't make it cross platform
 				File.WriteAllText(diagramFile.FullName, diagram.Content, Encoding.UTF8);
 
-				_diagramCompiler.Compile(diagram);
+				return _diagramCompiler.CompileToFile(diagram);
 
-			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
+			}, CancellationToken.None, TaskCreationOptions.None, _scheduler).Unwrap();
 		}
 
 		#endregion

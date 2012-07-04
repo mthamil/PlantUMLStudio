@@ -1,14 +1,28 @@
-﻿namespace PlantUmlEditor.Model
+﻿using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+
+namespace PlantUmlEditor.Model
 {
 	/// <summary>
-	/// Interface for an object that compiles diagrams.
+	/// Interface for a service that compiles diagrams to images.
 	/// </summary>
 	public interface IDiagramCompiler
 	{
 		/// <summary>
-		/// Compiles a diagram's code into a visual representation.
+		/// Creates an in-memory bitmap image from diagram code.
+		/// No external files are created.
+		/// </summary>
+		/// <param name="diagramCode">The diagram code to compile</param>
+		/// <param name="cancellationToken">An optional cancellation token</param>
+		/// <returns>A Task representing the compilation operation</returns>
+		Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Compiles a diagram file to an image and saves the output to a file.
 		/// </summary>
 		/// <param name="diagram">The diagram to compile</param>
-		void Compile(Diagram diagram);
+		/// <returns>A Task representing the compilation operation</returns>
+		Task CompileToFile(Diagram diagram);
 	}
 }

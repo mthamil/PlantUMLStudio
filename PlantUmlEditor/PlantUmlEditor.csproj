@@ -116,7 +116,7 @@
     <Compile Include="Model\DiagramIOService.cs" />
     <Compile Include="Model\IDiagramCompiler.cs" />
     <Compile Include="Model\IDiagramIOService.cs" />
-    <Compile Include="Model\PlantUmlDiagramCompiler.cs" />
+    <Compile Include="Model\PlantUml.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippet.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
@@ -176,7 +176,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="PlantUML.xshd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

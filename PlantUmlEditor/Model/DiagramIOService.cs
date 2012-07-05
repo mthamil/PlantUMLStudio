@@ -28,9 +28,9 @@ namespace PlantUmlEditor.Model
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
-		public Task<IList<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int?, string>> progress)
+		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int?, string>> progress)
 		{
-			return Task<IList<Diagram>>.Factory.StartNew(() =>
+			return Task<IEnumerable<Diagram>>.Factory.StartNew(() =>
 			{
 				var diagrams = new List<Diagram>();
 

@@ -76,6 +76,9 @@
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemTimersTimer.cs" />
     <Compile Include="Concurrency\IProgress.cs" />
+    <Compile Include="Concurrency\Processes\IProcessTaskAdapter.cs" />
+    <Compile Include="Concurrency\Processes\ProcessErrorException.cs" />
+    <Compile Include="Concurrency\Processes\ProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Progress.cs" />
     <Compile Include="Concurrency\ReaderWriterLockSlimExtensions.cs" />
     <Compile Include="Concurrency\SynchronousSynchronizationContext.cs" />
@@ -96,7 +99,6 @@
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="Weak.cs" />
-    <Compile Include="With.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

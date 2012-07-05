@@ -94,6 +94,7 @@
     <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\DiagramsViewModelTests.cs" />
     <Compile Include="SubSpec\SubSpec.cs" />
     <Compile Include="SubSpec\SubSpec.Thesis.cs" />
     <Compile Include="SubSpec\SubSpecUtils.cs" />

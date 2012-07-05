@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Reflection;
 using Utilities.Reflection;
+using Xunit;
 using Xunit.Sdk;
 
 namespace Unit.Tests
@@ -11,6 +14,21 @@ namespace Unit.Tests
 	/// </summary>
 	public class AssertThat
 	{
+		/// <summary>
+		/// Verifies that the provided object raised INotifyPropertyChanged.PropertyChanged as a result of executing the given
+		/// test code.
+		/// </summary>
+		/// <typeparam name="TDeclaring">The type of object declaring the property</typeparam>
+		/// <typeparam name="TValue">The value of the property</typeparam>
+		/// <param name="object">The object declaring the property</param>
+		/// <param name="property">The property</param>
+		/// <param name="testCode">The code that should change the property</param>
+		public static void PropertyChanged<TDeclaring, TValue>(TDeclaring @object, Expression<Func<TDeclaring, TValue>> property, Assert.PropertyChangedDelegate testCode)
+			where TDeclaring : INotifyPropertyChanged
+		{
+			Assert.PropertyChanged(@object, Reflect.PropertyOf(property).Name, testCode);
+		}
+
 		/// <summary>
 		/// Determines whether two sequences are equal by comparing length and element equality.
 		/// The type of element's default equality comparer is used.

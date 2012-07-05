@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Model;
 using Utilities.Chronology;
 using Utilities.Concurrency;
-using Utilities.Controls.Behaviors;
 using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -23,7 +23,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a diagram editor.
 	/// </summary>
-	public class DiagramEditorViewModel : ViewModelBase, IUndoProvider
+	public class DiagramEditorViewModel : ViewModelBase, IUndoProvider, IDiagramEditor
 	{
 		/// <summary>
 		/// Initializes a new diagram editor.
@@ -166,8 +166,8 @@ namespace PlantUmlEditor.ViewModel
 
 			_saveExecuting = true;
 			IsIdle = false;
-			if (_refreshCancellation != null)
-				_refreshCancellation.Cancel();
+			foreach (var cts in _refreshCancellations)
+				cts.Value.Cancel();
 
 			// PlantUML seems to have a problem detecting encoding if the
 			// first line is not an empty line.
@@ -237,16 +237,18 @@ namespace PlantUmlEditor.ViewModel
 			if (_saveExecuting)
 				return;
 
-			_refreshCancellation = new CancellationTokenSource();
-			_compiler.CompileToImage(CodeEditor.Content, _refreshCancellation.Token)
-				.ContinueWith(t =>
-				{
-					if (t.Status == TaskStatus.RanToCompletion)
-						DiagramViewModel.DiagramImage = t.Result;
+			var tcs = new CancellationTokenSource();
+			Task refreshTask = null;
+			refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token)
+				 .ContinueWith(t =>
+				 {
+					 if (t.Status == TaskStatus.RanToCompletion)
+						 DiagramViewModel.DiagramImage = t.Result;
 
-					_refreshCancellation.Dispose();
-					_refreshCancellation = null;
-				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+					 _refreshCancellations.Remove(refreshTask);
+				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+
+			_refreshCancellations[refreshTask] = tcs;
 		}
 
 		/// <summary>
@@ -342,7 +344,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _refreshCommand;
 		private readonly ICommand _closeCommand;
 
-		private CancellationTokenSource _refreshCancellation;
+		private readonly IDictionary<Task, CancellationTokenSource> _refreshCancellations = new ConcurrentDictionary<Task, CancellationTokenSource>();
 
 		private readonly Property<bool> _autoSave;
 		private readonly Property<TimeSpan> _autoSaveInterval;

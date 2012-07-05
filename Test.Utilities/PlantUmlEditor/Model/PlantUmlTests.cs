@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using PlantUmlEditor.Model;
+using Utilities.Concurrency.Processes;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.Model
@@ -13,7 +14,7 @@ namespace Unit.Tests.PlantUmlEditor.Model
 		public void Test_CompileDiagramFile()
 		{
 			// Arrange.
-			var plantUml = new PlantUml(TaskScheduler.Default)
+			var plantUml = new PlantUml(new ProcessTaskAdapter(TaskScheduler.Default))
 			{
 				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\Thirdparty\plantuml.jar"),
 				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")

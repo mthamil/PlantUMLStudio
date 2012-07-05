@@ -29,8 +29,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			codeEditor.Content = "initial content";
 
-			// Act.
-			codeEditor.Content = "new content";
+			// Act/Assert.
+			AssertThat.PropertyChanged(codeEditor, p => p.IsModified, () =>
+			{
+				codeEditor.Content = "new content";
+			});
 
 			// Assert.
 			Assert.Equal("new content", codeEditor.Content);

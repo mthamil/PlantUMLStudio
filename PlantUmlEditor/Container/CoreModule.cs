@@ -5,6 +5,7 @@ using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
+using Utilities.Concurrency.Processes;
 
 namespace PlantUmlEditor.Container
 {
@@ -21,6 +22,10 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<SystemTimersTimer>().As<ITimer>();
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
+
+			builder.RegisterType<ProcessTaskAdapter>().As<IProcessTaskAdapter>()
+				.SingleInstance();
+
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler>()
 				.WithProperty(c => c.GraphVizExecutable, new FileInfo(Settings.Default.GraphVizLocation))
 				.WithProperty(c => c.PlantUmlJar, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.jar")));

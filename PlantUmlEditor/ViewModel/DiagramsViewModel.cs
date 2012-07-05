@@ -16,7 +16,7 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramsViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, Func<DiagramViewModel, DiagramEditorViewModel> editorFactory, 
+		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, Func<DiagramViewModel, IDiagramEditor> editorFactory, 
 			Func<Diagram, DiagramViewModel> diagramFactory)
 		{
 			Progress = progressViewModel;
@@ -30,7 +30,7 @@ namespace PlantUmlEditor.ViewModel
 			_currentDiagram = Property.New(this, p => p.CurrentDiagram, OnPropertyChanged);
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
-			_openDiagrams.Value = new ObservableCollection<DiagramEditorViewModel>();
+			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
 
 			_openDiagram = Property.New(this, p => p.OpenDiagram, OnPropertyChanged);
 
@@ -113,7 +113,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The diagram currently open for editing.
 		/// </summary>
-		public DiagramEditorViewModel OpenDiagram
+		public IDiagramEditor OpenDiagram
 		{
 			get { return _openDiagram.Value; }
 			set { _openDiagram.Value = value; }
@@ -122,7 +122,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The currently open diagrams.
 		/// </summary>
-		public ICollection<DiagramEditorViewModel> OpenDiagrams
+		public ICollection<IDiagramEditor> OpenDiagrams
 		{
 			get { return _openDiagrams.Value; }
 		}
@@ -150,7 +150,7 @@ namespace PlantUmlEditor.ViewModel
 
 		void diagramEditor_Closed(object sender, EventArgs e)
 		{
-			var diagramEditor = (DiagramEditorViewModel)sender;
+			var diagramEditor = (IDiagramEditor)sender;
 			diagramEditor.Closed -= diagramEditor_Closed;
 			OpenDiagrams.Remove(diagramEditor);
 		}
@@ -212,14 +212,14 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;
 
-		private readonly Property<DiagramEditorViewModel> _openDiagram;
-		private readonly Property<ICollection<DiagramEditorViewModel>> _openDiagrams;
+		private readonly Property<IDiagramEditor> _openDiagram;
+		private readonly Property<ICollection<IDiagramEditor>> _openDiagrams;
 
 		private readonly ICommand _loadDiagramsCommand;
 		private readonly ICommand _openDiagramCommand;
 
 		private readonly IDiagramIOService _diagramIO;
-		private readonly Func<DiagramViewModel, DiagramEditorViewModel> _editorFactory;
+		private readonly Func<DiagramViewModel, IDiagramEditor> _editorFactory;
 		private readonly Func<Diagram, DiagramViewModel> _diagramFactory;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}

@@ -72,6 +72,7 @@
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemSelectedCommandBehavior.cs" />
+    <Compile Include="Converters\SecondsToTimeSpanConverter.cs" />
     <Compile Include="FilePicker.cs" />
     <Compile Include="MultiKey\MultiKeyBinding.cs" />
     <Compile Include="MultiKey\MultiKeyGesture.cs" />

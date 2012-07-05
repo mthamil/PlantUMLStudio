@@ -9,12 +9,14 @@
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
+    xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
     
     <UserControl.Resources>
         <attached:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
+        <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
     </UserControl.Resources>
   
     <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
@@ -88,7 +90,7 @@
                         <Button Content="_Refresh" Height="Auto" Padding="15, 0, 15, 0" Command="{Binding RefreshCommand}" Margin="0,0,7,0"/>
                         
                         <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" VerticalAlignment="Center" IsChecked="{Binding AutoSave, Mode=TwoWay}" Margin="10,0,5,0"/>
-                        <TextBox Text="{Binding AutoSaveIntervalSeconds, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MaxWidth="30"/>
+                        <TextBox Text="{Binding AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" VerticalAlignment="Center" MaxWidth="30"/>
                         <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0"/>
                         
                         <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>

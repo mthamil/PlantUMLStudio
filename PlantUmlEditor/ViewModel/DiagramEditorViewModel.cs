@@ -57,7 +57,7 @@ namespace PlantUmlEditor.ViewModel
 			IsIdle = true;
 
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
-			_autoSaveIntervalSeconds = Property.New(this, p => p.AutoSaveIntervalSeconds, OnPropertyChanged);
+			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
 			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Save(), p => p.CanSave, this);
 			_refreshCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Refresh(), p => p.CanRefresh, this);
@@ -95,7 +95,21 @@ namespace PlantUmlEditor.ViewModel
 		public bool AutoSave
 		{
 			get { return _autoSave.Value; }
-			set { _autoSave.Value = value; }
+			set 
+			{
+				if (_autoSave.TrySetValue(value))
+				{
+					if (_autoSave.Value)
+					{
+						if (CodeEditor.IsModified)
+							_autoSaveTimer.TryStart();
+					}
+					else
+					{
+						_autoSaveTimer.TryStop();
+					}
+				}
+			}
 		}
 
 		void autoSaveTimerElapsed(object sender, EventArgs e)
@@ -108,13 +122,13 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The auto-save internval.
 		/// </summary>
-		public int AutoSaveIntervalSeconds
+		public TimeSpan AutoSaveInterval
 		{
-			get { return _autoSaveIntervalSeconds.Value; }
+			get { return _autoSaveInterval.Value; }
 			set
 			{
-				if (_autoSaveIntervalSeconds.TrySetValue(value))
-					_autoSaveTimer.Interval = TimeSpan.FromSeconds(value);
+				if (_autoSaveInterval.TrySetValue(value))
+					_autoSaveTimer.Interval = value;
 			}
 		}
 
@@ -326,7 +340,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly CancellationTokenSource _refreshCancellation = new CancellationTokenSource();
 
 		private readonly Property<bool> _autoSave;
-		private readonly Property<int> _autoSaveIntervalSeconds;
+		private readonly Property<TimeSpan> _autoSaveInterval;
 		private readonly Property<bool> _isIdle;
 		private readonly Property<DiagramViewModel> _diagramViewModel;
 

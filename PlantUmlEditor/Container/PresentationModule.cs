@@ -47,7 +47,7 @@ namespace PlantUmlEditor.Container
 			builder.Register(c => new CodeEditorViewModel(c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")));
 
 			builder.RegisterType<DiagramEditorViewModel>()
-				.WithProperty(p => p.AutoSaveIntervalSeconds, 10)
+				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(10))
 				.WithProperty(p => p.AutoSave, true);
 
 			builder.RegisterType<DiagramsViewModel>()

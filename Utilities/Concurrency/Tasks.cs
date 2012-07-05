@@ -42,7 +42,7 @@ namespace Utilities.Concurrency
 		/// Creates an already completed task from an exception.
 		/// </summary>
 		/// <typeparam name="TException">The type of exception that was "thrown"</typeparam>
-		/// <param name="exception">An exception</param>
+		/// <param name="exception">An existing exception</param>
 		/// <returns>A Task that has failed due to the given exception</returns>
 		public static Task FromException<TException>(TException exception)
 			where TException : Exception
@@ -50,6 +50,17 @@ namespace Utilities.Concurrency
 			var taskSource = new TaskCompletionSource<object>();
 			taskSource.SetException(exception);
 			return taskSource.Task;
+		}
+
+		/// <summary>
+		/// Creates an already completed task from an exception.
+		/// </summary>
+		/// <typeparam name="TException">The type of exception that was "thrown"</typeparam>
+		/// <returns>A Task that has failed due to the given exception</returns>
+		public static Task FromException<TException>()
+			where TException : Exception, new()
+		{
+			return FromException(new TException());
 		}
 	}
 }

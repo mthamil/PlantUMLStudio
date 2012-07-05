@@ -19,21 +19,16 @@ namespace Unit.Tests.PlantUmlEditor.Model
 				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")
 			};
 
-			var cts = new CancellationTokenSource();
-
-			var inputFile = new FileInfo(@"C:\Users\mhamilt\Documents\PlantUmlEditor\samples\sample class.puml");
-
 			// Act.
-			Task<BitmapSource> compileTask = plantUml.CompileToImage(code, cts.Token);
-			//cts.Cancel();
+			Task<BitmapSource> compileTask = plantUml.CompileToImage(code, CancellationToken.None);
 			compileTask.Wait();
 
-			using (var filestream = new FileStream(inputFile.FullName.Replace(".puml", ".png"), FileMode.Create))
-			{
-				var encoder = new PngBitmapEncoder();
-				encoder.Frames.Add(BitmapFrame.Create(compileTask.Result));
-				encoder.Save(filestream);
-			}
+			//using (var filestream = new FileStream(inputFile.FullName.Replace(".puml", ".png"), FileMode.Create))
+			//{
+			//    var encoder = new PngBitmapEncoder();
+			//    encoder.Frames.Add(BitmapFrame.Create(compileTask.Result));
+			//    encoder.Save(filestream);
+			//}
 		}
 
 		private const string code = @"

@@ -57,10 +57,12 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=4.2.0.8783, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.4.2.0.8783\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -88,13 +90,16 @@
   <ItemGroup>
     <Compile Include="AssertThat.cs" />
     <Compile Include="AssertThatTests.cs" />
-    <Compile Include="MethodRecordingInterceptor.cs" />
+    <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
     <Compile Include="SubSpec\SubSpec.cs" />
     <Compile Include="SubSpec\SubSpec.Thesis.cs" />
     <Compile Include="SubSpec\SubSpecUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SynchronousAttribute.cs" />
     <Compile Include="Utilities.Controls\Behaviors\PlantUmlFoldingStrategyTests.cs" />
+    <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />
@@ -139,9 +144,7 @@
   <ItemGroup>
     <Content Include="SubSpec\LICENSE.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PlantUmlEditor\ViewModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

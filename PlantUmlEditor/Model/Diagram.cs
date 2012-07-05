@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using Utilities.PropertyChanged;
 
@@ -15,6 +16,7 @@ namespace PlantUmlEditor.Model
 		public Diagram()
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
+			_content.Value = string.Empty;
 		}
 
 		/// <summary>
@@ -49,7 +51,13 @@ namespace PlantUmlEditor.Model
         public string Content
 		{
 			get { return _content.Value; }
-			set { _content.Value = value; }
+			set
+			{
+				if (value == null)
+					throw new ArgumentNullException("value");
+
+				_content.Value = value; 
+			}
 		}
 
 		/// <see cref="object.Equals(object)"/>

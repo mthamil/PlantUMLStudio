@@ -151,37 +151,15 @@ namespace Unit.Tests
 
 		//private static EventInfo extractEvent<T>(Action<T> eventAccessor)
 		//{
-		//    var proxyFactory = new ProxyFactory();
+		//    var recorder = new MethodRecorder<T>();
+		//    recorder.Record(eventAccessor);
 
-		//    // Add the object that will intercept calls.
-		//    var recorder = new MethodRecordingInterceptor();
-		//    proxyFactory.AddAdvice(recorder);
-
-		//    Type targetType = typeof(T);
-		//    if (targetType.IsInterface)
-		//        proxyFactory.AddInterface(targetType);
-
-		//    // Add every derived interface.
-		//    foreach (Type intf in targetType.GetInterfaces())
-		//        proxyFactory.AddInterface(intf);
-
-		//    var recordingProxy = (T)proxyFactory.GetProxy();
-
-		//    try
-		//    {
-		//        // The only way to access the underlying add or remove handler methods is to actually
-		//        // call the method and intercept it.
-		//        eventAccessor(recordingProxy);
-		//    }
-		//    catch (TargetException) { }
-		//    catch (NotSupportedException) { }
-
-		//    MethodInfo eventMethod = recorder.LastInvocation.Method;
-		//    if (!(eventMethod.Name.StartsWith("add_") || eventMethod.Name.StartsWith("remove_")) || !eventMethod.IsSpecialName)
+		//    MemberInfo eventMember = recorder.LastInvocation;
+		//    if (!(eventMember.Name.StartsWith("add_") || eventMember.Name.StartsWith("remove_")) || !(eventMember is EventInfo))
 		//        throw new ArgumentException(@"Invocation must be an event subscription or unsubscription", "eventAccessor");
 
-		//    string eventName = eventMethod.Name.Replace("add_", string.Empty).Replace("remove_", string.Empty);
-		//    EventInfo eventInfo = targetType.GetEvent(eventName);
+		//    string eventName = eventMember.Name.Replace("add_", string.Empty).Replace("remove_", string.Empty);
+		//    EventInfo eventInfo = typeof(T).GetEvent(eventName);
 		//    return eventInfo;
 		//}
 

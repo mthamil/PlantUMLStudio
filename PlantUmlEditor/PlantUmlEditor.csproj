@@ -121,7 +121,6 @@
     <Compile Include="Model\Snippet.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
-    <Compile Include="ViewModel\Commands\SaveDiagramCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramsViewModel.cs" />
     <Compile Include="ViewModel\DiagramViewModel.cs" />
@@ -252,7 +251,9 @@
       <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModel\Commands\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>

@@ -2,11 +2,12 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using Autofac;
+using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
 {
 	/// <summary>
-	/// Factory for locator classes used for accessing specific view models. 
+	/// Used to retrieve specific view models from an application container. 
 	/// </summary>
 	/// <typeparam name="TViewModel">The specific type of ViewModel to access</typeparam>
 	public class AutofacViewModelLocator<TViewModel> : INotifyPropertyChanged where TViewModel : class
@@ -15,6 +16,12 @@ namespace PlantUmlEditor.ViewModel
 		{
 			_name = name;
 			_container = container;
+
+			_runtimeViewModel = Property.New(this, p => p.RuntimeViewModel, OnPropertyChanged)
+				.AlsoChanges(p => p.ViewModel);
+
+			_designtimeViewModel = Property.New(this, p => p.DesigntimeViewModel, OnPropertyChanged)
+				.AlsoChanges(p => p.ViewModel);
 		}
 
 		/// <summary>
@@ -42,19 +49,18 @@ namespace PlantUmlEditor.ViewModel
 		{
 			get
 			{
-				if (_runtimeViewModel == null)
+				if (_runtimeViewModel.Value == null)
 				{
 					RuntimeViewModel = String.IsNullOrEmpty(_name) 
 						? _container.Resolve<TViewModel>() 
 						: _container.ResolveNamed<TViewModel>(_name);
 				}
-				return _runtimeViewModel;
+				return _runtimeViewModel.Value;
 			}
 
 			set
 			{
-				_runtimeViewModel = value;
-				OnPropertyChanged("ViewModel");
+				_runtimeViewModel.Value = value;
 			}
 		}
 
@@ -74,33 +80,27 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public TViewModel DesigntimeViewModel
 		{
-			get
-			{
-				return _designtimeViewModel;
-			}
-
-			set
-			{
-				_designtimeViewModel = value;
-				OnPropertyChanged("ViewModel");
-			}
+			get { return _designtimeViewModel.Value; }
+			set { _designtimeViewModel.Value = value; }
 		}
 
 		#region INotifyPropertyChanged Members
 
+		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public void OnPropertyChanged(string propertyName)
+		private void OnPropertyChanged(string propertyName)
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			var localEvent = PropertyChanged;
+			if (localEvent != null)
+				localEvent(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#endregion
 
 		private static bool? _isInDesignMode;
-		private TViewModel _runtimeViewModel;
-		private TViewModel _designtimeViewModel;
+		private readonly Property<TViewModel> _runtimeViewModel;
+		private readonly Property<TViewModel> _designtimeViewModel;
 		private readonly string _name;
 		private readonly Autofac.IContainer _container;
 	}

@@ -49,12 +49,12 @@ namespace PlantUmlEditor.Model
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFile"/>
-		public Task CompileToFile(Diagram diagram)
+		public Task CompileToFile(FileInfo diagramFile)
 		{
 			return _processAdapter.Execute(new ProcessStartInfo
 			{
 				FileName = "java",
-				Arguments = String.Format(@"-jar ""{0}"" -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagram.DiagramFilePath),
+				Arguments = String.Format(@"-jar ""{0}"" -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
 				WindowStyle = ProcessWindowStyle.Hidden,
 				CreateNoWindow = true,
 				RedirectStandardError = true,

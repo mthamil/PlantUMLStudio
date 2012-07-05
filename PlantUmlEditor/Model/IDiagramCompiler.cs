@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -19,10 +20,10 @@ namespace PlantUmlEditor.Model
 		Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken);
 
 		/// <summary>
-		/// Compiles a diagram file to an image and saves the output to a file.
+		/// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.
 		/// </summary>
-		/// <param name="diagram">The diagram to compile</param>
+		/// <param name="diagramFile">The diagram file to compile</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task CompileToFile(Diagram diagram);
+		Task CompileToFile(FileInfo diagramFile);
 	}
 }

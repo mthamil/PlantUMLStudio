@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using Control = System.Windows.Controls.Control;
 
 namespace Utilities.Controls
@@ -60,7 +61,11 @@ namespace Utilities.Controls
 							folderDialog.SelectedPath = filePicker.InitialLocationUri.LocalPath;
 						var result = folderDialog.ShowDialog();
 						if (result == DialogResult.OK)
+						{
 							filePicker.SelectedUri = new Uri(folderDialog.SelectedPath, UriKind.Absolute);
+							if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
+								filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
+						}
 					}
 					break;
 
@@ -73,7 +78,11 @@ namespace Utilities.Controls
 						fileDialog.Filter = filePicker.Filter;
 						var result = fileDialog.ShowDialog();
 						if (result == DialogResult.OK)
+						{
 							filePicker.SelectedUri = new Uri(fileDialog.FileName, UriKind.Absolute);
+							if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
+								filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
+						}
 					}
 					break;
 			}
@@ -147,6 +156,25 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty ModeProperty =
 			DependencyProperty.Register("Mode",
 			typeof(FilePickerMode),
+			typeof(FilePicker));
+
+		/// <summary>
+		/// The command to be executed when an affirmativee choice is made.
+		/// The selected URI is passed as the command parameter.
+		/// </summary>
+		public ICommand AffirmativeCommand
+		{
+			get { return (ICommand)GetValue(AffirmativeCommandProperty); }
+			set { SetValue(AffirmativeCommandProperty, value); }
+		}
+
+		/// <summary>
+		/// The affirmative command property.
+		/// </summary>
+		public static readonly DependencyProperty AffirmativeCommandProperty =
+			DependencyProperty.RegisterAttached(
+			"AffirmativeCommand",
+			typeof(ICommand),
 			typeof(FilePicker));
 	}
 

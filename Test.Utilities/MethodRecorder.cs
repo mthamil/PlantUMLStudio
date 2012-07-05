@@ -15,8 +15,20 @@ namespace Unit.Tests
 		/// <summary>
 		/// Creates a new MethodRecorder.
 		/// </summary>
-		public MethodRecorder()
+		public MethodRecorder(T proxied)
 		{
+			_proxied = proxied;
+		}
+
+		public override System.Collections.Generic.IEnumerable<string> GetDynamicMemberNames()
+		{
+			return base.GetDynamicMemberNames();
+		}
+
+		public override bool TryConvert(ConvertBinder binder, out object result)
+		{
+			result = this;
+			return binder.Type == typeof(T);
 		}
 
 		public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -61,7 +73,8 @@ namespace Unit.Tests
 		{
 			try
 			{
-				invocation.DynamicInvoke(argument);
+				T proxy = argument;
+				invocation.DynamicInvoke(proxy);
 			}
 			catch (TargetException) { }
 			catch (NotSupportedException) { }

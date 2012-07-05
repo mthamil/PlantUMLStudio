@@ -140,7 +140,7 @@ namespace Unit.Tests
 
 		//private static EventProxy Raises<T>(T target, Action<T> subscriber, EventDelegate eventDelegate, bool expectEventReceived)
 		//{
-		//    EventInfo eventInfo = extractEvent(subscriber);
+		//    EventInfo eventInfo = ExtractEvent(subscriber, target);
 		//    EventProxy proxy = InternalRaises(target, eventInfo, eventDelegate);
 
 		//    if (expectEventReceived != proxy.EventReceived)
@@ -149,9 +149,9 @@ namespace Unit.Tests
 		//    return proxy;
 		//}
 
-		//private static EventInfo extractEvent<T>(Action<T> eventAccessor)
+		//private static EventInfo ExtractEvent<T>(Action<T> eventAccessor, T target)
 		//{
-		//    var recorder = new MethodRecorder<T>();
+		//    var recorder = new MethodRecorder<T>(target);
 		//    recorder.Record(eventAccessor);
 
 		//    MemberInfo eventMember = recorder.LastInvocation;

@@ -166,7 +166,8 @@ namespace PlantUmlEditor.ViewModel
 
 			_saveExecuting = true;
 			IsIdle = false;
-			_refreshCancellation.Cancel();
+			if (_refreshCancellation != null)
+				_refreshCancellation.Cancel();
 
 			// PlantUML seems to have a problem detecting encoding if the
 			// first line is not an empty line.
@@ -236,11 +237,15 @@ namespace PlantUmlEditor.ViewModel
 			if (_saveExecuting)
 				return;
 
+			_refreshCancellation = new CancellationTokenSource();
 			_compiler.CompileToImage(CodeEditor.Content, _refreshCancellation.Token)
 				.ContinueWith(t =>
 				{
 					if (t.Status == TaskStatus.RanToCompletion)
 						DiagramViewModel.DiagramImage = t.Result;
+
+					_refreshCancellation.Dispose();
+					_refreshCancellation = null;
 				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 		}
 
@@ -337,7 +342,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _refreshCommand;
 		private readonly ICommand _closeCommand;
 
-		private readonly CancellationTokenSource _refreshCancellation = new CancellationTokenSource();
+		private CancellationTokenSource _refreshCancellation;
 
 		private readonly Property<bool> _autoSave;
 		private readonly Property<TimeSpan> _autoSaveInterval;

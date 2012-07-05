@@ -127,7 +127,6 @@
     <Compile Include="ViewModel\NamedOperationViewModel.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
-    <Compile Include="ViewModel\RenderedDiagramViewModel.cs" />
     <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />
     <Compile Include="View\DiagramEditorView.xaml.cs">
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>

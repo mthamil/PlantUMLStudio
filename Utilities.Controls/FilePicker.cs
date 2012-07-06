@@ -159,7 +159,7 @@ namespace Utilities.Controls
 			typeof(FilePicker));
 
 		/// <summary>
-		/// The command to be executed when an affirmativee choice is made.
+		/// The command to be executed when an affirmative choice is made.
 		/// The selected URI is passed as the command parameter.
 		/// </summary>
 		public ICommand AffirmativeCommand
@@ -172,7 +172,7 @@ namespace Utilities.Controls
 		/// The affirmative command property.
 		/// </summary>
 		public static readonly DependencyProperty AffirmativeCommandProperty =
-			DependencyProperty.RegisterAttached(
+			DependencyProperty.Register(
 			"AffirmativeCommand",
 			typeof(ICommand),
 			typeof(FilePicker));

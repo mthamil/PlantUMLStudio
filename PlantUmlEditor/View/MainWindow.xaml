@@ -364,24 +364,49 @@
             </Grid>
       
             <!-- This is the bottom row containing status message and progress bar -->
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="100"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-          
-                <TextBlock Grid.Column="0" Grid.Row="0" x:Name="StatusMessage" Width="Auto" HorizontalAlignment="Left">
-                    <Run Text="{Binding Progress.Message, TargetNullValue=Ready.}"/>
-                </TextBlock>
-                <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Gray" 
-                             Minimum="0" Maximum="100" Width="215" Grid.ColumnSpan="2" HorizontalAlignment="Right" 
-                             IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
-                             Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"
-                             Visibility="{Binding Progress.InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
-            </Grid>      
+            <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25">
+
+                <!--<StatusBar.BorderBrush Color="" />-->
+                
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".85*"/>
+                                <ColumnDefinition Width=".15*"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+
+                <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding Progress.Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch">
+                        <!--<TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LastEvent.Severity}" Value="Informational">
+                                        <Setter Property="Foreground" Value="#FF000000"/>
+                                        <Setter Property="FontWeight" Value="Normal"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LastEvent.Severity}" Value="Critical">
+                                        <Setter Property="Foreground" Value="#FFFF0000"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>-->
+                    </TextBlock>
+                </StatusBarItem>
+
+                <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
+                    <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Gray" 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="18" Width="165" 
+                            Minimum="0" Maximum="100" IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                            Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"
+                            Visibility="{Binding Progress.InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
+                </StatusBarItem>
+                    
+            </StatusBar>    
       
         </Grid>
     </Grid>

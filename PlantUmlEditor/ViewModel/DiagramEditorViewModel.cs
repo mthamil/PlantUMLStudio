@@ -209,10 +209,8 @@ namespace PlantUmlEditor.ViewModel
 				_saveExecuting = false;
 				IsIdle = true;
 				if (t.Exception != null)
-				{
 					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
-					throw t.Exception.InnerException;
-				}
+
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 		}
 

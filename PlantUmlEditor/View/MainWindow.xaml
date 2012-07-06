@@ -196,7 +196,7 @@
                                      attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                      Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                            <ctrl:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}" 
+                            <ctrl:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}"
                                              Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
                                              InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
                                              Mode="Directory"/>
@@ -258,9 +258,12 @@
                     </ListBox>
             
                     <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                        <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
-                                        InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
-                                        Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
+                        <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" 
+                                         AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
+                                         Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
+                                         InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
+                                         Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
+                        
                         <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
                         <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                     </StackPanel>

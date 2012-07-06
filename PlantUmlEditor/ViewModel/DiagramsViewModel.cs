@@ -40,8 +40,14 @@ namespace PlantUmlEditor.ViewModel
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
+			_addNewDiagramCommand = new RelayCommand(uri => AddNewDiagram((Uri)uri));
 			_openDiagramCommand = new RelayCommand(d => OpenDiagramForEdit((DiagramViewModel)d), d => (d as DiagramViewModel) != null);
 		}
+
+		/// <summary>
+		/// The code used for new diagrams.
+		/// </summary>
+		public string NewDiagramTemplate { get; set; }
 
 		/// <summary>
 		/// The location to load diagrams from.
@@ -74,32 +80,12 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// A new diagram's URI.
+		/// A new diagram's selected URI.
 		/// </summary>
 		public Uri NewDiagramUri
 		{
 			get { return _newDiagramUri.Value; }
-			set
-			{
-				if (_newDiagramUri.TrySetValue(value))
-				{
-					var newFilePath = value.LocalPath;
-					string contents = String.Format(
-							"@startuml \"{0}.png\"{1}{2}{3}@enduml",
-							Path.GetFileNameWithoutExtension(newFilePath), 
-							Environment.NewLine,
-							Environment.NewLine,
-							Environment.NewLine);
-					File.WriteAllText(newFilePath, contents);
-
-					_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
-					LoadDiagrams().ContinueWith(t =>
-					{
-						CurrentDiagram = t.Result.SingleOrDefault(d => d.Diagram.DiagramFilePath == newFilePath);
-						OpenDiagramForEdit(CurrentDiagram);
-					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
-				}
-			}
+			set { _newDiagramUri.Value = value; }
 		}
 
 		/// <summary>
@@ -108,6 +94,36 @@ namespace PlantUmlEditor.ViewModel
 		public ICollection<DiagramViewModel> Diagrams
 		{
 			get { return _diagrams.Value; }
+		}
+
+		/// <summary>
+		/// Adds a new diagram with a given URI.
+		/// </summary>
+		public ICommand AddNewDiagramCommand
+		{
+			get { return _addNewDiagramCommand; }
+		}
+
+		private void AddNewDiagram(Uri newDiagramUri)
+		{
+			string newFilePath = newDiagramUri.LocalPath;
+			var newDiagram = new Diagram
+			{
+				DiagramFilePath = newFilePath,
+				Content = String.Format(NewDiagramTemplate, Path.GetFileNameWithoutExtension(newFilePath))
+			};
+
+			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
+
+			_diagramIO.SaveAsync(newDiagram, false)
+				.ContinueWith(st =>
+				{
+					LoadDiagrams().ContinueWith(lt =>
+					{
+						CurrentDiagram = lt.Result.SingleOrDefault(d => d.Diagram.DiagramFilePath == newFilePath);
+						OpenDiagramForEdit(CurrentDiagram);
+					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
+				}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 		}
 
 		/// <summary>
@@ -183,10 +199,7 @@ namespace PlantUmlEditor.ViewModel
 			loadTask.ContinueWith(t =>
 			{
 				if (t.Exception != null)
-				{
 					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
-					throw t.Exception.InnerException;
-				}
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 
@@ -216,6 +229,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<ICollection<IDiagramEditor>> _openDiagrams;
 
 		private readonly ICommand _loadDiagramsCommand;
+		private readonly ICommand _addNewDiagramCommand;
 		private readonly ICommand _openDiagramCommand;
 
 		private readonly IDiagramIOService _diagramIO;

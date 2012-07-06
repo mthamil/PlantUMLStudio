@@ -55,6 +55,8 @@ namespace PlantUmlEditor.Container
 					new DirectoryInfo(string.IsNullOrEmpty(Settings.Default.LastPath)
 									? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\")
 									: Settings.Default.LastPath))
+				.WithProperty(d => d.NewDiagramTemplate, String.Format(
+					@"@startuml ""{{0}}.png""{0}{1}{2}@enduml", Environment.NewLine, Environment.NewLine, Environment.NewLine))
 				.SingleInstance();
 		}
 	}

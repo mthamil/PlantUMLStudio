@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="AssertThat.cs" />
     <Compile Include="AssertThatTests.cs" />
+    <Compile Include="FailOnUnobservedTaskExceptionAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
@@ -145,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SubSpec\LICENSE.txt" />
+    <None Include="TestDiagrams\class.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

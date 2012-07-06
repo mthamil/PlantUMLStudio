@@ -110,7 +110,7 @@ namespace PlantUmlEditor.ViewModel
 			var newDiagram = new Diagram
 			{
 				DiagramFilePath = newFilePath,
-				Content = String.Format(NewDiagramTemplate, Path.GetFileNameWithoutExtension(newFilePath))
+				Content = String.Format(NewDiagramTemplate, Path.GetFileNameWithoutExtension(newFilePath) + ".png")
 			};
 
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));

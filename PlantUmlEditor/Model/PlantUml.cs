@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Utilities.Concurrency.Processes;
+using Utilities.Concurrency;
 
 namespace PlantUmlEditor.Model
 {
@@ -37,15 +38,15 @@ namespace PlantUmlEditor.Model
 				RedirectStandardInput = true,
 				UseShellExecute = false
 			}, new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken)
-			.ContinueWith(t =>
-			{
-				var bitmap = new BitmapImage();
-				bitmap.BeginInit();
-				bitmap.StreamSource = t.Result;
-				bitmap.EndInit();
-				bitmap.Freeze();
-				return (BitmapSource)bitmap;
-			}, TaskContinuationOptions.OnlyOnRanToCompletion);
+			.Then(stream => 
+				{
+					var bitmap = new BitmapImage();
+					bitmap.BeginInit();
+					bitmap.StreamSource = stream;
+					bitmap.EndInit();
+					bitmap.Freeze();
+					return (BitmapSource)bitmap;
+				});
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFile"/>

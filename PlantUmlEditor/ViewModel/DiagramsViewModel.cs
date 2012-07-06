@@ -116,14 +116,11 @@ namespace PlantUmlEditor.ViewModel
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
 			_diagramIO.SaveAsync(newDiagram, false)
-				.ContinueWith(st =>
-				{
-					LoadDiagrams().ContinueWith(lt =>
+				.Then(() => LoadDiagrams().ContinueWith(lt =>
 					{
 						CurrentDiagram = lt.Result.SingleOrDefault(d => d.Diagram.DiagramFilePath == newFilePath);
 						OpenDiagramForEdit(CurrentDiagram);
-					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
-				}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
+					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler));
 		}
 
 		/// <summary>

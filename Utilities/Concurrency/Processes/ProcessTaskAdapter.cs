@@ -45,20 +45,21 @@ namespace Utilities.Concurrency.Processes
 			{
 				process.Exited -= exitedHandler;
 				process.ErrorDataReceived -= errorHandler;
-				process.Dispose();
 
 				if (cancellationToken.IsCancellationRequested)
 				{
-					tcs.SetCanceled();
+					tcs.TrySetCanceled();
 				}
 				else if (errorStream.Length > 0)
 				{
-					tcs.SetException(CreateExceptionFromErrorStream(errorStream));
+					tcs.TrySetException(CreateExceptionFromErrorStream(errorStream));
 				}
 				else
 				{
-					tcs.SetResult(null);
+					tcs.TrySetResult(null);
 				}
+
+				process.Dispose();
 			};
 
 			process.Exited += exitedHandler;
@@ -71,7 +72,8 @@ namespace Utilities.Concurrency.Processes
 
 		/// <summary>
 		/// Executes a Process that takes data written to its input stream
-		/// and returns data read from its output stream.
+		/// and returns data read from its output stream.  Note that the entire stream 
+		/// is read into memory so for large outputs this method may not be appropriate.
 		/// </summary>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="input">The data to write to the Process's input stream</param>
@@ -98,21 +100,21 @@ namespace Utilities.Concurrency.Processes
 				process.Exited -= exitedHandler;
 				process.ErrorDataReceived -= errorHandler;
 
-				process.Dispose();
-
 				if (cancellationToken.IsCancellationRequested)
 				{
-					tcs.SetCanceled();
+					tcs.TrySetCanceled();
 				}
 				else if (errorStream.Length > 0)
 				{
-					tcs.SetException(CreateExceptionFromErrorStream(errorStream));
+					tcs.TrySetException(CreateExceptionFromErrorStream(errorStream));
 				}
 				else
 				{
 					outputStream.Position = 0;
-					tcs.SetResult(outputStream);
+					tcs.TrySetResult(outputStream);
 				}
+
+				process.Dispose();
 			};
 
 			process.Exited += exitedHandler;

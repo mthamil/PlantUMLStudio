@@ -105,6 +105,7 @@
     <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />
+    <Compile Include="Utilities\Concurrency\TaskExtensionsTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />
     <Compile Include="Utilities\PropertyChanged\PropertyTests.cs" />
     <Compile Include="Utilities\Reflection\ReflectionExtensionsTests.cs" />

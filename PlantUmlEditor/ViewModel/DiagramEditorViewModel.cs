@@ -240,7 +240,9 @@ namespace PlantUmlEditor.ViewModel
 			refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token)
 				 .ContinueWith(t =>
 				 {
-					 if (t.Status == TaskStatus.RanToCompletion)
+					 if (t.IsFaulted && t.Exception != null)
+						 Progress.Message = t.Exception.InnerException.Message;
+					 else if (!t.IsCanceled)
 						 DiagramViewModel.DiagramImage = t.Result;
 
 					 _refreshCancellations.Remove(refreshTask);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
@@ -76,7 +75,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.False(isValid);
-			diagramIO.Verify(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()), Times.Never());
+			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
+				It.IsAny<DirectoryInfo>(), 
+				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.Never());
 		}
 
 		[Fact]
@@ -167,8 +168,13 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(diagrams.OpenDiagrams.Single(), diagrams.OpenDiagram);
 			Assert.Equal(diagrams.Diagrams.Single(), diagrams.CurrentDiagram);
 
-			diagramIO.Verify(dio => dio.SaveAsync(It.Is<Diagram>(d => d.Content == "New Diagram" && d.DiagramFilePath == testDiagramFile.FullName), false));
-			diagramIO.Verify(dio => dio.ReadDiagramsAsync(It.Is<DirectoryInfo>(d => d.FullName == testDiagramFile.Directory.FullName), It.IsAny<IProgress<Tuple<int?, string>>>()), Times.AtLeastOnce());
+			diagramIO.Verify(dio => dio.SaveAsync(
+				It.Is<Diagram>(d => d.Content == "New Diagram" && d.DiagramFilePath == testDiagramFile.FullName), 
+				false));
+
+			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
+				It.Is<DirectoryInfo>(d => d.FullName == testDiagramFile.Directory.FullName), 
+				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.AtLeastOnce());
 		}
 
 		private DiagramsViewModel diagrams;

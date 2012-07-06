@@ -1,0 +1,16 @@
+<Configuration>
+  <SharedSolutionTemplateManager>
+    <LiveTemplates>
+      <Template uid="e4d2dc83-fee1-4702-bbb0-30cf3d1ff1ca" shortcut="ut" description="Unit Test" text="[Fact]&#xD;&#xA;public void Test_$METHOD_NAME$()&#xD;&#xA;{&#xD;&#xA;    // Arrange.&#xD;&#xA;    $END$&#xD;&#xA;&#xD;&#xA;    // Act.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;    // Assert.&#xD;&#xA;&#xD;&#xA;}" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="TypeMember" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="METHOD_NAME" expression="" initialRange="0" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+    </LiveTemplates>
+  </SharedSolutionTemplateManager>
+</Configuration>

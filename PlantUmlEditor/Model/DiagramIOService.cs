@@ -93,7 +93,7 @@ namespace PlantUmlEditor.Model
 					return new Diagram
 					{
 						Content = content,
-						DiagramFilePath = file.FullName,
+						File = file,
 						ImageFilePath = imageFilePath
 					};
 				}
@@ -107,20 +107,16 @@ namespace PlantUmlEditor.Model
 		{
 			return Task.Factory.StartNew(() =>
 			{
-				var diagramFile = new FileInfo(diagram.DiagramFilePath);
-
 				if (makeBackup)
-					diagramFile.CopyTo(diagramFile.FullName + ".bak", true);
+					diagram.File.CopyTo(diagram.File.FullName + ".bak", true);
 
 				//Thread.Sleep(4000);
 				// Save the diagram content using UTF-8 encoding to support 
 				// various international characters, which ASCII won't support
 				// and Unicode won't make it cross platform
-				File.WriteAllText(diagramFile.FullName, diagram.Content, Encoding.UTF8);
+				File.WriteAllText(diagram.File.FullName, diagram.Content, Encoding.UTF8);
 
-				return _diagramCompiler.CompileToFile(diagramFile);
-
-			}, CancellationToken.None, TaskCreationOptions.None, _scheduler).Unwrap();
+			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
 		}
 
 		#endregion

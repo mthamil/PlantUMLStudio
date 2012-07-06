@@ -20,16 +20,16 @@ namespace PlantUmlEditor.Model
 		}
 
 		/// <summary>
-		/// The diagram's full file path.
+		/// The diagram file.
 		/// </summary>
-        public string DiagramFilePath { get; set; }
+        public FileInfo File { get; set; }
 
 		/// <summary>
 		/// Just the diagram's file name.
 		/// </summary>
 		public string DiagramFileNameOnly
 		{
-			get { return Path.GetFileName(DiagramFilePath); }
+			get { return File.Name; }
 		}
 
 		/// <summary>
@@ -67,13 +67,13 @@ namespace PlantUmlEditor.Model
 			if (other == null)
 				return false;
 
-            return other.DiagramFilePath == DiagramFilePath;
+            return other.File.FullName == File.FullName;
         }
 
 		/// <see cref="object.GetHashCode"/>
         public override int GetHashCode()
         {
-            return DiagramFilePath.GetHashCode();
+            return File.FullName.GetHashCode();
         }
 
 		#region Implementation of INotifyPropertyChanged

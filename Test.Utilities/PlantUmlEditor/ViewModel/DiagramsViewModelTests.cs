@@ -85,7 +85,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_OpenDiagramCommand()
 		{
 			// Arrange.
-			var diagram = new DiagramViewModel(new Diagram { DiagramFilePath = testDiagramFile.FullName });
+			var diagram = new DiagramViewModel(new Diagram { File = testDiagramFile });
 			var editor = new Mock<IDiagramEditor>();
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
@@ -103,7 +103,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_OpenDiagramCommand_DiagramAlreadyOpenedOnce()
 		{
 			// Arrange.
-			var diagram = new DiagramViewModel(new Diagram { DiagramFilePath = testDiagramFile.FullName });
+			var diagram = new DiagramViewModel(new Diagram { File = testDiagramFile });
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.DiagramViewModel).Returns(diagram);
 
@@ -123,7 +123,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_OpenDiagramEditorClosed()
 		{
 			// Arrange.
-			var diagram = new DiagramViewModel(new Diagram { DiagramFilePath = testDiagramFile.FullName });
+			var diagram = new DiagramViewModel(new Diagram { File = testDiagramFile });
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.DiagramViewModel).Returns(diagram);
 
@@ -148,7 +148,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				.Returns(Tasks.FromResult<object>(null));
 
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
-				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { DiagramFilePath = testDiagramFile.FullName, Content = "New Diagram" } }));
+				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { File = testDiagramFile, Content = "New Diagram" } }));
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, d => new DiagramViewModel(d))
 			{
@@ -161,7 +161,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Single(diagrams.Diagrams);
-			Assert.Equal(testDiagramFile.FullName, diagrams.Diagrams.Single().Diagram.DiagramFilePath);
+			Assert.Equal(testDiagramFile.FullName, diagrams.Diagrams.Single().Diagram.File.FullName);
 			Assert.Equal("New Diagram", diagrams.Diagrams.Single().Diagram.Content);
 
 			Assert.Single(diagrams.OpenDiagrams);
@@ -169,7 +169,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(diagrams.Diagrams.Single(), diagrams.CurrentDiagram);
 
 			diagramIO.Verify(dio => dio.SaveAsync(
-				It.Is<Diagram>(d => d.Content == "New Diagram" && d.DiagramFilePath == testDiagramFile.FullName), 
+				It.Is<Diagram>(d => d.Content == "New Diagram" && d.File.FullName == testDiagramFile.FullName), 
 				false));
 
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(

@@ -9,6 +9,15 @@ namespace Utilities.Concurrency
 	public static class Tasks
 	{
 		/// <summary>
+		/// Creates an already completed task with no result value.
+		/// </summary>
+		/// <returns>A successfully completed task</returns>
+		public static Task FromSuccess()
+		{
+			return FromResult<object>(null);
+		}
+
+		/// <summary>
 		/// Creates an already completed task from an existing result value.
 		/// </summary>
 		/// <typeparam name="TResult">The type of the result</typeparam>

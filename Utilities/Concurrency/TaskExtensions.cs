@@ -110,7 +110,6 @@ namespace Utilities.Concurrency
 		/// <returns>A Task representing completion of both Tasks</returns>
 		public static Task Then(this Task first, Func<Task> next)
 		{
-			//return ((Task<object>)first).Then<object, object>(_ => next());
 			if (first == null)
 				throw new ArgumentNullException("first");
 			if (next == null)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using PlantUmlEditor.Model;
 
 namespace PlantUmlEditor.DesignTimeData
@@ -33,7 +34,7 @@ activate CPE
 	CPE -> EndUser : Transmit actual app binary
 deactivate CPE
 @enduml",
-                DiagramFilePath = "test.txt",
+                File = new FileInfo("test.txt"),
                 ImageFilePath = "http://plantuml.sourceforge.net/img/sequence_img009.png"
             });
 
@@ -69,7 +70,7 @@ activate SaaS
 deactivate SaaS
 
 @enduml",
-                DiagramFilePath = "test2.txt",
+                File = new FileInfo("test2.txt"),
                 ImageFilePath = "http://plantuml.sourceforge.net/img/activity_img06.png"
             });
         }

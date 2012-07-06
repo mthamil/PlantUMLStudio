@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Moq;
 using PlantUmlEditor.Model;
@@ -204,7 +205,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			codeEditor.Content = "Blah blah blah";
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromResult(new object()));
+				.Returns(Tasks.FromSuccess());
+
+			compiler.Setup(c => c.CompileToFile(It.IsAny<FileInfo>()))
+				.Returns(Tasks.FromSuccess());
 
 			// Act.
 			editor.SaveCommand.Execute(null);
@@ -227,9 +231,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			codeEditor.Content = "Blah blah blah";
 
-			diagramIO.SetupSequence(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromResult(new object()))
-				.Returns(Tasks.FromResult(new object()));
+			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
+				.Returns(Tasks.FromSuccess());
+
+			compiler.Setup(c => c.CompileToFile(It.IsAny<FileInfo>()))
+				.Returns(Tasks.FromSuccess());
 
 			editor.SaveCommand.Execute(null);
 

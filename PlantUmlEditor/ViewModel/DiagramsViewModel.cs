@@ -109,18 +109,26 @@ namespace PlantUmlEditor.ViewModel
 			string newFilePath = newDiagramUri.LocalPath;
 			var newDiagram = new Diagram
 			{
-				DiagramFilePath = newFilePath,
+				File = new FileInfo(newFilePath),
 				Content = String.Format(NewDiagramTemplate, Path.GetFileNameWithoutExtension(newFilePath) + ".png")
 			};
 
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
 			_diagramIO.SaveAsync(newDiagram, false)
-				.Then(() => LoadDiagrams().ContinueWith(lt =>
+				.ContinueWith(st => LoadDiagrams(), CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler).Unwrap()
+				.ContinueWith(lt =>
+				{
+					if (lt.IsFaulted && lt.Exception != null)
 					{
-						CurrentDiagram = lt.Result.SingleOrDefault(d => d.Diagram.DiagramFilePath == newFilePath);
+						Progress.Message = lt.Exception.InnerException.Message;
+					}
+					else if (!lt.IsCanceled)
+					{
+						CurrentDiagram = lt.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
 						OpenDiagramForEdit(CurrentDiagram);
-					}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler));
+					}
+				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>

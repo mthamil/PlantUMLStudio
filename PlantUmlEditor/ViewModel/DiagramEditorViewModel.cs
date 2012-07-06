@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -193,11 +194,13 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			progress.Report(Tuple.Create((int?)100, "Saving and generating diagram..."));
-			var saveTask = _diagramIO.SaveAsync(DiagramViewModel.Diagram, makeBackup);
+			var saveTask = _diagramIO.SaveAsync(DiagramViewModel.Diagram, makeBackup)
+				.Then(() => _compiler.CompileToFile(DiagramViewModel.Diagram.File));
 
 			saveTask.ContinueWith(t =>
 			{
 				_saveExecuting = false;
+				//DiagramViewModel.DiagramImage = null;	// Clear the old image first.
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
 				CodeEditor.IsModified = false;
 				IsIdle = true;
@@ -241,11 +244,16 @@ namespace PlantUmlEditor.ViewModel
 				 .ContinueWith(t =>
 				 {
 					 if (t.IsFaulted && t.Exception != null)
-						 Progress.Message = t.Exception.InnerException.Message;
+					 {
+					 	Progress.Message = t.Exception.InnerException.Message;
+					 }
 					 else if (!t.IsCanceled)
-						 DiagramViewModel.DiagramImage = t.Result;
+					 {
+						//DiagramViewModel.DiagramImage = null;	// Clear the old image first.
+					 	DiagramViewModel.DiagramImage = t.Result;
+					 }
 
-					 _refreshCancellations.Remove(refreshTask);
+				 	_refreshCancellations.Remove(refreshTask);
 				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 
 			_refreshCancellations[refreshTask] = tcs;

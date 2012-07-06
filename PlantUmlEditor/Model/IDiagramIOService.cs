@@ -27,7 +27,7 @@ namespace PlantUmlEditor.Model
 		Task<Diagram> ReadAsync(FileInfo file);
 
 		/// <summary>
-		/// Asynchronously compiles and writes a diagram.
+		/// Asynchronously saves a diagram's contents to its file.
 		/// </summary>
 		/// <param name="diagram">The diagram to write</param>
 		/// <param name="makeBackup">Whether to first back up the existing file before saving</param>

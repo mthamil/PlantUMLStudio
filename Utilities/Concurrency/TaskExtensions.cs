@@ -105,6 +105,55 @@ namespace Utilities.Concurrency
 		/// Schedules a task to be executed after completion of this task while propagating
 		/// its error or cancellation states.
 		/// </summary>
+		/// <typeparam name="T2">The result type of the second Task</typeparam>
+		/// <param name="first">The Task to execute first</param>
+		/// <param name="next">The Task to execute after completion of the first</param>
+		/// <returns>A Task representing completion of both Tasks</returns>
+		public static Task<T2> Then<T2>(this Task first, Func<Task<T2>> next)
+		{
+			if (first == null)
+				throw new ArgumentNullException("first");
+			if (next == null)
+				throw new ArgumentNullException("next");
+
+			var tcs = new TaskCompletionSource<T2>();
+			first.ContinueWith(delegate
+			{
+				if (first.IsFaulted)
+				{
+					tcs.TrySetException(first.Exception.InnerExceptions);
+				}
+				else if (first.IsCanceled)
+				{
+					tcs.TrySetCanceled();
+				}
+				else
+				{
+					try
+					{
+						var nextTask = next();
+						if (nextTask == null)
+						{
+							tcs.TrySetCanceled();
+						}
+						else nextTask.ContinueWith(delegate
+						{
+							TrySetFromTask(tcs, nextTask);
+						}, TaskContinuationOptions.ExecuteSynchronously);
+					}
+					catch (Exception e)
+					{
+						tcs.TrySetException(e);
+					}
+				}
+			}, TaskContinuationOptions.ExecuteSynchronously);
+			return tcs.Task;
+		}
+
+		/// <summary>
+		/// Schedules a task to be executed after completion of this task while propagating
+		/// its error or cancellation states.
+		/// </summary>
 		/// <param name="first">The Task to execute first</param>
 		/// <param name="next">The Task to execute after completion of the first</param>
 		/// <returns>A Task representing completion of both Tasks</returns>

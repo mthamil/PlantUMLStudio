@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Utilities.InputOutput
@@ -113,6 +114,17 @@ namespace Utilities.InputOutput
 			{
 				return WriteAsync(data, 0, data.Length);
 			}
+
+			///// <summary>
+			///// Asynchronously reads all bytes from the current stream and writes them to a 
+			///// destination stream.
+			///// </summary>
+			///// <param name="destination">The stream being copied to</param>
+			///// <returns>A Task representing the copy operation</returns>
+			//public Task CopyToAsync(Stream destination)
+			//{
+			//    return Task.Factory.StartNew(() => _stream.CopyTo(destination), CancellationToken.None, TaskCreationOptions.None, _;
+			//}
 
 			#endregion
 

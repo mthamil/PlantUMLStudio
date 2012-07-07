@@ -115,20 +115,21 @@ namespace PlantUmlEditor.ViewModel
 
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
-			_diagramIO.SaveAsync(newDiagram, false)
-				.ContinueWith(st => LoadDiagrams(), CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler).Unwrap()
-				.ContinueWith(lt =>
-				{
-					if (lt.IsFaulted && lt.Exception != null)
-					{
-						Progress.Message = lt.Exception.InnerException.Message;
-					}
-					else if (!lt.IsCanceled)
-					{
-						CurrentDiagram = lt.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
-						OpenDiagramForEdit(CurrentDiagram);
-					}
-				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+			var saveNewTask = _diagramIO.SaveAsync(newDiagram, false)
+				.Then(() => Task.Factory.StartNew(() =>
+					LoadDiagrams(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap());
+
+			saveNewTask.ContinueWith(t =>
+			{
+				CurrentDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
+				OpenDiagramForEdit(CurrentDiagram);
+			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
+
+			saveNewTask.ContinueWith(t =>
+			{
+				if (t.IsFaulted && t.Exception != null)
+					Progress.Message = t.Exception.InnerException.Message;
+			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 		}
 
 		/// <summary>

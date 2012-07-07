@@ -244,14 +244,9 @@ namespace PlantUmlEditor.ViewModel
 				 .ContinueWith(t =>
 				 {
 					 if (t.IsFaulted && t.Exception != null)
-					 {
 					 	Progress.Message = t.Exception.InnerException.Message;
-					 }
 					 else if (!t.IsCanceled)
-					 {
-						//DiagramViewModel.DiagramImage = null;	// Clear the old image first.
 					 	DiagramViewModel.DiagramImage = t.Result;
-					 }
 
 				 	_refreshCancellations.Remove(refreshTask);
 				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);

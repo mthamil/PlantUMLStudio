@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
@@ -271,6 +273,47 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.True(codeEditor.IsModified);
 			autoSaveTimer.Verify(t => t.TryStop());
 			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_RefreshCommand_Successful()
+		{
+			// Arrange.
+			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
+												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+
+			codeEditor.Content = "Diagram code goes here";
+			var result = new BitmapImage();
+
+			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+				.Returns(Tasks.FromResult<BitmapSource>(result));
+
+			// Act.
+			editor.RefreshCommand.Execute(null);
+
+			// Assert.
+			Assert.Equal(result, editor.DiagramViewModel.DiagramImage);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_RefreshCommand_Unsuccessful()
+		{
+			// Arrange.
+			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
+												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+
+			codeEditor.Content = "Diagram code goes here";
+
+			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+				.Returns(Tasks.FromException<BitmapSource, InvalidOperationException>(new InvalidOperationException()));
+
+			// Act.
+			editor.RefreshCommand.Execute(null);
+
+			// Assert.
+			Assert.Null(editor.DiagramViewModel.DiagramImage);
 		}
 
 		[Fact]

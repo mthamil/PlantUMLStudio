@@ -26,9 +26,9 @@ namespace PlantUmlEditor
 			if (!CheckGraphViz())
 			{
 				MessageBox.Show(
-					"Either GraphViz is not installed or the environment variable GRAPHVIZ_DOT " +
-					Environment.NewLine + "that points to the dot.exe where GraphViz is installed" +
-					Environment.NewLine + "has not been created. Please create and re-run.",
+					"Either GraphViz is not installed or the environment variable\n" +
+					"GRAPHVIZ_DOT that points to the dot.exe where GraphViz is\n" +
+					"installed has not been created. Please create and re-run.",
 					"GraphViz Environment variable not found",
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning);

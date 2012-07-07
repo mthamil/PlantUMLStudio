@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantUmlEditor", "PlantUmlE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{573D5F8C-4C19-42C3-B84B-BC585008B505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit.Tests", "Test.Utilities\Unit.Tests.csproj", "{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit.Tests", "Unit.Tests\Unit.Tests.csproj", "{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PlantUmlEditorSetup", "PlantUmlEditor.Setup\PlantUmlSetup.vdproj", "{3CF050EC-DCBF-4B95-B384-852C475705B4}"
 EndProject

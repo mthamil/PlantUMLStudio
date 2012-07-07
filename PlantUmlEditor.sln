@@ -11,6 +11,11 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PlantUmlEditorSetup", "Plan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Controls", "Utilities.Controls\Utilities.Controls.csproj", "{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{5E81D95C-1536-4CBF-A1F9-596555A1AC55}"
+	ProjectSection(SolutionItems) = preProject
+		PlantUML Language Reference Guide.pdf = PlantUML Language Reference Guide.pdf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

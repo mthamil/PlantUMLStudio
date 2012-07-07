@@ -342,7 +342,7 @@
             </Grid>
       
             <!-- This is the bottom row containing status message and progress bar -->
-            <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25">
+            <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25" Background="#2B3C59">
 
                 <!--<StatusBar.BorderBrush Color="" />-->
                 
@@ -358,7 +358,7 @@
                 </StatusBar.ItemsPanel>
 
                 <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding Progress.Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding Progress.Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White">
                         <!--<TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>

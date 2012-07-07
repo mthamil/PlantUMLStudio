@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Documents;
 using PlantUmlEditor.Properties;
 
 namespace PlantUmlEditor.View
@@ -17,11 +15,6 @@ namespace PlantUmlEditor.View
 		public MainWindow()
 		{
 			InitializeComponent();
-		}
-
-		private void NameHyperlink_Click(object sender, RoutedEventArgs e)
-		{
-			Process.Start((e.OriginalSource as Hyperlink).NavigateUri.ToString());
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e)

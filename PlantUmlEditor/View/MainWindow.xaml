@@ -118,7 +118,7 @@
     </Window.Resources>
 
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="#2B3C59">
         <Rectangle HorizontalAlignment="Stretch" x:Name="background" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
     
         <!-- First split the whole form into 3 rows, one for header, one for body and one for footer -->
@@ -133,29 +133,9 @@
             <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
                 <WrapPanel>
                     <TextBlock FontFamily="Segoe" VerticalAlignment="Top" FontStretch="Condensed" FontWeight="Thin" Margin="7,0,0,0"> 
-                        <Run FontSize="36" Foreground="#FF9C9C9C" Text="Plant"/>
-                        <Run FontSize="36" Foreground="Black" Text="UML"/>
-                        <Run Foreground="DarkGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />            
-                    </TextBlock>
-            
-                    <TextBlock Foreground="Black" 
-                                VerticalAlignment="Center"
-                                FontSize="16" 
-                                FontFamily="Segoe" 
-                                FontStretch="Condensed" 
-                                FontWeight="Thin" 
-                                Margin="10"
-                                Text="by"/>
-                    <TextBlock            
-                                Background="{x:Null}"
-                                Foreground="#55FFFFFF" 
-                                VerticalAlignment="Center"
-                                FontSize="16" 
-                                FontFamily="Segoe" 
-                                FontStretch="Condensed" 
-                                FontWeight="Thin" >
-                        <Hyperlink Foreground="Black" x:Name="NameHyperlink" Click="NameHyperlink_Click" 
-                                   NavigateUri="http://msmvps.com/blogs/omar">Omar AL Zabir</Hyperlink>
+                        <Run FontSize="36" Foreground="LightGray" Text="Plant"/>
+                        <Run FontSize="36" Foreground="White" Text="UML"/>
+                        <Run Foreground="LightGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />            
                     </TextBlock>
                 </WrapPanel>
             </StackPanel>
@@ -184,7 +164,7 @@
             
                     <!-- This is the location box -->
                     <StackPanel Grid.Row="0" Margin="5,5,5,5">
-                    <TextBlock Text="Location:"/>
+                    <TextBlock Text="Location:" Foreground="White"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -317,9 +297,9 @@
                                                 <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1" />
                                             </Trigger>
                                             <Trigger Property="IsSelected" Value="False">
-                                                <Setter TargetName="Border" Property="Background" Value="Gray" />
-                                                <Setter Property="Foreground" Value="Black" />
-                                                <Setter TargetName="Border" Property="Opacity" Value="0.4" />
+                                                <Setter TargetName="Border" Property="Background" Value="#44587C" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter TargetName="Border" Property="Opacity" Value="1.0" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
 
@@ -343,7 +323,6 @@
                         <Rectangle HorizontalAlignment="Stretch" 
                                     VerticalAlignment="Stretch" 
                                     Fill="GhostWhite" 
-                                    Opacity="0.6" 
                                     RadiusX="0" 
                                     RadiusY="0" 
                                     StrokeThickness="1" />

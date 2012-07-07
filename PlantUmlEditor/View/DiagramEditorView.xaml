@@ -132,9 +132,9 @@
               
                     <Image.RenderTransform>
                         <TransformGroup>
-                        <ScaleTransform 
-                            ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
-                            ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
+                            <ScaleTransform 
+                                ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
+                                ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
                         </TransformGroup>
                     </Image.RenderTransform>
               

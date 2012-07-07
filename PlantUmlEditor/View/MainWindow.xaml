@@ -12,7 +12,6 @@
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen" 
-    Loaded="Window_Loaded" 
     Closing="Window_Closing">
     
     <Window.Resources>

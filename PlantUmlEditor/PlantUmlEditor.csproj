@@ -198,9 +198,6 @@
     <Content Include="Thirdparty\plantuml.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Version.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="ChangeLog.txt" />
     <Content Include="EULA.txt" />
     <Content Include="samples\img\activity_img20.png">

@@ -8,8 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlantUmlEditor.Properties
-{
+namespace PlantUmlEditor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -26,37 +25,10 @@ namespace PlantUmlEditor.Properties
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://plantumleditor.googlecode.com/files/PlantUMLSetup.exe")]
-        public string DownloadUrl {
-            get {
-                return ((string)(this["DownloadUrl"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("PlantUmlSetup.exe")]
         public string SetupExeName {
             get {
                 return ((string)(this["SetupExeName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Version.txt")]
-        public string VersionFileName {
-            get {
-                return ((string)(this["VersionFileName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://plantumleditor.googlecode.com/files/Version.txt")]
-        public string VersionFileUrl {
-            get {
-                return ((string)(this["VersionFileUrl"]));
             }
         }
         
@@ -81,6 +53,15 @@ namespace PlantUmlEditor.Properties
             }
             set {
                 this["GraphVizLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://downloads.sourceforge.net/sourceforge/plantuml/plantuml.jar")]
+        public string DownloadUrl {
+            get {
+                return ((string)(this["DownloadUrl"]));
             }
         }
     }

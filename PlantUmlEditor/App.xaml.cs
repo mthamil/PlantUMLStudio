@@ -1,10 +1,18 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Threading;
 using Autofac;
 using PlantUmlEditor.Container;
+using PlantUmlEditor.Properties;
+using PlantUmlEditor.View;
+using Utilities;
 using Utilities.Controls;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace PlantUmlEditor
 {
@@ -13,6 +21,25 @@ namespace PlantUmlEditor
     /// </summary>
     public partial class App : Application
     {
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			if (!CheckGraphViz())
+			{
+				MessageBox.Show(
+					"Either GraphViz is not installed or the environment variable GRAPHVIZ_DOT " +
+					Environment.NewLine + "that points to the dot.exe where GraphViz is installed" +
+					Environment.NewLine + "has not been created. Please create and re-run.",
+					"GraphViz Environment variable not found",
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+
+				Shutdown(1);
+				return;
+			}
+
+			base.OnStartup(e);
+		}
+
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			Current.DispatcherUnhandledException += Application_DispatcherUnhandledException;
@@ -22,11 +49,18 @@ namespace PlantUmlEditor
 			containerBuilder.RegisterModule<CoreModule>();
 			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
+
+			//var updater = new UpdateChecker
+			//{
+			//    DownloadUrl = new Uri(Settings.Default.DownloadUrl)
+			//};
+			//updater.DownloadLatestPlantUml();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			_container.Dispose();
+			if (_container != null)
+				_container.Dispose();
 		}
 
 		/// <summary>
@@ -34,6 +68,38 @@ namespace PlantUmlEditor
 		/// </summary>
 		public static IContainer Container { get { return _container; } }
 		private static IContainer _container;
+
+		private static bool CheckGraphViz()
+		{
+			string graphVizPath = Settings.Default.GraphVizLocation;
+			if (string.IsNullOrEmpty(graphVizPath))
+				graphVizPath = Environment.GetEnvironmentVariable("GRAPHVIZ_DOT");
+
+			if (string.IsNullOrEmpty(graphVizPath) || !File.Exists(graphVizPath))
+			{
+				var dialog = new OpenFileDialog
+				{
+					FileName = "dot.exe",
+					DefaultExt = ".exe",
+					Filter = "dot.exe|dot.exe"
+				};
+
+				// See if graphviz is there in environment PATH
+				string envPath = Environment.GetEnvironmentVariable("PATH");
+				string[] paths = envPath.Split(';');
+				dialog.InitialDirectory = paths.Where(p => p.ToLower().Contains("graphviz")).FirstOrDefault();
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					Settings.Default.GraphVizLocation = dialog.FileName;
+					Settings.Default.Save();
+					return true;
+				}
+
+				return false;
+			}
+
+			return true;
+		}
 
 		void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{

@@ -2,23 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PlantUmlEditor.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DownloadUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://plantumleditor.googlecode.com/files/PlantUMLSetup.exe</Value>
-    </Setting>
     <Setting Name="SetupExeName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PlantUmlSetup.exe</Value>
-    </Setting>
-    <Setting Name="VersionFileName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Version.txt</Value>
-    </Setting>
-    <Setting Name="VersionFileUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://plantumleditor.googlecode.com/files/Version.txt</Value>
     </Setting>
     <Setting Name="LastPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="GraphVizLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DownloadUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://downloads.sourceforge.net/sourceforge/plantuml/plantuml.jar</Value>
     </Setting>
   </Settings>
 </SettingsFile>

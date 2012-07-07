@@ -46,55 +46,12 @@ namespace Utilities.Concurrency
 						}
 						else nextTask.ContinueWith(delegate
 						{
-							TrySetFromTask(tcs, nextTask);
+							tcs.TrySetFromTask(nextTask);
 						}, TaskContinuationOptions.ExecuteSynchronously);
 					}
 					catch (Exception e) 
 					{ 
 						tcs.TrySetException(e); 
-					}
-				}
-			}, TaskContinuationOptions.ExecuteSynchronously);
-			return tcs.Task;
-		}
-
-		/// <summary>
-		/// Schedules a continuation to be executed after completion of this task while propagating
-		/// its result, error, or cancellation states.
-		/// </summary>
-		/// <typeparam name="T1">The result type of this Task</typeparam>
-		/// <typeparam name="T2">The result type of the second Task</typeparam>
-		/// <param name="first">The Task to execute first</param>
-		/// <param name="continuation">A function to execute after completion of the first Task</param>
-		/// <returns>A Task representing completion of both Tasks</returns>
-		public static Task<T2> Then<T1, T2>(this Task<T1> first, Func<T1, T2> continuation)
-		{
-			if (first == null)
-				throw new ArgumentNullException("first");
-			if (continuation == null)
-				throw new ArgumentNullException("continuation");
-
-			var tcs = new TaskCompletionSource<T2>();
-			first.ContinueWith(delegate
-			{
-				if (first.IsFaulted)
-				{
-					tcs.TrySetException(first.Exception.InnerExceptions);
-				}
-				else if (first.IsCanceled)
-				{
-					tcs.TrySetCanceled();
-				}
-				else
-				{
-					try
-					{
-						var finalResult = continuation(first.Result);
-						tcs.TrySetResult(finalResult);
-					}
-					catch (Exception e)
-					{
-						tcs.TrySetException(e);
 					}
 				}
 			}, TaskContinuationOptions.ExecuteSynchronously);
@@ -138,7 +95,7 @@ namespace Utilities.Concurrency
 						}
 						else nextTask.ContinueWith(delegate
 						{
-							TrySetFromTask(tcs, nextTask);
+							tcs.TrySetFromTask(nextTask);
 						}, TaskContinuationOptions.ExecuteSynchronously);
 					}
 					catch (Exception e)
@@ -186,7 +143,7 @@ namespace Utilities.Concurrency
 						}
 						else nextTask.ContinueWith(delegate
 						{
-							TrySetFromTask(tcs, nextTask);
+							tcs.TrySetFromTask(nextTask);
 						}, TaskContinuationOptions.ExecuteSynchronously);
 					}
 					catch (Exception e)
@@ -199,34 +156,46 @@ namespace Utilities.Concurrency
 		}
 
 		/// <summary>
-		/// Attempts to transfer the result of a Task to a TaskCompletionSource.
-		/// </summary> 
-        /// <typeparam name="TResult">The type of the result</typeparam> 
-        /// <param name="resultSetter">The TaskCompletionSource to populate</param> 
-        /// <param name="task">The task whose completion results should be transfered</param> 
-		private static void TrySetFromTask<TResult>(TaskCompletionSource<TResult> resultSetter, Task task)
+		/// Schedules a continuation to be executed after completion of this task while propagating
+		/// its result, error, or cancellation states.
+		/// </summary>
+		/// <typeparam name="T1">The result type of this Task</typeparam>
+		/// <typeparam name="T2">The result type of the second Task</typeparam>
+		/// <param name="first">The Task to execute first</param>
+		/// <param name="continuation">A function to execute after completion of the first Task</param>
+		/// <returns>A Task representing completion of both Tasks</returns>
+		public static Task<T2> Then<T1, T2>(this Task<T1> first, Func<T1, T2> continuation)
 		{
-			switch (task.Status)
+			if (first == null)
+				throw new ArgumentNullException("first");
+			if (continuation == null)
+				throw new ArgumentNullException("continuation");
+
+			var tcs = new TaskCompletionSource<T2>();
+			first.ContinueWith(delegate
 			{
-				case TaskStatus.RanToCompletion:
-					var taskWithResult = task as Task<TResult>;
-					resultSetter.TrySetResult(taskWithResult != null ?
-						taskWithResult.Result :	// use the task's result IF it has one
-						default(TResult));
-					break;
-
-				case TaskStatus.Faulted:
-					if (task.Exception != null)
-						resultSetter.TrySetException(task.Exception.InnerExceptions);
-					break;
-
-				case TaskStatus.Canceled:
-					resultSetter.TrySetCanceled();
-					break;
-
-				default:
-					throw new InvalidOperationException("The task was not completed.");
-			}
+				if (first.IsFaulted)
+				{
+					tcs.TrySetException(first.Exception.InnerExceptions);
+				}
+				else if (first.IsCanceled)
+				{
+					tcs.TrySetCanceled();
+				}
+				else
+				{
+					try
+					{
+						var finalResult = continuation(first.Result);
+						tcs.TrySetResult(finalResult);
+					}
+					catch (Exception e)
+					{
+						tcs.TrySetException(e);
+					}
+				}
+			}, TaskContinuationOptions.ExecuteSynchronously);
+			return tcs.Task;
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace PlantUmlEditor.Model
 			return _processAdapter.Execute(new ProcessStartInfo
 			{
 				FileName = "java",
-				Arguments = String.Format(@"-jar ""{0}"" -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
+				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
 				WindowStyle = ProcessWindowStyle.Hidden,
 				CreateNoWindow = true,
 				RedirectStandardError = true,

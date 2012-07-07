@@ -28,8 +28,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AutoSave_Enabled_ContentIsModified()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.IsModified = true;
 
@@ -46,8 +45,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AutoSave_Enabled_ContentIsNotModified()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.IsModified = false;
 
@@ -64,11 +62,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AutoSave_Disabled()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object)
-				{
-					AutoSave = true
-				};
+			editor = CreateEditor();
+			editor.AutoSave = true;
 
 			// Act.
 			editor.AutoSave = false;
@@ -83,8 +78,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AutoSaveInterval()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			// Act.
 			editor.AutoSaveInterval = TimeSpan.FromSeconds(7);
@@ -103,11 +97,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_CanSave(bool expected, bool isIdle, bool isModified)
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object)
-				{
-					IsIdle = isIdle
-				};
+			editor = CreateEditor();
+			editor.IsIdle = isIdle;
 
 			codeEditor.IsModified = isModified;
 
@@ -125,11 +116,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_CanRefresh(bool expected, bool isIdle)
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object)
-			{
-				IsIdle = isIdle
-			};
+			editor = CreateEditor();
+			editor.IsIdle = isIdle;
 
 			// Act.
 			bool actual = editor.CanRefresh;
@@ -143,11 +131,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_CodeEditor_IsModified_ChangedToTrue()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object)
-				{
-					AutoSave = true
-				};
+			editor = CreateEditor();
+			editor.AutoSave = true;
 
 			// Act.
 			codeEditor.IsModified = true;
@@ -162,11 +147,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_CodeEditor_IsModified_ChangedToFalse()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-				diagramIO.Object, compiler.Object, autoSaveTimer.Object)
-				{
-					AutoSave = true
-				};
+			editor = CreateEditor();
+			editor.AutoSave = true;
+
 			codeEditor.IsModified = true;
 
 			// Act.
@@ -182,8 +165,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_CloseCommand()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			bool closed = false;
 			EventHandler closeHandler = (o, e) => closed = true;
@@ -201,8 +183,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_SaveCommand_SaveSuccessful()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.Content = "Blah blah blah";
 
@@ -228,8 +209,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_SaveCommand_SavedAgain()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.Content = "Blah blah blah";
 
@@ -257,8 +237,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_SaveCommand_SaveUnuccessful()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.Content = "Blah blah blah";
 
@@ -280,8 +259,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_RefreshCommand_Successful()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.Content = "Diagram code goes here";
 			var result = new BitmapImage();
@@ -301,8 +279,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_RefreshCommand_Unsuccessful()
 		{
 			// Arrange.
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-												diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			codeEditor.Content = "Diagram code goes here";
 
@@ -323,14 +300,19 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			var disposableTimer = autoSaveTimer.As<IDisposable>();
 
-			editor = new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
-			                                    diagramIO.Object, compiler.Object, autoSaveTimer.Object);
+			editor = CreateEditor();
 
 			// Act.
 			editor.Dispose();
 
 			// Assert.
 			disposableTimer.Verify(t => t.Dispose());
+		}
+
+		private DiagramEditorViewModel CreateEditor()
+		{
+			return new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
+											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
 
@@ -345,5 +327,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();
 		private readonly Mock<ITimer> autoSaveTimer = new Mock<ITimer>();
+		private readonly Mock<ITimer> refreshTimer = new Mock<ITimer>();
 	}
 }

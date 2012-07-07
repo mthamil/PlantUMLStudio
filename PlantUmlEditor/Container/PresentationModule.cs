@@ -5,6 +5,7 @@ using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
+using Utilities.Chronology;
 using Utilities.Mvvm;
 
 namespace PlantUmlEditor.Container
@@ -47,7 +48,8 @@ namespace PlantUmlEditor.Container
 			builder.Register(c => new CodeEditorViewModel(c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")));
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
-				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(10))
+				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })
+				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
 				.WithProperty(p => p.AutoSave, true);
 
 			builder.RegisterType<DiagramsViewModel>()

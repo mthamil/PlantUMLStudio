@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,8 +35,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
+		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
 		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
-			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, ITimer autoSaveTimer)
+			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
+			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
 			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
 			DiagramViewModel = diagramViewModel;
@@ -47,6 +48,7 @@ namespace PlantUmlEditor.ViewModel
 			_diagramIO = diagramIO;
 			_compiler = compiler;
 			_autoSaveTimer = autoSaveTimer;
+			_refreshTimer = refreshTimer;
 
 			CodeEditor = codeEditor;
 			CodeEditor.Content = diagramViewModel.Diagram.Content;
@@ -69,6 +71,7 @@ namespace PlantUmlEditor.ViewModel
 			_firstSaveAfterOpen = true;
 
 			_autoSaveTimer.Elapsed += autoSaveTimerElapsed;
+			_refreshTimer.Elapsed += refreshTimer_Elapsed;
 
 			ImageCommands = new List<NamedOperationViewModel>
 			{
@@ -111,13 +114,6 @@ namespace PlantUmlEditor.ViewModel
 					}
 				}
 			}
-		}
-
-		void autoSaveTimerElapsed(object sender, EventArgs e)
-		{
-			// We must begin the Save operation on the UI thread in order to update the UI 
-			// with pre-save state.
-			Task.Factory.StartNew(Save, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>
@@ -204,6 +200,7 @@ namespace PlantUmlEditor.ViewModel
 				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
 				CodeEditor.IsModified = false;
 				IsIdle = true;
+				_refreshTimer.TryStop();
 				progress.Report(Tuple.Create((int?)null, "Saved."));
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
@@ -211,10 +208,18 @@ namespace PlantUmlEditor.ViewModel
 			{
 				_saveExecuting = false;
 				IsIdle = true;
+				_refreshTimer.TryStop();
 				if (t.Exception != null)
 					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
+		}
+
+		void autoSaveTimerElapsed(object sender, EventArgs e)
+		{
+			// We must begin the Save operation on the UI thread in order to update the UI 
+			// with pre-save state.
+			Task.Factory.StartNew(Save, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>
@@ -252,6 +257,12 @@ namespace PlantUmlEditor.ViewModel
 				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 
 			_refreshCancellations[refreshTask] = tcs;
+		}
+
+		void refreshTimer_Elapsed(object sender, EventArgs e)
+		{
+			Refresh();
+			_refreshTimer.TryStop();
 		}
 
 		/// <summary>
@@ -298,8 +309,15 @@ namespace PlantUmlEditor.ViewModel
 
 				OnPropertyChanged(canSavePropertyName);	// boooo
 			}
+			else if (e.PropertyName == contentPropertyName)
+			{
+				// After a code change, reset the refresh timer.
+				_refreshTimer.TryStop();
+				_refreshTimer.TryStart();
+			}
 		}
 		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
+		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel, string>(p => p.Content).Name;
 		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel, bool>(p => p.CanSave).Name;
 
 
@@ -358,6 +376,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly IDiagramIOService _diagramIO;
 		private readonly IDiagramCompiler _compiler;
 		private readonly ITimer _autoSaveTimer;
+		private readonly ITimer _refreshTimer;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

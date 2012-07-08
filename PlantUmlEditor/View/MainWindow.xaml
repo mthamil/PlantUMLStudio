@@ -150,8 +150,8 @@
                 </Grid.ColumnDefinitions>
         
                 <!-- This is the left column controls -->
-                <!--<Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0">
-                    <Expander.Content>-->
+                <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0">
+                    <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0" >
                           <Grid>
                             <Grid.ColumnDefinitions>
@@ -251,8 +251,8 @@
             
                           </Grid>
                         </Border>
-                    <!--</Expander.Content>
-                </Expander>-->
+                    </Expander.Content>
+                </Expander>
 
                 <GridSplitter Grid.Column="1" Height="100" VerticalAlignment="Center" Width="3" HorizontalAlignment="Center" Grid.Row="0" Background="#66808080" />
         

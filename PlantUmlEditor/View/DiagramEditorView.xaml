@@ -114,8 +114,8 @@
 
             <GridSplitter Grid.Row="1" VerticalAlignment="Center" Width="Auto" Height="3"  HorizontalAlignment="Stretch" Background="#66808080"/>
 
-            <!--<Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White">
-                <Expander.Content>-->
+            <Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White">
+                <Expander.Content>
                     <Border ScrollViewer.CanContentScroll="True" 
                             ScrollViewer.HorizontalScrollBarVisibility="Visible" 
                             ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -157,8 +157,8 @@
 
                         </ScrollViewer>
                     </Border>
-                <!--</Expander.Content>
-            </Expander>-->
+                </Expander.Content>
+            </Expander>
             
         </Grid>
     </Border>

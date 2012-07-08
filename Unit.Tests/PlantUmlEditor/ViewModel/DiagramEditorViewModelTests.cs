@@ -19,8 +19,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public DiagramEditorViewModelTests()
 		{
 			autoSaveTimer.SetupProperty(t => t.Interval);
-
-			diagramViewModel = new DiagramViewModel(diagram);
+			previewDiagram = new PreviewDiagramViewModel(diagram);
 		}
 
 		[Fact]
@@ -121,6 +120,23 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Act.
 			bool actual = editor.CanRefresh;
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[Synchronous]
+		[InlineData(true, true)]
+		[InlineData(false, false)]
+		public void Test_CanClose(bool expected, bool isIdle)
+		{
+			// Arrange.
+			editor = CreateEditor();
+			editor.IsIdle = isIdle;
+
+			// Act.
+			bool actual = editor.CanClose;
 
 			// Assert.
 			Assert.Equal(expected, actual);
@@ -271,7 +287,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.RefreshCommand.Execute(null);
 
 			// Assert.
-			Assert.Equal(result, editor.DiagramViewModel.DiagramImage);
+			Assert.Equal(result, editor.DiagramImage);
 		}
 
 		[Fact]
@@ -290,7 +306,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.RefreshCommand.Execute(null);
 
 			// Assert.
-			Assert.Null(editor.DiagramViewModel.DiagramImage);
+			Assert.Null(editor.DiagramImage);
 		}
 
 		[Fact]
@@ -311,7 +327,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(diagramViewModel, codeEditor, progress.Object, renderer.Object,
+			return new DiagramEditorViewModel(previewDiagram, codeEditor, progress.Object, renderer.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
@@ -319,7 +335,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private DiagramEditorViewModel editor;
 
 		private readonly Diagram diagram = new Diagram();
-		private readonly DiagramViewModel diagramViewModel;
+		private readonly PreviewDiagramViewModel previewDiagram;
 
 		private readonly CodeEditorViewModel codeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>());
 		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();

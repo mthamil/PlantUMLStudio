@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Model;
@@ -28,7 +29,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new diagram editor.
 		/// </summary>
-		/// <param name="diagramViewModel">The diagram being edited</param>
+		/// <param name="previewDiagram">A preview of the diagram being edited</param>
 		/// <param name="codeEditor">The code editor</param>
 		/// <param name="progressViewModel">Reports progress of editor tasks</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
@@ -36,12 +37,12 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
-		public DiagramEditorViewModel(DiagramViewModel diagramViewModel, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
+		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
-			_diagramViewModel = Property.New(this, p => p.DiagramViewModel, OnPropertyChanged);
-			DiagramViewModel = diagramViewModel;
+			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
+			Diagram = previewDiagram.Diagram;
 			Progress = progressViewModel;
 
 			_diagramRenderer = diagramRenderer;
@@ -51,12 +52,16 @@ namespace PlantUmlEditor.ViewModel
 			_refreshTimer = refreshTimer;
 
 			CodeEditor = codeEditor;
-			CodeEditor.Content = diagramViewModel.Diagram.Content;
+			CodeEditor.Content = Diagram.Content;
 			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
+
+			_diagramImage = Property.New(this, p => p.DiagramImage, OnPropertyChanged);
+			DiagramImage = previewDiagram.ImagePreview;
 
 			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
 				.AlsoChanges(p => p.CanSave)
-				.AlsoChanges(p => p.CanRefresh);
+				.AlsoChanges(p => p.CanRefresh)
+				.AlsoChanges(p => p.CanClose);
 			IsIdle = true;
 
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
@@ -64,7 +69,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Save(), p => p.CanSave, this);
 			_refreshCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Refresh(), p => p.CanRefresh, this);
-			_closeCommand = new RelayCommand(_ => Close());
+			_closeCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Close(), p => p.CanClose, this);
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.
@@ -76,11 +81,11 @@ namespace PlantUmlEditor.ViewModel
 			ImageCommands = new List<NamedOperationViewModel>
 			{
 				new NamedOperationViewModel("Copy to Clipboard", 
-					new RelayCommand(_ => Clipboard.SetImage(DiagramViewModel.DiagramImage as BitmapSource))),	// Copy image.
+					new RelayCommand(_ => Clipboard.SetImage(DiagramImage as BitmapSource))),	// Copy image.
 				new NamedOperationViewModel("Open in Explorer", 
-					new RelayCommand(_ => Process.Start("explorer.exe","/select," + DiagramViewModel.Diagram.ImageFilePath).Dispose())), // Open in explorer.
+					new RelayCommand(_ => Process.Start("explorer.exe","/select," + Diagram.ImageFilePath).Dispose())), // Open in explorer.
 				new NamedOperationViewModel("Copy Image Path", 
-					new RelayCommand(_ => Clipboard.SetText(DiagramViewModel.Diagram.ImageFilePath)))	// Copy image path.
+					new RelayCommand(_ => Clipboard.SetText(Diagram.ImageFilePath)))	// Copy image path.
 			};
 		}
 
@@ -132,10 +137,19 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The underlying diagram.
 		/// </summary>
-		public DiagramViewModel DiagramViewModel
+		public Diagram Diagram
 		{
-			get { return _diagramViewModel.Value; }
-			private set { _diagramViewModel.Value = value; }
+			get { return _diagram.Value; }
+			private set { _diagram.Value = value; }
+		}
+
+		/// <summary>
+		/// The rendered diagram image.
+		/// </summary>
+		public ImageSource DiagramImage
+		{
+			get { return _diagramImage.Value; }
+			set { _diagramImage.Value = value; }
 		}
 
 		/// <summary>
@@ -171,7 +185,7 @@ namespace PlantUmlEditor.ViewModel
 			if (!Char.IsWhiteSpace(CodeEditor.Content, 0))
 				CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
 
-			DiagramViewModel.Diagram.Content = CodeEditor.Content;
+			Diagram.Content = CodeEditor.Content;
 
 			// Create a backup if this is the first time the diagram being modified
 			// after opening.
@@ -190,18 +204,20 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			progress.Report(Tuple.Create((int?)100, "Saving and generating diagram..."));
-			var saveTask = _diagramIO.SaveAsync(DiagramViewModel.Diagram, makeBackup)
-				.Then(() => _compiler.CompileToFile(DiagramViewModel.Diagram.File));
+			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
+				.Then(() => _compiler.CompileToFile(Diagram.File));
 
 			saveTask.ContinueWith(t =>
 			{
 				_saveExecuting = false;
 				//DiagramViewModel.DiagramImage = null;	// Clear the old image first.
-				DiagramViewModel.DiagramImage = _diagramRenderer.Render(DiagramViewModel.Diagram);
+				DiagramImage = _diagramRenderer.Render(Diagram);
 				CodeEditor.IsModified = false;
 				IsIdle = true;
 				_refreshTimer.TryStop();
 				progress.Report(Tuple.Create((int?)null, "Saved."));
+
+				OnSaved();
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
 			saveTask.ContinueWith(t =>
@@ -251,7 +267,7 @@ namespace PlantUmlEditor.ViewModel
 					 if (t.IsFaulted && t.Exception != null)
 					 	Progress.Message = t.Exception.InnerException.Message;
 					 else if (!t.IsCanceled)
-					 	DiagramViewModel.DiagramImage = t.Result;
+					 	DiagramImage = t.Result;
 
 				 	_refreshCancellations.Remove(refreshTask);
 				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
@@ -263,6 +279,14 @@ namespace PlantUmlEditor.ViewModel
 		{
 			Refresh();
 			_refreshTimer.TryStop();
+		}
+
+		/// <summary>
+		/// Whether an editor can currently be closed.
+		/// </summary>
+		public bool CanClose
+		{
+			get { return IsIdle; }
 		}
 
 		/// <summary>
@@ -278,14 +302,22 @@ namespace PlantUmlEditor.ViewModel
 			OnClosed();
 		}
 
-		/// <summary>
-		/// Event raised when a diagram editor has been closed.
-		/// </summary>
+		/// <see cref="IDiagramEditor.Closed"/>
 		public event EventHandler Closed;
 
 		private void OnClosed()
 		{
 			var localEvent = Closed;
+			if (localEvent != null)
+				localEvent(this, EventArgs.Empty);
+		}
+
+		/// <see cref="IDiagramEditor.Saved"/>
+		public event EventHandler Saved;
+
+		private void OnSaved()
+		{
+			var localEvent = Saved;
 			if (localEvent != null)
 				localEvent(this, EventArgs.Empty);
 		}
@@ -370,7 +402,8 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _autoSave;
 		private readonly Property<TimeSpan> _autoSaveInterval;
 		private readonly Property<bool> _isIdle;
-		private readonly Property<DiagramViewModel> _diagramViewModel;
+		private readonly Property<Diagram> _diagram;
+		private readonly Property<ImageSource> _diagramImage;
 
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramIOService _diagramIO;

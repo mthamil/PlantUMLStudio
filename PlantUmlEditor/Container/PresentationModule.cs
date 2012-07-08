@@ -22,12 +22,12 @@ namespace PlantUmlEditor.Container
 				.SingleInstance();
 
 			// Diagram view-model factory.
-			builder.Register<Func<Diagram, DiagramViewModel>>(c =>
+			builder.Register<Func<Diagram, PreviewDiagramViewModel>>(c =>
 			{
 				var diagramRenderer = c.Resolve<IDiagramRenderer>();
-				return diagram => new DiagramViewModel(diagram)
+				return diagram => new PreviewDiagramViewModel(diagram)
 				{
-					DiagramImage = diagramRenderer.Render(diagram)	// Perform an initial render of the diagram.
+					ImagePreview = diagramRenderer.Render(diagram)	// Perform an initial render of the diagram.
 				};
 			});
 

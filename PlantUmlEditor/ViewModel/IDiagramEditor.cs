@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Media;
+using PlantUmlEditor.Model;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -28,7 +30,12 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The underlying diagram.
 		/// </summary>
-		DiagramViewModel DiagramViewModel { get; }
+		Diagram Diagram { get; }
+
+		/// <summary>
+		/// The rendered diagram image.
+		/// </summary>
+		ImageSource DiagramImage { get; }
 
 		/// <summary>
 		/// Whether an editor's content can currently be saved.
@@ -74,5 +81,10 @@ namespace PlantUmlEditor.ViewModel
 		/// Event raised when a diagram editor has been closed.
 		/// </summary>
 		event EventHandler Closed;
+
+		/// <summary>
+		/// Event raised when a diagram editor saves.
+		/// </summary>
+		event EventHandler Saved;
 	}
 }

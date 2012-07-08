@@ -16,18 +16,19 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramsViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, Func<DiagramViewModel, IDiagramEditor> editorFactory, 
-			Func<Diagram, DiagramViewModel> diagramFactory)
+		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
+			Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory, 
+			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory)
 		{
 			Progress = progressViewModel;
 			_diagramIO = diagramIO;
 			_editorFactory = editorFactory;
-			_diagramFactory = diagramFactory;
+			_previewDiagramFactory = previewDiagramFactory;
 
-			_diagrams = Property.New(this, p => Diagrams, OnPropertyChanged);
-			_diagrams.Value = new ObservableCollection<DiagramViewModel>();
+			_previewDiagrams = Property.New(this, p => PreviewDiagrams, OnPropertyChanged);
+			_previewDiagrams.Value = new ObservableCollection<PreviewDiagramViewModel>();
 
-			_currentDiagram = Property.New(this, p => p.CurrentDiagram, OnPropertyChanged);
+			_currentPreviewDiagram = Property.New(this, p => p.CurrentPreviewDiagram, OnPropertyChanged);
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
 			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
@@ -41,7 +42,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand(uri => AddNewDiagram((Uri)uri));
-			_openDiagramCommand = new RelayCommand(d => OpenDiagramForEdit((DiagramViewModel)d), d => (d as DiagramViewModel) != null);
+			_openDiagramCommand = new RelayCommand(d => OpenDiagramForEdit((PreviewDiagramViewModel)d), d => (d as PreviewDiagramViewModel) != null);
 		}
 
 		/// <summary>
@@ -71,15 +72,6 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// The currently selected diagram.
-		/// </summary>
-		public DiagramViewModel CurrentDiagram
-		{
-			get { return _currentDiagram.Value; }
-			set { _currentDiagram.Value = value; }
-		}
-
-		/// <summary>
 		/// A new diagram's selected URI.
 		/// </summary>
 		public Uri NewDiagramUri
@@ -89,11 +81,20 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The currently selected preview diagram.
+		/// </summary>
+		public PreviewDiagramViewModel CurrentPreviewDiagram
+		{
+			get { return _currentPreviewDiagram.Value; }
+			set { _currentPreviewDiagram.Value = value; }
+		}
+
+		/// <summary>
 		/// The currently available diagrams.
 		/// </summary>
-		public ICollection<DiagramViewModel> Diagrams
+		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
 		{
-			get { return _diagrams.Value; }
+			get { return _previewDiagrams.Value; }
 		}
 
 		/// <summary>
@@ -121,8 +122,8 @@ namespace PlantUmlEditor.ViewModel
 
 			saveNewTask.ContinueWith(t =>
 			{
-				CurrentDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
-				OpenDiagramForEdit(CurrentDiagram);
+				CurrentPreviewDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
+				OpenDiagramForEdit(CurrentPreviewDiagram);
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
 			saveNewTask.ContinueWith(t =>
@@ -157,23 +158,35 @@ namespace PlantUmlEditor.ViewModel
 			get { return _openDiagramCommand; }
 		}
 
-		private void OpenDiagramForEdit(DiagramViewModel diagram)
+		private void OpenDiagramForEdit(PreviewDiagramViewModel diagram)
 		{
-			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.DiagramViewModel.Equals(diagram));
+			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagram.Diagram));
 			if (diagramEditor == null)
 			{
 				diagramEditor = _editorFactory(diagram);
 				diagramEditor.Closed += diagramEditor_Closed;
+				diagramEditor.Saved += diagramEditor_Saved;
 				OpenDiagrams.Add(diagramEditor);
 			}
 
 			OpenDiagram = diagramEditor;
 		}
 
+		void diagramEditor_Saved(object sender, EventArgs e)
+		{
+			var diagramEditor = (IDiagramEditor)sender;
+			var preview = PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
+			if (preview != null)
+			{
+				preview.ImagePreview = diagramEditor.DiagramImage;
+			}
+		}
+
 		void diagramEditor_Closed(object sender, EventArgs e)
 		{
 			var diagramEditor = (IDiagramEditor)sender;
 			diagramEditor.Closed -= diagramEditor_Closed;
+			diagramEditor.Saved -= diagramEditor_Saved;
 			OpenDiagrams.Remove(diagramEditor);
 		}
 
@@ -185,12 +198,12 @@ namespace PlantUmlEditor.ViewModel
 			get { return _loadDiagramsCommand; }
 		}
 
-		private Task<ICollection<DiagramViewModel>> LoadDiagrams()
+		private Task<ICollection<PreviewDiagramViewModel>> LoadDiagrams()
 		{
-			_diagrams.Value.Clear();
+			_previewDiagrams.Value.Clear();
 
 			if (!IsDiagramLocationValid)
-				return Tasks.FromResult(_diagrams.Value);
+				return Tasks.FromResult(_previewDiagrams.Value);
 
 			Progress.HasDiscreteProgress = true;
 			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
@@ -212,11 +225,11 @@ namespace PlantUmlEditor.ViewModel
 			return loadTask.ContinueWith(t =>
 			{
 				foreach (var diagramFile in t.Result)
-					_diagrams.Value.Add(_diagramFactory(diagramFile));
+					_previewDiagrams.Value.Add(_previewDiagramFactory(diagramFile));
 
 				progress.Report(Tuple.Create((int?)null, "Diagrams loaded."));
 
-				return _diagrams.Value;
+				return _previewDiagrams.Value;
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 		}
 
@@ -225,8 +238,8 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public IProgressViewModel Progress { get; private set; }
 
-		private readonly Property<DiagramViewModel> _currentDiagram;
-		private readonly Property<ICollection<DiagramViewModel>> _diagrams;
+		private readonly Property<PreviewDiagramViewModel> _currentPreviewDiagram;
+		private readonly Property<ICollection<PreviewDiagramViewModel>> _previewDiagrams;
 
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;
@@ -239,8 +252,8 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _openDiagramCommand;
 
 		private readonly IDiagramIOService _diagramIO;
-		private readonly Func<DiagramViewModel, IDiagramEditor> _editorFactory;
-		private readonly Func<Diagram, DiagramViewModel> _diagramFactory;
+		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;
+		private readonly Func<Diagram, PreviewDiagramViewModel> _previewDiagramFactory;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

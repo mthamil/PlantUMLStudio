@@ -41,8 +41,8 @@ namespace PlantUmlEditor.ViewModel
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
-			_addNewDiagramCommand = new RelayCommand(uri => AddNewDiagram((Uri)uri));
-			_openDiagramCommand = new RelayCommand(d => OpenDiagramForEdit((PreviewDiagramViewModel)d), d => (d as PreviewDiagramViewModel) != null);
+			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
+			_openDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
 		}
 
 		/// <summary>

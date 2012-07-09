@@ -55,8 +55,7 @@ namespace PlantUmlEditor.ViewModel
 			: base(snippet.Name)
 		{
 			_snippet = snippet;
-			SelectCommand = new RelayCommand(editor => 
-				Select((CodeEditorViewModel)editor));
+			SelectCommand = new RelayCommand<CodeEditorViewModel>(Select);
 		}
 
 		/// <summary>

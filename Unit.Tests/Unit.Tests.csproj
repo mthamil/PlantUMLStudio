@@ -109,6 +109,7 @@
     <Compile Include="Utilities\InputOutput\AsyncStreamTests.cs" />
     <Compile Include="Utilities\InputOutput\StreamExtensionsTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />
+    <Compile Include="Utilities\Mvvm\Commands\RelayCommandTests.cs" />
     <Compile Include="Utilities\PropertyChanged\PropertyTests.cs" />
     <Compile Include="Utilities\Reflection\ReflectionExtensionsTests.cs" />
     <Compile Include="Utilities\Reflection\ReflectTests.cs" />

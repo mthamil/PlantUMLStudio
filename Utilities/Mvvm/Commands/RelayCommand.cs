@@ -5,19 +5,41 @@ using System.Windows.Input;
 namespace Utilities.Mvvm.Commands
 {
 	/// <summary>
-	/// A command whose sole purpose is to 
-	/// relay its functionality to other
-	/// objects by invoking delegates. The
-	/// default return value for the CanExecute
+	/// A command whose sole purpose is to relay its functionality to other
+	/// objects by invoking delegates. The default return value for the CanExecute
 	/// method is 'true'.
 	/// </summary>
-	public class RelayCommand : ICommand
+	public class RelayCommand : RelayCommand<object>
 	{
 		/// <summary>
 		/// Creates a new command that can always execute.
 		/// </summary>
 		/// <param name="execute">The execution logic.</param>
-		public RelayCommand(Action<object> execute)
+		public RelayCommand(Action<object> execute) 
+			: base(execute) { }
+
+		/// <summary>
+		/// Creates a new command.
+		/// </summary>
+		/// <param name="execute">The execution logic.</param>
+		/// <param name="canExecute">The execution status logic.</param>
+		public RelayCommand(Action<object> execute, Predicate<object> canExecute) 
+			: base(execute, canExecute) { }
+	}
+
+	/// <summary>
+	/// A command whose sole purpose is to relay its functionality to other
+	/// objects by invoking delegates.  In order for CanExecute to return
+	/// true, the command parameter must of type T.
+	/// </summary>
+	/// <typeparam name="T">The type of parameter to be passed tot he command</typeparam>
+	public class RelayCommand<T> : ICommand
+	{
+		/// <summary>
+		/// Creates a new command that can always execute.
+		/// </summary>
+		/// <param name="execute">The execution logic.</param>
+		public RelayCommand(Action<T> execute)
 			: this(execute, null) { }
 
 		/// <summary>
@@ -25,7 +47,7 @@ namespace Utilities.Mvvm.Commands
 		/// </summary>
 		/// <param name="execute">The execution logic.</param>
 		/// <param name="canExecute">The execution status logic.</param>
-		public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+		public RelayCommand(Action<T> execute, Predicate<T> canExecute)
 		{
 			if (execute == null)
 				throw new ArgumentNullException("execute");
@@ -40,13 +62,19 @@ namespace Utilities.Mvvm.Commands
 		[DebuggerStepThrough]
 		public bool CanExecute(object parameter)
 		{
-			return _canExecute == null ? true : _canExecute(parameter);
+			if (_canExecute == null)
+				return true;
+
+			if (parameter is T)
+				return _canExecute((T)parameter);
+
+			return false;
 		}
 
 		/// <see cref="ICommand.Execute"/>
 		public void Execute(object parameter)
 		{
-			_execute(parameter);
+			_execute((T)parameter);
 		}
 
 		/// <see cref="ICommand.CanExecuteChanged"/>
@@ -58,8 +86,7 @@ namespace Utilities.Mvvm.Commands
 
 		#endregion
 
-		readonly Action<object> _execute;
-		readonly Predicate<object> _canExecute;
+		readonly Action<T> _execute;
+		readonly Predicate<T> _canExecute;
 	}
-
 }

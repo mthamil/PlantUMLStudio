@@ -142,9 +142,9 @@
       
               <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
                    and the right column for the tabs -->
-            <Grid Height="Auto" x:Name="MiddleGrid3Columns" Width="Auto" Grid.Row="1" Grid.Column="0" Margin="4">
+            <Grid Height="Auto" Width="Auto" Grid.Row="1" Grid.Column="0" Margin="4">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300" x:Name="LeftColumn" />
+                    <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="Auto" MinWidth="10" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -173,7 +173,7 @@
                                         <ColumnDefinition Width="30" />                                    
                                     </Grid.ColumnDefinitions>
                       
-                                    <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
+                                    <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox"  Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
                                              attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -188,7 +188,7 @@
                             </StackPanel>
             
                             <!-- This is the diagram file listbox -->
-                            <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended" x:Name="DiagramFileListBox" 
+                            <ListBox Grid.Row="1" Width="Auto" SelectionMode="Extended"
                                      IsSynchronizedWithCurrentItem="True" 
                                      HorizontalContentAlignment="Stretch"    
                                      Background="GhostWhite"
@@ -208,8 +208,7 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border Padding="0,2,0,2" 
-                                                    CornerRadius="2" 
-                                                    x:Name="DiagramItem" 
+                                                    CornerRadius="2"
                                                     HorizontalAlignment="Stretch" 
                                                     VerticalAlignment="Top">
                                                 <StackPanel>
@@ -246,7 +245,7 @@
                                                  Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
                         
                                 <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
-                                <Button x:Name="RefreshDiagramList" Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
+                                <Button Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                             </StackPanel>
             
                           </Grid>
@@ -276,7 +275,7 @@
                                     <ControlTemplate TargetType="{x:Type TabItem}">
 
                                         <Grid>
-                                            <Border Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
+                                            <Border x:Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
                                                 <DockPanel>
                                                     <TextBlock VerticalAlignment="Center" Margin="12,2,12,2">
                                                         <TextBlock.Text>
@@ -381,7 +380,7 @@
                 </StatusBarItem>
 
                 <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
-                    <ProgressBar x:Name="StatusProgressBar" Foreground="LightGreen" Background="Gray" 
+                    <ProgressBar Foreground="LightGreen" Background="Gray" 
                             VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="18" Width="165" 
                             Minimum="0" Maximum="100" IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
                             Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"

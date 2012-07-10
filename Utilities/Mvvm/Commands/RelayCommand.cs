@@ -7,24 +7,60 @@ namespace Utilities.Mvvm.Commands
 	/// <summary>
 	/// A command whose sole purpose is to relay its functionality to other
 	/// objects by invoking delegates. The default return value for the CanExecute
-	/// method is 'true'.
+	/// method is 'true'.  This command does not take any parameters.
 	/// </summary>
-	public class RelayCommand : RelayCommand<object>
+	public class RelayCommand : ICommand
 	{
 		/// <summary>
 		/// Creates a new command that can always execute.
 		/// </summary>
 		/// <param name="execute">The execution logic.</param>
-		public RelayCommand(Action<object> execute) 
-			: base(execute) { }
+		public RelayCommand(Action execute)
+			: this(execute, null) { }
 
 		/// <summary>
 		/// Creates a new command.
 		/// </summary>
 		/// <param name="execute">The execution logic.</param>
 		/// <param name="canExecute">The execution status logic.</param>
-		public RelayCommand(Action<object> execute, Predicate<object> canExecute) 
-			: base(execute, canExecute) { }
+		public RelayCommand(Action execute, Func<bool> canExecute)
+		{
+			if (execute == null)
+				throw new ArgumentNullException("execute");
+
+			_execute = execute;
+			_canExecute = canExecute;
+		}
+
+		#region ICommand Members
+
+		/// <see cref="ICommand.CanExecute"/>
+		[DebuggerStepThrough]
+		public bool CanExecute(object parameter)
+		{
+			if (_canExecute == null)
+				return true;
+
+			return _canExecute();
+		}
+
+		/// <see cref="ICommand.Execute"/>
+		public void Execute(object parameter)
+		{
+			_execute();
+		}
+
+		/// <see cref="ICommand.CanExecuteChanged"/>
+		public event EventHandler CanExecuteChanged
+		{
+			add { CommandManager.RequerySuggested += value; }
+			remove { CommandManager.RequerySuggested -= value; }
+		}
+
+		#endregion
+
+		readonly Action _execute;
+		readonly Func<bool> _canExecute;
 	}
 
 	/// <summary>

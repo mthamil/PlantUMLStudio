@@ -81,11 +81,11 @@ namespace PlantUmlEditor.ViewModel
 			ImageCommands = new List<NamedOperationViewModel>
 			{
 				new NamedOperationViewModel("Copy to Clipboard", 
-					new RelayCommand(_ => Clipboard.SetImage(DiagramImage as BitmapSource))),	// Copy image.
+					new RelayCommand(() => Clipboard.SetImage(DiagramImage as BitmapSource))),	// Copy image.
 				new NamedOperationViewModel("Open in Explorer", 
-					new RelayCommand(_ => Process.Start("explorer.exe","/select," + Diagram.ImageFilePath).Dispose())), // Open in explorer.
+					new RelayCommand(() => Process.Start("explorer.exe","/select," + Diagram.ImageFilePath).Dispose())), // Open in explorer.
 				new NamedOperationViewModel("Copy Image Path", 
-					new RelayCommand(_ => Clipboard.SetText(Diagram.ImageFilePath)))	// Copy image path.
+					new RelayCommand(() => Clipboard.SetText(Diagram.ImageFilePath)))	// Copy image path.
 			};
 		}
 

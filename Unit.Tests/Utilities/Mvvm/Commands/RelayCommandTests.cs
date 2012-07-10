@@ -6,7 +6,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 	public class RelayCommandTests
 	{
 		[Fact]
-		public void Test_CanExecute_NoPredicate()
+		public void Test_WithParameter_CanExecute_NoPredicate()
 		{
 			// Arrange.
 			var command = new RelayCommand<bool>(b => { });
@@ -19,7 +19,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 		}
 
 		[Fact]
-		public void Test_CanExecute_WrongType()
+		public void Test_WithParameter_CanExecute_WrongType()
 		{
 			// Arrange.
 			var command = new RelayCommand<bool>(b => { }, b => b);
@@ -32,7 +32,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 		}
 
 		[Fact]
-		public void Test_CanExecute()
+		public void Test_WithParameter_CanExecute()
 		{
 			// Arrange.
 			var command = new RelayCommand<bool>(b => { }, b => b);
@@ -42,6 +42,32 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 
 			// Assert.
 			Assert.True(actual);
+		}
+
+		[Fact]
+		public void Test_WithoutParameter_CanExecute_NoPredicate()
+		{
+			// Arrange.
+			var command = new RelayCommand(() => { });
+
+			// Act.
+			bool actual = command.CanExecute(false);
+
+			// Assert.
+			Assert.True(actual);
+		}
+
+		[Fact]
+		public void Test_WithoutParameter_CanExecute()
+		{
+			// Arrange.
+			var command = new RelayCommand(() => { }, () => false);
+
+			// Act.
+			bool actual = command.CanExecute(true);
+
+			// Assert.
+			Assert.False(actual);
 		}
 	}
 }

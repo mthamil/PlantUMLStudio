@@ -100,15 +100,6 @@ namespace Utilities.Controls.Behaviors
 					.Cast<UIElement>()
 					.OfType<GridSplitter>()
 					.FirstOrDefault();
-				if (_gridSplitter != null)
-				{
-					_gridSplitter.PreviewMouseDown += _gridSplitter_PreviewMouseDown;
-				}
-			}
-
-			void _gridSplitter_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-			{
-				_expanderColumn.Width = GridLength.Auto;
 			}
 
 			void element_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -127,10 +118,6 @@ namespace Utilities.Controls.Behaviors
 					else
 						_newWidth = _expanderColumn.Width;
 				}
-
-				//Console.WriteLine("Element: " + _element.Width);
-				//Console.WriteLine("Expander: " + _expander.Width);
-				//Console.WriteLine("Expander Column: " + _expanderColumn.Width);
 			}
 
 			void expander_Collapsed(object sender, RoutedEventArgs e)
@@ -162,11 +149,6 @@ namespace Utilities.Controls.Behaviors
 				_expander.Collapsed -= expander_Collapsed;
 
 				_element.SizeChanged -= element_SizeChanged;
-
-				if (_gridSplitter != null)
-				{
-					_gridSplitter.PreviewMouseDown -= _gridSplitter_PreviewMouseDown;
-				}
 			}
 
 			#endregion

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace Utilities.Controls.Behaviors
 {
@@ -57,7 +56,11 @@ namespace Utilities.Controls.Behaviors
 			{
 				if (newValue)
 				{
-					behavior = new GridSplitterSupportBehavior(expander, parentGrid);
+					if (expander.ExpandDirection == ExpandDirection.Left || expander.ExpandDirection == ExpandDirection.Right)
+						behavior = new ColumnGridSplitterSupportBehavior(expander, parentGrid);
+					else
+						behavior = new RowGridSplitterSupportBehavior(expander, parentGrid);
+
 					enabledBehaviors[expander] = behavior;
 				}
 			}
@@ -73,13 +76,12 @@ namespace Utilities.Controls.Behaviors
 
 		private static readonly IDictionary<Expander, GridSplitterSupportBehavior> enabledBehaviors = new Dictionary<Expander, GridSplitterSupportBehavior>();
 
-		class GridSplitterSupportBehavior : IDisposable
+		abstract class GridSplitterSupportBehavior : IDisposable
 		{
-			public GridSplitterSupportBehavior(Expander expander, Grid parentGrid)
+			protected GridSplitterSupportBehavior(Expander expander, Grid parentGrid)
 			{
 				_parentGrid = parentGrid;
 				_expander = expander;
-				_expanderColumn = _parentGrid.ColumnDefinitions[Grid.GetColumn(_expander)];
 
 				_parentGrid.Loaded += parentGrid_Loaded;
 
@@ -87,6 +89,8 @@ namespace Utilities.Controls.Behaviors
 				_expander.Expanded += expander_Expanded;
 				_expander.Collapsed += expander_Collapsed;
 			}
+
+			protected abstract GridLength DimensionSize { get; set; }
 
 			void expander_Initialized(object sender, EventArgs e)
 			{
@@ -107,7 +111,7 @@ namespace Utilities.Controls.Behaviors
 				if (!_sizeInitialized)
 				{
 					_sizeInitialized = true;
-					_width = _expanderColumn.Width;
+					_dimensionSize = DimensionSize;
 					return;
 				}
 
@@ -116,13 +120,13 @@ namespace Utilities.Controls.Behaviors
 					if (_sizeManuallyChanged)
 						_sizeManuallyChanged = false;
 					else
-						_newWidth = _expanderColumn.Width;
+						_newDimensionSize = DimensionSize;
 				}
 			}
 
 			void expander_Collapsed(object sender, RoutedEventArgs e)
 			{
-				_expanderColumn.Width = GridLength.Auto;
+				DimensionSize = GridLength.Auto;
 
 				if (_gridSplitter != null)
 					_gridSplitter.IsEnabled = false;
@@ -135,7 +139,7 @@ namespace Utilities.Controls.Behaviors
 				if (_gridSplitter != null)
 					_gridSplitter.IsEnabled = true;
 
-				_expanderColumn.Width = _newWidth.HasValue ? _newWidth.Value : _width;
+				DimensionSize = _newDimensionSize.HasValue ? _newDimensionSize.Value : _dimensionSize;
 			}
 
 			#region Implementation of IDisposable
@@ -156,15 +160,56 @@ namespace Utilities.Controls.Behaviors
 			private bool _sizeInitialized;
 			private bool _sizeManuallyChanged;
 
-			private GridLength? _newWidth;
-			private GridLength _width;
+			private GridLength? _newDimensionSize;
+			private GridLength _dimensionSize;
 
 			private GridSplitter _gridSplitter;
 			private FrameworkElement _element;
 
 			private readonly Grid _parentGrid;
 			private readonly Expander _expander;
+		}
+
+		class ColumnGridSplitterSupportBehavior : GridSplitterSupportBehavior
+		{
+			public ColumnGridSplitterSupportBehavior(Expander expander, Grid parentGrid)
+				: base(expander, parentGrid) 
+			{
+				_expanderColumn = parentGrid.ColumnDefinitions[Grid.GetColumn(expander)];
+			}
+
+			#region Overrides of GridSplitterSupportBehavior<ColumnDefinition>
+
+			protected override GridLength DimensionSize
+			{
+				get { return _expanderColumn.Width; }
+				set { _expanderColumn.Width = value; }
+			}
+
+			#endregion
+
 			private readonly ColumnDefinition _expanderColumn;
+		}
+
+		class RowGridSplitterSupportBehavior : GridSplitterSupportBehavior
+		{
+			public RowGridSplitterSupportBehavior(Expander expander, Grid parentGrid)
+				: base(expander, parentGrid)
+			{
+				_expanderRow = parentGrid.RowDefinitions[Grid.GetRow(expander)];
+			}
+
+			#region Overrides of GridSplitterSupportBehavior<ColumnDefinition>
+
+			protected override GridLength DimensionSize
+			{
+				get { return _expanderRow.Height; }
+				set { _expanderRow.Height = value; }
+			}
+
+			#endregion
+
+			private readonly RowDefinition _expanderRow;
 		}
 	}
 }

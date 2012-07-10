@@ -88,7 +88,7 @@ namespace Utilities.Controls.Behaviors
 				_expander.Collapsed += expander_Collapsed;
 			}
 
-			void expander_Initialized(object sender, System.EventArgs e)
+			void expander_Initialized(object sender, EventArgs e)
 			{
 				_element = (FrameworkElement)_expander.Content;
 				_element.SizeChanged += element_SizeChanged;
@@ -154,13 +154,13 @@ namespace Utilities.Controls.Behaviors
 			#endregion
 
 			private bool _sizeInitialized;
-			private GridLength? _newWidth;
 			private bool _sizeManuallyChanged;
-			
+
+			private GridLength? _newWidth;
+			private GridLength _width;
+
 			private GridSplitter _gridSplitter;
 			private FrameworkElement _element;
-
-			private GridLength _width;
 
 			private readonly Grid _parentGrid;
 			private readonly Expander _expander;

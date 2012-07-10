@@ -64,6 +64,7 @@
     <Compile Include="Behaviors\CollectionViewSourceItemFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
+    <Compile Include="Behaviors\GridSplitterSupport.cs" />
     <Compile Include="Behaviors\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
     <Compile Include="Behaviors\PlantUmlFoldingStrategy.cs" />

@@ -20,8 +20,8 @@ namespace Utilities.Controls
     [DesignTimeVisible(false)]
     public class MVVMMessageBox : Control
     {
-		 /// <summary>
-        /// Constructor
+		/// <summary>
+        /// Initializes a new message box.
         /// </summary>
 		public MVVMMessageBox()
         {
@@ -35,15 +35,15 @@ namespace Utilities.Controls
         /// </summary>
         public bool Trigger
         {
-            get
-            {
-                return (bool)GetValue(TriggerProperty);
-            }
-            set
-            {
-                SetValue(TriggerProperty, value);
-            }
+            get { return (bool)GetValue(TriggerProperty);  }
+            set  { SetValue(TriggerProperty, value); }
         }
+
+		/// <summary>
+		/// DependencyProperty for "Trigger". This also overrides the PropertyChangedCallback to trigger the message box display.
+		/// </summary>
+		public static readonly DependencyProperty TriggerProperty = DependencyProperty.Register("Trigger", typeof(bool), typeof(MVVMMessageBox),
+			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTriggerChange)));
 
         /// <summary>
         /// Type of message box. Can take values "OK", "OKCancel", "YesNo", "YesNoCancel". 
@@ -55,138 +55,83 @@ namespace Utilities.Controls
         /// </summary>
 		public MessageBoxButton Type
         {
-            get
-            {
-				return (MessageBoxButton)GetValue(TypeProperty);
-            }
-            set
-            {
-                SetValue(TypeProperty, value);
-            }
+            get { return (MessageBoxButton)GetValue(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
         }
 
-        /// <summary>
-        /// On a Ok/Cancel dialog, this will Execute the bound DelegateCommand on the user clicking "Ok".
-        /// </summary>
-		public ICommand OkAction
-        {
-            get
-            {
-				return (ICommand)GetValue(OkActionProperty);
-            }
-            set
-            {
-                SetValue(OkActionProperty, value);
-            }
-        }
+		/// <summary>
+		/// DependencyProperty for "Type".
+		/// </summary>
+		public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(MessageBoxButton), typeof(MVVMMessageBox));
 
         /// <summary>
-        /// On a Yes/No or Yes/No/Cancel dialog, this will Execute the bound DelegateCommand on the user clicking "Yes".
+        /// Command executed for Ok/Yes options.
         /// </summary>
-		public ICommand YesAction
+		public ICommand AffirmativeAction
         {
-            get
-            {
-				return (ICommand)GetValue(YesActionProperty);
-            }
-            set
-            {
-                SetValue(YesActionProperty, value);
-            }
+            get { return (ICommand)GetValue(AffirmativeActionProperty); }
+            set  { SetValue(AffirmativeActionProperty, value); }
         }
 
+		/// <summary>
+		/// DependencyProperty for "AffirmativeAction".
+		/// </summary>
+		public static readonly DependencyProperty AffirmativeActionProperty = DependencyProperty.Register("OkAction", typeof(ICommand), typeof(MVVMMessageBox));
+
         /// <summary>
-        /// On a Yes/No or Yes/No/Cancel dialog, this will Execute the bound DelegateCommand on the user clicking "No".
+        /// Command executed for No options.
         /// </summary>
-		public ICommand NoAction
+		public ICommand NegativeAction
         {
-            get
-            {
-				return (ICommand)GetValue(NoActionProperty);
-            }
-            set
-            {
-                SetValue(NoActionProperty, value);
-            }
+            get { return (ICommand)GetValue(NegativeActionProperty); }
+            set { SetValue(NegativeActionProperty, value); }
         }
+
+		/// <summary>
+		/// DependencyProperty for "NegativeAction".
+		/// </summary>
+		public static readonly DependencyProperty NegativeActionProperty = DependencyProperty.Register("NoAction", typeof(ICommand), typeof(MVVMMessageBox));
 
         /// <summary>
         /// On a Yes/No/Cancel or Ok/Cancel dialog, this will Execute the bound DelegateCommand on the user clicking "Cancel".
         /// </summary>
 		public ICommand CancelAction
         {
-            get
-            {
-				return (ICommand)GetValue(NoActionProperty);
-            }
-            set
-            {
-                SetValue(NoActionProperty, value);
-            }
+            get { return (ICommand)GetValue(NegativeActionProperty); }
+            set { SetValue(NegativeActionProperty, value); }
         }
+
+		/// <summary>
+		/// DependencyProperty for "CancelAction".
+		/// </summary>
+		public static readonly DependencyProperty CancelActionProperty = DependencyProperty.Register("CancelAction", typeof(ICommand), typeof(MVVMMessageBox));
 
         /// <summary>
         /// The message to show the user.
         /// </summary>
         public string Message
         {
-            get
-            {
-                return (string)GetValue(MessageProperty);
-            }
-            set
-            {
-                SetValue(MessageProperty, value);
-            }
+            get { return (string)GetValue(MessageProperty); }
+            set { SetValue(MessageProperty, value); }
         }
+
+		/// <summary>
+		/// DependencyProperty for "Message".
+		/// </summary>
+		public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(MVVMMessageBox));
 
         /// <summary>
         /// The message box caption/title to show the user.
         /// </summary>
         public string Caption
         {
-            get
-            {
-                return (string)GetValue(CaptionProperty);
-            }
-            set
-            {
-                SetValue(CaptionProperty, value);
-            }
+            get { return (string)GetValue(CaptionProperty); }
+            set { SetValue(CaptionProperty, value); }
         }
 
-        /// <summary>
-        /// DependencyProperty for "Trigger". This also overrides the PropertyChangedCallback to trigger the message box display.
-        /// </summary>
-		public static readonly DependencyProperty TriggerProperty = DependencyProperty.Register("Trigger", typeof(bool), typeof(MVVMMessageBox),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTriggerChange)));
-        /// <summary>
-        /// DependencyProperty for "Type".
-        /// </summary>
-		public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(MessageBoxButton), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "OkAction".
-        /// </summary>
-		public static readonly DependencyProperty OkActionProperty = DependencyProperty.Register("OkAction", typeof(ICommand), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "YesAction".
-        /// </summary>
-		public static readonly DependencyProperty YesActionProperty = DependencyProperty.Register("YesAction", typeof(ICommand), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "NoAction".
-        /// </summary>
-		public static readonly DependencyProperty NoActionProperty = DependencyProperty.Register("NoAction", typeof(ICommand), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "CancelAction".
-        /// </summary>
-		public static readonly DependencyProperty CancelActionProperty = DependencyProperty.Register("CancelAction", typeof(ICommand), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "Message".
-        /// </summary>
-		public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(MVVMMessageBox));
-        /// <summary>
-        /// DependencyProperty for "Caption".
-        /// </summary>
+		/// <summary>
+		/// DependencyProperty for "Caption".
+		/// </summary>
 		public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register("Caption", typeof(string), typeof(MVVMMessageBox));
 
         /// <summary>
@@ -224,8 +169,8 @@ namespace Utilities.Controls
         {
             MessageBox.Show(Message, Caption, MessageBoxButton.OK, MessageBoxImage.Information);
 
-			if (OkAction != null)
-				OkAction.Execute(null);
+			if (AffirmativeAction != null)
+				AffirmativeAction.Execute(null);
         }
 
         /// <summary>
@@ -233,7 +178,9 @@ namespace Utilities.Controls
         /// </summary>
         private void ShowOkCancel()
         {
-			ICommand action = MessageBox.Show(Message, Caption, MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.OK ? OkAction : CancelAction;
+			ICommand action = MessageBox.Show(Message, Caption, MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.OK 
+				? AffirmativeAction 
+				: CancelAction;
 
         	action.Execute(null);
         }
@@ -243,7 +190,9 @@ namespace Utilities.Controls
         /// </summary>
         private void ShowYesNo()
         {
-			ICommand action = MessageBox.Show(Message, Caption, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes ? YesAction : NoAction;
+			ICommand action = MessageBox.Show(Message, Caption, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes 
+				? AffirmativeAction 
+				: NegativeAction;
 
         	action.Execute(null);
         }
@@ -259,10 +208,10 @@ namespace Utilities.Controls
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    action = YesAction;
+					action = AffirmativeAction;
                     break;
                 case MessageBoxResult.No:
-                    action = NoAction;
+                    action = NegativeAction;
                     break;
             	default:
                     action = CancelAction;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -35,10 +36,14 @@ namespace PlantUmlEditor.ViewModel
 
 			_openDiagram = Property.New(this, p => p.OpenDiagram, OnPropertyChanged);
 
+			_closingDiagram = Property.New(this, p => p.ClosingDiagram, OnPropertyChanged);
+
 			_diagramLocation = Property.New(this, p => p.DiagramLocation, OnPropertyChanged)
 				.AlsoChanges(p => p.IsDiagramLocationValid);
 
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
+
+			_saveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
@@ -164,6 +169,7 @@ namespace PlantUmlEditor.ViewModel
 			if (diagramEditor == null)
 			{
 				diagramEditor = _editorFactory(diagram);
+				diagramEditor.Closing += diagramEditor_Closing;
 				diagramEditor.Closed += diagramEditor_Closed;
 				diagramEditor.Saved += diagramEditor_Saved;
 				OpenDiagrams.Add(diagramEditor);
@@ -177,17 +183,45 @@ namespace PlantUmlEditor.ViewModel
 			var diagramEditor = (IDiagramEditor)sender;
 			var preview = PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
 			if (preview != null)
-			{
 				preview.ImagePreview = diagramEditor.DiagramImage;
-			}
+		}
+
+		void diagramEditor_Closing(object sender, CancelEventArgs e)
+		{
+			ClosingDiagram = null;
+			ClosingDiagram = (IDiagramEditor)sender;
 		}
 
 		void diagramEditor_Closed(object sender, EventArgs e)
 		{
 			var diagramEditor = (IDiagramEditor)sender;
+			if (_editorsNeedingSaving.Contains(diagramEditor))
+			{
+				diagramEditor.SaveCommand.Execute(null);
+				_editorsNeedingSaving.Remove(diagramEditor);
+			}
+
+			diagramEditor.Closing -= diagramEditor_Closing;
 			diagramEditor.Closed -= diagramEditor_Closed;
 			diagramEditor.Saved -= diagramEditor_Saved;
 			OpenDiagrams.Remove(diagramEditor);
+		}
+
+		/// <summary>
+		/// Saves the currently closing diagram.
+		/// </summary>
+		public ICommand SaveClosingDiagramCommand
+		{
+			get { return _saveClosingDiagramCommand; }
+		}
+
+		/// <summary>
+		/// The diagram currently being closed, if any.
+		/// </summary>
+		public IDiagramEditor ClosingDiagram
+		{
+			get { return _closingDiagram.Value; }
+			set { _closingDiagram.Value = value; }
 		}
 
 		/// <summary>
@@ -246,10 +280,14 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<IDiagramEditor> _openDiagram;
 		private readonly Property<ICollection<IDiagramEditor>> _openDiagrams;
+		private readonly Property<IDiagramEditor> _closingDiagram;
 
 		private readonly ICommand _loadDiagramsCommand;
 		private readonly ICommand _addNewDiagramCommand;
 		private readonly ICommand _openDiagramCommand;
+
+		private readonly ICommand _saveClosingDiagramCommand;
+		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
 
 		private readonly IDiagramIOService _diagramIO;
 		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;

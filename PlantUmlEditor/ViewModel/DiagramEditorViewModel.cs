@@ -299,7 +299,21 @@ namespace PlantUmlEditor.ViewModel
 
 		private void Close()
 		{
-			OnClosed();
+			var cancelArgs = new CancelEventArgs();
+			OnClosing(cancelArgs);
+
+			if (!cancelArgs.Cancel)
+				OnClosed();
+		}
+
+		/// <see cref="IDiagramEditor.Closing"/>
+		public event CancelEventHandler Closing;
+
+		private void OnClosing(CancelEventArgs cancelArgs)
+		{
+			var localEvent = Closing;
+			if (localEvent != null)
+				localEvent(this, cancelArgs);
 		}
 
 		/// <see cref="IDiagramEditor.Closed"/>

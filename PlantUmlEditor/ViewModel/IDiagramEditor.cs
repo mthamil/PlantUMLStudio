@@ -78,6 +78,11 @@ namespace PlantUmlEditor.ViewModel
 		IProgressViewModel Progress { get; }
 
 		/// <summary>
+		/// Event raised when a diagram editor indicates it will be closing.
+		/// </summary>
+		event CancelEventHandler Closing;
+
+		/// <summary>
 		/// Event raised when a diagram editor has been closed.
 		/// </summary>
 		event EventHandler Closed;

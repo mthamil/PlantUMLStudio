@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -183,6 +184,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
+			bool closing = false;
+			CancelEventHandler closingHandler = (o, e) => closing = true;
+			editor.Closing += closingHandler;
+
 			bool closed = false;
 			EventHandler closeHandler = (o, e) => closed = true;
 			editor.Closed += closeHandler;
@@ -191,7 +196,35 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.CloseCommand.Execute(null);
 
 			// Assert.
+			Assert.True(closing);
 			Assert.True(closed);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_CloseCommand_Cancelled()
+		{
+			// Arrange.
+			editor = CreateEditor();
+
+			bool closing = false;
+			CancelEventHandler closingHandler = (o, e) =>
+			{
+				e.Cancel = true;
+				closing = true;
+			};
+			editor.Closing += closingHandler;
+
+			bool closed = false;
+			EventHandler closeHandler = (o, e) => closed = true;
+			editor.Closed += closeHandler;
+
+			// Act.
+			editor.CloseCommand.Execute(null);
+
+			// Assert.
+			Assert.True(closing);
+			Assert.False(closed);
 		}
 
 		[Fact]

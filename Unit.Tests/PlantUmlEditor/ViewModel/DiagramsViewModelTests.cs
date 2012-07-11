@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
+using Utilities.Mvvm;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
@@ -127,8 +130,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagram = new Diagram { File = testDiagramFile };
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
+
 			var editor = new Mock<IDiagramEditor>();
+			var saveCommand = new Mock<ICommand>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
 			diagrams.OpenDiagramCommand.Execute(diagramPreview);
@@ -138,6 +144,114 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagrams.OpenDiagrams);
+			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_OpenDiagramEditor_Closing_Saved()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = testDiagramFile };
+			var diagramPreview = new PreviewDiagramViewModel(diagram);
+
+			var editor = new Mock<IDiagramEditor>();
+			var saveCommand = new Mock<ICommand>();
+			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
+
+			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
+			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+
+			// Act.
+			editor.Raise(e => e.Closing += null, new CancelEventArgs());
+			diagrams.SaveClosingDiagramCommand.Execute(null);
+
+			// Assert.
+			Assert.Equal(editor.Object, diagrams.ClosingDiagram);
+
+			// Act.
+			editor.Raise(e => e.Closed += null, EventArgs.Empty);
+
+			// Assert.
+			Assert.Empty(diagrams.OpenDiagrams);
+			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Exactly(1));
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_OpenDiagramEditor_Closing_NotSaved()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = testDiagramFile };
+			var diagramPreview = new PreviewDiagramViewModel(diagram);
+
+			var editor = new Mock<IDiagramEditor>();
+			var saveCommand = new Mock<ICommand>();
+			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
+
+			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
+			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+
+			// Act.
+			editor.Raise(e => e.Closing += null, new CancelEventArgs());
+
+			// Assert.
+			Assert.Equal(editor.Object, diagrams.ClosingDiagram);
+
+			// Act.
+			editor.Raise(e => e.Closed += null, EventArgs.Empty);
+
+			// Assert.
+			Assert.Empty(diagrams.OpenDiagrams);
+			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_OpenDiagramEditor_DifferentEditorClosing()
+		{
+			// Arrange.
+			var previewMap = new Dictionary<PreviewDiagramViewModel, IDiagramEditor>();
+
+			var diagram1 = new Diagram { File = testDiagramFile };
+			var diagramPreview1 = new PreviewDiagramViewModel(diagram1);
+
+			var editor1 = new Mock<IDiagramEditor>();
+			var saveCommand1 = new Mock<ICommand>();
+			editor1.SetupGet(e => e.Diagram).Returns(diagram1);
+			editor1.SetupGet(e => e.SaveCommand).Returns(saveCommand1.Object);
+			previewMap[diagramPreview1] = editor1.Object;
+
+			var diagram2 = new Diagram { File = new FileInfo(testDiagramFile.FullName + "2") };
+			var diagramPreview2 = new PreviewDiagramViewModel(diagram2);
+
+			var editor2 = new Mock<IDiagramEditor>();
+			var saveCommand2 = new Mock<ICommand>();
+			editor2.SetupGet(e => e.Diagram).Returns(diagram2);
+			editor2.SetupGet(e => e.SaveCommand).Returns(saveCommand2.Object);
+			previewMap[diagramPreview2] = editor2.Object;
+
+			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => previewMap[d], null);
+			diagrams.OpenDiagramCommand.Execute(diagramPreview1);
+			diagrams.OpenDiagramCommand.Execute(diagramPreview2);
+
+			// Act.
+			editor2.Raise(e => e.Closing += null, new CancelEventArgs());
+			diagrams.SaveClosingDiagramCommand.Execute(null);
+
+			// Assert.
+			Assert.Equal(editor2.Object, diagrams.ClosingDiagram);
+
+			// Act.
+			editor1.Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the event for a different editor.
+
+			// Assert.
+			Assert.Single(diagrams.OpenDiagrams);
+			Assert.Equal(editor2.Object, diagrams.OpenDiagrams.Single());
+			saveCommand1.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+			saveCommand2.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
 		}
 
 		[Fact]

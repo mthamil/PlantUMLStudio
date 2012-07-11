@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.IO;
 using System.Windows.Data;
 using System.Windows;
 using System.Globalization;
 using System.Windows.Media.Imaging;
-using System.Windows.Media;
 
 namespace PlantUmlEditor.Converters
 {
@@ -17,7 +16,9 @@ namespace PlantUmlEditor.Converters
             if (value == null)
                 return null;
 
-            if (!string.IsNullOrEmpty(value.ToString()))
+			string imagePath = value.ToString();
+
+			if (!String.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
             {
                 BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
@@ -43,7 +44,7 @@ namespace PlantUmlEditor.Converters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException("Two way conversion is not supported.");
         }

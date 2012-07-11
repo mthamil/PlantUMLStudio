@@ -76,7 +76,7 @@ namespace Utilities.Controls
 		/// <summary>
 		/// DependencyProperty for "AffirmativeAction".
 		/// </summary>
-		public static readonly DependencyProperty AffirmativeActionProperty = DependencyProperty.Register("OkAction", typeof(ICommand), typeof(MVVMMessageBox));
+		public static readonly DependencyProperty AffirmativeActionProperty = DependencyProperty.Register("AffirmativeAction", typeof(ICommand), typeof(MVVMMessageBox));
 
         /// <summary>
         /// Command executed for No options.

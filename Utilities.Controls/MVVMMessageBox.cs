@@ -182,7 +182,8 @@ namespace Utilities.Controls
 				? AffirmativeAction 
 				: CancelAction;
 
-        	action.Execute(null);
+			if (action != null)
+        		action.Execute(null);
         }
 
 		/// <summary>
@@ -194,7 +195,8 @@ namespace Utilities.Controls
 				? AffirmativeAction 
 				: NegativeAction;
 
-        	action.Execute(null);
+			if (action != null)
+        		action.Execute(null);
         }
 
 		/// <summary>
@@ -218,7 +220,8 @@ namespace Utilities.Controls
                     break;
             }
 
-            action.Execute(null);
+			if (action != null)
+				action.Execute(null);
         }
     }
 }

@@ -23,21 +23,8 @@
         <Grid Height="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height=".57*"/>
-                <RowDefinition Height=".03*" MinHeight="5" />
-                <RowDefinition Height=".40*">
-                    <!--<RowDefinition.Style>
-                        <Style TargetType="{x:Type RowDefinition}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=ImageExpander, Path=IsExpanded}" Value="True">
-                                    <Setter Property="Height" Value=".40*"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=ImageExpander, Path=IsExpanded}" Value="False">
-                                    <Setter Property="Height" Value="0"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </RowDefinition.Style>-->
-                </RowDefinition>
+                <RowDefinition Height=".03*" MinHeight="5"/>
+                <RowDefinition Height=".40*"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" VerticalAlignment="Stretch" FocusManager.IsFocusScope="True">

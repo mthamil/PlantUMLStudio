@@ -132,9 +132,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
 
 			var editor = new Mock<IDiagramEditor>();
-			var saveCommand = new Mock<ICommand>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
 			diagrams.OpenDiagramCommand.Execute(diagramPreview);
@@ -144,7 +142,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagrams.OpenDiagrams);
-			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+			editor.Verify(e => e.Save(), Times.Never());
 		}
 
 		[Fact]
@@ -156,9 +154,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
 
 			var editor = new Mock<IDiagramEditor>();
-			var saveCommand = new Mock<ICommand>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
+			editor.Setup(e => e.Save()).Returns(Tasks.FromSuccess());
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
 			diagrams.OpenDiagramCommand.Execute(diagramPreview);
@@ -175,7 +172,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagrams.OpenDiagrams);
-			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Exactly(1));
+			editor.Verify(e => e.Save(), Times.Exactly(1));
 		}
 
 		[Fact]
@@ -187,9 +184,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
 
 			var editor = new Mock<IDiagramEditor>();
-			var saveCommand = new Mock<ICommand>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.SaveCommand).Returns(saveCommand.Object);
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => editor.Object, null);
 			diagrams.OpenDiagramCommand.Execute(diagramPreview);
@@ -205,7 +200,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagrams.OpenDiagrams);
-			saveCommand.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+			editor.Verify(e => e.Save(), Times.Never());
 		}
 
 		[Fact]
@@ -219,18 +214,14 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var diagramPreview1 = new PreviewDiagramViewModel(diagram1);
 
 			var editor1 = new Mock<IDiagramEditor>();
-			var saveCommand1 = new Mock<ICommand>();
 			editor1.SetupGet(e => e.Diagram).Returns(diagram1);
-			editor1.SetupGet(e => e.SaveCommand).Returns(saveCommand1.Object);
 			previewMap[diagramPreview1] = editor1.Object;
 
 			var diagram2 = new Diagram { File = new FileInfo(testDiagramFile.FullName + "2") };
 			var diagramPreview2 = new PreviewDiagramViewModel(diagram2);
 
 			var editor2 = new Mock<IDiagramEditor>();
-			var saveCommand2 = new Mock<ICommand>();
 			editor2.SetupGet(e => e.Diagram).Returns(diagram2);
-			editor2.SetupGet(e => e.SaveCommand).Returns(saveCommand2.Object);
 			previewMap[diagramPreview2] = editor2.Object;
 
 			diagrams = new DiagramsViewModel(progress.Object, diagramIO.Object, d => previewMap[d], null);
@@ -250,8 +241,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Single(diagrams.OpenDiagrams);
 			Assert.Equal(editor2.Object, diagrams.OpenDiagrams.Single());
-			saveCommand1.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
-			saveCommand2.Verify(s => s.Execute(It.IsAny<object>()), Times.Never());
+			editor1.Verify(e => e.Save(), Times.Never());
+			editor2.Verify(e => e.Save(), Times.Never());
 		}
 
 		[Fact]

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Model;
+using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -17,7 +18,7 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramsViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
+		public DiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO,
 			Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory, 
 			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory)
 		{
@@ -48,6 +49,7 @@ namespace PlantUmlEditor.ViewModel
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			_openDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
+			_closeCommand = new RelayCommand(Close);
 		}
 
 		/// <summary>
@@ -197,7 +199,11 @@ namespace PlantUmlEditor.ViewModel
 			var diagramEditor = (IDiagramEditor)sender;
 			if (_editorsNeedingSaving.Contains(diagramEditor))
 			{
-				diagramEditor.SaveCommand.Execute(null);
+				var saveTask = diagramEditor.Save();
+				_editorSaveTasks.Add(saveTask);
+				saveTask.ContinueWith(t =>_editorSaveTasks.Remove(t), 
+					CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+
 				_editorsNeedingSaving.Remove(diagramEditor);
 			}
 
@@ -222,6 +228,31 @@ namespace PlantUmlEditor.ViewModel
 		{
 			get { return _closingDiagram.Value; }
 			set { _closingDiagram.Value = value; }
+		}
+
+		/// <summary>
+		/// Command executed when closing the main application window.
+		/// </summary>
+		public ICommand CloseCommand
+		{
+			get { return _closeCommand; }
+		}
+
+		private void Close()
+		{
+			var unsavedOpenDiagrams = OpenDiagrams.Where(od => od.CodeEditor.IsModified).ToList();
+			foreach (var openDiagram in unsavedOpenDiagrams)
+			{
+				openDiagram.CloseCommand.Execute(null);
+			}
+
+			Task.WaitAll(_editorSaveTasks.ToArray());
+
+			if (IsDiagramLocationValid)
+			{
+				Settings.Default.LastPath = DiagramLocation.FullName;
+				Settings.Default.Save();
+			}
 		}
 
 		/// <summary>
@@ -285,9 +316,11 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICommand _loadDiagramsCommand;
 		private readonly ICommand _addNewDiagramCommand;
 		private readonly ICommand _openDiagramCommand;
+		private readonly ICommand _closeCommand;
 
 		private readonly ICommand _saveClosingDiagramCommand;
 		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
+		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
 
 		private readonly IDiagramIOService _diagramIO;
 		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;

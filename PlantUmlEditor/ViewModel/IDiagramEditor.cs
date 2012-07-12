@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using PlantUmlEditor.Model;
@@ -46,6 +47,12 @@ namespace PlantUmlEditor.ViewModel
 		/// Command that saves a diagram's changes.
 		/// </summary>
 		ICommand SaveCommand { get; }
+
+		/// <summary>
+		/// Asynchronously saves a diagram editor.
+		/// </summary>
+		/// <returns>A task representing the save operation</returns>
+		Task Save();
 
 		/// <summary>
 		/// Whether a diagram's image can currently be refreshed.

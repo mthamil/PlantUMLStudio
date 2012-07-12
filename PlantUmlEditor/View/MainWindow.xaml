@@ -5,14 +5,22 @@
     xmlns:DesignTimeData="clr-namespace:PlantUmlEditor.DesignTimeData" 
     xmlns:vw="clr-namespace:PlantUmlEditor.View" 
     xmlns:convert="clr-namespace:PlantUmlEditor.Converters" 
-    xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
+    xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
-    WindowStartupLocation="CenterScreen" 
-    Closing="Window_Closing">
+    WindowStartupLocation="CenterScreen"
+    attached:WindowBehavior.ClosingCommand="{Binding CloseCommand}">
+    
+    <Window.DataContext>
+        <Binding Path="ViewModel">
+            <Binding.Source>
+                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramsViewModel}" />
+            </Binding.Source>
+        </Binding>
+    </Window.DataContext>
     
     <Window.Resources>
         <ResourceDictionary>
@@ -112,8 +120,6 @@
                 </Style.Triggers>
             </Style>
 
-            <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramsViewModel}" x:Key="DiagramsViewModelLocator" />
-
         </ResourceDictionary>
     </Window.Resources>
 
@@ -122,8 +128,7 @@
         <Rectangle HorizontalAlignment="Stretch" x:Name="background" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
     
         <!-- First split the whole form into 3 rows, one for header, one for body and one for footer -->
-        <Grid Height="Auto" x:Name="MainGrid3Rows" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5"
-              DataContext="{Binding Source={StaticResource DiagramsViewModelLocator}, Path=ViewModel}">
+        <Grid Height="Auto" x:Name="MainGrid3Rows" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />

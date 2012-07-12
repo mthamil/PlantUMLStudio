@@ -168,12 +168,13 @@ namespace PlantUmlEditor.ViewModel
 			get { return _saveCommand; }
 		}
 
-		private void Save()
+		/// <see cref="IDiagramEditor.Save"/>
+		public Task Save()
 		{
 			_autoSaveTimer.TryStop();
 
 			if (_saveExecuting)
-				return;
+				return Tasks.FromSuccess();
 
 			_saveExecuting = true;
 			IsIdle = false;
@@ -229,13 +230,15 @@ namespace PlantUmlEditor.ViewModel
 					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
+
+			return saveTask;
 		}
 
 		void autoSaveTimerElapsed(object sender, EventArgs e)
 		{
 			// We must begin the Save operation on the UI thread in order to update the UI 
 			// with pre-save state.
-			Task.Factory.StartNew(Save, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
+			Task.Factory.StartNew(() => Save(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>

@@ -16,14 +16,5 @@ namespace PlantUmlEditor.View
 		{
 			InitializeComponent();
 		}
-
-		private void Window_Closing(object sender, CancelEventArgs e)
-		{
-			if (Directory.Exists(DiagramLocationTextBox.Text))
-			{
-				Settings.Default.LastPath = DiagramLocationTextBox.Text;
-				Settings.Default.Save();
-			}
-		}
 	}
 }

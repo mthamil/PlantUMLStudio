@@ -128,6 +128,8 @@
                                         <ContextMenu.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <Setter Property="Command" Value="{Binding Operation}"/>
+                                                <Setter Property="CommandParameter" 
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=DataContext}"/>
                                             </Style>
                                         </ContextMenu.ItemContainerStyle>
                                     </ContextMenu>

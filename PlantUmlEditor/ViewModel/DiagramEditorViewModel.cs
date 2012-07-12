@@ -78,16 +78,6 @@ namespace PlantUmlEditor.ViewModel
 
 			_autoSaveTimer.Elapsed += autoSaveTimerElapsed;
 			_refreshTimer.Elapsed += refreshTimer_Elapsed;
-
-			ImageCommands = new List<NamedOperationViewModel>
-			{
-				new NamedOperationViewModel(Resources.ContextMenu_Image_CopyToClipboard, 
-					new RelayCommand(() => Clipboard.SetImage(DiagramImage as BitmapSource))),	// Copy image.
-				new NamedOperationViewModel(Resources.ContextMenu_Image_OpenInExplorer, 
-					new RelayCommand(() => Process.Start("explorer.exe","/select," + Diagram.ImageFilePath).Dispose())), // Open in explorer.
-				new NamedOperationViewModel(Resources.ContextMenu_Image_CopyImagePath, 
-					new RelayCommand(() => Clipboard.SetText(Diagram.ImageFilePath)))	// Copy image path.
-			};
 		}
 
 		/// <summary>
@@ -374,7 +364,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Commands available to operate on the diagram image.
 		/// </summary>
-		public IEnumerable<NamedOperationViewModel> ImageCommands { get; private set; }
+		public IEnumerable<NamedOperationViewModel> ImageCommands { get; set; }
  
 		/// <summary>
 		/// Contains current task progress information.

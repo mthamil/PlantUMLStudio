@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
+using System.Windows.Media.Imaging;
 using Autofac;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Mvvm;
+using Utilities.Mvvm.Commands;
 
 namespace PlantUmlEditor.Container
 {
@@ -50,7 +54,18 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
-				.WithProperty(p => p.AutoSave, true);
+				.WithProperty(p => p.AutoSave, true)
+				.WithProperty(p => p.ImageCommands, new List<NamedOperationViewModel>
+					{
+						new NamedOperationViewModel(Resources.ContextMenu_Image_CopyToClipboard,
+						                            new RelayCommand<IDiagramEditor>(d => Clipboard.SetImage(d.DiagramImage as BitmapSource))),
+
+						new NamedOperationViewModel(Resources.ContextMenu_Image_OpenInExplorer,
+						                            new RelayCommand<IDiagramEditor>(d => Process.Start("explorer.exe", "/select," + d.Diagram.ImageFilePath).Dispose())),
+						
+						new NamedOperationViewModel(Resources.ContextMenu_Image_CopyImagePath,
+						                            new RelayCommand<IDiagramEditor>(d => Clipboard.SetText(d.Diagram.ImageFilePath)))
+					});
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithProperty(d => d.DiagramLocation,	// Initialize the diagram location.

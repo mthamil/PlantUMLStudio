@@ -96,9 +96,6 @@
     <Compile Include="Net\AsyncWebClient.cs" />
     <Compile Include="Net\IAsyncWebClient.cs" />
     <Compile Include="Net\WebClientExtensions.cs" />
-    <Compile Include="OldWindow.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyChanged\Property.cs" />
     <Compile Include="Reflection\Reflect.cs" />

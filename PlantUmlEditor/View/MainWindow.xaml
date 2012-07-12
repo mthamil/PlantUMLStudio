@@ -17,7 +17,7 @@
     <Window.DataContext>
         <Binding Path="ViewModel">
             <Binding.Source>
-                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramsViewModel}" />
+                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramManagerViewModel}" />
             </Binding.Source>
         </Binding>
     </Window.DataContext>
@@ -160,7 +160,7 @@
                 <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0" attached:GridSplitterSupport.IsEnabled="true">
                     <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0">
-                          <Grid DataContext="{Binding Previews}">
+                          <Grid DataContext="{Binding Explorer}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>

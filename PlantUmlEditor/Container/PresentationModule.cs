@@ -52,7 +52,7 @@ namespace PlantUmlEditor.Container
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
 				.WithProperty(p => p.AutoSave, true);
 
-			builder.RegisterType<PreviewDiagramsViewModel>().As<IPreviewDiagrams>()
+			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithProperty(d => d.DiagramLocation,	// Initialize the diagram location.
 					new DirectoryInfo(string.IsNullOrEmpty(Settings.Default.LastPath)
 									? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\")
@@ -60,7 +60,7 @@ namespace PlantUmlEditor.Container
 				.WithProperty(d => d.NewDiagramTemplate, String.Format(
 					@"@startuml ""{{0}}""{0}{1}{2}@enduml", Environment.NewLine, Environment.NewLine, Environment.NewLine));
 
-			builder.RegisterType<DiagramsViewModel>()
+			builder.RegisterType<DiagramManagerViewModel>()
 				.SingleInstance();
 		}
 	}

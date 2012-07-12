@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
 {
-	public class PreviewDiagramsViewModelTests
+	public class DiagramExplorerViewModelTests
 	{
 		[Fact]
 		[Synchronous]
@@ -25,18 +25,18 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 					new Diagram { Content = "Diagram 2" }
 				}));
 
-			previews = new PreviewDiagramsViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
 			{
 				DiagramLocation = testDiagramFile.Directory
 			};
 
 			// Act.
-			bool isValid = previews.IsDiagramLocationValid;
+			bool isValid = explorer.IsDiagramLocationValid;
 
 			// Assert.
 			Assert.True(isValid);
-			Assert.Equal(2, previews.PreviewDiagrams.Count);
-			AssertThat.SequenceEqual(new [] { "Diagram 1", "Diagram 2" }, previews.PreviewDiagrams.Select(d => d.Diagram.Content));
+			Assert.Equal(2, explorer.PreviewDiagrams.Count);
+			AssertThat.SequenceEqual(new [] { "Diagram 1", "Diagram 2" }, explorer.PreviewDiagrams.Select(d => d.Diagram.Content));
 		}
 
 		[Fact]
@@ -47,17 +47,17 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
-			previews = new PreviewDiagramsViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
 			{
 				DiagramLocation = testDiagramFile.Directory
 			};
 
 			// Act.
-			bool isValid = previews.IsDiagramLocationValid;
+			bool isValid = explorer.IsDiagramLocationValid;
 
 			// Assert.
 			Assert.True(isValid);
-			Assert.Empty(previews.PreviewDiagrams);
+			Assert.Empty(explorer.PreviewDiagrams);
 		}
 
 		[Fact]
@@ -68,10 +68,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
 
-			previews = new PreviewDiagramsViewModel(progress.Object, diagramIO.Object, null);
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, null);
 
 			// Act.
-			bool isValid = previews.IsDiagramLocationValid;
+			bool isValid = explorer.IsDiagramLocationValid;
 
 			// Assert.
 			Assert.False(isValid);
@@ -91,26 +91,26 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { File = testDiagramFile, Content = "New Diagram" } }));
 
-			previews = new PreviewDiagramsViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
 			{
 				DiagramLocation = testDiagramFile.Directory,
 				NewDiagramTemplate = "New Diagram"
 			};
 
 			NewDiagramCreatedEventArgs newDiagramArgs = null;
-			previews.NewDiagramCreated += (o, e) => newDiagramArgs = e;
+			explorer.NewDiagramCreated += (o, e) => newDiagramArgs = e;
 
 			// Act.
-			previews.AddNewDiagramCommand.Execute(new Uri(testDiagramFile.FullName));
+			explorer.AddNewDiagramCommand.Execute(new Uri(testDiagramFile.FullName));
 
 			// Assert.
-			Assert.Single(previews.PreviewDiagrams);
-			Assert.Equal(testDiagramFile.FullName, previews.PreviewDiagrams.Single().Diagram.File.FullName);
-			Assert.Equal("New Diagram", previews.PreviewDiagrams.Single().Diagram.Content);
+			Assert.Single(explorer.PreviewDiagrams);
+			Assert.Equal(testDiagramFile.FullName, explorer.PreviewDiagrams.Single().Diagram.File.FullName);
+			Assert.Equal("New Diagram", explorer.PreviewDiagrams.Single().Diagram.Content);
 
 			Assert.NotNull(newDiagramArgs);
-			Assert.Equal(previews.PreviewDiagrams.Single(), newDiagramArgs.NewDiagramPreview);
-			Assert.Equal(previews.PreviewDiagrams.Single(), previews.CurrentPreviewDiagram);
+			Assert.Equal(explorer.PreviewDiagrams.Single(), newDiagramArgs.NewDiagramPreview);
+			Assert.Equal(explorer.PreviewDiagrams.Single(), explorer.CurrentPreviewDiagram);
 
 			diagramIO.Verify(dio => dio.SaveAsync(
 				It.Is<Diagram>(d => d.Content == "New Diagram" && d.File.FullName == testDiagramFile.FullName), 
@@ -121,7 +121,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.AtLeastOnce());
 		}
 
-		private PreviewDiagramsViewModel previews;
+		private DiagramExplorerViewModel explorer;
 
 		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();

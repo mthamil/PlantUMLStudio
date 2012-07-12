@@ -12,12 +12,12 @@ using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
 {
-	public class DiagramsViewModel : ViewModelBase
+	public class DiagramManagerViewModel : ViewModelBase
 	{
-		public DiagramsViewModel(IPreviewDiagrams previews, Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)
+		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)
 		{
-			_previews = previews;
-			Previews.NewDiagramCreated += previews_NewDiagramCreated;
+			_explorer = explorer;
+			Explorer.NewDiagramCreated += explorer_NewDiagramCreated;
 			_editorFactory = editorFactory;
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
@@ -32,7 +32,7 @@ namespace PlantUmlEditor.ViewModel
 			_closeCommand = new RelayCommand(Close);
 		}
 
-		void previews_NewDiagramCreated(object sender, NewDiagramCreatedEventArgs e)
+		void explorer_NewDiagramCreated(object sender, NewDiagramCreatedEventArgs e)
 		{
 			OpenDiagramForEdit(e.NewDiagramPreview);
 		}
@@ -80,7 +80,7 @@ namespace PlantUmlEditor.ViewModel
 		void diagramEditor_Saved(object sender, EventArgs e)
 		{
 			var diagramEditor = (IDiagramEditor)sender;
-			var preview = Previews.PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
+			var preview = Explorer.PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
 			if (preview != null)
 				preview.ImagePreview = diagramEditor.DiagramImage;
 		}
@@ -155,9 +155,9 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Diagram previews.
 		/// </summary>
-		public IPreviewDiagrams Previews
+		public IDiagramExplorer Explorer
 		{
-			get { return _previews; }
+			get { return _explorer; }
 		}
 
 		private readonly Property<IDiagramEditor> _openDiagram;
@@ -171,7 +171,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
 		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
 
-		private readonly IPreviewDiagrams _previews;
+		private readonly IDiagramExplorer _explorer;
 		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}

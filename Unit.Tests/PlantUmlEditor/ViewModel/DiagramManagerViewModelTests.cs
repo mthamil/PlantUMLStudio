@@ -13,12 +13,12 @@ using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
 {
-	public class DiagramsViewModelTests
+	public class DiagramManagerViewModelTests
 	{
-		public DiagramsViewModelTests()
+		public DiagramManagerViewModelTests()
 		{
 			var previews = new List<PreviewDiagramViewModel>();
-			this.previews.SetupGet(p => p.PreviewDiagrams).Returns(previews);
+			explorer.SetupGet(p => p.PreviewDiagrams).Returns(previews);
 		}
 
 		[Fact]
@@ -29,14 +29,14 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var diagramPreview = new PreviewDiagramViewModel(new Diagram { File = testDiagramFile });
 			var editor = new Mock<IDiagramEditor>();
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
 
 			// Act.
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Assert.
-			Assert.Single(diagrams.OpenDiagrams);
-			Assert.Equal(editor.Object, diagrams.OpenDiagram);
+			Assert.Single(_diagramManager.OpenDiagrams);
+			Assert.Equal(editor.Object, _diagramManager.OpenDiagram);
 		}
 
 		[Fact]
@@ -49,15 +49,15 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 
-			diagrams = new DiagramsViewModel(previews.Object, null);
-			diagrams.OpenDiagrams.Add(editor.Object);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, null);
+			_diagramManager.OpenDiagrams.Add(editor.Object);
 
 			// Act.
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Assert.
-			Assert.Single(diagrams.OpenDiagrams);
-			Assert.Equal(editor.Object, diagrams.OpenDiagram);
+			Assert.Single(_diagramManager.OpenDiagrams);
+			Assert.Equal(editor.Object, _diagramManager.OpenDiagram);
 		}
 
 		[Fact]
@@ -71,14 +71,14 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
 			editor.Raise(e => e.Closed += null, EventArgs.Empty);
 
 			// Assert.
-			Assert.Empty(diagrams.OpenDiagrams);
+			Assert.Empty(_diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Never());
 		}
 
@@ -94,21 +94,21 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 			editor.Setup(e => e.Save()).Returns(Tasks.FromSuccess());
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
 			editor.Raise(e => e.Closing += null, new CancelEventArgs());
-			diagrams.SaveClosingDiagramCommand.Execute(null);
+			_diagramManager.SaveClosingDiagramCommand.Execute(null);
 
 			// Assert.
-			Assert.Equal(editor.Object, diagrams.ClosingDiagram);
+			Assert.Equal(editor.Object, _diagramManager.ClosingDiagram);
 
 			// Act.
 			editor.Raise(e => e.Closed += null, EventArgs.Empty);
 
 			// Assert.
-			Assert.Empty(diagrams.OpenDiagrams);
+			Assert.Empty(_diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Exactly(1));
 		}
 
@@ -123,20 +123,20 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
 			editor.Raise(e => e.Closing += null, new CancelEventArgs());
 
 			// Assert.
-			Assert.Equal(editor.Object, diagrams.ClosingDiagram);
+			Assert.Equal(editor.Object, _diagramManager.ClosingDiagram);
 
 			// Act.
 			editor.Raise(e => e.Closed += null, EventArgs.Empty);
 
 			// Assert.
-			Assert.Empty(diagrams.OpenDiagrams);
+			Assert.Empty(_diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Never());
 		}
 
@@ -161,23 +161,23 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor2.SetupGet(e => e.Diagram).Returns(diagram2);
 			previewMap[diagramPreview2] = editor2.Object;
 
-			diagrams = new DiagramsViewModel(previews.Object, d => previewMap[d]);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview1);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview2);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => previewMap[d]);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview1);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview2);
 
 			// Act.
 			editor2.Raise(e => e.Closing += null, new CancelEventArgs());
-			diagrams.SaveClosingDiagramCommand.Execute(null);
+			_diagramManager.SaveClosingDiagramCommand.Execute(null);
 
 			// Assert.
-			Assert.Equal(editor2.Object, diagrams.ClosingDiagram);
+			Assert.Equal(editor2.Object, _diagramManager.ClosingDiagram);
 
 			// Act.
 			editor1.Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the event for a different editor.
 
 			// Assert.
-			Assert.Single(diagrams.OpenDiagrams);
-			Assert.Equal(editor2.Object, diagrams.OpenDiagrams.Single());
+			Assert.Single(_diagramManager.OpenDiagrams);
+			Assert.Equal(editor2.Object, _diagramManager.OpenDiagrams.Single());
 			editor1.Verify(e => e.Save(), Times.Never());
 			editor2.Verify(e => e.Save(), Times.Never());
 		}
@@ -196,9 +196,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 			editor.SetupGet(e => e.DiagramImage).Returns(image);
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
-			diagrams.Previews.PreviewDiagrams.Add(diagramPreview);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
+			_diagramManager.Explorer.PreviewDiagrams.Add(diagramPreview);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
 			editor.Raise(e => e.Saved += null, EventArgs.Empty);
@@ -220,9 +220,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.SetupGet(e => e.Diagram).Returns(new Diagram { File = testDiagramFile });
 			editor.SetupGet(e => e.DiagramImage).Returns(image);
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
-			diagrams.Previews.PreviewDiagrams.Add(diagramPreview);
-			diagrams.OpenDiagramCommand.Execute(diagramPreview);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
+			_diagramManager.Explorer.PreviewDiagrams.Add(diagramPreview);
+			_diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
 			editor.Raise(e => e.Saved += null, EventArgs.Empty);
@@ -242,20 +242,20 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 
-			diagrams = new DiagramsViewModel(previews.Object, d => editor.Object);
+			_diagramManager = new DiagramManagerViewModel(explorer.Object, d => editor.Object);
 
 			// Act.
-			previews.Raise(p => p.NewDiagramCreated += null, new NewDiagramCreatedEventArgs(diagramPreview));
+			explorer.Raise(p => p.NewDiagramCreated += null, new NewDiagramCreatedEventArgs(diagramPreview));
 
 			// Assert.
-			Assert.Single(diagrams.OpenDiagrams);
-			Assert.Equal(editor.Object, diagrams.OpenDiagrams.Single());
-			Assert.Equal(editor.Object, diagrams.OpenDiagram);
+			Assert.Single(_diagramManager.OpenDiagrams);
+			Assert.Equal(editor.Object, _diagramManager.OpenDiagrams.Single());
+			Assert.Equal(editor.Object, _diagramManager.OpenDiagram);
 		}
 
-		private DiagramsViewModel diagrams;
+		private DiagramManagerViewModel _diagramManager;
 
-		private readonly Mock<IPreviewDiagrams> previews = new Mock<IPreviewDiagrams>();
+		private readonly Mock<IDiagramExplorer> explorer = new Mock<IDiagramExplorer>();
 
 		private static readonly FileInfo testDiagramFile = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"TestDiagrams\class.puml"));
 	}

@@ -17,9 +17,9 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Manages diagram previews.
 	/// </summary>
-	public class PreviewDiagramsViewModel : ViewModelBase, IPreviewDiagrams
+	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
-		public PreviewDiagramsViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
+		public DiagramExplorerViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
 			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory)
 		{
 			_progress = progressViewModel;
@@ -36,7 +36,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
-			_loadDiagramsCommand = new BoundRelayCommand<PreviewDiagramsViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
+			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 		}
 

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace PlantUmlEditor.ViewModel
 {
 	/// <summary>
-	/// Represents diagram previews.
+	/// Provides browsing and previewing of diagram files.
 	/// </summary>
-	public interface IPreviewDiagrams
+	public interface IDiagramExplorer
 	{
 		/// <summary>
 		/// Event raised whena  new diagram is created.

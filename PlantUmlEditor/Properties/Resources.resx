@@ -144,4 +144,7 @@
 	<data name="Progress_LoadingFile">
 		<value xml:space="preserve">Loading {0} of {1}</value>
 	</data>
+	<data name="ContextMenu_Code_Snippets">
+		<value xml:space="preserve">Snippets</value>
+	</data>
 </root>

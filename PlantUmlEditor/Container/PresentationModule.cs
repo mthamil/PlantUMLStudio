@@ -42,7 +42,7 @@ namespace PlantUmlEditor.Container
 			builder.Register<IEnumerable<ViewModelBase>>(c =>
 			{
 				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
-				var snippetRoot = new SnippetCategoryViewModel("Snippets");
+				var snippetRoot = new SnippetCategoryViewModel(Resources.ContextMenu_Code_Snippets);
 				foreach (var snippet in snippets)
 					snippetRoot.Snippets.Add(snippet);
 				return new List<ViewModelBase> { snippetRoot };

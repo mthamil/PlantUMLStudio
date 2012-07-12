@@ -61,6 +61,15 @@ namespace PlantUmlEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Snippets.
+        /// </summary>
+        internal static string ContextMenu_Code_Snippets {
+            get {
+                return ResourceManager.GetString("ContextMenu_Code_Snippets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy Image Path.
         /// </summary>
         internal static string ContextMenu_Image_CopyImagePath {

@@ -120,6 +120,8 @@
                 </Style.Triggers>
             </Style>
 
+            <xtn:ViewModelLocator TypeArgument="{x:Type vm:IProgressViewModel}" x:Key="ProgressViewModel"/>
+
         </ResourceDictionary>
     </Window.Resources>
 
@@ -158,20 +160,20 @@
                 <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0" attached:GridSplitterSupport.IsEnabled="true">
                     <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0">
-                          <Grid>
+                          <Grid DataContext="{Binding Previews}">
                             <Grid.ColumnDefinitions>
-                              <ColumnDefinition />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
             
                             <Grid.RowDefinitions>
-                              <RowDefinition Height="Auto"/>
-                              <RowDefinition Height="300*" />
-                              <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="300*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions> 
             
                             <!-- This is the location box -->
                             <StackPanel Grid.Row="0" Margin="5,5,5,5">
-                            <TextBlock Text="Location:" Foreground="White"/>
+                                <TextBlock Text="Location:" Foreground="White"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -207,7 +209,7 @@
                                      SelectedItem="{Binding CurrentPreviewDiagram}"
                                      ItemContainerStyle="{StaticResource ListBoxItemStyle}"
                                      ItemsSource="{Binding PreviewDiagrams}" 
-                                     attached:DoubleClickCommandBehavior.Command="{Binding OpenDiagramCommand}"
+                                     attached:DoubleClickCommandBehavior.Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenDiagramCommand}"
                                      attached:DoubleClickCommandBehavior.CommandParameter="{Binding CurrentPreviewDiagram}">
                     
                                     <ListBox.ItemTemplate>
@@ -357,7 +359,8 @@
             </Grid>
       
             <!-- This is the bottom row containing status message and progress bar -->
-            <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25" Background="#2B3C59">
+            <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25" Background="#2B3C59"
+                       DataContext="{Binding Source={StaticResource ProgressViewModel}, Path=ViewModel}">
 
                 <!--<StatusBar.BorderBrush Color="" />-->
                 
@@ -373,7 +376,7 @@
                 </StatusBar.ItemsPanel>
 
                 <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding Progress.Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White">
+                    <TextBlock Text="{Binding Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White">
                         <!--<TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>
@@ -394,9 +397,9 @@
                 <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
                     <ProgressBar Foreground="LightGreen" Background="Gray" 
                             VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="18" Width="165" 
-                            Minimum="0" Maximum="100" IsIndeterminate="{Binding Progress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
-                            Value="{Binding Progress.PercentComplete, TargetNullValue=-1}"
-                            Visibility="{Binding Progress.InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
+                            Minimum="0" Maximum="100" IsIndeterminate="{Binding HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                            Value="{Binding PercentComplete, TargetNullValue=-1}"
+                            Visibility="{Binding InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
                 </StatusBarItem>
                     
             </StatusBar>    

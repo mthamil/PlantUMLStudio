@@ -95,6 +95,7 @@
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\PreviewDiagramsViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramsViewModelTests.cs" />
     <Compile Include="SubSpec\SubSpec.cs" />

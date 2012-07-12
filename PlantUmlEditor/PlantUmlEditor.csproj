@@ -124,8 +124,10 @@
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramsViewModel.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
+    <Compile Include="ViewModel\IPreviewDiagrams.cs" />
     <Compile Include="ViewModel\NamedOperationViewModel.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
+    <Compile Include="ViewModel\PreviewDiagramsViewModel.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />

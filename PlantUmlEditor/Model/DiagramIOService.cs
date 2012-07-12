@@ -18,11 +18,9 @@ namespace PlantUmlEditor.Model
 		/// <summary>
 		/// Initializes the service.
 		/// </summary>
-		/// <param name="diagramCompiler">Compiles diagram code to an image</param>
 		/// <param name="scheduler">The scheduler to use for executing tasks</param>
-		public DiagramIOService(IDiagramCompiler diagramCompiler, TaskScheduler scheduler)
+		public DiagramIOService(TaskScheduler scheduler)
 		{
-			_diagramCompiler = diagramCompiler;
 			_scheduler = scheduler;
 		}
 
@@ -122,7 +120,6 @@ namespace PlantUmlEditor.Model
 
 		#endregion
 
-		private readonly IDiagramCompiler _diagramCompiler;
 		private readonly TaskScheduler _scheduler;
 	}
 }

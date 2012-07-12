@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Model;
+using PlantUmlEditor.Properties;
 using Utilities.Chronology;
 using Utilities.Concurrency;
 using Utilities.Controls.Behaviors.AvalonEdit;
@@ -80,11 +81,11 @@ namespace PlantUmlEditor.ViewModel
 
 			ImageCommands = new List<NamedOperationViewModel>
 			{
-				new NamedOperationViewModel("Copy to Clipboard", 
+				new NamedOperationViewModel(Resources.ContextMenu_Image_CopyToClipboard, 
 					new RelayCommand(() => Clipboard.SetImage(DiagramImage as BitmapSource))),	// Copy image.
-				new NamedOperationViewModel("Open in Explorer", 
+				new NamedOperationViewModel(Resources.ContextMenu_Image_OpenInExplorer, 
 					new RelayCommand(() => Process.Start("explorer.exe","/select," + Diagram.ImageFilePath).Dispose())), // Open in explorer.
-				new NamedOperationViewModel("Copy Image Path", 
+				new NamedOperationViewModel(Resources.ContextMenu_Image_CopyImagePath, 
 					new RelayCommand(() => Clipboard.SetText(Diagram.ImageFilePath)))	// Copy image path.
 			};
 		}
@@ -204,7 +205,7 @@ namespace PlantUmlEditor.ViewModel
 				Progress.Message = p.Item2;
 			});
 
-			progress.Report(Tuple.Create((int?)100, "Saving and generating diagram..."));
+			progress.Report(Tuple.Create((int?)100, Resources.Progress_SavingDiagram));
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
 				.Then(() => _compiler.CompileToFile(Diagram.File));
 
@@ -216,7 +217,7 @@ namespace PlantUmlEditor.ViewModel
 				CodeEditor.IsModified = false;
 				IsIdle = true;
 				_refreshTimer.TryStop();
-				progress.Report(Tuple.Create((int?)null, "Saved."));
+				progress.Report(Tuple.Create((int?)null, Resources.Progress_DiagramSaved));
 
 				OnSaved();
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);

@@ -112,12 +112,33 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NotImplemented" xml:space="preserve">
-    <value>Sorry this feature is not implemeted</value>
+    <value>Sorry, this feature is not implemented.</value>
+  </data>
+  <data name="Progress_LoadingDiagrams" xml:space="preserve">
+    <value>Loading diagrams...</value>
+  </data>
+  <data name="Progress_DiagramsLoaded" xml:space="preserve">
+    <value>Diagrams loaded.</value>
+  </data>
+  <data name="ContextMenu_Image_CopyToClipboard" xml:space="preserve">
+    <value>Copy to Clipboard</value>
+  </data>
+  <data name="ContextMenu_Image_OpenInExplorer" xml:space="preserve">
+    <value>Open in Explorer</value>
+  </data>
+  <data name="ContextMenu_Image_CopyImagePath" xml:space="preserve">
+    <value>Copy Image Path</value>
+  </data>
+  <data name="Progress_SavingDiagram" xml:space="preserve">
+    <value>Saving and generating diagram...</value>
+  </data>
+  <data name="Progress_DiagramSaved" xml:space="preserve">
+    <value>Saved.</value>
   </data>
 </root>

@@ -8,8 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlantUmlEditor.Properties
-{
+namespace PlantUmlEditor.Properties {
     using System;
     
     
@@ -62,11 +61,74 @@ namespace PlantUmlEditor.Properties
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry this feature is not implemeted.
+        ///   Looks up a localized string similar to Copy Image Path.
+        /// </summary>
+        internal static string ContextMenu_Image_CopyImagePath {
+            get {
+                return ResourceManager.GetString("ContextMenu_Image_CopyImagePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy to Clipboard.
+        /// </summary>
+        internal static string ContextMenu_Image_CopyToClipboard {
+            get {
+                return ResourceManager.GetString("ContextMenu_Image_CopyToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open in Explorer.
+        /// </summary>
+        internal static string ContextMenu_Image_OpenInExplorer {
+            get {
+                return ResourceManager.GetString("ContextMenu_Image_OpenInExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, this feature is not implemented..
         /// </summary>
         internal static string NotImplemented {
             get {
                 return ResourceManager.GetString("NotImplemented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved..
+        /// </summary>
+        internal static string Progress_DiagramSaved {
+            get {
+                return ResourceManager.GetString("Progress_DiagramSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagrams loaded..
+        /// </summary>
+        internal static string Progress_DiagramsLoaded {
+            get {
+                return ResourceManager.GetString("Progress_DiagramsLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading diagrams....
+        /// </summary>
+        internal static string Progress_LoadingDiagrams {
+            get {
+                return ResourceManager.GetString("Progress_LoadingDiagrams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving and generating diagram....
+        /// </summary>
+        internal static string Progress_SavingDiagram {
+            get {
+                return ResourceManager.GetString("Progress_SavingDiagram", resourceCulture);
             }
         }
     }

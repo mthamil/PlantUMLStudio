@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Model;
+using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -162,7 +163,7 @@ namespace PlantUmlEditor.ViewModel
 				_progress.Message = p.Item2;
 			});
 
-			progress.Report(Tuple.Create((int?)0, "Loading diagrams..."));
+			progress.Report(Tuple.Create((int?)0, Resources.Progress_LoadingDiagrams));
 			var loadTask = _diagramIO.ReadDiagramsAsync(DiagramLocation, progress);
 
 			loadTask.ContinueWith(t =>
@@ -177,7 +178,7 @@ namespace PlantUmlEditor.ViewModel
 				foreach (var diagramFile in t.Result)
 					_previewDiagrams.Value.Add(_previewDiagramFactory(diagramFile));
 
-				progress.Report(Tuple.Create((int?)null, "Diagrams loaded."));
+				progress.Report(Tuple.Create((int?)null, Resources.Progress_DiagramsLoaded));
 
 				return _previewDiagrams.Value;
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);

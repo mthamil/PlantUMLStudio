@@ -141,4 +141,7 @@
   <data name="Progress_DiagramSaved" xml:space="preserve">
     <value>Saved.</value>
   </data>
+	<data name="Progress_LoadingFile">
+		<value xml:space="preserve">Loading {0} of {1}</value>
+	</data>
 </root>

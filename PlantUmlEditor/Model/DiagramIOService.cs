@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
 
 namespace PlantUmlEditor.Model
@@ -49,7 +50,7 @@ namespace PlantUmlEditor.Model
 					{
 						progress.Report(Tuple.Create(
 							(int?)(processed/(double)numberOfFiles*100),
-							String.Format("Loading {0} of {1}", processed, numberOfFiles)));
+							String.Format(Resources.Progress_LoadingFile, processed, numberOfFiles)));
 					}
 				}
 

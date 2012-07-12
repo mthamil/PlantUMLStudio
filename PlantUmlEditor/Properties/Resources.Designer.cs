@@ -124,6 +124,15 @@ namespace PlantUmlEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading {0} of {1}.
+        /// </summary>
+        internal static string Progress_LoadingFile {
+            get {
+                return ResourceManager.GetString("Progress_LoadingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving and generating diagram....
         /// </summary>
         internal static string Progress_SavingDiagram {

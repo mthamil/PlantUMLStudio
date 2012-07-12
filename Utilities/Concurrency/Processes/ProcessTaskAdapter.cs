@@ -143,7 +143,7 @@ namespace Utilities.Concurrency.Processes
 		{
 			if (errorData != null)
 			{
-				var bytes = Encoding.Default.GetBytes(errorData);
+				var bytes = Encoding.Default.GetBytes(errorData + Environment.NewLine);
 				stream.Write(bytes, 0, bytes.Length);
 			}
 		}
@@ -152,7 +152,7 @@ namespace Utilities.Concurrency.Processes
 		{
 			errorStream.Position = 0;
 			string error;
-			using (var reader = new StreamReader(errorStream))
+			using (var reader = new StreamReader(errorStream, Encoding.Default))
 				error = reader.ReadToEnd();
 
 			return new ProcessErrorException(error);

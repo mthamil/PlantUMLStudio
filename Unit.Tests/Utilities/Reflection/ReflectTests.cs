@@ -34,13 +34,13 @@ namespace Unit.Tests.Utilities.Reflection
 		[Fact]
 		public void Test_PropertyOf_Method()
 		{
-			AssertThat.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, string>(t => t.ToString()));
+			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, string>(t => t.ToString()));
 		}
 
 		[Fact]
 		public void Test_PropertyOf_ConstantValue()
 		{
-			AssertThat.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, int>(t => 1));
+			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, int>(t => 1));
 		}
 
 		[Fact]
@@ -84,13 +84,13 @@ namespace Unit.Tests.Utilities.Reflection
 		[Fact]
 		public void Test_MethodOf_Property()
 		{
-			AssertThat.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, string>(t => t.StringProperty));
+			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, string>(t => t.StringProperty));
 		}
 
 		[Fact]
 		public void Test_MethodOf_ConstantValue()
 		{
-			AssertThat.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, int>(t => 1));
+			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, int>(t => 1));
 		}
 
 		private class TestType

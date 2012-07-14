@@ -13,6 +13,12 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 {
 	public class DiagramExplorerViewModelTests
 	{
+		public DiagramExplorerViewModelTests()
+		{
+			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
+				.Returns(Tasks.FromSuccess());
+		}
+
 		[Fact]
 		[Synchronous]
 		public void Test_IsDiagramLocationValid_SuccessfulLoad()
@@ -85,9 +91,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AddNewDiagramCommand()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromResult<object>(null));
-
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { File = testDiagramFile, Content = "New Diagram" } }));
 
@@ -119,6 +122,29 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.Is<DirectoryInfo>(d => d.FullName == testDiagramFile.Directory.FullName), 
 				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.AtLeastOnce());
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_AddNewDiagramCommand_FileNameWithoutExtension()
+		{
+			// Arrange.
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
+
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
+			{
+				DiagramLocation = testDiagramFile.Directory,
+				NewDiagramTemplate = "New Diagram"
+			};
+
+			// Act.
+			explorer.AddNewDiagramCommand.Execute(new Uri(testDiagramFile.Directory.FullName + @"\test-diagram"));
+
+			// Assert.
+			diagramIO.Verify(io => io.SaveAsync(
+				It.Is<Diagram>(d => d.File.FullName == testDiagramFile.Directory.FullName + @"\test-diagram.puml"), 
+				It.IsAny<bool>()));
 		}
 
 		private DiagramExplorerViewModel explorer;

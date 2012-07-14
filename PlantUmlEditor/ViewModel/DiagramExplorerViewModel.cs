@@ -116,6 +116,10 @@ namespace PlantUmlEditor.ViewModel
 		private void AddNewDiagram(Uri newDiagramUri)
 		{
 			string newFilePath = newDiagramUri.LocalPath;
+
+			if (String.IsNullOrEmpty(Path.GetExtension(newFilePath)))
+				newFilePath += ".puml";
+
 			var newDiagram = new Diagram
 			{
 				File = new FileInfo(newFilePath),

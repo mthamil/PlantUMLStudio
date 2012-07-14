@@ -68,7 +68,7 @@ namespace Utilities.Mvvm.Commands
 	/// objects by invoking delegates.  In order for CanExecute to return
 	/// true, the command parameter must of type T.
 	/// </summary>
-	/// <typeparam name="T">The type of parameter to be passed tot he command</typeparam>
+	/// <typeparam name="T">The type of parameter to be passed to the command</typeparam>
 	public class RelayCommand<T> : ICommand
 	{
 		/// <summary>

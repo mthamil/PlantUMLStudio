@@ -75,11 +75,6 @@ namespace PlantUmlEditor.ViewModel
 		CodeEditorViewModel CodeEditor { get; }
 
 		/// <summary>
-		/// Commands available to operate on the diagram image.
-		/// </summary>
-		IEnumerable<NamedOperationViewModel> ImageCommands { get; }
-
-		/// <summary>
 		/// Contains current task progress information.
 		/// </summary>
 		IProgressViewModel Progress { get; }

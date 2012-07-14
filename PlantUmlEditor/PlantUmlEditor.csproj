@@ -125,7 +125,7 @@
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />
-    <Compile Include="ViewModel\NamedOperationViewModel.cs" />
+    <Compile Include="ViewModel\NamedRelayCommand.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />

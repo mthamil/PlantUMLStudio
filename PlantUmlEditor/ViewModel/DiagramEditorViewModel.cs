@@ -2,13 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
@@ -364,7 +361,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Commands available to operate on the diagram image.
 		/// </summary>
-		public IEnumerable<NamedOperationViewModel> ImageCommands { get; set; }
+		public IEnumerable<NamedRelayCommand<IDiagramEditor>> ImageCommands { get; set; }
  
 		/// <summary>
 		/// Contains current task progress information.

@@ -55,16 +55,22 @@ namespace PlantUmlEditor.Container
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
 				.WithProperty(p => p.AutoSave, true)
-				.WithProperty(p => p.ImageCommands, new List<NamedOperationViewModel>
+				.WithProperty(p => p.ImageCommands, new List<NamedRelayCommand<IDiagramEditor>>
 					{
-						new NamedOperationViewModel(Resources.ContextMenu_Image_CopyToClipboard,
-						                            new RelayCommand<IDiagramEditor>(d => Clipboard.SetImage(d.DiagramImage as BitmapSource))),
+						new NamedRelayCommand<IDiagramEditor>(d => Clipboard.SetImage(d.DiagramImage as BitmapSource))
+						{
+							Name = Resources.ContextMenu_Image_CopyToClipboard
+						},
 
-						new NamedOperationViewModel(Resources.ContextMenu_Image_OpenInExplorer,
-						                            new RelayCommand<IDiagramEditor>(d => Process.Start("explorer.exe", "/select," + d.Diagram.ImageFilePath).Dispose())),
+						new NamedRelayCommand<IDiagramEditor>(d => Process.Start("explorer.exe", "/select," + d.Diagram.ImageFilePath).Dispose())
+						{
+							Name = Resources.ContextMenu_Image_OpenInExplorer
+						},
 						
-						new NamedOperationViewModel(Resources.ContextMenu_Image_CopyImagePath,
-						                            new RelayCommand<IDiagramEditor>(d => Clipboard.SetText(d.Diagram.ImageFilePath)))
+						new NamedRelayCommand<IDiagramEditor>(d => Clipboard.SetText(d.Diagram.ImageFilePath)) 
+						{ 
+							Name = Resources.ContextMenu_Image_CopyImagePath 
+						}
 					});
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()

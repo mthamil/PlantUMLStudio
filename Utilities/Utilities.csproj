@@ -89,6 +89,8 @@
     <Compile Include="Concurrency\TaskExtensions.cs" />
     <Compile Include="Concurrency\Tasks.cs" />
     <Compile Include="InputOutput\AsyncStream.cs" />
+    <Compile Include="InputOutput\FileSystemWatcherAdapter.cs" />
+    <Compile Include="InputOutput\IFileSystemWatcher.cs" />
     <Compile Include="InputOutput\StreamExtensions.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\RelayCommand.cs" />

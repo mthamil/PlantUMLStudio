@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Utilities.Concurrency;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Unit.Tests
 {
@@ -18,7 +22,7 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2 };
 
 			// Act/Assert.
-			var exception = AssertThat.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,2,3", exception.Expected);
@@ -34,7 +38,7 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = AssertThat.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,2", exception.Expected);
@@ -50,7 +54,7 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = AssertThat.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,4", exception.Expected);
@@ -66,7 +70,7 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			AssertThat.DoesNotThrow(() =>
+			Assert.DoesNotThrow(() =>
 				AssertThat.SequenceEqual(expected, actual));
 		}
 
@@ -78,7 +82,7 @@ namespace Unit.Tests
 			var actual = Enumerable.Range(1, 3);
 
 			// Act/Assert.
-			AssertThat.DoesNotThrow(() =>
+			Assert.DoesNotThrow(() =>
 				AssertThat.SequenceEqual(expected, actual));
 		}
 
@@ -90,7 +94,7 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = AssertThat.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal(string.Empty, exception.Expected);
@@ -106,7 +110,7 @@ namespace Unit.Tests
 			var actual = Enumerable.Empty<int>();
 
 			// Act/Assert.
-			var exception = AssertThat.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1", exception.Expected);
@@ -121,7 +125,7 @@ namespace Unit.Tests
 			IEventTest test = new EventTest();
 
 			// Act/Assert.
-			AssertThat.DoesNotThrow(() =>
+			Assert.DoesNotThrow(() =>
 				AssertThat.Raises(test, "TestEvent", () => test.OnTestEvent(4)));
 
 			Assert.True(test.EventRaised);
@@ -134,7 +138,7 @@ namespace Unit.Tests
 			IEventTest test = new EventTest();
 
 			// Act/Assert.
-			AssertThat.Throws<RaisesException>(() =>
+			Assert.Throws<RaisesException>(() =>
 				AssertThat.Raises(test, "TestEvent", () => test.ToString()));
 
 			Assert.False(test.EventRaised);
@@ -147,7 +151,7 @@ namespace Unit.Tests
 		//    IEventTest test = new EventTest();
 
 		//    // Act/Assert.
-		//    AssertThat.DoesNotThrow(() =>
+		//    Assert.DoesNotThrow(() =>
 		//        AssertThat.Raises(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
 		//    Assert.True(test.EventRaised);
@@ -160,7 +164,7 @@ namespace Unit.Tests
 		//    IEventTest test = new EventTest();
 
 		//    // Act/Assert.
-		//    AssertThat.Throws<RaisesException>(() =>
+		//    Assert.Throws<RaisesException>(() =>
 		//        AssertThat.Raises(test, t => t.TestEvent += null, () => test.ToString()));
 
 		//    Assert.False(test.EventRaised);
@@ -173,7 +177,7 @@ namespace Unit.Tests
 			IEventTest test = new EventTest();
 
 			// Act/Assert.
-			AssertThat.Throws<RaisesException>(() =>
+			Assert.Throws<RaisesException>(() =>
 				AssertThat.DoesNotRaise(test, "TestEvent", () => test.OnTestEvent(4)));
 
 			Assert.True(test.EventRaised);
@@ -186,7 +190,7 @@ namespace Unit.Tests
 			IEventTest test = new EventTest();
 
 			// Act/Assert.
-			AssertThat.DoesNotThrow(() =>
+			Assert.DoesNotThrow(() =>
 				AssertThat.DoesNotRaise(test, "TestEvent", () => test.ToString()));
 
 			Assert.False(test.EventRaised);
@@ -199,7 +203,7 @@ namespace Unit.Tests
 		//    IEventTest test = new EventTest();
 
 		//    // Act/Assert.
-		//    AssertThat.Throws<RaisesException>(() =>
+		//    Assert.Throws<RaisesException>(() =>
 		//        AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
 		//    Assert.True(test.EventRaised);
@@ -212,7 +216,7 @@ namespace Unit.Tests
 		//    IEventTest test = new EventTest();
 
 		//    // Act/Assert.
-		//    AssertThat.DoesNotThrow(() =>
+		//    Assert.DoesNotThrow(() =>
 		//        AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.ToString()));
 
 		//    Assert.False(test.EventRaised);
@@ -226,7 +230,7 @@ namespace Unit.Tests
 
 			// Act/Assert.
 			TestEventArgs args = null;
-			AssertThat.DoesNotThrow(() =>
+			Assert.DoesNotThrow(() =>
 				args = AssertThat.RaisesWithEventArgs<TestEventArgs>(test, "TestEvent", () => test.OnTestEvent(4)));
 
 			Assert.Equal(4, args.Value);
@@ -240,7 +244,7 @@ namespace Unit.Tests
 			IEventTest test = new EventTest();
 
 			// Act/Assert.
-			AssertThat.Throws<RaisesException>(() =>
+			Assert.Throws<RaisesException>(() =>
 				AssertThat.RaisesWithEventArgs<TestEventArgs>(test, "TestEvent", () => test.ToString()));
 
 			Assert.False(test.EventRaised);
@@ -254,7 +258,7 @@ namespace Unit.Tests
 
 		//    // Act/Assert.
 		//    TestEventArgs args = null;
-		//    AssertThat.DoesNotThrow(() =>
+		//    Assert.DoesNotThrow(() =>
 		//        args = AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
 		//    Assert.Equal(4, args.Value);
@@ -268,103 +272,85 @@ namespace Unit.Tests
 		//    IEventTest test = new EventTest();
 
 		//    // Act/Assert.
-		//    AssertThat.Throws<RaisesException>(() =>
+		//    Assert.Throws<RaisesException>(() =>
 		//        AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.ToString()));
 
 		//    Assert.False(test.EventRaised);
 		//}
 
 		[Fact]
-		public void Test_Throws_Success()
+		public void Test_Throws_Task_Success()
 		{
-			// Act.
-			ThrowsException expected = null;
-			try
-			{
-				AssertThat.Throws<ArgumentException>(() => { throw new ArgumentException(); });
-			}
-			catch (ThrowsException e)
-			{
-				expected = e;
-			}
-
-			// Assert.
-			Assert.Null(expected);
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() => 
+					{ 
+						throw new ArgumentException(); 
+					}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
 		}
 
 		[Fact]
-		public void Test_Throws_NoException()
+		public void Test_Throws_Task_NoException()
 		{
-			// Act.
-			ThrowsException expected = null;
-			try
-			{
-				AssertThat.Throws<ArgumentException>(() => string.Empty.GetType());
-			}
-			catch (ThrowsException e)
-			{
-				expected = e;
-			}
+			// Act/Assert.
+			var expected = Assert.Throws<ThrowsException>(() =>
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() =>
+				{
+					string.Empty.GetType();
+				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
 
 			// Assert.
 			Assert.NotNull(expected);
-			Assert.Equal("ThrowsException : Throws Assertion Failure\r\nExpected: ArgumentException, Actual: No Exception", expected.Message);
 		}
 
 		[Fact]
-		public void Test_Throws_WrongException()
+		public void Test_Throws_Task_WrongException()
 		{
-			// Act.
-			ThrowsException expected = null;
-			try
-			{
-				AssertThat.Throws<ArgumentException>(() => { throw new ArgumentOutOfRangeException(); });
-			}
-			catch (ThrowsException e)
-			{
-				expected = e;
-			}
+			// Act/Assert.
+			var expected = Assert.Throws<ThrowsException>(() =>
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() =>
+				{
+					throw new ArgumentOutOfRangeException();
+				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
 
 			// Assert.
 			Assert.NotNull(expected);
-			Assert.Equal("ThrowsException : Throws Assertion Failure\r\nExpected: ArgumentException, Actual: ArgumentOutOfRangeException", expected.Message);
 		}
 
 		[Fact]
-		public void Test_DoesNotThrow_Success()
+		public void Test_Throws_Task_AggregateException()
 		{
-			// Act.
-			ThrowsException expected = null;
-			try
-			{
-				AssertThat.DoesNotThrow(() => string.Empty.GetType());
-			}
-			catch (ThrowsException e)
-			{
-				expected = e;
-			}
-
-			// Assert.
-			Assert.Null(expected);
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.Throws<AggregateException>(() => Task.Factory.StartNew(() =>
+				{
+					throw new ArgumentOutOfRangeException();
+				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
 		}
 
 		[Fact]
-		public void Test_DoesNotThrow_Failure()
+		public void Test_DoesNotThrow_Task_Success()
 		{
-			// Act.
-			ThrowsException expected = null;
-			try
-			{
-				AssertThat.DoesNotThrow(() => { throw new ArgumentNullException(); });
-			}
-			catch (ThrowsException e)
-			{
-				expected = e;
-			}
+			// Act/Assert.
+			Assert.DoesNotThrow(() => 
+				AssertThat.DoesNotThrow(() => Task.Factory.StartNew(() =>
+				{
+					 string.Empty.GetType();
+				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
+		}
+
+		[Fact]
+		public void Test_DoesNotThrow_Task_Failure()
+		{
+			// Act/Assert.
+			var expected = Assert.Throws<DoesNotThrowException>(() => 
+				AssertThat.DoesNotThrow(() => Task.Factory.StartNew(() =>
+				{
+					throw new ArgumentNullException();
+				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
 
 			// Assert.
 			Assert.NotNull(expected);
-			Assert.Equal("ThrowsException : Throws Assertion Failure\r\nExpected: No Exception, Actual: ArgumentNullException", expected.Message);
 		}
 
 		public interface IEventTest

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using Utilities.Reflection;
 using Xunit;
 using Xunit.Sdk;
@@ -90,19 +92,27 @@ namespace Unit.Tests
 		}
 
 		/// <summary>
-		/// Asserts that a specifci exception should be thrown by the given code.
+		/// Asserts that a specific exception should be thrown by the given code.
 		/// </summary>
 		/// <typeparam name="TException">The type of exception that should be thrown</typeparam>
 		/// <param name="action">The code that should throw the exception</param>
 		/// <returns>The exception if it was thrown</returns>
-		public static TException Throws<TException>(Action action) where TException : Exception
+		public static TException Throws<TException>(Func<Task> action) where TException : Exception
 		{
-			var exception = ExceptionRecorder.Record(action);
+			var exception = ExceptionRecorder.Record(() => action().Wait());
+
+			var aggregateException = exception as AggregateException;
+			if (aggregateException != null)
+			{
+				if (typeof(TException) != typeof(AggregateException))
+					exception = aggregateException.InnerExceptions.FirstOrDefault();
+			}
+
 			if (exception == null)
-				throw new ThrowsException(typeof(TException), null);
+				throw new ThrowsException(typeof(TException));
 
 			if (typeof(TException) != exception.GetType())
-				throw new ThrowsException(typeof(TException), exception.GetType());
+				throw new ThrowsException(typeof(TException), exception);
 
 			return (TException)exception;
 		}
@@ -111,11 +121,11 @@ namespace Unit.Tests
 		/// Asserts that the given code does not thrown any exceptions.
 		/// </summary>
 		/// <param name="action">The code that should not throw an exception</param>
-		public static void DoesNotThrow(Action action)
+		public static void DoesNotThrow(Func<Task> action)
 		{
-			var exception = ExceptionRecorder.Record(action);
+			var exception = ExceptionRecorder.Record(() => action().Wait());
 			if (exception != null)
-				throw new ThrowsException(null, exception.GetType());
+				throw new DoesNotThrowException(exception);
 		}
 
 		///// <summary>
@@ -345,57 +355,6 @@ namespace Unit.Tests
 					WasRaised ? "was raised" : "was not raised",
 					ShouldHaveBeenRaised ? "expected" : "not expected");
 			}
-		}
-	}
-
-	/// <summary>
-	/// Exception raised when an assertion about the throwing of an exception is not met.
-	/// </summary>
-	public class ThrowsException : AssertException
-	{
-		/// <summary>
-		/// Creates a new instance of the <see cref="ThrowsException"/> class.
-		/// </summary>
-		/// <param name="expected">The expected exception type</param>
-		/// <param name="actual">The actual exception type</param>
-		public ThrowsException(Type expected, Type actual)
-			: base(typeof(ThrowsException).Name + " : Throws Assertion Failure")
-		{
-			Expected = expected;
-			Actual = actual;
-		}
-
-		/// <summary>
-		/// The expected exception type or null if no exception was expected.
-		/// </summary>
-		public Type Expected { get; private set; }
-
-		/// <summary>
-		/// The actual exception type or null if no exception occurred.
-		/// </summary>
-		public Type Actual { get; private set; }
-
-		/// <summary>
-		/// Gets a message that describes the current exception.
-		/// </summary>
-		/// <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
-		public override string Message
-		{
-			get
-			{
-				return String.Format("{0}{1}Expected: {2}, Actual: {3}",
-					base.Message,
-					Environment.NewLine,
-					FormatExceptionType(Expected),
-					FormatExceptionType(Actual));
-			}
-		}
-
-		private static string FormatExceptionType(Type exceptionType)
-		{
-			return exceptionType == null
-				? "No Exception"
-				: exceptionType.Name;
 		}
 	}
 

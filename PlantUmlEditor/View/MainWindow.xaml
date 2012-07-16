@@ -142,7 +142,8 @@
                     <TextBlock FontFamily="Segoe" VerticalAlignment="Top" FontStretch="Condensed" FontWeight="Thin" Margin="7,0,0,0"> 
                         <Run FontSize="36" Foreground="LightGray" Text="Plant"/>
                         <Run FontSize="36" Foreground="White" Text="UML"/>
-                        <Run Foreground="LightGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />            
+                        <Run Foreground="LightGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />
+                        <Run FontSize="14" Foreground="White" Text="v2.0"/>
                     </TextBlock>
                 </WrapPanel>
             </StackPanel>

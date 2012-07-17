@@ -121,12 +121,14 @@ namespace Utilities.Concurrency.Processes
 			process.ErrorDataReceived += errorHandler;
 			if (process.Start())
 			{
-				// Launch a task to read output and error streams.
-				Task.Factory.StartNew(() =>
-				{
-					process.BeginErrorReadLine();
-					process.StandardOutput.BaseStream.CopyTo(outputStream);
-				}, cancellationToken, TaskCreationOptions.None, _taskScheduler);
+				// Asynchronously start reading std error.
+				process.BeginErrorReadLine();
+
+				// Launch a task to read output. This technique is used instead 
+				// of BeginOutputReadLine because that method only returns strings.
+				Task.Factory.StartNew(() => 
+					process.StandardOutput.BaseStream.CopyTo(outputStream), 
+						cancellationToken, TaskCreationOptions.None, _taskScheduler);
 
 				// Launch another task to write input.
 				Task.Factory.StartNew(() =>

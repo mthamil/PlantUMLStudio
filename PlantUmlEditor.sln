@@ -11,14 +11,16 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PlantUmlEditorSetup", "Plan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Controls", "Utilities.Controls\Utilities.Controls.csproj", "{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{5E81D95C-1536-4CBF-A1F9-596555A1AC55}"
-	ProjectSection(SolutionItems) = preProject
-		PlantUML Language Reference Guide.pdf = PlantUML Language Reference Guide.pdf
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{387E4E1E-FAE3-4447-9530-160038A09BAA}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{48B0ABAE-458A-46FD-B548-0EEB50AB3413}"
+	ProjectSection(SolutionItems) = preProject
+		Reference\language.txt = Reference\language.txt
+		Reference\patterns.txt = Reference\patterns.txt
+		Reference\PlantUML Language Reference Guide.pdf = Reference\PlantUML Language Reference Guide.pdf
 	EndProjectSection
 EndProject
 Global

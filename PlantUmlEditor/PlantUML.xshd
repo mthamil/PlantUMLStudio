@@ -11,31 +11,54 @@
 		<Span color="Comment" multiline="true"
 			 begin="/\*" end="\*/" />
 
-		<Keywords color="Keyword">
-      <Word>title</Word>
-      <Word>if</Word>
-      <Word>then</Word>
-			<Word>else</Word>
-			<Word>endif</Word>
-      <Word>package</Word>
-      <Word>end package</Word>
-      <Word>interface</Word>
-      <Word>class</Word>
-      <Word>enum</Word>
-      <Word>actor</Word>
-      <Word>participant</Word>
+    <!-- Actions/Misc -->
+    <Keywords color="Keyword">
       <Word>activate</Word>
       <Word>deactivate</Word>
-      <Word>state</Word>
-      <Word>partition</Word>
+      <Word>destroy</Word>
+      <Word>create</Word>
       <Word>as</Word>
-      <Word>opt</Word>
-      <Word>alt</Word>
+      <Word>autonumber</Word>
+    </Keywords>
+
+    <!-- Grouping/Organization -->
+		<Keywords color="Keyword">
+      <Word>package</Word>
+      <Word>end package</Word>
+      <Word>namespace</Word>
+      <Word>end namespace</Word>
+      <Word>partition</Word>
       <Word>title</Word>
       <Word>end title</Word>
       <Word>box</Word>
       <Word>end box</Word>
 		</Keywords>
+
+    <!-- Flow Control -->
+    <Keywords color="Keyword">
+      <Word>if</Word>
+      <Word>then</Word>
+      <Word>else</Word>
+      <Word>endif</Word>
+      <Word>opt</Word>
+      <Word>alt</Word>
+      <Word>loop</Word>
+      <Word>critical</Word>
+    </Keywords>
+
+    <!-- Entities -->
+    <Keywords color="Keyword">
+      <Word>abstract</Word>
+      <Word>actor</Word>
+      <Word>class</Word>
+      <Word>component</Word>
+      <Word>enum</Word>
+      <Word>interface</Word>
+      <Word>object</Word>
+      <Word>participant</Word>
+      <Word>state</Word>
+      <Word>usecase</Word>
+    </Keywords>
 
     <Keywords fontWeight="bold" foreground="DarkRed">
       <Word>@startuml</Word>

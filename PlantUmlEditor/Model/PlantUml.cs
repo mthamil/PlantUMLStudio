@@ -15,19 +15,10 @@ namespace PlantUmlEditor.Model
 	/// </summary>
 	public class PlantUml : IDiagramCompiler
 	{
-		/// <summary>
-		/// Initializes PlantUML.
-		/// </summary>
-		/// <param name="processAdapter">Creates and executes Process objects as Task objects</param>
-		public PlantUml(IProcessTaskAdapter processAdapter)
-		{
-			_processAdapter = processAdapter;
-		}
-
 		/// <see cref="IDiagramCompiler.CompileToImage"/>
 		public Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken)
 		{
-			return _processAdapter.Execute(new ProcessStartInfo
+			return new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" -pipe", PlantUmlJar.FullName, GraphVizExecutable.FullName),
@@ -37,7 +28,7 @@ namespace PlantUmlEditor.Model
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}, new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken)
+			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken)
 			.Then(stream => 
 				{
 					var bitmap = new BitmapImage();
@@ -52,7 +43,7 @@ namespace PlantUmlEditor.Model
 		/// <see cref="IDiagramCompiler.CompileToFile"/>
 		public Task CompileToFile(FileInfo diagramFile)
 		{
-			return _processAdapter.Execute(new ProcessStartInfo
+			return new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
@@ -60,7 +51,7 @@ namespace PlantUmlEditor.Model
 				CreateNoWindow = true,
 				RedirectStandardError = true,
 				UseShellExecute = false
-			}, CancellationToken.None);
+			}.ToTask(CancellationToken.None);
 		}
 
 		/// <summary>
@@ -72,7 +63,5 @@ namespace PlantUmlEditor.Model
 		/// The location of the plantuml.jar file.
 		/// </summary>
 		public FileInfo PlantUmlJar { get; set; }
-
-		private readonly IProcessTaskAdapter _processAdapter;
 	}
 }

@@ -23,9 +23,6 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
-			builder.RegisterType<ProcessTaskAdapter>().As<IProcessTaskAdapter>()
-				.SingleInstance();
-
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler>()
 				.WithProperty(c => c.GraphVizExecutable, new FileInfo(Settings.Default.GraphVizLocation))
 				.WithProperty(c => c.PlantUmlJar, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.jar")));

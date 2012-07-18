@@ -14,7 +14,7 @@ namespace Unit.Tests.PlantUmlEditor.Model
 		public void Test_CompileDiagramFile()
 		{
 			// Arrange.
-			var plantUml = new PlantUml(new ProcessTaskAdapter(TaskScheduler.Default))
+			var plantUml = new PlantUml()
 			{
 				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\Thirdparty\plantuml.jar"),
 				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")

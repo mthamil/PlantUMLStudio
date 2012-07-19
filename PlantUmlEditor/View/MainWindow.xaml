@@ -301,9 +301,10 @@
                                                         </TextBlock.Text>
                                                     </TextBlock>
 
-                                                    <Button Content="X" FontWeight="Bold" Height="20" Width="20" DockPanel.Dock="Right" Margin="1,1,3,1"
+                                                    <Button DockPanel.Dock="Right" Margin="1,1,3,1"
                                                             HorizontalAlignment="Center" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" VerticalAlignment="Center"
-                                                            Command="{Binding CloseCommand}"/>
+                                                            Command="{Binding CloseCommand}" Style="{StaticResource TabCloseButton}"
+                                                            ToolTip="Close"/>
                                                 </DockPanel>
                                             </Border>
                                         </Grid>

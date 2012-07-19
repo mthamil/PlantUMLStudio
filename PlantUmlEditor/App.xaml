@@ -33,7 +33,7 @@
         
     	<Style x:Key="TabCloseButton" TargetType="{x:Type Button}">
             <Setter Property="Content" Value="X"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
             <Setter Property="FontStretch" Value="UltraExpanded"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Height" Value="20"/>

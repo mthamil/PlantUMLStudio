@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
@@ -21,11 +22,12 @@ namespace PlantUmlEditor.ViewModel
 	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
 		public DiagramExplorerViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
-			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory)
+			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings)
 		{
 			_progress = progressViewModel;
 			_diagramIO = diagramIO;
 			_previewDiagramFactory = previewDiagramFactory;
+			_settings = settings;
 
 			_previewDiagrams = Property.New(this, p => PreviewDiagrams, OnPropertyChanged);
 			_previewDiagrams.Value = new ObservableCollection<PreviewDiagramViewModel>();
@@ -58,16 +60,19 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public string NewDiagramTemplate { get; set; }
 
-		/// <summary>
-		/// The location to load diagrams from.
-		/// </summary>
+		/// <see cref="IDiagramExplorer.DiagramLocation"/>
 		public DirectoryInfo DiagramLocation
 		{
 			get { return _diagramLocation.Value; }
 			set
 			{
 				if (_diagramLocation.TrySetValue(value))
+				{
+					if (IsDiagramLocationValid)
+						_settings.LastDiagramLocation = value;
+
 					LoadDiagrams();
+				}
 			}
 		}
 
@@ -205,6 +210,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly IDiagramIOService _diagramIO;
 
 		private readonly Func<Diagram, PreviewDiagramViewModel> _previewDiagramFactory;
+		private readonly ISettings _settings;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 

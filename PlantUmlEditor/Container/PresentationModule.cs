@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Autofac;
+using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
 
 namespace PlantUmlEditor.Container
 {
@@ -74,12 +73,9 @@ namespace PlantUmlEditor.Container
 					});
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
-				.WithProperty(d => d.DiagramLocation,	// Initialize the diagram location.
-					new DirectoryInfo(string.IsNullOrEmpty(Settings.Default.LastPath)
-									? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\")
-									: Settings.Default.LastPath))
 				.WithProperty(d => d.NewDiagramTemplate, String.Format(
-					@"@startuml ""{{0}}""{0}{1}{2}@enduml", Environment.NewLine, Environment.NewLine, Environment.NewLine));
+					@"@startuml ""{{0}}""{0}{1}{2}@enduml", Environment.NewLine, Environment.NewLine, Environment.NewLine))
+				.OnActivating(c => c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation);
 
 			builder.RegisterType<DiagramManagerViewModel>()
 				.SingleInstance();

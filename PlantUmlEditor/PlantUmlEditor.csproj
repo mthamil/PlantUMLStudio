@@ -104,6 +104,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\DotNetSettings.cs" />
+    <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using PlantUmlEditor.Configuration;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -14,11 +15,12 @@ namespace PlantUmlEditor.ViewModel
 {
 	public class DiagramManagerViewModel : ViewModelBase
 	{
-		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)
+		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory, ISettings settings)
 		{
 			_explorer = explorer;
 			Explorer.NewDiagramCreated += explorer_NewDiagramCreated;
 			_editorFactory = editorFactory;
+			_settings = settings;
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
 			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
@@ -145,11 +147,7 @@ namespace PlantUmlEditor.ViewModel
 
 			Task.WaitAll(_editorSaveTasks.ToArray());
 
-			//if (IsDiagramLocationValid)
-			//{
-			//    Settings.Default.LastPath = DiagramLocation.FullName;
-			//    Settings.Default.Save();
-			//}
+			_settings.Save();
 		}
 
 		/// <summary>
@@ -173,6 +171,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly IDiagramExplorer _explorer;
 		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;
+		private readonly ISettings _settings;
 		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

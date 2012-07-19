@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -9,7 +10,12 @@ namespace PlantUmlEditor.ViewModel
 	public interface IDiagramExplorer
 	{
 		/// <summary>
-		/// Event raised whena  new diagram is created.
+		/// The current explorer directory.
+		/// </summary>
+		DirectoryInfo DiagramLocation { get; }
+
+		/// <summary>
+		/// Event raised when a new diagram is created.
 		/// </summary>
 		event EventHandler<NewDiagramCreatedEventArgs> NewDiagramCreated;
 

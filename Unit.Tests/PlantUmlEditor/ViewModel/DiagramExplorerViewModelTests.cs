@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moq;
+using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
@@ -17,6 +18,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromSuccess());
+
+			settings.SetupProperty(s => s.LastDiagramLocation);
 		}
 
 		[Fact]
@@ -31,18 +34,17 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 					new Diagram { Content = "Diagram 2" }
 				}));
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
-			{
-				DiagramLocation = testDiagramFile.Directory
-			};
+			var explorer = CreateExplorer();
 
 			// Act.
+			explorer.DiagramLocation = testDiagramFile.Directory;
 			bool isValid = explorer.IsDiagramLocationValid;
 
 			// Assert.
 			Assert.True(isValid);
 			Assert.Equal(2, explorer.PreviewDiagrams.Count);
 			AssertThat.SequenceEqual(new [] { "Diagram 1", "Diagram 2" }, explorer.PreviewDiagrams.Select(d => d.Diagram.Content));
+			Assert.Equal(testDiagramFile.Directory.FullName, settings.Object.LastDiagramLocation.FullName);
 		}
 
 		[Fact]
@@ -53,17 +55,16 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
-			{
-				DiagramLocation = testDiagramFile.Directory
-			};
+			var explorer = CreateExplorer();
 
 			// Act.
+			explorer.DiagramLocation = testDiagramFile.Directory;
 			bool isValid = explorer.IsDiagramLocationValid;
 
 			// Assert.
 			Assert.True(isValid);
 			Assert.Empty(explorer.PreviewDiagrams);
+			Assert.Equal(testDiagramFile.Directory.FullName, settings.Object.LastDiagramLocation.FullName);
 		}
 
 		[Fact]
@@ -74,7 +75,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, null);
+			var explorer = CreateExplorer();
 
 			// Act.
 			bool isValid = explorer.IsDiagramLocationValid;
@@ -84,6 +85,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.IsAny<DirectoryInfo>(), 
 				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.Never());
+			settings.VerifySet(s => s.LastDiagramLocation = It.IsAny<DirectoryInfo>(), Times.Never());
 		}
 
 		[Fact]
@@ -94,11 +96,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { File = testDiagramFile, Content = "New Diagram" } }));
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
-			{
-				DiagramLocation = testDiagramFile.Directory,
-				NewDiagramTemplate = "New Diagram"
-			};
+			var explorer = CreateExplorer();
+			explorer.DiagramLocation = testDiagramFile.Directory;
+			explorer.NewDiagramTemplate = "New Diagram";
 
 			NewDiagramCreatedEventArgs newDiagramArgs = null;
 			explorer.NewDiagramCreated += (o, e) => newDiagramArgs = e;
@@ -132,11 +132,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
 				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d))
-			{
-				DiagramLocation = testDiagramFile.Directory,
-				NewDiagramTemplate = "New Diagram"
-			};
+			var explorer = CreateExplorer();
+			explorer.DiagramLocation = testDiagramFile.Directory;
+			explorer.NewDiagramTemplate = "New Diagram";
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(testDiagramFile.Directory.FullName + @"\test-diagram"));
@@ -147,10 +145,14 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				It.IsAny<bool>()));
 		}
 
-		private DiagramExplorerViewModel explorer;
+		private DiagramExplorerViewModel CreateExplorer()
+		{
+			return new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object);
+		}
 
 		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
+		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 
 		private static readonly FileInfo testDiagramFile = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"TestDiagrams\class.puml"));
 	}

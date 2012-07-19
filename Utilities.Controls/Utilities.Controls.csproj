@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Behaviors\AvalonEdit\AvalonEditor.cs" />
     <Compile Include="Behaviors\AvalonEdit\IUndoProvider.cs" />
+    <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldingStrategy.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentIndexBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorUndoStackBehavior.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Behaviors\GridSplitterSupport.cs" />
     <Compile Include="Behaviors\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
-    <Compile Include="Behaviors\PlantUmlFoldingStrategy.cs" />
     <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />

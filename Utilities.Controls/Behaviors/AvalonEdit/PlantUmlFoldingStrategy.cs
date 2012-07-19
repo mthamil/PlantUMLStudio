@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors
+namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Creates folding regions for PlantUML diagrams.

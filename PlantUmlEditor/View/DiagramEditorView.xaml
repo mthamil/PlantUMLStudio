@@ -15,7 +15,7 @@
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
     
     <UserControl.Resources>
-        <attached:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
+        <avalon:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
         <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
     </UserControl.Resources>
   

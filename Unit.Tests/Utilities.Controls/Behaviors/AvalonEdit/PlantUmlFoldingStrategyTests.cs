@@ -1,12 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
-using Utilities.Controls.Behaviors;
+using Utilities.Controls.Behaviors.AvalonEdit;
 using Xunit;
 using Xunit.Extensions;
 
-namespace Unit.Tests.Utilities.Controls.Behaviors
+namespace Unit.Tests.Utilities.Controls.Behaviors.AvalonEdit
 {
 	public class PlantUmlFoldingStrategyTests
 	{

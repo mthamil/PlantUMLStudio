@@ -84,6 +84,7 @@
     <Compile Include="Concurrency\Processes\IProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Processes\ProcessErrorException.cs" />
     <Compile Include="Concurrency\Processes\ProcessTaskAdapter.cs" />
+    <Compile Include="Concurrency\Processes\ProcessTaskExtensions.cs" />
     <Compile Include="Concurrency\Progress.cs" />
     <Compile Include="Concurrency\ReaderWriterLockSlimExtensions.cs" />
     <Compile Include="Concurrency\SynchronousSynchronizationContext.cs" />

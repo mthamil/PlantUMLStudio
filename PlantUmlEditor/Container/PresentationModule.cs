@@ -73,8 +73,7 @@ namespace PlantUmlEditor.Container
 					});
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
-				.WithProperty(d => d.NewDiagramTemplate, String.Format(
-					@"@startuml ""{{0}}""{0}{1}{2}@enduml", Environment.NewLine, Environment.NewLine, Environment.NewLine))
+				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
 				.OnActivating(c => c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation);
 
 			builder.RegisterType<DiagramManagerViewModel>()

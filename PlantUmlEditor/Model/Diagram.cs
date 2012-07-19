@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using Utilities.PropertyChanged;
 
@@ -8,7 +7,7 @@ namespace PlantUmlEditor.Model
 	/// <summary>
 	/// Represents a diagram.
 	/// </summary>
-    public class Diagram : INotifyPropertyChanged
+    public class Diagram : PropertyChangedBase
     {
 		/// <summary>
 		/// Initializes a new diagram.
@@ -75,20 +74,6 @@ namespace PlantUmlEditor.Model
         {
             return File.FullName.GetHashCode();
         }
-
-		#region Implementation of INotifyPropertyChanged
-
-		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
-			var localEvent = PropertyChanged;
-			if (localEvent != null)
-				localEvent(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
 
 		private readonly Property<string> _content;
     }

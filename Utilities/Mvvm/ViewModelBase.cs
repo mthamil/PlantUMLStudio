@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using Utilities.PropertyChanged;
 
 namespace Utilities.Mvvm
 {
@@ -7,22 +7,8 @@ namespace Utilities.Mvvm
 	/// This class serves as base class for all ViewModel classes. 
 	/// It provides implementations for interfaces that should be implemented by all view models
 	/// </summary>
-	public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
+	public abstract class ViewModelBase : PropertyChangedBase, IDisposable
 	{
-		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		/// <summary>
-		/// Raises the property changed event.
-		/// </summary>
-		/// <param name="propertyName">The name of the property that changed</param>
-		protected void OnPropertyChanged(string propertyName)
-		{
-			var localEvent = PropertyChanged;
-			if (localEvent != null)
-				localEvent(this, new PropertyChangedEventArgs(propertyName));
-		}
-
 		#region IDisposable Members
 
 		/// <see cref="IDisposable.Dispose"/>

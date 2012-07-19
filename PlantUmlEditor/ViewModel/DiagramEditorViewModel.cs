@@ -192,7 +192,7 @@ namespace PlantUmlEditor.ViewModel
 				Progress.Message = p.Item2;
 			});
 
-			progress.Report(Tuple.Create((int?)100, Resources.Progress_SavingDiagram));
+			progress.Report(Tuple.Create((int?)100, String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileNameOnly)));
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
 				.Then(() => _compiler.CompileToFile(Diagram.File));
 
@@ -294,7 +294,10 @@ namespace PlantUmlEditor.ViewModel
 			OnClosing(cancelArgs);
 
 			if (!cancelArgs.Cancel)
+			{
+				CleanUpTimers();
 				OnClosed();
+			}
 		}
 
 		/// <see cref="IDiagramEditor.Closing"/>
@@ -378,6 +381,15 @@ namespace PlantUmlEditor.ViewModel
 
 		#endregion
 
+		private void CleanUpTimers()
+		{
+			_autoSaveTimer.Elapsed -= autoSaveTimerElapsed;
+			_autoSaveTimer.TryStop();
+
+			_refreshTimer.Elapsed -= refreshTimer_Elapsed;
+			_refreshTimer.TryStop();
+		}
+
 		/// <see cref="ViewModelBase.Dispose(bool)"/>
 		protected override void Dispose(bool disposing)
 		{
@@ -385,10 +397,14 @@ namespace PlantUmlEditor.ViewModel
 			{
 				if (disposing)
 				{
-					_autoSaveTimer.Elapsed -= autoSaveTimerElapsed;
-					var disposableTimer = _autoSaveTimer as IDisposable;
-					if (disposableTimer != null)
-						disposableTimer.Dispose();
+					CleanUpTimers();
+					var disposableSaveTimer = _autoSaveTimer as IDisposable;
+					if (disposableSaveTimer != null)
+						disposableSaveTimer.Dispose();
+
+					var disposableRefreshTimer = _refreshTimer as IDisposable;
+					if (disposableRefreshTimer != null)
+						disposableRefreshTimer.Dispose();
 				}
 				_disposed = true;
 			}

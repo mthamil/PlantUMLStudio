@@ -136,15 +136,15 @@
     <value>Copy Image Path</value>
   </data>
   <data name="Progress_SavingDiagram" xml:space="preserve">
-    <value>Saving and generating diagram...</value>
+    <value>Saving and generating diagram "{0}"...</value>
   </data>
   <data name="Progress_DiagramSaved" xml:space="preserve">
     <value>Saved.</value>
   </data>
-	<data name="Progress_LoadingFile">
-		<value xml:space="preserve">Loading {0} of {1}</value>
-	</data>
-	<data name="ContextMenu_Code_Snippets">
-		<value xml:space="preserve">Snippets</value>
-	</data>
+  <data name="Progress_LoadingFile" xml:space="preserve">
+    <value>Loading {0} of {1}</value>
+  </data>
+  <data name="ContextMenu_Code_Snippets" xml:space="preserve">
+    <value>Snippets</value>
+  </data>
 </root>

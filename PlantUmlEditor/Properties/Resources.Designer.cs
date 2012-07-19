@@ -142,7 +142,7 @@ namespace PlantUmlEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saving and generating diagram....
+        ///   Looks up a localized string similar to Saving and generating diagram &quot;{0}&quot;....
         /// </summary>
         internal static string Progress_SavingDiagram {
             get {

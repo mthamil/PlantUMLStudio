@@ -198,6 +198,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.True(closing);
 			Assert.True(closed);
+			refreshTimer.Verify(t => t.TryStop());
+			autoSaveTimer.Verify(t => t.TryStop());
 		}
 
 		[Fact]
@@ -225,6 +227,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.True(closing);
 			Assert.False(closed);
+			refreshTimer.Verify(t => t.TryStop(), Times.Never());
+			autoSaveTimer.Verify(t => t.TryStop(), Times.Never());
 		}
 
 		[Fact]
@@ -234,6 +238,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
+			diagram.File = new FileInfo("TestFile.puml");
 			codeEditor.Content = "Blah blah blah";
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
@@ -260,6 +265,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
+			diagram.File = new FileInfo("TestFile.puml");
 			codeEditor.Content = "Blah blah blah";
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
@@ -288,6 +294,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
+			diagram.File = new FileInfo("TestFile.puml");
 			codeEditor.Content = "Blah blah blah";
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
@@ -347,7 +354,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_Dispose()
 		{
 			// Arrange.
-			var disposableTimer = autoSaveTimer.As<IDisposable>();
+			var disposableSaveTimer = autoSaveTimer.As<IDisposable>();
+			var disposableRefreshTimer = refreshTimer.As<IDisposable>();
 
 			editor = CreateEditor();
 
@@ -355,7 +363,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.Dispose();
 
 			// Assert.
-			disposableTimer.Verify(t => t.Dispose());
+			refreshTimer.Verify(t => t.TryStop());
+			disposableRefreshTimer.Verify(t => t.Dispose());
+			autoSaveTimer.Verify(t => t.TryStop());
+			disposableSaveTimer.Verify(t => t.Dispose());
 		}
 
 		private DiagramEditorViewModel CreateEditor()

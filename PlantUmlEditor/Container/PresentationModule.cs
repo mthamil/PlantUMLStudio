@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using Autofac;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
+using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
@@ -34,19 +35,16 @@ namespace PlantUmlEditor.Container
 				};
 			});
 
-			builder.Register(c => new DefaultSnippets().SnippetCategories)
-				.Named<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets")
-				.SingleInstance();
-
 			builder.Register<IEnumerable<ViewModelBase>>(c =>
 			{
-				var snippets = c.ResolveNamed<IEnumerable<SnippetCategoryViewModel>>("DefaultSnippets");
+				var snippetProvider = c.Resolve<SnippetProvider>();
 				var snippetRoot = new SnippetCategoryViewModel(Resources.ContextMenu_Code_Snippets);
-				foreach (var snippet in snippets)
+				foreach (var snippet in SnippetCategoryViewModel.BuildTree(snippetProvider.Snippets))
 					snippetRoot.Snippets.Add(snippet);
 				return new List<ViewModelBase> { snippetRoot };
 			})
-			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu");
+			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu")
+			.SingleInstance();
 
 			builder.Register(c => new CodeEditorViewModel(c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")));
 

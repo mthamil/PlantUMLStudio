@@ -1,0 +1,7 @@
+name:Activation Block
+category:Sequence
+User -> A: DoWork
+activate A
+A -> B: << createRequest >>
+A --> User: Return response                  
+deactivate A

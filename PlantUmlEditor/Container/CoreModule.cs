@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
+using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
 using Utilities.Concurrency.Processes;
@@ -32,6 +35,13 @@ namespace PlantUmlEditor.Container
 				.OnActivating(c => c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable);
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>();
+
+			builder.RegisterType<SnippetReader>().As<ISnippetReader>();
+
+			builder.RegisterType<SnippetProvider>()
+				.WithProperty(p => p.SnippetLocation, new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"snippets\")))
+				.OnActivating(c => c.Instance.Load())
+				.SingleInstance();
 		}
 	}
 }

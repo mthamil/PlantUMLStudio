@@ -97,6 +97,7 @@
     <Compile Include="FailOnUnobservedTaskExceptionAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
+    <Compile Include="PlantUmlEditor\Model\Snippets\SnippetReaderTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />

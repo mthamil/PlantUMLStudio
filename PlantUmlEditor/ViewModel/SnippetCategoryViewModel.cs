@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Model.Snippets;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 
@@ -43,6 +43,28 @@ namespace PlantUmlEditor.ViewModel
 		public override int GetHashCode()
 		{
 			return Name.GetHashCode();
+		}
+
+		/// <summary>
+		/// Constructs a hierarchical tree from a collection of snippets.
+		/// </summary>
+		/// <param name="snippets">The snippets to build the tree with</param>
+		/// <returns>A tree of snippets</returns>
+		public static IEnumerable<SnippetCategoryViewModel> BuildTree(IEnumerable<Snippet> snippets)
+		{
+			var categories = new SortedDictionary<string, SnippetCategoryViewModel>();
+			foreach (var snippet in snippets)
+			{
+				SnippetCategoryViewModel category;
+				if (!categories.TryGetValue(snippet.Category, out category))
+				{
+					category = new SnippetCategoryViewModel(snippet.Category);
+					categories[category.Name] = category;
+				}
+
+				category.Snippets.Add(new SnippetViewModel(snippet));
+			}
+			return categories.Values;
 		}
 	}
 

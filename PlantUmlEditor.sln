@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{48B0ABAE-458A-46FD-B548-0EEB50AB3413}"
 	ProjectSection(SolutionItems) = preProject
+		Reference\ICSharpCode.AvalonEdit.shfb = Reference\ICSharpCode.AvalonEdit.shfb
 		Reference\language.txt = Reference\language.txt
 		Reference\patterns.txt = Reference\patterns.txt
 		Reference\PlantUML Language Reference Guide.pdf = Reference\PlantUML Language Reference Guide.pdf

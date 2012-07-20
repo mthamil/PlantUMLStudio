@@ -1,0 +1,7 @@
+name:Composite State
+category:State
+state NotShooting {
+[*] --> Idle
+Idle --> Configuring : EvConfig
+Configuring --> Idle : EvConfig
+}

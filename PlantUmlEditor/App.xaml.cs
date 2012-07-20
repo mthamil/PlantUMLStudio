@@ -8,8 +8,6 @@ using System.Windows.Threading;
 using Autofac;
 using PlantUmlEditor.Container;
 using PlantUmlEditor.Properties;
-using PlantUmlEditor.View;
-using Utilities;
 using Utilities.Controls;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;

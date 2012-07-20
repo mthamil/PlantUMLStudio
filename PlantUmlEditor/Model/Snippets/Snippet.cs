@@ -1,4 +1,4 @@
-namespace PlantUmlEditor.Model
+﻿namespace PlantUmlEditor.Model.Snippets
 {
 	/// <summary>
 	/// Represents a diagram code snippet.

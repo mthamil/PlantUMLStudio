@@ -14,13 +14,7 @@ namespace PlantUmlEditor.ViewModel
 		public SnippetViewModel(Snippet snippet)
 			: base(snippet.Name)
 		{
-			_snippet = new ICSharpCode.AvalonEdit.Snippets.Snippet
-			{
-				Elements =
-					{
-						new SnippetTextElement { Text = snippet.Code }
-					}
-			};
+			_snippet = snippet.Code;
 			InsertCommand = new RelayCommand<TextArea>(Insert);
 		}
 

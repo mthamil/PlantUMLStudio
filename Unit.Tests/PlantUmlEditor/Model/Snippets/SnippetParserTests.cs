@@ -1,5 +1,7 @@
 using System.IO;
+using System.Linq;
 using System.Text;
+using ICSharpCode.AvalonEdit.Snippets;
 using PlantUmlEditor.Model.Snippets;
 using Xunit;
 
@@ -8,7 +10,7 @@ namespace Unit.Tests.PlantUmlEditor.Model.Snippets
 	public class SnippetParserTests
 	{
 		[Fact]
-		public void Test_ReadSnippet()
+		public void Test_Parse()
 		{
 			// Arrange.
 			string snippetText =
@@ -26,7 +28,7 @@ test --> (*)";
 			// Assert.
 			Assert.Equal("test snippet", snippet.Name);
 			Assert.Equal("snippets", snippet.Category);
-			Assert.Equal("(*) --> test\r\ntest --> (*)\r\n", snippet.Code);
+			Assert.Equal("(*) --> test\r\ntest --> (*)\r\n", ((SnippetTextElement)snippet.Code.Elements.Single()).Text);
 		}
 
 		private readonly SnippetParser parser = new SnippetParser();

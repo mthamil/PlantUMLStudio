@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using ICSharpCode.AvalonEdit.Snippets;
 using Utilities.InputOutput;
 
 namespace PlantUmlEditor.Model.Snippets
@@ -34,7 +35,15 @@ namespace PlantUmlEditor.Model.Snippets
 				}
 			}
 
-			return new Snippet(name, category, code.ToString());
+			var snippet = new ICSharpCode.AvalonEdit.Snippets.Snippet
+			{
+				Elements =
+					{
+						new SnippetTextElement { Text = code.ToString() }
+					}
+			};
+
+			return new Snippet(name, category, snippet);
 		}
 
 		private const string NameToken = "name";

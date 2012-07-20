@@ -71,8 +71,8 @@
                                         <xtn:StyleMapEntry DataType="{x:Type vm:SnippetViewModel}">
                                             <xtn:StyleMapEntry.Style>
                                                 <Style TargetType="{x:Type MenuItem}">
-                                                    <Setter Property="Command" Value="{Binding SelectCommand}"/>
-                                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CodeEditor}"/>
+                                                    <Setter Property="Command" Value="{Binding InsertCommand}"/>
+                                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.TextArea}"/>
                                                 </Style>
                                             </xtn:StyleMapEntry.Style>
                                         </xtn:StyleMapEntry>

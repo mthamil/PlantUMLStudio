@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
@@ -9,7 +7,6 @@ using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
-using Utilities.Concurrency.Processes;
 
 namespace PlantUmlEditor.Container
 {

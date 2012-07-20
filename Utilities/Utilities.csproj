@@ -97,6 +97,7 @@
     <Compile Include="InputOutput\IFileSystemWatcher.cs" />
     <Compile Include="InputOutput\StreamExtensions.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
+    <Compile Include="Mvvm\Commands\NamedRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\RelayCommand.cs" />
     <Compile Include="Mvvm\ViewModelBase.cs" />
     <Compile Include="Net\AsyncWebClient.cs" />

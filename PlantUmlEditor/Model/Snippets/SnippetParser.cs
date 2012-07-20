@@ -5,12 +5,12 @@ using Utilities.InputOutput;
 namespace PlantUmlEditor.Model.Snippets
 {
 	/// <summary>
-	/// Reads code snippets.
+	/// Parses code snippets.
 	/// </summary>
-	public class SnippetReader : ISnippetReader
+	public class SnippetParser : ISnippetParser
 	{
-		/// <see cref="ISnippetReader.Read"/>
-		public Snippet Read(Stream snippetSource)
+		/// <see cref="ISnippetParser.Parse"/>
+		public Snippet Parse(Stream snippetSource)
 		{
 			string name = null;
 			string category = null;

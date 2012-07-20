@@ -3,15 +3,15 @@
 namespace PlantUmlEditor.Model.Snippets
 {
 	/// <summary>
-	/// Reads code snippets.
+	/// Parses code snippets.
 	/// </summary>
-	public interface ISnippetReader
+	public interface ISnippetParser
 	{
 		/// <summary>
 		/// Reads the content of a stream and creates a Snippet from it.
 		/// </summary>
 		/// <param name="snippetSource">The source stream</param>
 		/// <returns>A snippet.</returns>
-		Snippet Read(Stream snippetSource);
+		Snippet Parse(Stream snippetSource);
 	}
 }

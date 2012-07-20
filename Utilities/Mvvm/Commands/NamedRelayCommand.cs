@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 
-namespace PlantUmlEditor.ViewModel
+namespace Utilities.Mvvm.Commands
 {
 	/// <summary>
 	/// A command that has a name.
@@ -23,7 +22,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="execute">The execution logic.</param>
 		/// <param name="canExecute">The execution status logic.</param>
 		public NamedRelayCommand(Action execute, Func<bool> canExecute)
-			: base(execute, canExecute) 
+			: base(execute, canExecute)
 		{
 			_name = Property.New(this, p => p.Name, OnPropertyChanged);
 		}
@@ -31,7 +30,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The name of the command.
 		/// </summary>
-		public string Name 
+		public string Name
 		{
 			get { return _name.Value; }
 			set { _name.Value = value; }

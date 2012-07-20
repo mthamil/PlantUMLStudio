@@ -11,6 +11,7 @@ using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Mvvm;
+using Utilities.Mvvm.Commands;
 
 namespace PlantUmlEditor.Container
 {

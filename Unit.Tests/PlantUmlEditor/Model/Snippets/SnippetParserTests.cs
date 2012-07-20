@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.Model.Snippets
 {
-	public class SnippetReaderTests
+	public class SnippetParserTests
 	{
 		[Fact]
 		public void Test_ReadSnippet()
@@ -21,7 +21,7 @@ test --> (*)";
 			var stream = new MemoryStream(Encoding.UTF8.GetBytes(snippetText));
 
 			// Act.
-			var snippet = reader.Read(stream);
+			var snippet = parser.Parse(stream);
 
 			// Assert.
 			Assert.Equal("test snippet", snippet.Name);
@@ -29,6 +29,6 @@ test --> (*)";
 			Assert.Equal("(*) --> test\r\ntest --> (*)\r\n", snippet.Code);
 		}
 
-		private readonly SnippetReader reader = new SnippetReader();
+		private readonly SnippetParser parser = new SnippetParser();
 	}
 }

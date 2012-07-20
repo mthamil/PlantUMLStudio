@@ -33,7 +33,7 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>();
 
-			builder.RegisterType<SnippetReader>().As<ISnippetReader>();
+			builder.RegisterType<SnippetParser>().As<ISnippetParser>();
 
 			builder.RegisterType<SnippetProvider>()
 				.WithProperty(p => p.SnippetLocation, new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"snippets\")))

@@ -9,9 +9,9 @@ namespace PlantUmlEditor.Model.Snippets
 	/// </summary>
 	public class SnippetProvider
 	{
-		public SnippetProvider(ISnippetReader snippetReader)
+		public SnippetProvider(ISnippetParser snippetParser)
 		{
-			_snippetReader = snippetReader;
+			_snippetParser = snippetParser;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace PlantUmlEditor.Model.Snippets
 		{
 			_snippets = SnippetLocation.GetFiles("*.snip", SearchOption.AllDirectories)
 				.Select(snippetFile => snippetFile.OpenRead())
-				.Select(_snippetReader.Read);
+				.Select(_snippetParser.Parse);
 		}
 
 		/// <summary>
@@ -35,6 +35,6 @@ namespace PlantUmlEditor.Model.Snippets
 		public DirectoryInfo SnippetLocation { get; set; }
 
 		private IEnumerable<Snippet> _snippets;
-		private readonly ISnippetReader _snippetReader;
+		private readonly ISnippetParser _snippetParser;
 	}
 }

@@ -107,6 +107,11 @@ endif", new [] { new NewFolding(13, 49) } };
 }", new [] { new NewFolding(0, 23) } };
 
 				yield return new object[] { 
+@"abstract class C {
+	
+}", new [] { new NewFolding(0, 24) } };
+
+				yield return new object[] { 
 @"package P {
 	jufcjsffj
 }", new [] { new NewFolding(0, 26) } };
@@ -141,7 +146,7 @@ end box", new [] { new NewFolding(0, 30) } };
 	jufcjsffj
 end boxghghg", new List<NewFolding>() };
 
-			}
+            }
 		}
 
 		private readonly PlantUmlFoldingStrategy foldingStrategy = new PlantUmlFoldingStrategy();

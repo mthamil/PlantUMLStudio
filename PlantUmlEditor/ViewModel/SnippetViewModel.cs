@@ -28,26 +28,6 @@ namespace PlantUmlEditor.ViewModel
 			_snippet.Insert(editor);
 		}
 
-		//var loopCounter = new SnippetReplaceableTextElement { Text = "i" };
-		//Snippet snippet = new Snippet {
-		//Elements = {
-		//new SnippetTextElement { Text = "for(int " },
-		//new SnippetBoundElement { TargetElement = loopCounter },
-		//new SnippetTextElement { Text = " = " },
-		//new SnippetReplaceableTextElement { Text = "0" },
-		//new SnippetTextElement { Text = "; " },
-		//loopCounter,
-		//new SnippetTextElement { Text = " < " },
-		//new SnippetReplaceableTextElement { Text = "end" },
-		//new SnippetTextElement { Text = "; " },
-		//new SnippetBoundElement { TargetElement = loopCounter },
-		//new SnippetTextElement { Text = "++) { \t" },
-		//new SnippetCaretElement(),
-		//new SnippetTextElement { Text = " }" }
-		//    }
-		//};
-		//snippet.Insert(textEditor.TextArea);
-
 		private readonly ICSharpCode.AvalonEdit.Snippets.Snippet _snippet;
 	}
 }

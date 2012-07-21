@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Snippets;
+using PlantUmlEditor.Model.Snippets;
 using Utilities.Mvvm.Commands;
-using Snippet = PlantUmlEditor.Model.Snippets.Snippet;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -11,10 +11,10 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class SnippetViewModel : SnippetCategoryViewModel
 	{
-		public SnippetViewModel(Snippet snippet)
-			: base(snippet.Name)
+		public SnippetViewModel(CodeSnippet codeSnippet)
+			: base(codeSnippet.Name)
 		{
-			_snippet = snippet.Code;
+			_snippet = codeSnippet.Code;
 			InsertCommand = new RelayCommand<TextArea>(Insert);
 		}
 
@@ -28,6 +28,6 @@ namespace PlantUmlEditor.ViewModel
 			_snippet.Insert(editor);
 		}
 
-		private readonly ICSharpCode.AvalonEdit.Snippets.Snippet _snippet;
+		private readonly Snippet _snippet;
 	}
 }

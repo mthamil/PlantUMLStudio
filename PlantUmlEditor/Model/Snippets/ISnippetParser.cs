@@ -12,6 +12,6 @@ namespace PlantUmlEditor.Model.Snippets
 		/// </summary>
 		/// <param name="snippetSource">The source stream</param>
 		/// <returns>A snippet.</returns>
-		Snippet Parse(Stream snippetSource);
+		CodeSnippet Parse(Stream snippetSource);
 	}
 }

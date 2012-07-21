@@ -1,9 +1,11 @@
-﻿namespace PlantUmlEditor.Model.Snippets
+﻿using ICSharpCode.AvalonEdit.Snippets;
+
+namespace PlantUmlEditor.Model.Snippets
 {
 	/// <summary>
 	/// Represents a diagram code snippet.
 	/// </summary>
-	public class Snippet
+	public class CodeSnippet
 	{
 		/// <summary>
 		/// Creates a new snippet.
@@ -11,7 +13,7 @@
 		/// <param name="name">The name of the snippet</param>
 		/// <param name="category">The snippet category</param>
 		/// <param name="code">The snippet code structure</param>
-		public Snippet(string name, string category, ICSharpCode.AvalonEdit.Snippets.Snippet code)
+		public CodeSnippet(string name, string category, Snippet code)
 		{
 			Name = name;
 			Category = category;
@@ -31,6 +33,6 @@
 		/// <summary>
 		/// The snippet code.
 		/// </summary>
-		public ICSharpCode.AvalonEdit.Snippets.Snippet Code { get; private set; }
+		public Snippet Code { get; private set; }
 	}
 }

@@ -123,7 +123,7 @@
     <Compile Include="Model\PlantUml.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />
-    <Compile Include="Model\Snippets\Snippet.cs" />
+    <Compile Include="Model\Snippets\CodeSnippet.cs" />
     <Compile Include="Model\Snippets\SnippetProvider.cs" />
     <Compile Include="Model\Snippets\SnippetParser.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />

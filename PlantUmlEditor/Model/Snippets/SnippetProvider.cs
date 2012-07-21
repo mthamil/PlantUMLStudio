@@ -17,7 +17,7 @@ namespace PlantUmlEditor.Model.Snippets
 		/// <summary>
 		/// The available snippets.
 		/// </summary>
-		public IEnumerable<Snippet> Snippets { get { return _snippets; } }
+		public IEnumerable<CodeSnippet> Snippets { get { return _snippets; } }
 
 		/// <summary>
 		/// Loads snippets.
@@ -34,7 +34,7 @@ namespace PlantUmlEditor.Model.Snippets
 		/// </summary>
 		public DirectoryInfo SnippetLocation { get; set; }
 
-		private IEnumerable<Snippet> _snippets;
+		private IEnumerable<CodeSnippet> _snippets;
 		private readonly ISnippetParser _snippetParser;
 	}
 }

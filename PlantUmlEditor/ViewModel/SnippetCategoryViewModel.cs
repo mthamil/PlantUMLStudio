@@ -47,7 +47,7 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		/// <param name="snippets">The snippets to build the tree with</param>
 		/// <returns>A tree of snippets</returns>
-		public static IEnumerable<SnippetCategoryViewModel> BuildTree(IEnumerable<Snippet> snippets)
+		public static IEnumerable<SnippetCategoryViewModel> BuildTree(IEnumerable<CodeSnippet> snippets)
 		{
 			var categories = new SortedDictionary<string, SnippetCategoryViewModel>();
 			foreach (var snippet in snippets)

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Snippets;
 using Utilities.InputOutput;
@@ -15,13 +14,13 @@ namespace PlantUmlEditor.Model.Snippets
 	public class SnippetParser : ISnippetParser
 	{
 		/// <see cref="ISnippetParser.Parse"/>
-		public Snippet Parse(Stream snippetSource)
+		public CodeSnippet Parse(Stream snippetSource)
 		{
 			string name = null;
 			string category = null;
 
 			var symbols = new Dictionary<string, SnippetReplaceableTextElement>();
-			var root = new ICSharpCode.AvalonEdit.Snippets.Snippet();
+			var root = new Snippet();
 
 			foreach (string line in snippetSource.Lines())
 			{
@@ -42,10 +41,10 @@ namespace PlantUmlEditor.Model.Snippets
 				}
 			}
 
-			return new Snippet(name, category, root);
+			return new CodeSnippet(name, category, root);
 		}
 
-		private static void ParseCodeLine(string line, ICSharpCode.AvalonEdit.Snippets.Snippet root, IDictionary<string, SnippetReplaceableTextElement> symbols)
+		private static void ParseCodeLine(string line, Snippet root, IDictionary<string, SnippetReplaceableTextElement> symbols)
 		{
 			var matchResult = ReplaceableTokenPattern.Matches(line);
 			var matches = matchResult.Cast<Match>().Where(m => m.Success).OrderBy(m => m.Index).ToArray();

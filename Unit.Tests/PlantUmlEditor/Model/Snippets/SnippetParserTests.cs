@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 using System.Text;
 using ICSharpCode.AvalonEdit.Snippets;
 using PlantUmlEditor.Model.Snippets;
@@ -60,6 +59,36 @@ Category: snippets
 			Assert.Equal("\r\n", ((SnippetTextElement)snippet.Code.Elements[4]).Text);
 			Assert.Equal(snippet.Code.Elements[3], ((SnippetBoundElement)snippet.Code.Elements[5]).TargetElement);
 			Assert.Equal(" --> (*)\r\n", ((SnippetTextElement)snippet.Code.Elements[6]).Text);
+		}
+
+		[Fact]
+		public void Test_Parse_CursorPlacement()
+		{
+			// Arrange.
+			string snippetText =
+@"
+name:test snippet
+Category: snippets
+class %CLASS_NAME% {
+	%END%
+}";
+
+			var stream = new MemoryStream(Encoding.UTF8.GetBytes(snippetText));
+
+			// Act.
+			var snippet = parser.Parse(stream);
+
+			// Assert.
+			Assert.Equal("test snippet", snippet.Name);
+			Assert.Equal("snippets", snippet.Category);
+			Assert.Equal(7, snippet.Code.Elements.Count);
+			Assert.Equal("class ", ((SnippetTextElement)snippet.Code.Elements[0]).Text);
+			Assert.Equal("%CLASS_NAME%", ((SnippetReplaceableTextElement)snippet.Code.Elements[1]).Text);
+			Assert.Equal(" {\r\n", ((SnippetTextElement)snippet.Code.Elements[2]).Text);
+			Assert.Equal("\t", ((SnippetTextElement)snippet.Code.Elements[3]).Text);
+			Assert.IsType<SnippetCaretElement>(snippet.Code.Elements[4]);
+			Assert.Equal("\r\n", ((SnippetTextElement)snippet.Code.Elements[5]).Text);
+			Assert.Equal("}\r\n", ((SnippetTextElement)snippet.Code.Elements[6]).Text);
 		}
 
 		private readonly SnippetParser parser = new SnippetParser();

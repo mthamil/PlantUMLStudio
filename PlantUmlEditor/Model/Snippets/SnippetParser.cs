@@ -56,22 +56,31 @@ namespace PlantUmlEditor.Model.Snippets
 					var group = match.Groups["token"];
 					string token = group.Value;
 
-						if (lastIndex < group.Index)
+					if (lastIndex < group.Index)
 					{
 						root.Elements.Add(new SnippetTextElement { Text = line.Substring(lastIndex, group.Index - lastIndex) });
 					}
 
-					SnippetReplaceableTextElement symbol;
-					if (symbols.TryGetValue(token, out symbol))
+					if (token == "%END%")
 					{
-						root.Elements.Add(new SnippetBoundElement { TargetElement = symbol });
+						// END is a special case token that describes where to place the
+						// cursor at the end.
+						root.Elements.Add(new SnippetCaretElement());
 					}
 					else
 					{
-						symbol = new SnippetReplaceableTextElement { Text = token };
-						symbols[token] = symbol;
+						SnippetReplaceableTextElement symbol;
+						if (symbols.TryGetValue(token, out symbol))
+						{
+							root.Elements.Add(new SnippetBoundElement { TargetElement = symbol });
+						}
+						else
+						{
+							symbol = new SnippetReplaceableTextElement { Text = token };
+							symbols[token] = symbol;
 
-						root.Elements.Add(symbol);
+							root.Elements.Add(symbol);
+						}
 					}
 
 					lastIndex = group.Index + group.Length;

@@ -89,7 +89,7 @@ namespace PlantUmlEditor.Model.Snippets
 							}
 							else
 							{
-								symbol = new SnippetReplaceableTextElement { Text = token };
+								symbol = new SnippetReplaceableTextElement { Text = token.Trim('%') };
 								symbols[token] = symbol;
 
 								root.Elements.Add(symbol);

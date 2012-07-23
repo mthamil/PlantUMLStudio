@@ -10,6 +10,8 @@
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
     xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
+    xmlns:MultiKey="clr-namespace:Utilities.Controls.MultiKey;assembly=Utilities.Controls" 
+    xmlns:cmds="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
@@ -17,6 +19,7 @@
     <UserControl.Resources>
         <avalon:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
         <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
+        <cmds:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
     </UserControl.Resources>
   
     <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
@@ -46,6 +49,9 @@
                     
                     <avalonEdit:TextEditor.InputBindings>
                         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+                        <MultiKey:MultiKeyBinding Command="{StaticResource OpenContextMenuCommand}" 
+                                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=avalonEdit:TextEditor}}"
+                                                  Gesture="Ctrl+N,Ctrl+P"/>
                     </avalonEdit:TextEditor.InputBindings>
                     
                     <avalonEdit:TextEditor.ContextMenu>

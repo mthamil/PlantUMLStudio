@@ -128,6 +128,7 @@
     <Compile Include="Model\Snippets\SnippetParser.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
+    <Compile Include="ViewModel\Commands\OpenContextMenuCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
@@ -434,9 +435,7 @@
       <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>

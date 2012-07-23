@@ -113,6 +113,7 @@
     <Compile Include="Utilities.Controls\Behaviors\TreeViewBindableSelectedItemBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
+    <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureTests.cs" />
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />
     <Compile Include="Utilities\Concurrency\TaskExtensionsTests.cs" />
     <Compile Include="Utilities\InputOutput\AsyncStreamTests.cs" />

@@ -50,19 +50,22 @@ namespace Utilities.Controls.MultiKey
 		public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
 		{
 			var args = inputEventArgs as KeyEventArgs;
-
-			if ((args == null) || (Key.None <= args.Key && args.Key <= Key.OemClear))
+			if ((args == null))
 				return false;
 
-			if (_currentKeyIndex != 0 && ((DateTime.Now - _lastKeyPressTime) > maximumDelayBetweenKeyPresses))
+			var keyboardDevice = inputEventArgs.Device as KeyboardDevice;
+			if (keyboardDevice == null)
+				return false;
+
+			if (_currentKeyIndex != 0 && ((DateTime.Now - _lastKeyPressTime) > MaximumDelayBetweenKeyPresses))
 			{
 				// The key gesture timed-out.
 				_currentKeyIndex = 0;
 				return false;
 			}
-
-			// Check for the correct modifier key.
-			if (_keys[_currentKeyIndex].Modifier != Keyboard.Modifiers)
+			
+			// Check for the correct modifier key.)
+			if (_keys[_currentKeyIndex].Modifier != keyboardDevice.Modifiers)
 			{
 				// The wrong modifier was used.
 				_currentKeyIndex = 0;
@@ -95,7 +98,10 @@ namespace Utilities.Controls.MultiKey
 		private int _currentKeyIndex;
 		private DateTime _lastKeyPressTime;
 
-		private static readonly TimeSpan maximumDelayBetweenKeyPresses = TimeSpan.FromSeconds(1);
+		/// <summary>
+		/// The maximum delay allowed between keys of a sequence.
+		/// </summary>
+		internal static TimeSpan MaximumDelayBetweenKeyPresses = TimeSpan.FromSeconds(1);
 	}
 
 	/// <summary>

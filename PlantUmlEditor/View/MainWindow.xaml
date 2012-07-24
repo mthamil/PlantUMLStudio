@@ -126,11 +126,11 @@
     </Window.Resources>
 
 
-    <Grid x:Name="LayoutRoot" Background="#2B3C59">
-        <Rectangle HorizontalAlignment="Stretch" x:Name="background" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
+    <Grid Background="#2B3C59">
+        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
     
         <!-- First split the whole form into 3 rows, one for header, one for body and one for footer -->
-        <Grid Height="Auto" x:Name="MainGrid3Rows" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
+        <Grid Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />

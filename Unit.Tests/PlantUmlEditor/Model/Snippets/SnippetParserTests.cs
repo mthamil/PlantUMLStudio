@@ -115,6 +115,7 @@ Category: snippets
 			Assert.Equal("{\r\n", ((SnippetTextElement)snippet.Code.Elements[0]).Text);
 			Assert.Equal("\t", ((SnippetTextElement)snippet.Code.Elements[1]).Text);
 			Assert.IsType<SnippetSelectionElement>(snippet.Code.Elements[2]);
+			Assert.Equal(1, ((SnippetSelectionElement)snippet.Code.Elements[2]).Indentation);
 			Assert.IsType<SnippetCaretElement>(snippet.Code.Elements[3]);
 			Assert.Equal("\r\n", ((SnippetTextElement)snippet.Code.Elements[4]).Text);
 			Assert.Equal("}\r\n", ((SnippetTextElement)snippet.Code.Elements[5]).Text);

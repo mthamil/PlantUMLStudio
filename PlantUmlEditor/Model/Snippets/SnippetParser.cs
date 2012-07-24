@@ -77,7 +77,8 @@ namespace PlantUmlEditor.Model.Snippets
 							// %SELECTION% is a special case token that describes where to place the
 							// text that was selected before snippet insertion.  This is useful for
 							// snippets that "surround" other text.
-							root.Elements.Add(new SnippetSelectionElement());
+							int tabCount = line.Substring(0, group.Index).Count(c => c == '\t');
+							root.Elements.Add(new SnippetSelectionElement { Indentation = tabCount });
 							break;
 						}
 						default:

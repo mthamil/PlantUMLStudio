@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
+using Utilities.Mvvm;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
@@ -252,6 +254,39 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Single(diagramManager.OpenDiagrams);
 			Assert.Equal(editor.Object, diagramManager.OpenDiagrams.Single());
 			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_CloseCommand_UnsavedDiagram()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = testDiagramFile };
+
+			var unsavedCodeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>()) { IsModified = true };
+			var unsavedEditorCloseCommand = new Mock<ICommand>();
+			var unsavedEditor = new Mock<IDiagramEditor>();
+			unsavedEditor.SetupGet(e => e.Diagram).Returns(diagram);
+			unsavedEditor.SetupGet(e => e.CodeEditor).Returns(unsavedCodeEditor);
+			unsavedEditor.SetupGet(e => e.CloseCommand).Returns(unsavedEditorCloseCommand.Object);
+
+			var codeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>()) { IsModified = false };
+			var editorCloseCommand = new Mock<ICommand>();
+			var editor = new Mock<IDiagramEditor>();
+			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			editor.SetupGet(e => e.CodeEditor).Returns(codeEditor);
+			editor.SetupGet(e => e.CloseCommand).Returns(editorCloseCommand.Object);
+
+			var diagramManager = CreateManager(d => unsavedEditor.Object);
+			diagramManager.OpenDiagrams.Add(unsavedEditor.Object);
+			diagramManager.OpenDiagrams.Add(editor.Object);
+
+			// Act.
+			diagramManager.CloseCommand.Execute(null);
+
+			// Assert.
+			unsavedEditorCloseCommand.Verify(c => c.Execute(It.IsAny<object>()));
+			editorCloseCommand.Verify(c => c.Execute(It.IsAny<object>()), Times.Never());
 		}
 
 		private DiagramManagerViewModel CreateManager(Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)

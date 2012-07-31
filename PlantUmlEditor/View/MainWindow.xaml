@@ -174,7 +174,7 @@
             
                             <!-- This is the location box -->
                             <StackPanel Grid.Row="0" Margin="5,5,5,5">
-                                <TextBlock Text="Location:" Foreground="White" FontFamily="Segoe" FontSize="14"/>
+                                <TextBlock Text="Location:" Foreground="White" FontFamily="Segoe UI" FontSize="14"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -346,11 +346,11 @@
                                     RadiusY="0" 
                                     StrokeThickness="1" />
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontFamily="Segoe" FontStretch="Condensed" FontSize="30" FontWeight="Thin" Margin="0,11,0,10">
+                            <TextBlock HorizontalAlignment="Center" FontFamily="Segoe UI" FontStretch="Condensed" FontSize="30" Margin="0,11,0,10">
                                 <Run Text="Welcome to PlantUML Editor"/>
                             </TextBlock>
                             <Separator HorizontalAlignment="Stretch" Height="1" />
-                            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontFamily="Segoe" FontSize="20" VerticalAlignment="Center">
+                            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontFamily="Segoe UI" FontSize="20" VerticalAlignment="Center">
                                 Enter a path in the location text box to load the diagrams from that directory.                
                                 Or, just click on "Create New Diagram" to start working on a new diagram.                
                             </TextBlock>
@@ -378,7 +378,7 @@
                 </StatusBar.ItemsPanel>
 
                 <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White">
+                    <TextBlock Text="{Binding Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White" FontFamily="Segoe UI" >
                         <!--<TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>

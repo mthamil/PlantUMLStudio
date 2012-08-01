@@ -60,7 +60,9 @@ namespace Utilities.Concurrency
 			{
 				if (localEvent != null)
 					ProgressChanged(this, new ProgressChangedEventArgs<T>(value));
-				_handler(value);
+
+				if (_handler != null)
+					_handler(value);
 			},
 			CancellationToken.None,
 			TaskCreationOptions.None,

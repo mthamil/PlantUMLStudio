@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Concurrency;
 
@@ -15,6 +16,7 @@ namespace Utilities.Net
 		/// </summary>
 		/// <param name="address">The URI of the resource to download. </param>
 		/// <param name="fileName">The name of the file to be placed on the local computer. </param>
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <param name="progress">An optional progress reporter</param>
 		/// 
 		/// <exception cref="T:System.Net.WebException">
@@ -27,6 +29,6 @@ namespace Utilities.Net
 		/// </exception>
 		/// 
 		/// <returns>A task representing the asynchronous operation</returns>
-		Task DownloadFileAsync(Uri address, string fileName, IProgress<DownloadProgressChangedEventArgs> progress = null);
+		Task DownloadFileAsync(Uri address, string fileName, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
 	}
 }

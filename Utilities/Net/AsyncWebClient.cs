@@ -16,33 +16,20 @@ namespace Utilities.Net
 		/// Initializes a new AsyncWebClient.
 		/// </summary>
 		/// <param name="webClient">The web client to use</param>
-		/// <param name="taskScheduler">Used to schedule tasks</param>
-		public AsyncWebClient(WebClient webClient, TaskScheduler taskScheduler)
+		public AsyncWebClient(WebClient webClient)
 		{
 			_webClient = webClient;
-			_taskScheduler = taskScheduler;
 		}
 
 		#region Implementation of IAsyncWebClient
 
 		/// <see cref="IAsyncWebClient.DownloadFileAsync"/>
-		public Task DownloadFileAsync(Uri address, string fileName, IProgress<DownloadProgressChangedEventArgs> progress)
+		public Task DownloadFileAsync(Uri address, string fileName, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
 		{
+			cancellationToken.Register(() => _webClient.CancelAsync());
+
 			var cookie = Guid.NewGuid();
 			var tcs = new TaskCompletionSource<object>();
-			AsyncCompletedEventHandler completedHandler = (o, e) =>
-			{
-				if (!Equals(e.UserState, cookie))
-					return;
-
-				if (e.Cancelled)
-					tcs.SetCanceled();
-				else if (e.Error != null)
-					tcs.SetException(e.Error);
-				else
-					tcs.SetResult(null);
-			};
-			_webClient.DownloadFileCompleted += completedHandler;
 
 			DownloadProgressChangedEventHandler progressHandler = (o, e) =>
 			{
@@ -54,21 +41,30 @@ namespace Utilities.Net
 			if (progress != null)
 				_webClient.DownloadProgressChanged += progressHandler;
 
-			return Task.Factory.StartNew(() =>
+			AsyncCompletedEventHandler completedHandler = null;
+			completedHandler = (o, e) =>
 			{
-				_webClient.DownloadFileAsync(address, fileName, cookie);
+				if (!Equals(e.UserState, cookie))
+					return;
 
-				return tcs.Task.ContinueWith(t =>
-				{
-					_webClient.DownloadProgressChanged -= progressHandler;
-					_webClient.DownloadFileCompleted -= completedHandler;
-				});
-			}, CancellationToken.None, TaskCreationOptions.None, _taskScheduler).Unwrap();
+				_webClient.DownloadProgressChanged -= progressHandler;
+				_webClient.DownloadFileCompleted -= completedHandler;
+
+				if (e.Cancelled)
+					tcs.SetCanceled();
+				else if (e.Error != null)
+					tcs.SetException(e.Error);
+				else
+					tcs.SetResult(null);
+			};
+			_webClient.DownloadFileCompleted += completedHandler;
+
+			_webClient.DownloadFileAsync(address, fileName, cookie);
+			return tcs.Task;
 		}
 
 		#endregion
 
 		private readonly WebClient _webClient;
-		private readonly TaskScheduler _taskScheduler;
 	}
 }

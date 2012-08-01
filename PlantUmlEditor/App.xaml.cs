@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using System.Windows.Threading;
 using Autofac;
 using PlantUmlEditor.Container;
 using PlantUmlEditor.Properties;
+using Utilities;
 using Utilities.Controls;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
@@ -48,11 +50,14 @@ namespace PlantUmlEditor
 			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
 
-			//var updater = new UpdateChecker
+			//var localFileDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			//var existingFileName = @"Thirdparty\" + Path.GetFileName(Settings.Default.DownloadUrl);
+			//var updater = new PlantUmlUpdateChecker
 			//{
-			//    DownloadUrl = new Uri(Settings.Default.DownloadUrl)
+			//    DownloadUrl = new Uri(Settings.Default.DownloadUrl),
+			//    LocalVersion = new FileInfo(Path.Combine(localFileDirectory, existingFileName))
 			//};
-			//updater.DownloadLatestPlantUml();
+			//updater.DownloadLatestAsync();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

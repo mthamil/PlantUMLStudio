@@ -27,15 +27,9 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel, IProgressRegistration>()
 				.SingleInstance();
 
-			// Diagram view-model factory.
-			builder.Register<Func<Diagram, PreviewDiagramViewModel>>(c =>
-			{
-				var diagramRenderer = c.Resolve<IDiagramRenderer>();
-				return diagram => new PreviewDiagramViewModel(diagram)
-				{
-					ImagePreview = diagramRenderer.Render(diagram)	// Perform an initial render of the diagram.
-				};
-			});
+			builder.RegisterType<PreviewDiagramViewModel>()
+				.OnActivating(c => c.Instance.ImagePreview =
+					c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
 
 			builder.Register(c =>
 			{

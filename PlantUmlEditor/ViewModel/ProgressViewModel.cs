@@ -77,7 +77,7 @@ namespace PlantUmlEditor.ViewModel
 		public string Message { get; set; }
 
 		/// <summary>
-		/// Creates a new progress update indicating completion due to an exception.
+		/// Creates a new progress update indicating failed completion due to an exception.
 		/// </summary>
 		/// <param name="exception">The exception that caused termination of progress</param>
 		public static ProgressUpdate Failed(Exception exception)

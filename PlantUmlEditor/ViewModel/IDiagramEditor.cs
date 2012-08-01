@@ -75,11 +75,6 @@ namespace PlantUmlEditor.ViewModel
 		ICodeEditor CodeEditor { get; }
 
 		/// <summary>
-		/// Contains current task progress information.
-		/// </summary>
-		IProgressViewModel Progress { get; }
-
-		/// <summary>
 		/// Event raised when a diagram editor indicates it will be closing.
 		/// </summary>
 		event CancelEventHandler Closing;

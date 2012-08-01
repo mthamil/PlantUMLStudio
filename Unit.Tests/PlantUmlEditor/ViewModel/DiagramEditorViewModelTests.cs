@@ -235,6 +235,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -264,6 +265,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -296,6 +298,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -390,7 +393,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly PreviewDiagramViewModel previewDiagram;
 
 		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
-		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();
+		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
 		private readonly Mock<IDiagramRenderer> renderer = new Mock<IDiagramRenderer>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();

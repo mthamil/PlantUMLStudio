@@ -20,6 +20,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				.Returns(Tasks.FromSuccess());
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
+
+			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 		}
 
 		[Fact]
@@ -27,7 +29,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_SuccessfulLoad()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram>
 				{
 					new Diagram { Content = "Diagram 1"},
@@ -52,7 +54,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_UnsuccessfulLoad()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
 			var explorer = CreateExplorer();
@@ -72,7 +74,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_False()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
 
 			var explorer = CreateExplorer();
@@ -84,7 +86,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.False(isValid);
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.IsAny<DirectoryInfo>(), 
-				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.Never());
+				It.IsAny<IProgress<Tuple<int, int>>>()), Times.Never());
 			settings.VerifySet(s => s.LastDiagramLocation = It.IsAny<DirectoryInfo>(), Times.Never());
 		}
 
@@ -93,7 +95,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AddNewDiagramCommand()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> { new Diagram { File = testDiagramFile, Content = "New Diagram" } }));
 
 			var explorer = CreateExplorer();
@@ -121,7 +123,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.Is<DirectoryInfo>(d => d.FullName == testDiagramFile.Directory.FullName), 
-				It.IsAny<IProgress<Tuple<int?, string>>>()), Times.AtLeastOnce());
+				It.IsAny<IProgress<Tuple<int, int>>>()), Times.AtLeastOnce());
 		}
 
 		[Fact]
@@ -129,7 +131,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AddNewDiagramCommand_FileNameWithoutExtension()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int?, string>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
 
 			var explorer = CreateExplorer();
@@ -150,7 +152,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			return new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object);
 		}
 
-		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();
+		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 

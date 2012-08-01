@@ -27,7 +27,7 @@ namespace PlantUmlEditor.Model
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
-		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int?, string>> progress)
+		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int, int>> progress)
 		{
 			return Task<IEnumerable<Diagram>>.Factory.StartNew(() =>
 			{
@@ -45,11 +45,7 @@ namespace PlantUmlEditor.Model
 
 					processed++;
 					if (progress != null)
-					{
-						progress.Report(Tuple.Create(
-							(int?)(processed/(double)numberOfFiles*100),
-							String.Format(Resources.Progress_LoadingFile, processed, numberOfFiles)));
-					}
+						progress.Report(Tuple.Create(processed, numberOfFiles));
 				}
 
 				return diagrams;

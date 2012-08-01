@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,20 +30,20 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		/// <param name="previewDiagram">A preview of the diagram being edited</param>
 		/// <param name="codeEditor">The code editor</param>
-		/// <param name="progressViewModel">Reports progress of editor tasks</param>
+		/// <param name="progressFactory">Creates objects that report progress</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
 		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
-		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, IProgressViewModel progressViewModel,
+		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, IProgressRegistration progressFactory,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
 			Diagram = previewDiagram.Diagram;
-			Progress = progressViewModel;
 
+			_progressFactory = progressFactory;
 			_diagramRenderer = diagramRenderer;
 			_diagramIO = diagramIO;
 			_compiler = compiler;
@@ -185,14 +186,13 @@ namespace PlantUmlEditor.ViewModel
 				_firstSaveAfterOpen = false;
 			}
 
-			Progress.HasDiscreteProgress = false;
-			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
-			{
-				Progress.PercentComplete = p.Item1;
-				Progress.Message = p.Item2;
+			var progress = _progressFactory.New(false);
+			progress.Report(new ProgressUpdate 
+			{ 
+				PercentComplete = 100, 
+				Message = String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileNameOnly) 
 			});
 
-			progress.Report(Tuple.Create((int?)100, String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileNameOnly)));
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
 				.Then(() => _compiler.CompileToFile(Diagram.File));
 
@@ -204,7 +204,7 @@ namespace PlantUmlEditor.ViewModel
 				CodeEditor.IsModified = false;
 				IsIdle = true;
 				_refreshTimer.TryStop();
-				progress.Report(Tuple.Create((int?)null, Resources.Progress_DiagramSaved));
+				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramSaved));
 
 				OnSaved();
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
@@ -215,7 +215,7 @@ namespace PlantUmlEditor.ViewModel
 				IsIdle = true;
 				_refreshTimer.TryStop();
 				if (t.Exception != null)
-					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
+					progress.Report(ProgressUpdate.Failed(t.Exception.InnerExceptions.First()));
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 
@@ -252,11 +252,12 @@ namespace PlantUmlEditor.ViewModel
 
 			var tcs = new CancellationTokenSource();
 			Task refreshTask = null;
+			var progress = _progressFactory.New(false);
 			refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token)
 				 .ContinueWith(t =>
 				 {
 					 if (t.IsFaulted && t.Exception != null)
-					 	Progress.Message = t.Exception.InnerException.Message;
+						 progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
 					 else if (!t.IsCanceled)
 					 	DiagramImage = t.Result;
 
@@ -365,11 +366,6 @@ namespace PlantUmlEditor.ViewModel
 		/// Commands available to operate on the diagram image.
 		/// </summary>
 		public IEnumerable<ICommand> ImageCommands { get; set; }
- 
-		/// <summary>
-		/// Contains current task progress information.
-		/// </summary>
-		public IProgressViewModel Progress { get; private set; }
 
 		#region Implementation of IUndoProvider
 
@@ -426,6 +422,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
 
+		private readonly IProgressRegistration _progressFactory;
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramIOService _diagramIO;
 		private readonly IDiagramCompiler _compiler;

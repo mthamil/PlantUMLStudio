@@ -21,10 +21,10 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
-		public DiagramExplorerViewModel(IProgressViewModel progressViewModel, IDiagramIOService diagramIO, 
+		public DiagramExplorerViewModel(IProgressRegistration progressFactory, IDiagramIOService diagramIO, 
 			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings)
 		{
-			_progress = progressViewModel;
+			_progressFactory = progressFactory;
 			_diagramIO = diagramIO;
 			_previewDiagramFactory = previewDiagramFactory;
 			_settings = settings;
@@ -133,6 +133,8 @@ namespace PlantUmlEditor.ViewModel
 
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
+			var progress = _progressFactory.New(false);
+
 			var saveNewTask = _diagramIO.SaveAsync(newDiagram, false)
 				.Then(() => Task.Factory.StartNew(() =>
 					LoadDiagrams(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap());
@@ -146,7 +148,7 @@ namespace PlantUmlEditor.ViewModel
 			saveNewTask.ContinueWith(t =>
 			{
 				if (t.IsFaulted && t.Exception != null)
-					_progress.Message = t.Exception.InnerException.Message;
+					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 		}
 
@@ -165,20 +167,22 @@ namespace PlantUmlEditor.ViewModel
 			if (!IsDiagramLocationValid)
 				return Tasks.FromResult(_previewDiagrams.Value);
 
-			_progress.HasDiscreteProgress = true;
-			IProgress<Tuple<int?, string>> progress = new Progress<Tuple<int?, string>>(p =>
+			var progress = _progressFactory.New();
+			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
+
+			var readProgress = new Progress<Tuple<int, int>>();
+			progress.Wrap(readProgress, p => new ProgressUpdate
 			{
-				_progress.PercentComplete = p.Item1;
-				_progress.Message = p.Item2;
+				PercentComplete = (int?)(p.Item1 / (double)p.Item2 * 100),
+				Message = String.Format(Resources.Progress_LoadingFile, p.Item1, p.Item2)
 			});
 
-			progress.Report(Tuple.Create((int?)0, Resources.Progress_LoadingDiagrams));
-			var loadTask = _diagramIO.ReadDiagramsAsync(DiagramLocation, progress);
+			var loadTask = _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
 
 			loadTask.ContinueWith(t =>
 			{
 				if (t.Exception != null)
-					progress.Report(Tuple.Create((int?)null, t.Exception.InnerException.Message));
+					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
 
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
 
@@ -187,7 +191,7 @@ namespace PlantUmlEditor.ViewModel
 				foreach (var diagramFile in t.Result)
 					_previewDiagrams.Value.Add(_previewDiagramFactory(diagramFile));
 
-				progress.Report(Tuple.Create((int?)null, Resources.Progress_DiagramsLoaded));
+				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
 
 				return _previewDiagrams.Value;
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
@@ -196,7 +200,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Contains current task progress information.
 		/// </summary>
-		private readonly IProgressViewModel _progress;
+		private readonly IProgressRegistration _progressFactory;
 
 		private readonly Property<PreviewDiagramViewModel> _currentPreviewDiagram;
 		private readonly Property<ICollection<PreviewDiagramViewModel>> _previewDiagrams;

@@ -24,7 +24,7 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel>()
+			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel, IProgressRegistration>()
 				.SingleInstance();
 
 			// Diagram view-model factory.
@@ -37,7 +37,7 @@ namespace PlantUmlEditor.Container
 				};
 			});
 
-			builder.Register<IEnumerable<ViewModelBase>>(c =>
+			builder.Register(c =>
 			{
 				var snippetProvider = c.Resolve<SnippetProvider>();
 				var snippetRoot = new SnippetCategoryViewModel(Resources.ContextMenu_Code_Snippets);
@@ -48,13 +48,14 @@ namespace PlantUmlEditor.Container
 			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu")
 			.SingleInstance();
 
-			builder.RegisterType<PlantUmlFoldRegions>().As<IEnumerable<FoldedRegionDefinition>>();
+			builder.RegisterType<PlantUmlFoldRegions>();
 
-			builder.RegisterType<PatternBasedFoldingStrategy>().As<AbstractFoldingStrategy>()
+			builder.Register(c => new PatternBasedFoldingStrategy(c.Resolve<PlantUmlFoldRegions>()))
+				.Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
 				.SingleInstance();
 
 			builder.Register(c => new CodeEditorViewModel(
-				c.Resolve<AbstractFoldingStrategy>(), 
+				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
 				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")), 
 				c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
 

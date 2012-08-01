@@ -131,6 +131,7 @@
     <Compile Include="ViewModel\Commands\OpenContextMenuCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
+    <Compile Include="ViewModel\ICodeEditor.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />

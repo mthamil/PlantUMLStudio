@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ICSharpCode.AvalonEdit.Document;
-using Utilities.Controls.Behaviors;
+using ICSharpCode.AvalonEdit.Folding;
 using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
@@ -12,13 +11,15 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a diagram code editor.
 	/// </summary>
-	public class CodeEditorViewModel : ViewModelBase, IUndoProvider
+	public class CodeEditorViewModel : ViewModelBase, ICodeEditor
 	{
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(IEnumerable<ViewModelBase> editorCommands)
+		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, IEnumerable<ViewModelBase> editorCommands)
 		{
+			FoldingStrategy = foldingStrategy;
+
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 
 			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
@@ -29,6 +30,11 @@ namespace PlantUmlEditor.ViewModel
 			_editorCommands = Property.New(this, p => p.EditorCommands, OnPropertyChanged);
 			EditorCommands = new ObservableCollection<ViewModelBase>(editorCommands);
 		}
+
+		/// <summary>
+		/// The editor folding strategy.
+		/// </summary>
+		public AbstractFoldingStrategy FoldingStrategy { get; private set; }
 
 		/// <summary>
 		/// Available operations for a code editor.

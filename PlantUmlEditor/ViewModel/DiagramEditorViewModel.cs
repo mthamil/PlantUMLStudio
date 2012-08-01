@@ -35,7 +35,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
-		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, CodeEditorViewModel codeEditor, IProgressViewModel progressViewModel,
+		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, IProgressViewModel progressViewModel,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
@@ -333,7 +333,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The code editor.
 		/// </summary>
-		public CodeEditorViewModel CodeEditor { get; private set; }
+		public ICodeEditor CodeEditor { get; private set; }
 
 		void codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{

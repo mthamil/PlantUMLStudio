@@ -11,7 +11,6 @@ using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
-using Utilities.Mvvm;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
@@ -263,18 +262,20 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagram = new Diagram { File = testDiagramFile };
 
-			var unsavedCodeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>()) { IsModified = true };
+			var unsavedCodeEditor = new Mock<ICodeEditor>();
+			unsavedCodeEditor.SetupGet(ce => ce.IsModified).Returns(true);
 			var unsavedEditorCloseCommand = new Mock<ICommand>();
 			var unsavedEditor = new Mock<IDiagramEditor>();
 			unsavedEditor.SetupGet(e => e.Diagram).Returns(diagram);
-			unsavedEditor.SetupGet(e => e.CodeEditor).Returns(unsavedCodeEditor);
+			unsavedEditor.SetupGet(e => e.CodeEditor).Returns(unsavedCodeEditor.Object);
 			unsavedEditor.SetupGet(e => e.CloseCommand).Returns(unsavedEditorCloseCommand.Object);
 
-			var codeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>()) { IsModified = false };
+			var codeEditor = new Mock<ICodeEditor>();
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(false);
 			var editorCloseCommand = new Mock<ICommand>();
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.CodeEditor).Returns(codeEditor);
+			editor.SetupGet(e => e.CodeEditor).Returns(codeEditor.Object);
 			editor.SetupGet(e => e.CloseCommand).Returns(editorCloseCommand.Object);
 
 			var diagramManager = CreateManager(d => unsavedEditor.Object);

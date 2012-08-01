@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Media.Imaging;
 using Moq;
@@ -9,7 +8,6 @@ using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Concurrency;
-using Utilities.Mvvm;
 using Xunit;
 using Xunit.Extensions;
 
@@ -30,7 +28,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
-			codeEditor.IsModified = true;
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(true);
 
 			// Act.
 			editor.AutoSave = true;
@@ -47,7 +45,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			editor = CreateEditor();
 
-			codeEditor.IsModified = false;
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(false);
 
 			// Act.
 			editor.AutoSave = true;
@@ -100,7 +98,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor = CreateEditor();
 			editor.IsIdle = isIdle;
 
-			codeEditor.IsModified = isModified;
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(isModified);
 
 			// Act.
 			bool actual = editor.CanSave;
@@ -152,7 +150,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.AutoSave = true;
 
 			// Act.
-			codeEditor.IsModified = true;
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(true);
+			codeEditor.Raise(ce => ce.PropertyChanged += null, new PropertyChangedEventArgs("IsModified"));
 
 			// Assert.
 			Assert.True(editor.CanSave);
@@ -167,10 +166,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor = CreateEditor();
 			editor.AutoSave = true;
 
-			codeEditor.IsModified = true;
-
 			// Act.
-			codeEditor.IsModified = false;
+			codeEditor.SetupGet(ce => ce.IsModified).Returns(false);
+			codeEditor.Raise(ce => ce.PropertyChanged += null, new PropertyChangedEventArgs("IsModified"));
 
 			// Assert.
 			Assert.False(editor.CanSave);
@@ -237,9 +235,12 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.IsModified);
+			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
-			codeEditor.Content = "Blah blah blah";
+			codeEditor.Object.Content = "Blah blah blah";
+			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromSuccess());
@@ -251,9 +252,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			editor.SaveCommand.Execute(null);
 
 			// Assert.
-			Assert.True(editor.IsIdle);
-			Assert.False(codeEditor.IsModified);
-			Assert.Equal(codeEditor.Content, diagram.Content);
+			Assert.False(codeEditor.Object.IsModified);
+			Assert.Equal(codeEditor.Object.Content, diagram.Content);
 			autoSaveTimer.Verify(t => t.TryStop());
 			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
 		}
@@ -264,9 +264,12 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.IsModified);
+			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
-			codeEditor.Content = "Blah blah blah";
+			codeEditor.Object.Content = "Blah blah blah";
+			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromSuccess());
@@ -281,8 +284,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.True(editor.IsIdle);
-			Assert.False(codeEditor.IsModified);
-			Assert.Equal(codeEditor.Content, diagram.Content);
+			Assert.False(codeEditor.Object.IsModified);
+			Assert.Equal(codeEditor.Object.Content, diagram.Content);
 			autoSaveTimer.Verify(t => t.TryStop());
 			diagramIO.Verify(dio => dio.SaveAsync(diagram, false));
 		}
@@ -293,9 +296,12 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.IsModified);
+			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
-			codeEditor.Content = "Blah blah blah";
+			codeEditor.Object.Content = "Blah blah blah";
+			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromException(new AggregateException()));
@@ -305,7 +311,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.True(editor.IsIdle);
-			Assert.True(codeEditor.IsModified);
+			Assert.True(codeEditor.Object.IsModified);
 			autoSaveTimer.Verify(t => t.TryStop());
 			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
 		}
@@ -316,8 +322,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.Content);
 
-			codeEditor.Content = "Diagram code goes here";
+			codeEditor.Object.Content = "Diagram code goes here";
 			var result = new BitmapImage();
 
 			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -336,8 +343,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.Content);
 
-			codeEditor.Content = "Diagram code goes here";
+			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 				.Returns(Tasks.FromException<BitmapSource, InvalidOperationException>(new InvalidOperationException()));
@@ -371,7 +379,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(previewDiagram, codeEditor, progress.Object, renderer.Object,
+			return new DiagramEditorViewModel(previewDiagram, codeEditor.Object, progress.Object, renderer.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
@@ -381,7 +389,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly Diagram diagram = new Diagram();
 		private readonly PreviewDiagramViewModel previewDiagram;
 
-		private readonly CodeEditorViewModel codeEditor = new CodeEditorViewModel(Enumerable.Empty<ViewModelBase>());
+		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
 		private readonly Mock<IProgressViewModel> progress = new Mock<IProgressViewModel>();
 		private readonly Mock<IDiagramRenderer> renderer = new Mock<IDiagramRenderer>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();

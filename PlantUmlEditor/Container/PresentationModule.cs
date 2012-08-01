@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Autofac;
+using ICSharpCode.AvalonEdit.Folding;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
+using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 
@@ -47,7 +49,10 @@ namespace PlantUmlEditor.Container
 			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu")
 			.SingleInstance();
 
-			builder.Register(c => new CodeEditorViewModel(c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")));
+			builder.RegisterType<PlantUmlFoldingStrategy>().As<AbstractFoldingStrategy>()
+				.SingleInstance();
+
+			builder.Register(c => new CodeEditorViewModel(c.Resolve<AbstractFoldingStrategy>(), c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })

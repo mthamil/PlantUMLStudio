@@ -17,7 +17,6 @@
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
     
     <UserControl.Resources>
-        <avalon:PlantUmlFoldingStrategy x:Key="FoldingStrategy"/>
         <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
         <cmds:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
     </UserControl.Resources>
@@ -43,7 +42,7 @@
                                    avalon:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    avalon:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
-                                   avalon:AvalonEditor.FoldingStrategy="{StaticResource FoldingStrategy}"
+                                   avalon:AvalonEditor.FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"
                                    avalon:AvalonEditor.BindableUndoStack="{Binding CodeEditor.UndoStack}"
                                    ShowLineNumbers="True">
                     

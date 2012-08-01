@@ -72,7 +72,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The code editor.
 		/// </summary>
-		CodeEditorViewModel CodeEditor { get; }
+		ICodeEditor CodeEditor { get; }
 
 		/// <summary>
 		/// Contains current task progress information.

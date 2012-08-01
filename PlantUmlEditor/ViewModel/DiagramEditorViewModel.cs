@@ -331,7 +331,7 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// The code editor.
+		/// The code content editor.
 		/// </summary>
 		public ICodeEditor CodeEditor { get; private set; }
 

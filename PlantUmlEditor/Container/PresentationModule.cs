@@ -49,10 +49,13 @@ namespace PlantUmlEditor.Container
 			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu")
 			.SingleInstance();
 
-			builder.RegisterType<PlantUmlFoldingStrategy>().As<AbstractFoldingStrategy>()
+			builder.RegisterType<PlantUmlFoldRegions>().As<IEnumerable<FoldedRegionDefinition>>();
+
+			builder.RegisterType<PatternBasedFoldingStrategy>().As<AbstractFoldingStrategy>()
 				.SingleInstance();
 
-			builder.Register(c => new CodeEditorViewModel(c.Resolve<AbstractFoldingStrategy>(), c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
+			builder.Register(c => new CodeEditorViewModel(c.Resolve<AbstractFoldingStrategy>(), c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")))
+				.As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })

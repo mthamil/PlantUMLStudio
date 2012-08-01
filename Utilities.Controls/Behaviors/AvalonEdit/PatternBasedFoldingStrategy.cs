@@ -8,10 +8,19 @@ using ICSharpCode.AvalonEdit.Folding;
 namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
-	/// Creates folding regions for PlantUML diagrams.
+	/// Creates folding regions based on start and end pattern definitions.
 	/// </summary>
-	public class PlantUmlFoldingStrategy : AbstractFoldingStrategy
+	public class PatternBasedFoldingStrategy : AbstractFoldingStrategy
 	{
+		public PatternBasedFoldingStrategy(IEnumerable<FoldedRegionDefinition> foldRegions)
+		{
+			int counter = 1;
+			tokens = foldRegions.ToDictionary(region => counter++.ToString(), region => region);
+
+			startTokens = new Regex(String.Join("|", tokens.Select(t => String.Format(@"(?<{0}>{1})", t.Key, t.Value.StartPattern))),
+				RegexOptions.ExplicitCapture);
+		}
+
 		#region Overrides of AbstractFoldingStrategy
 
 		/// <see cref="AbstractFoldingStrategy.CreateNewFoldings"/>
@@ -62,7 +71,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		#endregion
 
-		private static Tuple<FoldedRegionDefinition, Match> TryMatchStartToken(string input)
+		private Tuple<FoldedRegionDefinition, Match> TryMatchStartToken(string input)
 		{
 			var matches = startTokens.Matches(input);
 			if (matches.Count > 0 && matches[0].Success)
@@ -81,34 +90,12 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			return null;
 		}
 
-		private static readonly IDictionary<string, FoldedRegionDefinition> tokens = new Dictionary<string, FoldedRegionDefinition>
-		{
-			{ "1", new FoldedRegionDefinition(@"(^|\s+)note (left|right|top|bottom|over)([^\S\n]+.*)?$",								@"(^|\s+)end note($|\s+)") },
-			{ "2", new FoldedRegionDefinition(@"(^|\s+)package[^\S\n]+[^{]+$",															@"(^|\s+)end package($|\s+)") },
-			{ "3", new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)[^\S\n]*$",													@"(^|\s+)deactivate +") },
-			{ "4", new FoldedRegionDefinition(@"(^|\s+)if.+then[^\S\n]*$",																@"(^|\s+)endif($|\s+)") },
-			{ "5", new FoldedRegionDefinition(@"^[^\S\n]*title[^\S\n]*$",																@"(^|\s+)end title($|\s+)") },
-			{ "6", new FoldedRegionDefinition(@"^[^\S\n]*box[^\S\n]*.*$",																@"(^|\s+)end box($|\s+)") },
-			{ "7", new FoldedRegionDefinition(@"(^|\s+)(partition|package|namespace|abstract class|class|enum)[^\S\n]+.+{[^\S\n]*$",	@"(^|\s+)}.*$") },
-		};
+		private readonly IDictionary<string, FoldedRegionDefinition> tokens;
 
 		/// <summary>
 		/// A pattern that can match any of the start tokens.
 		/// </summary>
-		private static readonly Regex startTokens = new Regex(String.Join("|", tokens.Select(t => String.Format(@"(?<{0}>{1})" , t.Key, t.Value.StartPattern))), 
-			RegexOptions.ExplicitCapture);
-
-		private sealed class FoldedRegionDefinition
-		{
-			public FoldedRegionDefinition(string startPattern, string endPattern)
-			{
-				StartPattern = startPattern;
-				EndPattern = endPattern;
-			}
-
-			public string StartPattern { get; private set; }
-			public string EndPattern { get; private set; }
-		}
+		private readonly Regex startTokens;
 
 		private sealed class PotentialFoldRegion
 		{

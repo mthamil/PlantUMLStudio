@@ -60,8 +60,10 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\AvalonEdit\AvalonEditor.cs" />
+    <Compile Include="Behaviors\AvalonEdit\FoldedRegionDefinition.cs" />
     <Compile Include="Behaviors\AvalonEdit\IUndoProvider.cs" />
-    <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldingStrategy.cs" />
+    <Compile Include="Behaviors\AvalonEdit\PatternBasedFoldingStrategy.cs" />
+    <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldRegions.cs" />
     <Compile Include="Behaviors\AvalonEdit\StubFoldingStrategy.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentIndexBehavior.cs" />

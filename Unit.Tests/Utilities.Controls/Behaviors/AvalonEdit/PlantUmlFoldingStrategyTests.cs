@@ -149,6 +149,6 @@ end boxghghg", new List<NewFolding>() };
             }
 		}
 
-		private readonly PlantUmlFoldingStrategy foldingStrategy = new PlantUmlFoldingStrategy();
+		private readonly PatternBasedFoldingStrategy foldingStrategy = new PatternBasedFoldingStrategy(new PlantUmlFoldRegions());
 	}
 }

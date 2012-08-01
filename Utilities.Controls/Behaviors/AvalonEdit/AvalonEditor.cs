@@ -159,7 +159,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				return;
 
 			var definitionPath = definitionUri.IsAbsoluteUri ? 
-				definitionUri.AbsolutePath : 
+				definitionUri.LocalPath : 
 				Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + definitionUri);
 			using (var stream = new StreamReader(definitionPath))
 			{

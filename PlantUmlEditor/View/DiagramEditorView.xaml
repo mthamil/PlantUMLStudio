@@ -41,7 +41,7 @@
                                    IsEnabled="{Binding IsIdle}"
                                    avalon:AvalonEditor.Content="{Binding CodeEditor.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                   avalon:AvalonEditor.HighlightingDefinition="/PlantUML.xshd"
+                                   avalon:AvalonEditor.HighlightingDefinition="{Binding CodeEditor.HighlightingDefinition}"
                                    avalon:AvalonEditor.FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"
                                    avalon:AvalonEditor.BindableUndoStack="{Binding CodeEditor.UndoStack}"
                                    ShowLineNumbers="True">

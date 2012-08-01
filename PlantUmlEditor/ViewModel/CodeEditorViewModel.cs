@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
@@ -16,9 +17,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, IEnumerable<ViewModelBase> editorCommands)
+		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, Uri highlightingDefinition, IEnumerable<ViewModelBase> editorCommands)
 		{
 			FoldingStrategy = foldingStrategy;
+			HighlightingDefinition = highlightingDefinition;
 
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 
@@ -35,6 +37,11 @@ namespace PlantUmlEditor.ViewModel
 		/// The editor folding strategy.
 		/// </summary>
 		public AbstractFoldingStrategy FoldingStrategy { get; private set; }
+
+		/// <summary>
+		/// The location of the code highlighting definition.
+		/// </summary>
+		public Uri HighlightingDefinition { get; private set; }
 
 		/// <summary>
 		/// Available operations for a code editor.

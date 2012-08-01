@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Autofac;
 using ICSharpCode.AvalonEdit.Folding;
 using PlantUmlEditor.Configuration;
@@ -10,6 +12,7 @@ using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
+using Module = Autofac.Module;
 
 namespace PlantUmlEditor.Container
 {
@@ -50,8 +53,10 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<PatternBasedFoldingStrategy>().As<AbstractFoldingStrategy>()
 				.SingleInstance();
 
-			builder.Register(c => new CodeEditorViewModel(c.Resolve<AbstractFoldingStrategy>(), c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu")))
-				.As<ICodeEditor>();
+			builder.Register(c => new CodeEditorViewModel(
+				c.Resolve<AbstractFoldingStrategy>(), 
+				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")), 
+				c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })

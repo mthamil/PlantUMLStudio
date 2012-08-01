@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Utilities.Net
 {
@@ -19,6 +18,6 @@ namespace Utilities.Net
 			return AsyncWebClientFactory(webClient);
 		}
 
-		internal static Func<WebClient, IAsyncWebClient> AsyncWebClientFactory = wc => new AsyncWebClient(wc, TaskScheduler.Default);
+		internal static Func<WebClient, IAsyncWebClient> AsyncWebClientFactory = wc => new AsyncWebClient(wc);
 	}
 }

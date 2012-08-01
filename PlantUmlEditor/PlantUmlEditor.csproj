@@ -134,6 +134,7 @@
     <Compile Include="ViewModel\ICodeEditor.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />
+    <Compile Include="ViewModel\ImageContextMenu.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />

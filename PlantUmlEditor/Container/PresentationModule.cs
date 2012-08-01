@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media.Imaging;
 using Autofac;
 using ICSharpCode.AvalonEdit.Folding;
 using PlantUmlEditor.Configuration;
@@ -13,7 +10,6 @@ using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
 
 namespace PlantUmlEditor.Container
 {
@@ -61,23 +57,7 @@ namespace PlantUmlEditor.Container
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
 				.WithProperty(p => p.AutoSave, true)
-				.WithProperty(p => p.ImageCommands, new List<NamedRelayCommand<IDiagramEditor>>
-					{
-						new NamedRelayCommand<IDiagramEditor>(d => Clipboard.SetImage(d.DiagramImage as BitmapSource))
-						{
-							Name = Resources.ContextMenu_Image_CopyToClipboard
-						},
-
-						new NamedRelayCommand<IDiagramEditor>(d => Process.Start("explorer.exe", "/select," + d.Diagram.ImageFilePath).Dispose())
-						{
-							Name = Resources.ContextMenu_Image_OpenInExplorer
-						},
-						
-						new NamedRelayCommand<IDiagramEditor>(d => Clipboard.SetText(d.Diagram.ImageFilePath)) 
-						{ 
-							Name = Resources.ContextMenu_Image_CopyImagePath 
-						}
-					});
+				.WithProperty(p => p.ImageCommands, new ImageContextMenu());
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")

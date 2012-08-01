@@ -364,7 +364,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Commands available to operate on the diagram image.
 		/// </summary>
-		public IEnumerable<NamedRelayCommand<IDiagramEditor>> ImageCommands { get; set; }
+		public IEnumerable<ICommand> ImageCommands { get; set; }
  
 		/// <summary>
 		/// Contains current task progress information.

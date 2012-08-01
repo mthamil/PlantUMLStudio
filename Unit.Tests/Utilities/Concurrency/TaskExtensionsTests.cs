@@ -303,7 +303,7 @@ namespace Unit.Tests.Utilities.Concurrency
 		}
 
 		[Fact]
-		public void Test_Then_WithContinuation_BothComplete()
+		public void Test_Then_WithResult_Continuation_BothComplete()
 		{
 			// Act.
 			Task<string> task = 
@@ -317,7 +317,7 @@ namespace Unit.Tests.Utilities.Concurrency
 		}
 
 		[Fact]
-		public void Test_Then_WithContinuation_TaskFails()
+		public void Test_Then_WithResult_Continuation_TaskFails()
 		{
 			// Act.
 			Task<string> task =
@@ -332,7 +332,7 @@ namespace Unit.Tests.Utilities.Concurrency
 		}
 
 		[Fact]
-		public void Test_Then_WithContinuation_TaskCancelled()
+		public void Test_Then_WithResult_Continuation_TaskCancelled()
 		{
 			// Act.
 			Task<string> task = 
@@ -351,12 +351,85 @@ namespace Unit.Tests.Utilities.Concurrency
 		}
 
 		[Fact]
-		public void Test_Then_WithContinuation_ContinuationFails()
+		public void Test_Then_WithResult_Continuation_ContinuationFails()
 		{
 			// Act.
 			Task<string> task = 
 				Task.Factory.StartNew(() => 1m, cts.Token, TaskCreationOptions.None, taskScheduler)
 				.Then(new Func<decimal, string>(result => { throw new InvalidOperationException(); }));
+
+			// Assert.
+			Assert.Throws<AggregateException>(() => task.Wait());
+			Assert.True(task.IsFaulted);
+			Assert.NotNull(task.Exception);
+			Assert.IsType<InvalidOperationException>(task.Exception.InnerException);
+		}
+
+		[Fact]
+		public void Test_Then_WithoutResult_Continuation_BothComplete()
+		{
+			// Arrange.
+			bool continued = false;
+
+			// Act.
+			Task task =
+				Task.Factory.StartNew(() => { }, cts.Token, TaskCreationOptions.None, taskScheduler)
+				.Then(() => { continued = true; });
+
+			task.Wait();
+
+			// Assert.
+			Assert.True(continued);
+		}
+
+		[Fact]
+		public void Test_Then_WithoutResult_Continuation_TaskFails()
+		{
+			// Arrange.
+			bool continued = false;
+
+			// Act.
+			Task task =
+				Task.Factory.StartNew(() => { throw new InvalidOperationException(); }, cts.Token, TaskCreationOptions.None, taskScheduler)
+				.Then(() => { continued = true; });
+
+			// Assert.
+			Assert.Throws<AggregateException>(() => task.Wait());
+			Assert.True(task.IsFaulted);
+			Assert.NotNull(task.Exception);
+			Assert.IsType<InvalidOperationException>(task.Exception.InnerException);
+			Assert.False(continued);
+		}
+
+		[Fact]
+		public void Test_Then_WithoutResult_Continuation_TaskCancelled()
+		{
+			// Arrange.
+			bool continued = false;
+
+			// Act.
+			Task task =
+				Task.Factory.StartNew(() =>
+				{
+					cts.Cancel();
+					cts.Token.ThrowIfCancellationRequested();
+				}, cts.Token, TaskCreationOptions.None, taskScheduler)
+				.Then(() => { continued = true; });
+
+			// Assert.
+			var exception = Assert.Throws<AggregateException>(() => task.Wait());
+			Assert.True(task.IsCanceled);
+			Assert.IsType<TaskCanceledException>(exception.InnerException);
+			Assert.False(continued);
+		}
+
+		[Fact]
+		public void Test_Then_WithoutResult_Continuation_ContinuationFails()
+		{
+			// Act.
+			Task task =
+				Task.Factory.StartNew(() => { }, cts.Token, TaskCreationOptions.None, taskScheduler)
+				.Then(new Action(() => { throw new InvalidOperationException(); }));
 
 			// Assert.
 			Assert.Throws<AggregateException>(() => task.Wait());

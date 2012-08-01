@@ -197,5 +197,46 @@ namespace Utilities.Concurrency
 			}, TaskContinuationOptions.ExecuteSynchronously);
 			return tcs.Task;
 		}
+
+		/// <summary>
+		/// Schedules a continuation to be executed after completion of this task while propagating
+		/// its result, error, or cancellation states.
+		/// </summary>
+		/// <param name="first">The Task to execute first</param>
+		/// <param name="continuation">A function to execute after completion of the first Task</param>
+		/// <returns>A Task representing completion of both operations</returns>
+		public static Task Then(this Task first, Action continuation)
+		{
+			if (first == null)
+				throw new ArgumentNullException("first");
+			if (continuation == null)
+				throw new ArgumentNullException("continuation");
+
+			var tcs = new TaskCompletionSource<object>();
+			first.ContinueWith(delegate
+			{
+				if (first.IsFaulted)
+				{
+					tcs.TrySetException(first.Exception.InnerExceptions);
+				}
+				else if (first.IsCanceled)
+				{
+					tcs.TrySetCanceled();
+				}
+				else
+				{
+					try
+					{
+						continuation();
+						tcs.TrySetResult(null);
+					}
+					catch (Exception e)
+					{
+						tcs.TrySetException(e);
+					}
+				}
+			}, TaskContinuationOptions.ExecuteSynchronously);
+			return tcs.Task;
+		}
 	}
 }

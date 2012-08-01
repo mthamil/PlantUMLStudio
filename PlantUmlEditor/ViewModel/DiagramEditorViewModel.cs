@@ -199,7 +199,6 @@ namespace PlantUmlEditor.ViewModel
 			saveTask.ContinueWith(t =>
 			{
 				_saveExecuting = false;
-				//DiagramViewModel.DiagramImage = null;	// Clear the old image first.
 				DiagramImage = _diagramRenderer.Render(Diagram);
 				CodeEditor.IsModified = false;
 				IsIdle = true;

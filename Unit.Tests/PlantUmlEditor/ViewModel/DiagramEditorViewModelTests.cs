@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Media.Imaging;
 using Moq;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;

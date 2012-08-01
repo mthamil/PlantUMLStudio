@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Utilities.Concurrency;
 
-namespace PlantUmlEditor.Model
+namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Provides operations related to diagram reading/writing.

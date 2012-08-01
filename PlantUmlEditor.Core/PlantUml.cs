@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Utilities.Concurrency.Processes;
 using Utilities.Concurrency;
+using Utilities.Concurrency.Processes;
 
-namespace PlantUmlEditor.Model
+namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Provides an interface to PlantUML.
@@ -29,15 +29,15 @@ namespace PlantUmlEditor.Model
 				RedirectStandardInput = true,
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken)
-			.Then(stream => 
-				{
-					var bitmap = new BitmapImage();
-					bitmap.BeginInit();
-					bitmap.StreamSource = stream;
-					bitmap.EndInit();
-					bitmap.Freeze();
-					return (BitmapSource)bitmap;
-				});
+			.Then(stream =>
+			{
+				var bitmap = new BitmapImage();
+				bitmap.BeginInit();
+				bitmap.StreamSource = stream;
+				bitmap.EndInit();
+				bitmap.Freeze();
+				return (BitmapSource)bitmap;
+			});
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFile"/>

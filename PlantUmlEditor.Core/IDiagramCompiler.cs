@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace PlantUmlEditor.Model
+namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Interface for a service that compiles diagrams to images.

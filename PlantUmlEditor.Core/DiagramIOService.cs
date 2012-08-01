@@ -5,10 +5,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
 
-namespace PlantUmlEditor.Model
+namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Provides diagram reading/writing operations.

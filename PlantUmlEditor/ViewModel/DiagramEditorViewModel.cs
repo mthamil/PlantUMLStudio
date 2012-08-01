@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;

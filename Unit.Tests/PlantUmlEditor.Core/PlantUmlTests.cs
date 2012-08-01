@@ -1,12 +1,11 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using PlantUmlEditor.Model;
-using Utilities.Concurrency.Processes;
+using PlantUmlEditor.Core;
 using Xunit;
 
-namespace Unit.Tests.PlantUmlEditor.Model
+namespace Unit.Tests.PlantUmlEditor.Core
 {
 	public class PlantUmlTests
 	{

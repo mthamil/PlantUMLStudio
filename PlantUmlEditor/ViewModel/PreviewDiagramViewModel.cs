@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Media;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 using Utilities.Reflection;

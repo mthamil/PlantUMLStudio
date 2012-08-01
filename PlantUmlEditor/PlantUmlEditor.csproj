@@ -117,10 +117,6 @@
     <Compile Include="Converters\ReverseConverter.cs" />
     <Compile Include="Converters\UriConverter.cs" />
     <Compile Include="Model\DiagramBitmapRenderer.cs" />
-    <Compile Include="Model\DiagramIOService.cs" />
-    <Compile Include="Model\IDiagramCompiler.cs" />
-    <Compile Include="Model\IDiagramIOService.cs" />
-    <Compile Include="Model\PlantUml.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />
     <Compile Include="Model\Snippets\CodeSnippet.cs" />
@@ -165,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DesignTimeData\DiagramFiles.cs" />
-    <Compile Include="Model\Diagram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -428,6 +423,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlantUmlEditor.Core\PlantUmlEditor.Core.csproj">
+      <Project>{F8E4AD9F-72F7-4205-803B-E3B242D32E5C}</Project>
+      <Name>PlantUmlEditor.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities.Controls\Utilities.Controls.csproj">
       <Project>{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}</Project>
       <Name>Utilities.Controls</Name>

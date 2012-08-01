@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;

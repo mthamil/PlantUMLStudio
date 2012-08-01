@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Properties;
 using Utilities.Concurrency;
 using Utilities.Mvvm;

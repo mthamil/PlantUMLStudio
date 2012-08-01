@@ -2,7 +2,7 @@
 using System.IO;
 using Utilities.PropertyChanged;
 
-namespace PlantUmlEditor.Model
+namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Represents a diagram.

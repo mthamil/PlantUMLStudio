@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Configuration;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;

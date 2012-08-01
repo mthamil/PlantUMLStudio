@@ -96,7 +96,7 @@
     <Compile Include="AssertThatTests.cs" />
     <Compile Include="FailOnUnobservedTaskExceptionAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
-    <Compile Include="PlantUmlEditor\Model\PlantUmlTests.cs" />
+    <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Model\Snippets\SnippetParserTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
@@ -122,6 +122,10 @@
     <Compile Include="Utilities\Reflection\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlantUmlEditor.Core\PlantUmlEditor.Core.csproj">
+      <Project>{F8E4AD9F-72F7-4205-803B-E3B242D32E5C}</Project>
+      <Name>PlantUmlEditor.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlantUmlEditor\PlantUmlEditor.csproj">
       <Project>{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}</Project>
       <Name>PlantUmlEditor</Name>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Moq;
 using PlantUmlEditor.Configuration;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;

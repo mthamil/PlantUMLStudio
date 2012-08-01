@@ -1,5 +1,6 @@
 ﻿using System.Windows.Media;
 using PlantUmlEditor.Converters;
+using PlantUmlEditor.Core;
 
 namespace PlantUmlEditor.Model
 {

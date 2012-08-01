@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 
 namespace PlantUmlEditor.DesignTimeData
 {

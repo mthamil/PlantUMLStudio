@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core;
 
 namespace PlantUmlEditor.ViewModel
 {

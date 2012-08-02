@@ -48,9 +48,9 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Diagram.cs" />
-    <Compile Include="DiagramIOService.cs" />
     <Compile Include="IDiagramCompiler.cs" />
-    <Compile Include="IDiagramIOService.cs" />
+    <Compile Include="InputOutput\DiagramIOService.cs" />
+    <Compile Include="InputOutput\IDiagramIOService.cs" />
     <Compile Include="PlantUml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

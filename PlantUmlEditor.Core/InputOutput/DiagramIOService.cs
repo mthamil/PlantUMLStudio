@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Concurrency;
 
-namespace PlantUmlEditor.Core
+namespace PlantUmlEditor.Core.InputOutput
 {
 	/// <summary>
 	/// Provides diagram reading/writing operations.

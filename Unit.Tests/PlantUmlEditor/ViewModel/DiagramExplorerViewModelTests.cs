@@ -6,6 +6,7 @@ using System.Reflection;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;

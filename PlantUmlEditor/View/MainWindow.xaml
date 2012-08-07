@@ -45,13 +45,13 @@
             <convert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <convert:ComposingConverter.Converters>
                     <convert:NullToFalseValueConverter/>
-                    <convert:NotConverter/>
+                    <convert:NegatingConverter/>
                     <convert:BooleanToVisibilityValueConverter/>
                 </convert:ComposingConverter.Converters>
             </convert:ComposingConverter>
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter"/>
-            <convert:NotConverter x:Key="NotConverter"/>
+            <convert:NegatingConverter x:Key="NotConverter"/>
             
             <cmd:NullCommand x:Key="NullCommand"/>
 

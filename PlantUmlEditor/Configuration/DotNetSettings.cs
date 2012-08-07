@@ -9,16 +9,15 @@ namespace PlantUmlEditor.Configuration
 	/// </summary>
 	public class DotNetSettings : ISettings
 	{
-		internal DotNetSettings(Settings settings)
+		internal DotNetSettings(Settings settings, DirectoryInfo defaultDiagramLocation)
 		{
 			_settings = settings;
 
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
 
-			LastDiagramLocation = new DirectoryInfo(String.IsNullOrEmpty(_settings.LastPath)
-									? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\")
-									: _settings.LastPath);
-
+			LastDiagramLocation = String.IsNullOrEmpty(_settings.LastPath)
+				? defaultDiagramLocation
+				: new DirectoryInfo(_settings.LastPath);
 		}
 
 		/// <see cref="ISettings.GraphVizExecutable"/>

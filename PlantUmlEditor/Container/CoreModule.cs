@@ -22,7 +22,10 @@ namespace PlantUmlEditor.Container
 		{
 			builder.Register(c => TaskScheduler.Default);
 
-			builder.Register(c => new DotNetSettings(Settings.Default)).As<ISettings>()
+			builder.Register(c => new DotNetSettings(
+					Settings.Default,
+					new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\"))))
+				.As<ISettings>()
 				.SingleInstance();
 
 			builder.RegisterType<SystemTimersTimer>().As<ITimer>();

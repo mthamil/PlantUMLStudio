@@ -22,7 +22,9 @@ namespace PlantUmlEditor.Converters
 
 			var fileName = (string)values[0];
 			bool isModified = (bool)values[1];
-			return fileName + (isModified ? "*" : string.Empty);
+			return isModified 
+				? String.Format(ModifiedFormat, fileName) 
+				: fileName;
 		}
 
 		/// <see cref="IMultiValueConverter.ConvertBack"/>
@@ -32,5 +34,10 @@ namespace PlantUmlEditor.Converters
 		}
 
 		#endregion
+
+		/// <summary>
+		/// The string format to use when a tab represents modified data.
+		/// </summary>
+		public string ModifiedFormat { get; set; }
 	}
 }

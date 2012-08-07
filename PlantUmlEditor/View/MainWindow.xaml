@@ -50,7 +50,7 @@
                 </convert:ComposingConverter.Converters>
             </convert:ComposingConverter>
             
-            <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter"/>
+            <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
             <convert:NegatingConverter x:Key="NotConverter"/>
             
             <cmd:NullCommand x:Key="NullCommand"/>

@@ -142,15 +142,15 @@
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
                 <Menu IsMainMenu="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" Background="#B4BFD1">
-                    <MenuItem Header="File">
-                        <MenuItem Header="Save" Command="{Binding OpenDiagram.SaveCommand}"/>
-                        <MenuItem Header="Exit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                    <MenuItem Header="_File">
+                        <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}"/>
+                        <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
                                 <cmd:CloseWindowCommand/>
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="Help">
+                    <MenuItem Header="_Help">
                         <MenuItem Header="About" CommandParameter="{x:Type vw:About}">
                             <MenuItem.Command>
                                 <cmd:OpenWindowCommand/>

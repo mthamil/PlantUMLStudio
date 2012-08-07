@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace PlantUmlEditor.Converters
 {
+	/// <summary>
+	/// Executes another converter in reverse.
+	/// </summary>
 	public class ReverseConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter

@@ -95,11 +95,11 @@ namespace Unit.Tests
 		/// Asserts that a specific exception should be thrown by the given code.
 		/// </summary>
 		/// <typeparam name="TException">The type of exception that should be thrown</typeparam>
-		/// <param name="action">The code that should throw the exception</param>
+		/// <param name="task">The task that should throw the exception</param>
 		/// <returns>The exception if it was thrown</returns>
-		public static TException Throws<TException>(Func<Task> action) where TException : Exception
+		public static TException Throws<TException>(Task task) where TException : Exception
 		{
-			var exception = ExceptionRecorder.Record(() => action().Wait());
+			var exception = ExceptionRecorder.Record(task.Wait);
 
 			var aggregateException = exception as AggregateException;
 			if (aggregateException != null)
@@ -120,10 +120,10 @@ namespace Unit.Tests
 		/// <summary>
 		/// Asserts that the given code does not thrown any exceptions.
 		/// </summary>
-		/// <param name="action">The code that should not throw an exception</param>
-		public static void DoesNotThrow(Func<Task> action)
+		/// <param name="task">The task that should not throw an exception</param>
+		public static void DoesNotThrow(Task task)
 		{
-			var exception = ExceptionRecorder.Record(() => action().Wait());
+			var exception = ExceptionRecorder.Record(task.Wait);
 			if (exception != null)
 				throw new DoesNotThrowException(exception);
 		}

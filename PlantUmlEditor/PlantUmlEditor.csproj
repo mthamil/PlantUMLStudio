@@ -122,6 +122,7 @@
     <Compile Include="Model\Snippets\CodeSnippet.cs" />
     <Compile Include="Model\Snippets\SnippetProvider.cs" />
     <Compile Include="Model\Snippets\SnippetParser.cs" />
+    <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />

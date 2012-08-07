@@ -66,6 +66,8 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramManagerViewModel>()
 				.SingleInstance();
+
+			builder.RegisterType<AboutViewModel>();
 		}
 	}
 }

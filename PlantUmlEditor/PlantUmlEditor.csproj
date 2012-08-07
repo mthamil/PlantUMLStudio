@@ -124,7 +124,10 @@
     <Compile Include="Model\Snippets\SnippetParser.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
+    <Compile Include="ViewModel\Commands\NullCommand.cs" />
     <Compile Include="ViewModel\Commands\OpenContextMenuCommand.cs" />
+    <Compile Include="ViewModel\Commands\CloseWindowCommand.cs" />
+    <Compile Include="ViewModel\Commands\OpenWindowCommand.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
     <Compile Include="ViewModel\ICodeEditor.cs" />
@@ -137,6 +140,9 @@
     <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />
     <Compile Include="ViewModel\SnippetViewModel.cs" />
+    <Compile Include="View\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\DiagramEditorView.xaml.cs">
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>
     </Compile>
@@ -150,6 +156,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DiagramEditorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

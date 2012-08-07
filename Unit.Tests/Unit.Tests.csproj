@@ -99,6 +99,8 @@
     <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Model\Snippets\SnippetParserTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\Commands\CloseWindowCommandTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\Commands\OpenContextMenuCommandTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramManagerViewModelTests.cs" />

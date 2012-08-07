@@ -9,6 +9,7 @@
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
+    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -51,6 +52,8 @@
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter"/>
             <convert:NotConverter x:Key="NotConverter"/>
+            
+            <cmd:NullCommand x:Key="NullCommand"/>
 
             <DesignTimeData:DiagramFiles x:Key="DesignTimeDiagramFiles" />
       
@@ -138,14 +141,23 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
-                <WrapPanel>
-                    <TextBlock FontFamily="Segoe" VerticalAlignment="Top" FontStretch="Condensed" FontWeight="Thin" Margin="7,0,0,0"> 
-                        <Run FontSize="36" Foreground="LightGray" Text="Plant"/>
-                        <Run FontSize="36" Foreground="White" Text="UML"/>
-                        <Run Foreground="LightGray" FontSize="36" FontFamily="Segoe" FontStretch="Condensed" FontWeight="Thin" Text="Editor" />
-                        <Run FontSize="14" Foreground="White" Text="v2.0"/>
-                    </TextBlock>
-                </WrapPanel>
+                <Menu IsMainMenu="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" Background="#B4BFD1">
+                    <MenuItem Header="File">
+                        <MenuItem Header="Save" Command="{Binding OpenDiagram.SaveCommand}"/>
+                        <MenuItem Header="Exit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                            <MenuItem.Command>
+                                <cmd:CloseWindowCommand/>
+                            </MenuItem.Command>
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Help">
+                        <MenuItem Header="About" CommandParameter="{x:Type vw:About}">
+                            <MenuItem.Command>
+                                <cmd:OpenWindowCommand/>
+                            </MenuItem.Command>
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
             </StackPanel>
       
               <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter

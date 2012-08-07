@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	public class BoolANDVisibilityConverter : IMultiValueConverter
 	{
@@ -27,7 +27,7 @@ namespace PlantUmlEditor.Converters
 		/// <see cref="IMultiValueConverter.ConvertBack"/>
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			throw new NotSupportedException(Properties.Resources.NotImplemented);
+			throw new NotSupportedException();
 		}
 		#endregion
 	}

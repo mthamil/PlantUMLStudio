@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	public class UriToCachedImageConverter : IValueConverter
 	{

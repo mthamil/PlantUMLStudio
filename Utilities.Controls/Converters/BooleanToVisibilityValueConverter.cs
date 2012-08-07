@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	///<see cref="IValueConverter"/>
 	/// <remarks>

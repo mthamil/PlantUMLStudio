@@ -2,9 +2,8 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using PlantUmlEditor.Properties;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	public class BoolSwitchVisibilityConverter : IMultiValueConverter
 	{
@@ -28,7 +27,7 @@ namespace PlantUmlEditor.Converters
 		/// <see cref="IMultiValueConverter.ConvertBack"/>
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			throw new NotSupportedException(Resources.NotImplemented);
+			throw new NotSupportedException();
 		}
 		#endregion
 	}

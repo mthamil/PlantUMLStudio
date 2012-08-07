@@ -10,6 +10,7 @@
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
+    xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -29,29 +30,29 @@
                 <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <convert:BooleanToVisibilityValueConverter x:Key="BooleanToVisibilityValueConverter"/>
-            <convert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
-            <convert:UriConverter x:Key="UriConverter"/>
-            <convert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
-            <convert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
+            <utilconvert:BooleanToVisibilityValueConverter x:Key="BooleanToVisibilityValueConverter"/>
+            <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
+            <utilconvert:UriConverter x:Key="UriConverter"/>
+            <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
+            <utilconvert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
                 
-            <convert:ComposingConverter x:Key="NullToVisibilityConverter">
-                <convert:ComposingConverter.Converters>
-                    <convert:NullToFalseValueConverter/>
-                    <convert:BooleanToVisibilityValueConverter/>
-                </convert:ComposingConverter.Converters>
-            </convert:ComposingConverter>
+            <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
+                <utilconvert:ComposingConverter.Converters>
+                    <utilconvert:NullToFalseValueConverter/>
+                    <utilconvert:BooleanToVisibilityValueConverter/>
+                </utilconvert:ComposingConverter.Converters>
+            </utilconvert:ComposingConverter>
                 
-            <convert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
-                <convert:ComposingConverter.Converters>
-                    <convert:NullToFalseValueConverter/>
-                    <convert:NegatingConverter/>
-                    <convert:BooleanToVisibilityValueConverter/>
-                </convert:ComposingConverter.Converters>
-            </convert:ComposingConverter>
+            <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
+                <utilconvert:ComposingConverter.Converters>
+                    <utilconvert:NullToFalseValueConverter/>
+                    <utilconvert:NegatingConverter/>
+                    <utilconvert:BooleanToVisibilityValueConverter/>
+                </utilconvert:ComposingConverter.Converters>
+            </utilconvert:ComposingConverter>
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
-            <convert:NegatingConverter x:Key="NotConverter"/>
+            <utilconvert:NegatingConverter x:Key="NotConverter"/>
             
             <cmd:NullCommand x:Key="NullCommand"/>
 

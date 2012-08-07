@@ -1,35 +1,35 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	/// <summary>
-	/// Converts between strings and DirectoryInfos.
+	/// Converts between DirectoryInfos and URIs.
 	/// </summary>
-	public class DirectoryInfoConverter : IValueConverter
+	public class DirectoryInfoUriConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter
 
 		/// <see cref="IValueConverter.Convert"/>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var directory = value as DirectoryInfo;
-			if (directory == null)
-				return string.Empty;
+			var directoryInfo = value as DirectoryInfo;
+			if (directoryInfo == null)
+				return null;
 
-			return directory.FullName;
+			return new Uri(directoryInfo.FullName, UriKind.Absolute);
 		}
 
 		/// <see cref="IValueConverter.ConvertBack"/>
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			string path = value as string;
-			if (String.IsNullOrEmpty(path))
+			var uri = value as Uri;
+			if (uri == null)
 				return null;
 
-			return new DirectoryInfo(path);
+			return new DirectoryInfo(uri.LocalPath);
 		}
 
 		#endregion

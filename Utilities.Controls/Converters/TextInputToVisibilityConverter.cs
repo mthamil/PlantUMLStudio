@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Data;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
     public class TextInputToVisibilityConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             // Always test MultiValueConverter inputs for non-null
             // (to avoid crash bugs for views in the designer)
@@ -26,7 +24,7 @@ namespace PlantUmlEditor.Converters
         }
 
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

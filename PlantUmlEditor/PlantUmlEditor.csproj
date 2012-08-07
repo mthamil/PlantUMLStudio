@@ -109,17 +109,7 @@
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
-    <Compile Include="Converters\BoolANDVisibilityConverter.cs" />
-    <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
-    <Compile Include="Converters\BoolSwitchVisibilityConverter.cs" />
     <Compile Include="Converters\DiagramTabNameConverter.cs" />
-    <Compile Include="Converters\DirectoryInfoUriConverter.cs" />
-    <Compile Include="Converters\DirectoryInfoConverter.cs" />
-    <Compile Include="Converters\NegatingConverter.cs" />
-    <Compile Include="Converters\NullToFalseValueConverter.cs" />
-    <Compile Include="Converters\ReverseConverter.cs" />
-    <Compile Include="Converters\UriConverter.cs" />
-    <Compile Include="Converters\UriToCachedImageConverter.cs" />
     <Compile Include="Model\DiagramBitmapRenderer.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />
@@ -189,8 +179,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Converters\TextInputToVisibilityConverter.cs" />
-    <Compile Include="Converters\ComposingConverter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

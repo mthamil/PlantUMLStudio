@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace PlantUmlEditor.Converters
+namespace Utilities.Controls.Converters
 {
 	/// <summary>
 	/// Converts between strings and URIs.

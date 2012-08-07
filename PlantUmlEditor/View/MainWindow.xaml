@@ -141,7 +141,17 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
-                <Menu IsMainMenu="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" Background="#B4BFD1">
+                <Menu IsMainMenu="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" ><!--Background="#B4BFD1">-->
+                    <Menu.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#C5CFDE" Offset="0.0"/>
+                            <!--<GradientStop Color="#C0CAD9" Offset="0.2"/>-->
+                            <GradientStop Color="#BCC6D7" Offset="0.5"/>
+                            <!--<GradientStop Color="#B6C1D3" Offset="0.8"/>-->
+                            <GradientStop Color="#B6C1D3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Menu.Background>
+                    
                     <MenuItem Header="_File">
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}"/>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">

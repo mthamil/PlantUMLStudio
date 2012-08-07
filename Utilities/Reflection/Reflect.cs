@@ -14,14 +14,24 @@ namespace Utilities.Reflection
 		/// Extracts the PropertyInfo for the property referred to by the given lambda expression.
 		/// </summary>
 		/// <typeparam name="T">The type that should contain the property</typeparam>
-		/// <typeparam name="V">The type of the property</typeparam>
 		/// <param name="propertyAccessor">A lambda expression referring to the property</param>
 		/// <returns>The PropertyInfo of the given property</returns>
 		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
 		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-		public static PropertyInfo PropertyOf<T, V>(Expression<Func<T, V>> propertyAccessor)
+		public static PropertyInfo PropertyOf<T>(Expression<Func<T, object>> propertyAccessor)
 		{
-			return ExtractProperty(typeof(T), propertyAccessor);
+			return PropertyOf(typeof(T), propertyAccessor);
+		}
+
+		/// <summary>
+		/// Extracts the PropertyInfo for the property referred to by the given lambda expression.
+		/// </summary>
+		/// <param name="declaring">The declaring type</param>
+		/// <param name="propertyAccessor">A lambda expression referring to the property</param>
+		/// <returns>The PropertyInfo of the given property</returns>
+		public static PropertyInfo PropertyOf(Type declaring, LambdaExpression propertyAccessor)
+		{
+			return ExtractProperty(declaring, propertyAccessor);
 		}
 
 		private static PropertyInfo ExtractProperty(Type type, LambdaExpression propertyAccessor)
@@ -74,15 +84,14 @@ namespace Utilities.Reflection
 		}
 
 		/// <summary>
-		/// Extracts a method with return type V from a lambda expression.
+		/// Extracts a method with a return type from a lambda expression.
 		/// </summary>
 		/// <typeparam name="T">The declaring type of the method</typeparam>
-		/// <typeparam name="V">The return type of the method</typeparam>
 		/// <param name="methodCaller">The expression that invokes the method</param>
 		/// <returns>The MethodInfo of the given method</returns>
 		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
 		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-		public static MethodInfo MethodOf<T, V>(this Expression<Func<T, V>> methodCaller)
+		public static MethodInfo MethodOf<T>(this Expression<Func<T, object>> methodCaller)
 		{
 			return ExtractMethodCall(typeof(T), methodCaller).Method;
 		}

@@ -11,7 +11,7 @@ namespace Unit.Tests.Utilities.Reflection
 		public void Test_PropertyOf_ValueType()
 		{
 			// Act.
-			PropertyInfo property = Reflect.PropertyOf<TestType, int>(t => t.IntProperty);
+			PropertyInfo property = Reflect.PropertyOf<TestType>(t => t.IntProperty);
 
 			// Assert.
 			Assert.Equal("IntProperty", property.Name);
@@ -23,7 +23,7 @@ namespace Unit.Tests.Utilities.Reflection
 		public void Test_PropertyOf_ReferenceType()
 		{
 			// Act.
-			PropertyInfo property = Reflect.PropertyOf<TestType, string>(t => t.StringProperty);
+			PropertyInfo property = Reflect.PropertyOf<TestType>(t => t.StringProperty);
 
 			// Assert.
 			Assert.Equal("StringProperty", property.Name);
@@ -34,20 +34,20 @@ namespace Unit.Tests.Utilities.Reflection
 		[Fact]
 		public void Test_PropertyOf_Method()
 		{
-			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, string>(t => t.ToString()));
+			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType>(t => t.ToString()));
 		}
 
 		[Fact]
 		public void Test_PropertyOf_ConstantValue()
 		{
-			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType, int>(t => 1));
+			Assert.Throws<ArgumentException>(() => Reflect.PropertyOf<TestType>(t => 1));
 		}
 
 		[Fact]
 		public void Test_MethodOf_HasReturnValue()
 		{
 			// Act.
-			MethodInfo method = Reflect.MethodOf<TestType, string>(t => t.ToString());
+			MethodInfo method = Reflect.MethodOf<TestType>(t => t.ToString());
 
 			// Assert.
 			Assert.Equal("ToString", method.Name);
@@ -84,13 +84,13 @@ namespace Unit.Tests.Utilities.Reflection
 		[Fact]
 		public void Test_MethodOf_Property()
 		{
-			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, string>(t => t.StringProperty));
+			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType>(t => t.StringProperty));
 		}
 
 		[Fact]
 		public void Test_MethodOf_ConstantValue()
 		{
-			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType, int>(t => 1));
+			Assert.Throws<ArgumentException>(() => Reflect.MethodOf<TestType>(t => 1));
 		}
 
 		private class TestType

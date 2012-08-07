@@ -29,7 +29,7 @@ namespace PlantUmlEditor.Container
 			this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration, Expression<Func<TLimit, TValue>> property, TValue propertyValue)
 			where TReflectionActivatorData : ReflectionActivatorData
 		{
-			return registration.WithProperty(Reflect.PropertyOf(property).Name, propertyValue);
+			return registration.WithProperty(Reflect.PropertyOf(typeof(TLimit), property).Name, propertyValue);
 		}
 	}
 }

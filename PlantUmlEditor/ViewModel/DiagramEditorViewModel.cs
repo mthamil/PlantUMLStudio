@@ -358,9 +358,9 @@ namespace PlantUmlEditor.ViewModel
 				_refreshTimer.TryStart();
 			}
 		}
-		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel, bool>(p => p.IsModified).Name;
-		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel, string>(p => p.Content).Name;
-		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel, bool>(p => p.CanSave).Name;
+		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.IsModified).Name;
+		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.Content).Name;
+		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel>(p => p.CanSave).Name;
 
 
 		/// <summary>

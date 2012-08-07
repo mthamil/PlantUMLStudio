@@ -44,7 +44,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="propertyChangedRaiser">A function that raises a property changed event</param>
 		public PropertyBuilder(T owner, Expression<Func<T, V>> propertyAccessor, Action<string> propertyChangedRaiser)
 		{
-			_propertyName = Reflect.PropertyOf(propertyAccessor).Name;
+			_propertyName = Reflect.PropertyOf(typeof(T), propertyAccessor).Name;
 			_propertyChangedRaiser = propertyChangedRaiser;
 		}
 
@@ -56,7 +56,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="otherPropertyAccessor">An expression that references the dependent property</param>
 		public PropertyBuilder<T, V> AlsoChanges<VOther>(Expression<Func<T, VOther>> otherPropertyAccessor)
 		{
-			var dependentProperty = Reflect.PropertyOf(otherPropertyAccessor);
+			var dependentProperty = Reflect.PropertyOf(typeof(T), otherPropertyAccessor);
 			if (dependentProperty.GetSetMethod(true) != null)
 				throw new ArgumentException("Properties with setters cannot be dependent!");
 

@@ -28,7 +28,7 @@ namespace Unit.Tests
 		public static void PropertyChanged<TDeclaring, TValue>(TDeclaring @object, Expression<Func<TDeclaring, TValue>> property, Assert.PropertyChangedDelegate testCode)
 			where TDeclaring : INotifyPropertyChanged
 		{
-			Assert.PropertyChanged(@object, Reflect.PropertyOf(property).Name, testCode);
+			Assert.PropertyChanged(@object, Reflect.PropertyOf(typeof(TDeclaring), property).Name, testCode);
 		}
 
 		/// <summary>

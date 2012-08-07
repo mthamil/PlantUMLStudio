@@ -33,7 +33,7 @@ namespace Utilities.Mvvm.Commands
 
 			_execute = execute;
 
-			var property = Reflect.PropertyOf(canExecuteProperty);
+			var property = Reflect.PropertyOf(typeof(TSource), canExecuteProperty);
 			_propertyName = property.Name;
 			propertyDeclarer.PropertyChanged += propertyDeclarer_PropertyChanged;
 			Func<TSource, bool> func = canExecuteProperty.Compile();

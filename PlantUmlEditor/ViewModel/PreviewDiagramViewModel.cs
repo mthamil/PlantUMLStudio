@@ -56,7 +56,7 @@ namespace PlantUmlEditor.ViewModel
 			if (e.PropertyName == contentPropertyName)
 				CodePreview = CreatePreview(Diagram.Content);
 		}
-		private static readonly string contentPropertyName = Reflect.PropertyOf<Diagram, string>(p => p.Content).Name;
+		private static readonly string contentPropertyName = Reflect.PropertyOf<Diagram>(p => p.Content).Name;
 
 		/// <summary>
 		/// The underlying diagram.

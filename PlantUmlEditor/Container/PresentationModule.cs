@@ -55,7 +55,7 @@ namespace PlantUmlEditor.Container
 				c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
-				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimersTimer { Interval = TimeSpan.FromSeconds(2) })
+				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
 				.WithProperty(p => p.AutoSave, true)
 				.WithProperty(p => p.ImageCommands, new ImageContextMenu());

@@ -28,7 +28,7 @@ namespace PlantUmlEditor.Container
 				.As<ISettings>()
 				.SingleInstance();
 
-			builder.RegisterType<SystemTimersTimer>().As<ITimer>();
+			builder.RegisterType<SystemTimer>().As<ITimer>();
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 

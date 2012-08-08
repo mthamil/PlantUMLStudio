@@ -79,7 +79,7 @@
     <Compile Include="Chronology\IClock.cs" />
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemClock.cs" />
-    <Compile Include="Chronology\SystemTimersTimer.cs" />
+    <Compile Include="Chronology\SystemTimer.cs" />
     <Compile Include="Concurrency\IProgress.cs" />
     <Compile Include="Concurrency\Processes\IProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Processes\ProcessErrorException.cs" />

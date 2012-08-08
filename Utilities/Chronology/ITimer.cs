@@ -15,6 +15,9 @@ namespace Utilities.Chronology
 		/// <summary>
 		/// Call to start the timer
 		/// </summary>
+		/// <exception cref="System.InvalidOperationException">
+		/// Thrown if the timer has already been started.
+		/// </exception>
 		void Start();
 
 		/// <summary>
@@ -27,6 +30,9 @@ namespace Utilities.Chronology
 		/// <summary>
 		/// Call to stop the timer
 		/// </summary>
+		/// <exception cref="System.InvalidOperationException">
+		/// Thrown if the timer has not yet been started.
+		/// </exception>	
 		void Stop();
 
 		/// <summary>

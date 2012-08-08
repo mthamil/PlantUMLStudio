@@ -111,6 +111,7 @@
     <Compile Include="Utilities.Controls\Behaviors\CollectionViewSourceItemFilterTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\TextBoxAutoSelectOnFocusBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\TreeViewBindableSelectedItemBehaviorTests.cs" />
+    <Compile Include="Utilities.Controls\Converters\ComposingConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\ReverseConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />

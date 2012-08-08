@@ -11,7 +11,7 @@ namespace Utilities.Controls.Converters
 	/// </summary>
 	public class ComposingConverter : IValueConverter
     {
-        #region IValueConverter Members
+		#region IValueConverter Members
 
 		/// <see cref="IValueConverter.Convert"/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -37,11 +37,14 @@ namespace Utilities.Controls.Converters
 
         #endregion
 
+		/// <summary>
+		/// The converters to compose.
+		/// </summary>
 		public Collection<IValueConverter> Converters
 		{
-			get { return new Collection<IValueConverter>(_converters); }
+			get { return _converters; }
 		}
 
-		private readonly IList<IValueConverter> _converters = new List<IValueConverter>();
+		private readonly Collection<IValueConverter> _converters = new Collection<IValueConverter>();
     }
 }

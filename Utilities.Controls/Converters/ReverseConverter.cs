@@ -25,6 +25,9 @@ namespace Utilities.Controls.Converters
 
 		#endregion
 
+		/// <summary>
+		/// The converter to reverse.
+		/// </summary>
 		public IValueConverter InnerConverter { get; set; }
 	}
 }

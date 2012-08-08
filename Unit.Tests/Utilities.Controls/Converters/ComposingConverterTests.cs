@@ -25,7 +25,7 @@ namespace Unit.Tests.Utilities.Controls.Converters
 			converter.Converters.Add(converter2.Object);
 
 			// Act.
-			var converted = converter.Convert("initial", typeof(int), "param", null);
+			var converted = converter.Convert("initial", typeof(int), "param", CultureInfo.InvariantCulture);
 
 			// Assert.
 			converter1.Verify(c => c.Convert("initial", typeof(int), "param", It.IsAny<CultureInfo>()));
@@ -49,7 +49,7 @@ namespace Unit.Tests.Utilities.Controls.Converters
 			converter.Converters.Add(converter2.Object);
 
 			// Act.
-			var converted = converter.ConvertBack("initial", typeof(int), "param", null);
+			var converted = converter.ConvertBack("initial", typeof(int), "param", CultureInfo.InvariantCulture);
 
 			// Assert.
 			converter1.Verify(c => c.ConvertBack("second", typeof(int), "param", It.IsAny<CultureInfo>()));

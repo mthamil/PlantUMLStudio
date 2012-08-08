@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="AssertThat.cs" />
     <Compile Include="AssertThatTests.cs" />
+    <Compile Include="CultureAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />

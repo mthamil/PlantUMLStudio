@@ -1,3 +1,4 @@
+using System.Globalization;
 using Utilities.Controls.Converters;
 using Xunit;
 using Xunit.Extensions;
@@ -20,7 +21,7 @@ namespace Unit.Tests.Utilities.Controls.Converters
 			input.CopyTo(values, 0);
 
 			// Act.
-			bool actual = (bool)converter.Convert(values, typeof(bool), null, null);
+			bool actual = (bool)converter.Convert(values, typeof(bool), null, CultureInfo.InvariantCulture);
 
 			// Assert.
 			Assert.Equal(expected, actual);

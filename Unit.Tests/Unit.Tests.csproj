@@ -94,7 +94,6 @@
     </Compile>
     <Compile Include="AssertThat.cs" />
     <Compile Include="AssertThatTests.cs" />
-    <Compile Include="FailOnUnobservedTaskExceptionAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />

@@ -80,14 +80,15 @@
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemSelectedCommandBehavior.cs" />
     <Compile Include="Behaviors\WindowBehavior.cs" />
-    <Compile Include="Converters\BoolANDVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
     <Compile Include="Converters\BoolSwitchVisibilityConverter.cs" />
     <Compile Include="Converters\ComposingConverter.cs" />
+    <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Converters\DirectoryInfoConverter.cs" />
     <Compile Include="Converters\DirectoryInfoUriConverter.cs" />
     <Compile Include="Converters\NegatingConverter.cs" />
     <Compile Include="Converters\NullToFalseValueConverter.cs" />
+    <Compile Include="Converters\OrConverter.cs" />
     <Compile Include="Converters\ReverseConverter.cs" />
     <Compile Include="Converters\SecondsToTimeSpanConverter.cs" />
     <Compile Include="Converters\TextInputToVisibilityConverter.cs" />

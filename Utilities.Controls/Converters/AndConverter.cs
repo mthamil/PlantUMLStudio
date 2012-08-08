@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Utilities.Controls.Converters
 {
-	public class BoolANDVisibilityConverter : IMultiValueConverter
+	/// <summary>
+	/// Performs a logical AND on multiple boolean values.
+	/// </summary>
+	public class AndConverter : IMultiValueConverter
 	{
 		#region IMultiValueConverter Members
 
 		/// <see cref="IMultiValueConverter.Convert"/>
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (values == null || values.Length < 2) 
-				return Visibility.Visible;
-
-			bool condition1 = (values[0] is bool ? (bool)values[0] : true);
-			bool condition2 = (values[1] is bool ? (bool)values[1] : true);
-
-			if (condition1 && condition2)
-				return Visibility.Visible;
-
-			return Visibility.Collapsed;
+			bool result = values.OfType<bool>().Aggregate(true, (first, second) => first && second);
+			return result;
 		}
 
 		/// <see cref="IMultiValueConverter.ConvertBack"/>

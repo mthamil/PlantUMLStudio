@@ -54,6 +54,8 @@
                 </utilconvert:ComposingConverter.Converters>
             </utilconvert:ComposingConverter>
             
+            <utilconvert:OrConverter x:Key="OrConverter"/>
+            
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
             <utilconvert:NegatingConverter x:Key="NotConverter"/>
             
@@ -155,6 +157,7 @@
                     </Menu.Background>
                     
                     <MenuItem Header="_File">
+                        <MenuItem Header="_New" Name="NewDiagramMenuItem"/>
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}"/>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
@@ -272,9 +275,15 @@
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
                                 <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" 
                                                  AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
-                                                 Trigger="{Binding ElementName=CreateNewDiagram, Path=IsPressed}" 
                                                  InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
-                                                 Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml"/>
+                                                 Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml">
+                                    <ctrl:FilePicker.Trigger>
+                                        <MultiBinding Converter="{StaticResource OrConverter}">
+                                            <Binding ElementName="CreateNewDiagram" Path="IsPressed"/>
+                                            <Binding ElementName="NewDiagramMenuItem" Path="IsPressed"/>
+                                        </MultiBinding>
+                                    </ctrl:FilePicker.Trigger>
+                                </ctrl:FilePicker>
                         
                                 <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
                                 <Button Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />

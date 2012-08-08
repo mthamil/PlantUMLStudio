@@ -107,7 +107,7 @@ namespace Utilities.Controls.Behaviors
 				return;
 
 			SetIsClicked(item, true);
-			SetIsClicked(item, false);	// Reset after triggering to true.
+			SetIsClicked(item, false);	// Reset after triggering so that the next click will register as a change in value.
 		}
 
 		private static readonly ICollection<DependencyObject> items = new HashSet<DependencyObject>();

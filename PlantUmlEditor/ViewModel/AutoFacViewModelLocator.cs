@@ -76,7 +76,7 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Holds the intance of the designtime version of the ViewModel that is instantiated only when application is opened in IDE designer (VisualStudio, Blend etc).
+		/// Holds the instance of the design-time version of the ViewModel that is instantiated only when application is opened in IDE designer (VisualStudio, Blend etc).
 		/// </summary>
 		public TViewModel DesigntimeViewModel
 		{

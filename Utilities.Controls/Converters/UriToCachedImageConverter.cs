@@ -15,11 +15,12 @@ namespace Utilities.Controls.Converters
 
 			string imagePath = value.ToString();
 
-			if (!String.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+			Uri imageUri;
+			if (!String.IsNullOrEmpty(imagePath) && Uri.TryCreate(imagePath, UriKind.RelativeOrAbsolute, out imageUri))
 			{
 				BitmapImage bi = new BitmapImage();
 				bi.BeginInit();
-				bi.UriSource = new Uri(value.ToString());
+				bi.UriSource = imageUri;
 				// OMAR: Trick #6
 				// Unless we use this option, the image file is locked and cannot be modified.
 				// Looks like WPF holds read lock on the images. Very bad.

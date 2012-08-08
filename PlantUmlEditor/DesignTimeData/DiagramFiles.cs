@@ -35,7 +35,7 @@ activate CPE
 deactivate CPE
 @enduml",
                 File = new FileInfo("test.txt"),
-                ImageFilePath = "http://plantuml.sourceforge.net/img/sequence_img009.png"
+                //ImageFilePath = "http://plantuml.sourceforge.net/img/sequence_img009.png"
             });
 
             this.Add(new Diagram()
@@ -71,7 +71,7 @@ deactivate SaaS
 
 @enduml",
                 File = new FileInfo("test2.txt"),
-                ImageFilePath = "http://plantuml.sourceforge.net/img/activity_img06.png"
+               // ImageFilePath = "http://plantuml.sourceforge.net/img/activity_img06.png"
             });
         }
     }

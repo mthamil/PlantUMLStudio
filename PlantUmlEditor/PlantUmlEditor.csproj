@@ -110,6 +110,7 @@
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
     <Compile Include="Converters\DiagramTabNameConverter.cs" />
+    <Compile Include="DesignTimeData\DesignTimeDiagramExplorer.cs" />
     <Compile Include="Model\DiagramBitmapRenderer.cs" />
     <Compile Include="Model\IDiagramRenderer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />

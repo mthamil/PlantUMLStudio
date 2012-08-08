@@ -157,7 +157,7 @@
                     </Menu.Background>
                     
                     <MenuItem Header="_File">
-                        <MenuItem Header="_New..." Name="NewDiagramMenuItem"/>
+                        <MenuItem Header="_New..." Name="NewDiagramMenuItem" attached:BindableClick.Enabled="True"/>
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}"/>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
@@ -279,13 +279,13 @@
                                                  Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml">
                                     <ctrl:FilePicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">
-                                            <Binding ElementName="CreateNewDiagram" Path="IsPressed"/>
-                                            <Binding ElementName="NewDiagramMenuItem" Path="IsPressed"/>
+                                            <Binding ElementName="CreateNewDiagram" Path="(attached:BindableClick.IsClicked)"/>
+                                            <Binding ElementName="NewDiagramMenuItem" Path="(attached:BindableClick.IsClicked)"/>
                                         </MultiBinding>
                                     </ctrl:FilePicker.Trigger>
                                 </ctrl:FilePicker>
                         
-                                <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram"/>
+                                <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram" attached:BindableClick.Enabled="True"/>
                                 <Button Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                             </StackPanel>
             

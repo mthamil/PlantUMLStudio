@@ -157,7 +157,7 @@
                     </Menu.Background>
                     
                     <MenuItem Header="_File">
-                        <MenuItem Header="_New" Name="NewDiagramMenuItem"/>
+                        <MenuItem Header="_New..." Name="NewDiagramMenuItem"/>
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}"/>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>

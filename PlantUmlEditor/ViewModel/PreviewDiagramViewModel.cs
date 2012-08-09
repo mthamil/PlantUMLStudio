@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Media;
 using PlantUmlEditor.Core;
 using Utilities.Mvvm;
@@ -47,8 +49,9 @@ namespace PlantUmlEditor.ViewModel
 
 		private static string CreatePreview(string content)
 		{
-			// Ignore first @startuml line and select non-empty lines
-			return content.Length > 100 ? content.Substring(0, 100) : content;
+			// Select first few lines, but skip initial whitespace.
+			var lines = content.Trim().Split(delimiters, maxPreviewLines + 1);
+			return String.Join("\n", lines.Take(Math.Min(maxPreviewLines, lines.Length)));
 		}
 
 		void Diagram_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -65,5 +68,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<ImageSource> _imagePreview;
 		private readonly Property<string> _codePreview;
+		private static readonly char[] delimiters = new [] { '\n' };
+		private const int maxPreviewLines = 5;
 	}
 }

@@ -57,7 +57,7 @@ namespace Utilities.Controls
 					{
 						folderDialog.ShowNewFolderButton = true;
 						folderDialog.RootFolder = Environment.SpecialFolder.Desktop;
-						if (filePicker.InitialLocationUri.IsAbsoluteUri)
+						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
 							folderDialog.SelectedPath = filePicker.InitialLocationUri.LocalPath;
 						var result = folderDialog.ShowDialog();
 						if (result == DialogResult.OK)
@@ -73,9 +73,12 @@ namespace Utilities.Controls
 				case FilePickerMode.Save:
 					using (var fileDialog = filePicker.Mode == FilePickerMode.Save ? new SaveFileDialog() : (FileDialog)new OpenFileDialog())
 					{
-						if (filePicker.InitialLocationUri.IsAbsoluteUri)
+						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
 							fileDialog.InitialDirectory = filePicker.InitialLocationUri.LocalPath;
+
 						fileDialog.Filter = filePicker.Filter;
+						fileDialog.AddExtension = true;
+
 						var result = fileDialog.ShowDialog();
 						if (result == DialogResult.OK)
 						{

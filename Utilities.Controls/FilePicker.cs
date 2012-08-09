@@ -76,6 +76,9 @@ namespace Utilities.Controls
 						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
 							fileDialog.InitialDirectory = filePicker.InitialLocationUri.LocalPath;
 
+						if (filePicker.InitialFileName != null)
+							fileDialog.FileName = filePicker.InitialFileName;
+
 						fileDialog.Filter = filePicker.Filter;
 						fileDialog.AddExtension = true;
 
@@ -108,6 +111,23 @@ namespace Utilities.Controls
 			typeof(Uri),
 			typeof(FilePicker),
 			new FrameworkPropertyMetadata(null));
+
+		/// <summary>
+		/// The initial file name.
+		/// </summary>
+		public string InitialFileName
+		{
+			get { return (string)GetValue(InitialFileNameProperty); }
+			set { SetValue(InitialFileNameProperty, value); }
+		}
+
+		/// <summary>
+		/// DependencyProperty for the initial file name.
+		/// </summary>
+		public static readonly DependencyProperty InitialFileNameProperty =
+			DependencyProperty.Register("InitialFileName",
+			typeof(string),
+			typeof(FilePicker));
 
 		/// <summary>
 		/// The URI of the initial directory.

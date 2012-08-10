@@ -5,7 +5,7 @@
         xmlns:Reflection="clr-namespace:System.Reflection;assembly=mscorlib" 
         xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
-        Title="About" Height="125" Width="266" Background="#2B3C59"
+        Title="About" Height="151" Width="266" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
@@ -23,8 +23,7 @@
     <Grid DataContext="{Binding Source={StaticResource ViewModel}, Path=ViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height=".50*"/>
-            <RowDefinition Height=".25*"/>
-            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".50*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Style="{StaticResource Font}"> 
@@ -34,14 +33,26 @@
             <Run FontSize="14" Foreground="White" Text="v2.0"/>
         </TextBlock>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="Copyright © " FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
-            <TextBlock Text="{Binding Source={x:Static System:DateTime.Now}, StringFormat='{}{0:yyyy}'}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
-        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Copyright © " FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+                <TextBlock Text="{Binding Source={x:Static System:DateTime.Now}, StringFormat='{}{0:yyyy}'}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+            </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="Build " FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
-            <TextBlock Text="{Binding Version}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Build " FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+                <TextBlock Text="{Binding Version}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Fugue Icons © 2012 " FontSize="14" Foreground="White" Style="{StaticResource Font}" HorizontalAlignment="Center"/>
+                <TextBlock>
+                    <Hyperlink NavigateUri="http://p.yusukekamiyamane.com" ToolTip="http://p.yusukekamiyamane.com" 
+                               FontFamily="Segoe" FontSize="14" FontStretch="Condensed" FontWeight="Thin" Foreground="White">
+                        Yusuke Kamiyamane
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
 
     </Grid>

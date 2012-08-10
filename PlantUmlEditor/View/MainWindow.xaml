@@ -279,13 +279,11 @@
                                                  Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml">
                                     <ctrl:FilePicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">
-                                            <Binding ElementName="CreateNewDiagram" Path="(attached:BindableClick.IsClicked)"/>
                                             <Binding ElementName="NewDiagramMenuItem" Path="(attached:BindableClick.IsClicked)"/>
                                         </MultiBinding>
                                     </ctrl:FilePicker.Trigger>
                                 </ctrl:FilePicker>
                         
-                                <Button Height="30" x:Name="CreateNewDiagram" Content="Create New Diagram" attached:BindableClick.Enabled="True"/>
                                 <Button Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
                             </StackPanel>
             
@@ -385,7 +383,7 @@
                             <Separator HorizontalAlignment="Stretch" Height="1" />
                             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontFamily="Segoe UI" FontSize="20" VerticalAlignment="Center">
                                 Enter a path in the location text box to load the diagrams from that directory.                
-                                Or, just click on "Create New Diagram" to start working on a new diagram.                
+                                Or, just click on File -> New to start working on a new diagram.                
                             </TextBlock>
                         </StackPanel>
                     </Grid>                    

@@ -209,6 +209,7 @@
     <Resource Include="Resources\Icons\arrow-circle-double-16x16.png" />
     <Resource Include="Resources\Icons\arrow-circle-double-24x24.png" />
     <Resource Include="Resources\Icons\disk-black-24x24.png" />
+    <Resource Include="Resources\Icons\document-plus-16x16.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

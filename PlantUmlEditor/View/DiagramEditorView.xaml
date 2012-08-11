@@ -97,23 +97,6 @@
         
                 <Border Grid.Row="1">
                     <WrapPanel Margin="4" Background="#2B3C59" VerticalAlignment="Center">
-                        <Button Command="{Binding SaveCommand}" Margin="0,0,7,0" ToolTip="Save Diagram">
-                            <Image Source="{StaticResource SaveIcon_Medium}" Stretch="None">
-                                <Image.Style>
-                                    <Style TargetType="{x:Type Image}">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="0.3"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                        </Button>
-                        <Button Command="{Binding RefreshCommand}" Margin="0,0,7,0" ToolTip="Refresh Diagram">
-                            <Image Source="{StaticResource RefreshIcon_Medium}" Stretch="None"/>
-                        </Button>
-
                         <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" VerticalAlignment="Center" IsChecked="{Binding AutoSave, Mode=TwoWay}" Margin="10,0,5,0" Foreground="White"/>
                         <TextBox Text="{Binding AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" VerticalAlignment="Center" MaxWidth="30"/>
                         <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>

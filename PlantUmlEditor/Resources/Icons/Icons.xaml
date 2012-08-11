@@ -7,4 +7,6 @@
     <BitmapImage x:Key="RefreshIcon_Small" UriSource="../Icons/arrow-circle-double-16x16.png"/>
     <BitmapImage x:Key="RefreshIcon_Medium" UriSource="../Icons/arrow-circle-double-24x24.png"/>
 
+    <BitmapImage x:Key="NewDocumentIcon_Small" UriSource="../Icons/document-plus-16x16.png"/>
+
 </ResourceDictionary>

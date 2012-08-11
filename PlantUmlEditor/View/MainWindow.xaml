@@ -158,20 +158,15 @@
                     </Menu.Background>
                     
                     <MenuItem Header="_File">
-                        <MenuItem Header="_New..." Name="NewDiagramMenuItem" attached:BindableClick.Enabled="True"/>
+                        <MenuItem Header="_New..." Name="NewDiagramMenuItem" attached:BindableClick.Enabled="True">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource NewDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}">
                             <MenuItem.Icon>
-                                <Image Source="{StaticResource SaveIcon_Small}">
-                                    <Image.Style>
-                                        <Style TargetType="{x:Type Image}">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Opacity" Value="0.3"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
+                                <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
@@ -186,6 +181,32 @@
                                 <cmd:OpenWindowCommand/>
                             </MenuItem.Command>
                         </MenuItem>
+                    </MenuItem>
+                </Menu>
+                
+                <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" >
+                    <Menu.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#C5CFDE" Offset="0.0"/>
+                            <GradientStop Color="#BCC6D7" Offset="0.5"/>
+                            <GradientStop Color="#B6C1D3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Menu.Background>
+
+                    <MenuItem Command="{Binding OpenDiagram.SaveCommand}" ToolTip="Save diagram.">
+                        <MenuItem.Header>
+                            <StackPanel>
+                                <Image Source="{StaticResource SaveIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Command="{Binding OpenDiagram.RefreshCommand}" ToolTip="Force diagram re-render.">
+                        <MenuItem.Header>
+                            <StackPanel>
+                                <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                            </StackPanel>
+                        </MenuItem.Header>
                     </MenuItem>
                 </Menu>
             </StackPanel>

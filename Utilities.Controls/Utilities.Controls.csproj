@@ -80,7 +80,7 @@
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemSelectedCommandBehavior.cs" />
-    <Compile Include="Behaviors\WindowBehavior.cs" />
+    <Compile Include="Behaviors\WindowBehaviors.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
     <Compile Include="Converters\BoolSwitchVisibilityConverter.cs" />
     <Compile Include="Converters\ComposingConverter.cs" />

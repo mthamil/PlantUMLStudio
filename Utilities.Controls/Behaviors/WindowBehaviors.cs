@@ -7,7 +7,7 @@ namespace Utilities.Controls.Behaviors
 	/// <summary>
 	/// Contains attached properties and behaviors for the Window class.
 	/// </summary>
-	public static class WindowBehavior
+	public static class WindowBehaviors
 	{
 		/// <summary>
 		/// Gets the Closing command parameter for a Window.
@@ -33,7 +33,7 @@ namespace Utilities.Controls.Behaviors
 			DependencyProperty.RegisterAttached(
 			"ClosingCommandParameter",
 			typeof(object),
-			typeof(WindowBehavior),
+			typeof(WindowBehaviors),
 			new UIPropertyMetadata(null));
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Utilities.Controls.Behaviors
 			DependencyProperty.RegisterAttached(
 			"ClosingCommand",
 			typeof(ICommand),
-			typeof(WindowBehavior),
+			typeof(WindowBehaviors),
 			new UIPropertyMetadata(null, OnCommandChanged));
 
 		static void OnCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)

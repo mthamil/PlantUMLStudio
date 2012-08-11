@@ -16,7 +16,7 @@
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
-    attached:WindowBehavior.ClosingCommand="{Binding CloseCommand}"
+    attached:WindowBehaviors.ClosingCommand="{Binding CloseCommand}"
     mc:Ignorable="d">
     
     <Window.DataContext>

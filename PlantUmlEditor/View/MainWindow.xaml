@@ -161,7 +161,17 @@
                         <MenuItem Header="_New..." Name="NewDiagramMenuItem" attached:BindableClick.Enabled="True"/>
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}">
                             <MenuItem.Icon>
-                                <Image Source="{StaticResource SaveIcon}"></Image>
+                                <Image Source="{StaticResource SaveIcon_Small}">
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Opacity" Value="0.3"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
@@ -222,7 +232,7 @@
                                                      InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
                                                      Mode="Directory"/>
                       
-                                    <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..."/>
+                                    <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..." ToolTip="Browse..."/>
 
                                 </Grid>                            
                             </StackPanel>
@@ -234,7 +244,7 @@
                                      Background="GhostWhite"
                                      Foreground="Black" 
                                      BorderBrush="{x:Null}" 
-                                     Margin="0,0,0,10"
+                                     Margin="0,0,0,5"
                                      ScrollViewer.CanContentScroll="True"
                                      VirtualizingStackPanel.IsVirtualizing="True"
                                      VirtualizingStackPanel.VirtualizationMode="Recycling"
@@ -289,7 +299,12 @@
                                     </ctrl:FilePicker.Trigger>
                                 </ctrl:FilePicker>
                         
-                                <Button Content="Refresh Diagram List" Command="{Binding LoadDiagramsCommand}" />
+                                <Button Command="{Binding LoadDiagramsCommand}" Height="25">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None"/>
+                                        <TextBlock Text="Refresh Diagram List" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
             
                           </Grid>

@@ -17,8 +17,14 @@
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
     
     <UserControl.Resources>
-        <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
-        <cmds:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
+            <cmds:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+        </ResourceDictionary>
     </UserControl.Resources>
   
     <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
@@ -32,7 +38,7 @@
             <Grid Grid.Row="0" VerticalAlignment="Stretch" FocusManager.IsFocusScope="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height=".90*"/>
-                    <RowDefinition Height=".10*" MinHeight="40"/>
+                    <RowDefinition Height=".10*" MinHeight="35"/>
                 </Grid.RowDefinitions>
         
                 <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
@@ -89,16 +95,30 @@
                     </avalonEdit:TextEditor.ContextMenu>
                 </avalonEdit:TextEditor>
         
-                <Border Grid.Row="1" Height="40">
+                <Border Grid.Row="1">
                     <WrapPanel Margin="4" Background="#2B3C59" VerticalAlignment="Center">
-                        <Button Content="_Save" Height="Auto" Padding="20, 0, 20, 0" Command="{Binding SaveCommand}" Margin="0,0,7,0"/>
-                        <Button Content="_Refresh" Height="Auto" Padding="15, 0, 15, 0" Command="{Binding RefreshCommand}" Margin="0,0,7,0"/>
-                        
+                        <Button Command="{Binding SaveCommand}" Margin="0,0,7,0" ToolTip="Save Diagram">
+                            <Image Source="{StaticResource SaveIcon_Medium}" Stretch="None">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.3"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
+                        <Button Command="{Binding RefreshCommand}" Margin="0,0,7,0" ToolTip="Refresh Diagram">
+                            <Image Source="{StaticResource RefreshIcon_Medium}" Stretch="None"/>
+                        </Button>
+
                         <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" VerticalAlignment="Center" IsChecked="{Binding AutoSave, Mode=TwoWay}" Margin="10,0,5,0" Foreground="White"/>
                         <TextBox Text="{Binding AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" VerticalAlignment="Center" MaxWidth="30"/>
                         <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
-                        
-                        <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>
+
+                        <Slider x:Name="ZoomSlider" Margin="0,5,0,0" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>
                     </WrapPanel>
                 </Border>
         

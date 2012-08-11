@@ -204,7 +204,10 @@
     </None>
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\Icons\README.txt" />
-    <Resource Include="Resources\Icons\disk-black.png" />
+    <Resource Include="Resources\Icons\disk-black-16x16.png" />
+    <Resource Include="Resources\Icons\arrow-circle-double-16x16.png" />
+    <Resource Include="Resources\Icons\arrow-circle-double-24x24.png" />
+    <Resource Include="Resources\Icons\disk-black-24x24.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

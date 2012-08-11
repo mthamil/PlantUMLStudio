@@ -120,6 +120,7 @@
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
+    <Compile Include="ViewModel\Commands\BrowseToCommand.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
     <Compile Include="ViewModel\Commands\OpenContextMenuCommand.cs" />
     <Compile Include="ViewModel\Commands\CloseWindowCommand.cs" />

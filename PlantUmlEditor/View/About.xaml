@@ -5,6 +5,7 @@
         xmlns:Reflection="clr-namespace:System.Reflection;assembly=mscorlib" 
         xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
+        xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
         Title="About" Height="151" Width="266" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     
@@ -18,6 +19,8 @@
             <Setter Property="FontWeight" Value="Thin"/>
         </Style>
 
+        <cmd:BrowseToCommand x:Key="BrowseCommand" />
+        
     </Window.Resources>
     
     <Grid DataContext="{Binding Source={StaticResource ViewModel}, Path=ViewModel}">
@@ -48,6 +51,7 @@
                 <TextBlock Text="Fugue Icons © 2012 " FontSize="14" Foreground="White" Style="{StaticResource Font}" HorizontalAlignment="Center"/>
                 <TextBlock>
                     <Hyperlink NavigateUri="http://p.yusukekamiyamane.com" ToolTip="http://p.yusukekamiyamane.com" 
+                               Command="{StaticResource BrowseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                FontFamily="Segoe" FontSize="14" FontStretch="Condensed" FontWeight="Thin" Foreground="White">
                         Yusuke Kamiyamane
                     </Hyperlink>

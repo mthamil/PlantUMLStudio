@@ -1,5 +1,5 @@
 using System.Windows;
-using PlantUmlEditor.ViewModel.Commands;
+using Utilities.Controls.Commands;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel.Commands

@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Documents;
 using Utilities.Mvvm.Commands;
 
-namespace PlantUmlEditor.ViewModel.Commands
+namespace Utilities.Controls.Commands
 {
 	/// <summary>
 	/// Launches a hyperlink in the default browser.

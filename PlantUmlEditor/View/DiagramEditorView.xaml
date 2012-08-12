@@ -11,7 +11,7 @@
     xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
     xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:MultiKey="clr-namespace:Utilities.Controls.MultiKey;assembly=Utilities.Controls" 
-    xmlns:cmds="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
+    xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
@@ -23,7 +23,7 @@
             </ResourceDictionary.MergedDictionaries>
             
             <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
-            <cmds:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+            <cmd:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
         </ResourceDictionary>
     </UserControl.Resources>
   

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Windows;
 using Utilities.Mvvm.Commands;
 
-namespace PlantUmlEditor.ViewModel.Commands
+namespace Utilities.Controls.Commands
 {
 	/// <summary>
 	/// Creates an displays a window of a given type.

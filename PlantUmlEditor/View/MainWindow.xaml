@@ -11,8 +11,8 @@
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
-    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
     xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
+    xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -59,8 +59,6 @@
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
             <utilconvert:NegatingConverter x:Key="NotConverter"/>
-            
-            <cmd:NullCommand x:Key="NullCommand"/>
       
             <!-- Custom style for diagram listbox which shows preview of diagram as well as preview of the content -->
             <Style x:Key="ListBoxItemStyle" TargetType="{x:Type ListBoxItem}">        

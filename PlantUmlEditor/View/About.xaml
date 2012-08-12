@@ -5,7 +5,7 @@
         xmlns:Reflection="clr-namespace:System.Reflection;assembly=mscorlib" 
         xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
-        xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
+        xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
         Title="About" Height="151" Width="266" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     

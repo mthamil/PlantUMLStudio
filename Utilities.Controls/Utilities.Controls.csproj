@@ -81,6 +81,10 @@
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemSelectedCommandBehavior.cs" />
     <Compile Include="Behaviors\WindowBehaviors.cs" />
+    <Compile Include="Commands\BrowseToCommand.cs" />
+    <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\OpenContextMenuCommand.cs" />
+    <Compile Include="Commands\OpenWindowCommand.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
     <Compile Include="Converters\BoolSwitchVisibilityConverter.cs" />
     <Compile Include="Converters\ComposingConverter.cs" />
@@ -145,6 +149,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{573D5F8C-4C19-42C3-B84B-BC585008B505}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

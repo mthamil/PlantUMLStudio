@@ -1,7 +1,7 @@
-using System.Windows;
+﻿using System.Windows;
 using Utilities.Mvvm.Commands;
 
-namespace PlantUmlEditor.ViewModel.Commands
+namespace Utilities.Controls.Commands
 {
 	/// <summary>
 	/// Closes a window.

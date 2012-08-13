@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using Utilities.Controls.Behaviors.AvalonEdit;
@@ -17,10 +18,12 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, Uri highlightingDefinition, IEnumerable<ViewModelBase> editorCommands)
+		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, Uri highlightingDefinition, 
+			IEnumerable<MenuViewModel> editorCommands, MenuViewModel snippets)
 		{
 			FoldingStrategy = foldingStrategy;
 			HighlightingDefinition = highlightingDefinition;
+			Snippets = snippets;
 
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 
@@ -29,8 +32,11 @@ namespace PlantUmlEditor.ViewModel
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
 
-			_editorCommands = Property.New(this, p => p.EditorCommands, OnPropertyChanged);
-			EditorCommands = new ObservableCollection<ViewModelBase>(editorCommands);
+			_editorOperations = Property.New(this, p => p.EditorOperations, OnPropertyChanged);
+			EditorOperations = new ObservableCollection<MenuViewModel>(editorCommands);
+
+			var allCommands = new ObservableCollection<MenuViewModel>(editorCommands) { snippets };
+			AllOperations = allCommands;
 		}
 
 		/// <summary>
@@ -44,12 +50,26 @@ namespace PlantUmlEditor.ViewModel
 		public Uri HighlightingDefinition { get; private set; }
 
 		/// <summary>
+		/// The available code snippets.
+		/// </summary>
+		public MenuViewModel Snippets { get; private set; }
+
+		/// <summary>
 		/// Available operations for a code editor.
 		/// </summary>
-		public ICollection<ViewModelBase> EditorCommands
+		public ICollection<MenuViewModel> EditorOperations
 		{
-			get { return _editorCommands.Value; }
-			private set { _editorCommands.Value = value; }
+			get { return _editorOperations.Value; }
+			private set { _editorOperations.Value = value; }
+		}
+
+		/// <summary>
+		/// All possible editor commands.
+		/// </summary>
+		public IEnumerable<MenuViewModel> AllOperations
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>
@@ -106,6 +126,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<int> _contentIndex;
 		private readonly Property<bool> _isModified;
 
-		private readonly Property<ICollection<ViewModelBase>> _editorCommands;
+		private readonly Property<ICollection<MenuViewModel>> _editorOperations;
 	}
 }

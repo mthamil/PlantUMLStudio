@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using PlantUmlEditor.ViewModel;
 using Utilities.Controls.Behaviors.AvalonEdit;
-using Utilities.Mvvm;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
@@ -11,7 +10,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 	{
 		public CodeEditorViewModelTests()
 		{
-			codeEditor = new CodeEditorViewModel(new StubFoldingStrategy(), new Uri(@"file:///PlantUML.xshd"), Enumerable.Empty<ViewModelBase>());
+			codeEditor = new CodeEditorViewModel(new StubFoldingStrategy(), new Uri(@"file:///PlantUML.xshd"), Enumerable.Empty<MenuViewModel>(), new MenuViewModel());
 		}
 
 		[Fact]

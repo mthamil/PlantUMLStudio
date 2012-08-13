@@ -147,4 +147,13 @@
   <data name="ContextMenu_Code_Snippets" xml:space="preserve">
     <value>Snippets</value>
   </data>
+  <data name="ContextMenu_Code_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ContextMenu_Code_Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="ContextMenu_Code_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
 </root>

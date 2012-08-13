@@ -61,6 +61,33 @@ namespace PlantUmlEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string ContextMenu_Code_Copy {
+            get {
+                return ResourceManager.GetString("ContextMenu_Code_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cut.
+        /// </summary>
+        internal static string ContextMenu_Code_Cut {
+            get {
+                return ResourceManager.GetString("ContextMenu_Code_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        internal static string ContextMenu_Code_Paste {
+            get {
+                return ResourceManager.GetString("ContextMenu_Code_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Snippets.
         /// </summary>
         internal static string ContextMenu_Code_Snippets {

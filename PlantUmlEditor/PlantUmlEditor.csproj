@@ -120,7 +120,9 @@
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
+    <Compile Include="ViewModel\Commands\ClipboardCommands.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
+    <Compile Include="ViewModel\EditorContextMenu.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
     <Compile Include="ViewModel\ICodeEditor.cs" />
@@ -129,9 +131,10 @@
     <Compile Include="ViewModel\ImageContextMenu.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
+    <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
-    <Compile Include="ViewModel\SnippetCategoryViewModel.cs" />
+    <Compile Include="ViewModel\SnippetsMenu.cs" />
     <Compile Include="ViewModel\SnippetViewModel.cs" />
     <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>

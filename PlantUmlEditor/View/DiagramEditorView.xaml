@@ -24,6 +24,7 @@
             
             <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
             <cmd:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+
         </ResourceDictionary>
     </UserControl.Resources>
   
@@ -60,36 +61,23 @@
                     </avalonEdit:TextEditor.InputBindings>
                     
                     <avalonEdit:TextEditor.ContextMenu>
-                        <ContextMenu ItemsSource="{Binding CodeEditor.EditorCommands}" 
+                        <ContextMenu ItemsSource="{Binding CodeEditor.AllOperations}" 
                                      DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-
-                            <ContextMenu.ItemTemplateSelector>
-                                <xtn:TypeBasedDataTemplateSelector>
-                                    <xtn:TypeBasedDataTemplateSelector.DataTemplates>
-                                        <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
-                                            <TextBlock Text="{Binding Name}"/>
-                                        </DataTemplate>
-                                        <HierarchicalDataTemplate DataType="{x:Type vm:SnippetCategoryViewModel}" ItemsSource="{Binding Snippets}">
-                                            <TextBlock Text="{Binding Name}"/>
-                                        </HierarchicalDataTemplate>
-                                    </xtn:TypeBasedDataTemplateSelector.DataTemplates>
-                                </xtn:TypeBasedDataTemplateSelector>
-                            </ContextMenu.ItemTemplateSelector>
-
-                            <ContextMenu.ItemContainerStyleSelector>
-                                <xtn:TypeBasedStyleSelector>
-                                    <xtn:TypeBasedStyleSelector.Styles>
-                                        <xtn:StyleMapEntry DataType="{x:Type vm:SnippetViewModel}">
-                                            <xtn:StyleMapEntry.Style>
-                                                <Style TargetType="{x:Type MenuItem}">
-                                                    <Setter Property="Command" Value="{Binding InsertCommand}"/>
-                                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.TextArea}"/>
-                                                </Style>
-                                            </xtn:StyleMapEntry.Style>
-                                        </xtn:StyleMapEntry>
-                                    </xtn:TypeBasedStyleSelector.Styles>
-                                </xtn:TypeBasedStyleSelector>
-                            </ContextMenu.ItemContainerStyleSelector>
+                            
+                            <ContextMenu.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding Path=SubMenu}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" />
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </ContextMenu.ItemTemplate>
+                            
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Command" Value="{Binding Command}"/>
+                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
 
                         </ContextMenu>
                     </avalonEdit:TextEditor.ContextMenu>

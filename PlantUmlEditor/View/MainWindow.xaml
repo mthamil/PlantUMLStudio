@@ -127,6 +127,7 @@
             </Style>
 
             <xtn:ViewModelLocator TypeArgument="{x:Type vm:IProgressViewModel}" x:Key="ProgressViewModel"/>
+            <xtn:ViewModelLocator TypeArgument="{x:Type vm:EditorContextMenu}" x:Key="EditMenu"/>
 
         </ResourceDictionary>
     </Window.Resources>
@@ -173,6 +174,16 @@
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>
+
+                    <MenuItem Header="_Edit" DataContext="{Binding Source={StaticResource EditMenu}, Path=ViewModel}" ItemsSource="{Binding}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding Command}"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+
                     <MenuItem Header="_Help">
                         <MenuItem Header="About" CommandParameter="{x:Type vw:About}">
                             <MenuItem.Command>

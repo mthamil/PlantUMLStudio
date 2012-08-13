@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Autofac;
@@ -8,11 +7,9 @@ using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
-using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
 using Utilities.Controls.Behaviors.AvalonEdit;
-using Utilities.Mvvm;
 using Module = Autofac.Module;
 
 namespace PlantUmlEditor.Container
@@ -32,16 +29,11 @@ namespace PlantUmlEditor.Container
 				.OnActivating(c => c.Instance.ImagePreview =
 					c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
 
-			builder.Register(c =>
-			{
-				var snippetProvider = c.Resolve<SnippetProvider>();
-				var snippetRoot = new SnippetCategoryViewModel(Resources.ContextMenu_Code_Snippets);
-				foreach (var snippet in SnippetCategoryViewModel.BuildTree(snippetProvider.Snippets))
-					snippetRoot.Snippets.Add(snippet);
-				return new List<ViewModelBase> { snippetRoot };
-			})
-			.Named<IEnumerable<ViewModelBase>>("EditorContextMenu")
-			.SingleInstance();
+			builder.Register(c => new SnippetsMenu(c.Resolve<SnippetProvider>().Snippets))
+				.SingleInstance();
+
+			builder.RegisterType<EditorContextMenu>()
+				.SingleInstance();
 
 			builder.RegisterType<PlantUmlFoldRegions>();
 
@@ -51,8 +43,9 @@ namespace PlantUmlEditor.Container
 
 			builder.Register(c => new CodeEditorViewModel(
 				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
-				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")), 
-				c.ResolveNamed<IEnumerable<ViewModelBase>>("EditorContextMenu"))).As<ICodeEditor>();
+				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")),
+				c.Resolve<EditorContextMenu>(),
+				c.Resolve<SnippetsMenu>())).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })

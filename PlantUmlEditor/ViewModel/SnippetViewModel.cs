@@ -1,5 +1,5 @@
-﻿using System.Windows.Input;
-using ICSharpCode.AvalonEdit.Editing;
+﻿using System;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Snippets;
 using PlantUmlEditor.Model.Snippets;
 using Utilities.Mvvm.Commands;
@@ -9,23 +9,18 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a code snippet.
 	/// </summary>
-	public class SnippetViewModel : SnippetCategoryViewModel
+	public class SnippetViewModel : MenuViewModel
 	{
 		public SnippetViewModel(CodeSnippet codeSnippet)
-			: base(codeSnippet.Name)
 		{
 			_snippet = codeSnippet.Code;
-			InsertCommand = new RelayCommand<TextArea>(Insert);
+			Name = codeSnippet.Name;
+			Command = new RelayCommand<TextEditor>(Insert);
 		}
 
-		/// <summary>
-		/// A command that inserts a code snippet.
-		/// </summary>
-		public ICommand InsertCommand { get; private set; }
-
-		private void Insert(TextArea editor)
+		private void Insert(TextEditor editor)
 		{
-			_snippet.Insert(editor);
+			_snippet.Insert(editor.TextArea);
 		}
 
 		private readonly Snippet _snippet;

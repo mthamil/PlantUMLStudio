@@ -44,14 +44,12 @@ namespace PlantUmlEditor.Container
 			builder.Register(c => new CodeEditorViewModel(
 				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
 				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")),
-				c.Resolve<EditorContextMenu>(),
 				c.Resolve<SnippetsMenu>())).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })
 				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
-				.WithProperty(p => p.AutoSave, true)
-				.WithProperty(p => p.ImageCommands, new ImageContextMenu());
+				.WithProperty(p => p.AutoSave, true);
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")

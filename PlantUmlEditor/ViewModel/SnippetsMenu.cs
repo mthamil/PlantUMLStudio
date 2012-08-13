@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using PlantUmlEditor.Model.Snippets;
-using PlantUmlEditor.Properties;
 
 namespace PlantUmlEditor.ViewModel
 {
-	public class SnippetsMenu : MenuViewModel
+	public class SnippetsMenu : IEnumerable<MenuViewModel>
 	{
 		public SnippetsMenu(IEnumerable<CodeSnippet> snippets)
 		{
-			foreach (var snippet in BuildTree(snippets))
-				SubMenu.Add(snippet);
-			Name = Resources.ContextMenu_Code_Snippets;
+			_snippets = BuildTree(snippets);
 		}
 
 		/// <summary>
@@ -34,5 +32,23 @@ namespace PlantUmlEditor.ViewModel
 			}
 			return categories.Values;
 		}
+
+		#region Implementation of IEnumerable
+
+		/// <see cref="IEnumerable{T}.GetEnumerator"/>
+		public IEnumerator<MenuViewModel> GetEnumerator()
+		{
+			return _snippets.GetEnumerator();
+		}
+
+		/// <see cref="IEnumerable.GetEnumerator"/>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		#endregion
+
+		private readonly IEnumerable<MenuViewModel> _snippets;
 	}
 }

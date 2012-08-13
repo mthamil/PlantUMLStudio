@@ -12,7 +12,8 @@
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
-    xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
+    xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
+    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -170,24 +171,42 @@
                         </MenuItem>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
-                                <cmd:CloseWindowCommand/>
+                                <utilcmd:CloseWindowCommand/>
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>
 
-                    <MenuItem Header="_Edit" DataContext="{Binding Source={StaticResource EditMenu}, Path=ViewModel}" ItemsSource="{Binding}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="Header" Value="{Binding Name}"/>
-                                <Setter Property="Command" Value="{Binding Command}"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
+                    <MenuItem Header="_Edit">
+                        <MenuItem Header="Cut">
+                            <MenuItem.Command>
+                                <cmd:CutCommand/>
+                            </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Copy">
+                            <MenuItem.Command>
+                                <cmd:CopyCommand/>
+                            </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Paste">
+                            <MenuItem.Command>
+                                <cmd:PasteCommand/>
+                            </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource PasteIconSmall}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
 
                     <MenuItem Header="_Help">
                         <MenuItem Header="About" CommandParameter="{x:Type vw:About}">
                             <MenuItem.Command>
-                                <cmd:OpenWindowCommand/>
+                                <utilcmd:OpenWindowCommand/>
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>

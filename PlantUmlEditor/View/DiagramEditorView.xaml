@@ -5,13 +5,12 @@
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
-    xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
     xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:MultiKey="clr-namespace:Utilities.Controls.MultiKey;assembly=Utilities.Controls" 
-    xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
+    xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
+    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
@@ -23,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
             
             <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
-            <cmd:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+            <utilcmd:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -61,24 +60,51 @@
                     </avalonEdit:TextEditor.InputBindings>
                     
                     <avalonEdit:TextEditor.ContextMenu>
-                        <ContextMenu ItemsSource="{Binding CodeEditor.AllOperations}" 
-                                     DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                            
-                            <ContextMenu.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Path=SubMenu}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                            </ContextMenu.ItemTemplate>
-                            
-                            <ContextMenu.ItemContainerStyle>
-                                <Style TargetType="{x:Type MenuItem}">
-                                    <Setter Property="Command" Value="{Binding Command}"/>
-                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
-                                </Style>
-                            </ContextMenu.ItemContainerStyle>
-
+                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="Cut" 
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
+                                <MenuItem.Command>
+                                    <cmd:CutCommand/>
+                                </MenuItem.Command>
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Copy" 
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
+                                <MenuItem.Command>
+                                    <cmd:CopyCommand/>
+                                </MenuItem.Command>
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Paste" 
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
+                                <MenuItem.Command>
+                                    <cmd:PasteCommand/>
+                                </MenuItem.Command>
+                                <MenuItem.Icon>
+                                    <Image Source="{StaticResource PasteIconSmall}" Style="{StaticResource DisableableIcon}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="Snippets" ItemsSource="{Binding CodeEditor.Snippets}">
+                                <MenuItem.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Path=SubMenu}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding Icon}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </MenuItem.ItemTemplate>
+                                <MenuItem.ItemContainerStyle>
+                                    <Style TargetType="{x:Type MenuItem}">
+                                        <Setter Property="Command" Value="{Binding Command}"/>
+                                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
+                                    </Style>
+                                </MenuItem.ItemContainerStyle>
+                            </MenuItem>
                         </ContextMenu>
                     </avalonEdit:TextEditor.ContextMenu>
                 </avalonEdit:TextEditor>
@@ -113,21 +139,37 @@
                                    Stretch="None">
               
                                 <Image.ContextMenu>
-                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
-                                                 ItemsSource="{Binding ImageCommands}">
-                                        <ContextMenu.ItemTemplate>
-                                            <DataTemplate DataType="{x:Type vm:SnippetViewModel}">
-                                                <TextBlock Text="{Binding Name}"/>
-                                            </DataTemplate>
-                                        </ContextMenu.ItemTemplate>
-
-                                        <ContextMenu.ItemContainerStyle>
-                                            <Style TargetType="{x:Type MenuItem}">
-                                                <Setter Property="Command" Value="{Binding}"/>
-                                                <Setter Property="CommandParameter" 
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, Path=DataContext}"/>
-                                            </Style>
-                                        </ContextMenu.ItemContainerStyle>
+                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem Header="Copy Image" 
+                                                  CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                             Path=DataContext.DiagramImage}">
+                                            <MenuItem.Command>
+                                                <cmd:CopyImageCommand/>
+                                            </MenuItem.Command>
+                                            <MenuItem.Icon>
+                                                <Image Source="{StaticResource CopyImageIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Copy Image Path" 
+                                                  CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                             Path=DataContext.Diagram.ImageFilePath}">
+                                            <MenuItem.Command>
+                                                <cmd:CopyTextCommand/>
+                                            </MenuItem.Command>
+                                            <!--<MenuItem.Icon>
+                                                <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                            </MenuItem.Icon>-->
+                                        </MenuItem>
+                                        <MenuItem Header="Browse to Image" 
+                                                  CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                             Path=DataContext.Diagram.ImageFilePath}">
+                                            <MenuItem.Command>
+                                                <cmd:BrowseToCommand/>
+                                            </MenuItem.Command>
+                                            <MenuItem.Icon>
+                                                <Image Source="{StaticResource BrowseToImageIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Image.ContextMenu>
               

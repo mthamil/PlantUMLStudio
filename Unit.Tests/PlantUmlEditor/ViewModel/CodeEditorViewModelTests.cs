@@ -10,7 +10,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 	{
 		public CodeEditorViewModelTests()
 		{
-			codeEditor = new CodeEditorViewModel(new StubFoldingStrategy(), new Uri(@"file:///PlantUML.xshd"), Enumerable.Empty<MenuViewModel>(), new MenuViewModel());
+			codeEditor = new CodeEditorViewModel(new StubFoldingStrategy(), new Uri(@"file:///PlantUML.xshd"), Enumerable.Empty<MenuViewModel>());
 		}
 
 		[Fact]

@@ -120,7 +120,8 @@
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />
-    <Compile Include="ViewModel\Commands\ClipboardCommands.cs" />
+    <Compile Include="ViewModel\Commands\EditorCommands.cs" />
+    <Compile Include="ViewModel\Commands\ImageCommands.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
     <Compile Include="ViewModel\EditorContextMenu.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="ViewModel\ICodeEditor.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />
-    <Compile Include="ViewModel\ImageContextMenu.cs" />
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
@@ -205,10 +205,15 @@
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\Icons\README.txt" />
     <Resource Include="Resources\Icons\disk-black-16x16.png" />
-    <Resource Include="Resources\Icons\arrow-circle-double-16x16.png" />
-    <Resource Include="Resources\Icons\arrow-circle-double-24x24.png" />
     <Resource Include="Resources\Icons\disk-black-24x24.png" />
     <Resource Include="Resources\Icons\document-plus-16x16.png" />
+    <Resource Include="Resources\Icons\clipboard-paste-document-text-16x16.png" />
+    <Resource Include="Resources\Icons\document-copy-16x16.png" />
+    <Resource Include="Resources\Icons\scissors-blue-16x16.png" />
+    <Resource Include="Resources\Icons\arrow-circle-double-135-16x16.png" />
+    <Resource Include="Resources\Icons\arrow-circle-double-135-24x24.png" />
+    <Resource Include="Resources\Icons\folder-open-slide-16x16.png" />
+    <Resource Include="Resources\Icons\image-copy-16x16.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

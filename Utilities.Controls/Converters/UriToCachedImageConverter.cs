@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
@@ -8,7 +7,7 @@ namespace Utilities.Controls.Converters
 {
 	public class UriToCachedImageConverter : IValueConverter
 	{
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null)
 				return null;
@@ -25,7 +24,7 @@ namespace Utilities.Controls.Converters
 				// Unless we use this option, the image file is locked and cannot be modified.
 				// Looks like WPF holds read lock on the images. Very bad.
 				bi.CacheOption = BitmapCacheOption.OnLoad;
-				// Unless we use this option, an image cannot be refrehsed. It loads from 
+				// Unless we use this option, an image cannot be refreshed. It loads from 
 				// cache. Looks like WPF caches every image it loads in memory. Very bad.
 				bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
 				try

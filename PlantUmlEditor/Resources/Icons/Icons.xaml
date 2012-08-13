@@ -4,9 +4,17 @@
     <BitmapImage x:Key="SaveIcon_Small" UriSource="../Icons/disk-black-16x16.png"/>
     <BitmapImage x:Key="SaveIcon_Medium" UriSource="../Icons/disk-black-24x24.png"/>
     
-    <BitmapImage x:Key="RefreshIcon_Small" UriSource="../Icons/arrow-circle-double-16x16.png"/>
-    <BitmapImage x:Key="RefreshIcon_Medium" UriSource="../Icons/arrow-circle-double-24x24.png"/>
+    <BitmapImage x:Key="RefreshIcon_Small" UriSource="../Icons/arrow-circle-double-135-16x16.png"/>
+    <BitmapImage x:Key="RefreshIcon_Medium" UriSource="../Icons/arrow-circle-double-135-24x24.png"/>
 
     <BitmapImage x:Key="NewDocumentIcon_Small" UriSource="../Icons/document-plus-16x16.png"/>
 
+    <BitmapImage x:Key="CutIcon_Small" UriSource="../Icons/scissors-blue-16x16.png"/>
+    <BitmapImage x:Key="CopyIcon_Small" UriSource="../Icons/document-copy-16x16.png"/>
+    <BitmapImage x:Key="PasteIconSmall" UriSource="../Icons/clipboard-paste-document-text-16x16.png"/>
+
+    <BitmapImage x:Key="CopyImageIcon_Small" UriSource="../Icons/image-copy-16x16.png"/>
+
+    <BitmapImage x:Key="BrowseToImageIcon_Small" UriSource="../Icons/folder-open-slide-16x16.png"/>
+    
 </ResourceDictionary>

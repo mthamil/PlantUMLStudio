@@ -362,12 +362,6 @@ namespace PlantUmlEditor.ViewModel
 		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.Content).Name;
 		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel>(p => p.CanSave).Name;
 
-
-		/// <summary>
-		/// Commands available to operate on the diagram image.
-		/// </summary>
-		public IEnumerable<ICommand> ImageCommands { get; set; }
-
 		#region Implementation of IUndoProvider
 
 		/// <see cref="IUndoProvider.UndoStack"/>

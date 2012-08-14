@@ -128,7 +128,6 @@
             </Style>
 
             <xtn:ViewModelLocator TypeArgument="{x:Type vm:IProgressViewModel}" x:Key="ProgressViewModel"/>
-            <xtn:ViewModelLocator TypeArgument="{x:Type vm:EditorContextMenu}" x:Key="EditMenu"/>
 
         </ResourceDictionary>
     </Window.Resources>

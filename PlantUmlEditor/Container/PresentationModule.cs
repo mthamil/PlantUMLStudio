@@ -32,9 +32,6 @@ namespace PlantUmlEditor.Container
 			builder.Register(c => new SnippetsMenu(c.Resolve<SnippetProvider>().Snippets))
 				.SingleInstance();
 
-			builder.RegisterType<EditorContextMenu>()
-				.SingleInstance();
-
 			builder.RegisterType<PlantUmlFoldRegions>();
 
 			builder.Register(c => new PatternBasedFoldingStrategy(c.Resolve<PlantUmlFoldRegions>()))

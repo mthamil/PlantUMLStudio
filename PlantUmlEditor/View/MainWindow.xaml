@@ -336,8 +336,8 @@
                                     <ListBox.ContextMenu>
                                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                             <MenuItem Header="Open"
-                                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.RequestOpenPreviewCommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CurrentPreviewDiagram}">
+                                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.RequestOpenPreviewCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CurrentPreviewDiagram}">
                                                 <MenuItem.Icon>
                                                     <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                                 </MenuItem.Icon>

@@ -82,6 +82,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Never());
+			editor.Verify(e => e.Dispose());
 		}
 
 		[Fact]
@@ -112,6 +113,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Exactly(1));
+			editor.Verify(e => e.Dispose());
 		}
 
 		[Fact]
@@ -140,6 +142,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
 			editor.Verify(e => e.Save(), Times.Never());
+			editor.Verify(e => e.Dispose());
 		}
 
 		[Fact]

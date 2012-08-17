@@ -1,8 +1,11 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 using Autofac;
 using ICSharpCode.AvalonEdit.Folding;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
@@ -38,9 +41,16 @@ namespace PlantUmlEditor.Container
 				.Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
 				.SingleInstance();
 
+			builder.Register(c =>
+			{
+				using (var stream = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")))
+				using (var reader = new XmlTextReader(stream))
+					return HighlightingLoader.Load(reader, HighlightingManager.Instance);
+			}).SingleInstance();
+
 			builder.Register(c => new CodeEditorViewModel(
 				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
-				new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")),
+				c.Resolve<IHighlightingDefinition>(),
 				c.Resolve<SnippetsMenu>())).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()

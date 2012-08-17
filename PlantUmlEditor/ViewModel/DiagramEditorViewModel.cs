@@ -7,14 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using ICSharpCode.AvalonEdit.Document;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
 using Utilities.Concurrency;
-using Utilities.Controls.Behaviors.AvalonEdit;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -25,7 +23,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Represents a diagram editor.
 	/// </summary>
-	public class DiagramEditorViewModel : ViewModelBase, IUndoProvider, IDiagramEditor
+	public class DiagramEditorViewModel : ViewModelBase, IDiagramEditor
 	{
 		/// <summary>
 		/// Initializes a new diagram editor.
@@ -362,16 +360,6 @@ namespace PlantUmlEditor.ViewModel
 		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.Content).Name;
 		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel>(p => p.CanSave).Name;
 
-		#region Implementation of IUndoProvider
-
-		/// <see cref="IUndoProvider.UndoStack"/>
-		public UndoStack UndoStack
-		{
-			get { return CodeEditor.UndoStack; }
-		}
-
-		#endregion
-
 		private void CleanUpTimers()
 		{
 			_autoSaveTimer.Elapsed -= autoSaveTimerElapsed;
@@ -396,6 +384,10 @@ namespace PlantUmlEditor.ViewModel
 					var disposableRefreshTimer = _refreshTimer as IDisposable;
 					if (disposableRefreshTimer != null)
 						disposableRefreshTimer.Dispose();
+
+					var disposableCodeEditor = CodeEditor as IDisposable;
+					if (disposableCodeEditor != null)
+						disposableCodeEditor.Dispose();
 				}
 				_disposed = true;
 			}

@@ -369,6 +369,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			var disposableSaveTimer = autoSaveTimer.As<IDisposable>();
 			var disposableRefreshTimer = refreshTimer.As<IDisposable>();
+			var disposableCodeEditor = codeEditor.As<IDisposable>();
 
 			editor = CreateEditor();
 
@@ -380,6 +381,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			disposableRefreshTimer.Verify(t => t.Dispose());
 			autoSaveTimer.Verify(t => t.TryStop());
 			disposableSaveTimer.Verify(t => t.Dispose());
+			disposableCodeEditor.Verify(ce => ce.Dispose());
 		}
 
 		private DiagramEditorViewModel CreateEditor()

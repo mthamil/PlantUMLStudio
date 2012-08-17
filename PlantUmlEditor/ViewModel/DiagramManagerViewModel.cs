@@ -100,16 +100,27 @@ namespace PlantUmlEditor.ViewModel
 			{
 				var saveTask = diagramEditor.Save();
 				_editorSaveTasks.Add(saveTask);
-				saveTask.ContinueWith(t =>_editorSaveTasks.Remove(t), 
-					CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+				saveTask.ContinueWith(t =>
+				{
+					_editorSaveTasks.Remove(t);
+					RemoveEditor(diagramEditor);
+				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 
 				_editorsNeedingSaving.Remove(diagramEditor);
 			}
+			else
+			{
+				RemoveEditor(diagramEditor);
+			}
+		}
 
-			diagramEditor.Closing -= diagramEditor_Closing;
-			diagramEditor.Closed -= diagramEditor_Closed;
-			diagramEditor.Saved -= diagramEditor_Saved;
-			OpenDiagrams.Remove(diagramEditor);
+		private void RemoveEditor(IDiagramEditor editor)
+		{
+			editor.Closing -= diagramEditor_Closing;
+			editor.Closed -= diagramEditor_Closed;
+			editor.Saved -= diagramEditor_Saved;
+			OpenDiagrams.Remove(editor);
+			editor.Dispose();
 		}
 
 		/// <summary>

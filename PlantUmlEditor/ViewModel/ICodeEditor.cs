@@ -6,7 +6,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Interface for code editor content.
 	/// </summary>
-	public interface ICodeEditor : INotifyPropertyChanged, IUndoProvider
+	public interface ICodeEditor : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// The content being edited.

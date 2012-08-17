@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 
 namespace Utilities.Controls.Behaviors
@@ -8,32 +12,81 @@ namespace Utilities.Controls.Behaviors
 	/// <summary>
 	/// Behavior for managing a text editor's folding strategy.
 	/// </summary>
+	/// <remarks>This is a mess!</remarks>
 	internal class FoldingStrategyBehavior
 	{
 		/// <summary>
 		/// Initializes a folding strategy behavior for a text editor.
 		/// </summary>
-		/// <param name="document">The document being folded</param>
-		/// <param name="textArea">The associated text area</param>
+		/// <param name="editor">The text editor</param>
 		/// <param name="foldingStrategy">The folding strategy to use</param>
-		public FoldingStrategyBehavior(TextDocument document, TextArea textArea, AbstractFoldingStrategy foldingStrategy)
+		public FoldingStrategyBehavior(TextEditor editor, AbstractFoldingStrategy foldingStrategy)
 		{
-			_document = document;
+			_editor = editor;
 			_foldingStrategy = foldingStrategy;
-			_foldingManager = FoldingManager.Install(textArea);
 
-			_document.TextChanged += document_TextChanged;
+			editor.DataContextChanged += editor_DataContextChanged;
+			editor.DocumentChanged += editor_DocumentChanged;
 
-			foldingStrategy.UpdateFoldings(_foldingManager, _document);
+			EditorDocumentChanged();
 		}
 
-		void document_TextChanged(object sender, EventArgs e)
+		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			_foldingStrategy.UpdateFoldings(_foldingManager, _document);
+			if (_currentFoldingManager != null)
+			{
+				// Currently the DefaultClosed property does not seem to be respected when foldings are restored.
+				var foldings = _currentFoldingManager
+					.AllFoldings
+					.Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title });
+
+				_documents.Remove(_currentDocument);
+				_documents.Add(_currentDocument, foldings.ToList());
+				_currentDocument.Changed -= document_Changed;
+				FoldingManager.Uninstall(_currentFoldingManager);
+			}
 		}
 
-		private readonly FoldingManager _foldingManager;
-		private readonly TextDocument _document;
+		void editor_DocumentChanged(object sender, EventArgs e)
+		{
+			EditorDocumentChanged();
+		}
+
+		private void EditorDocumentChanged()
+		{
+			_currentDocument = _editor.Document;
+			if (_currentDocument != null)
+			{
+				_currentFoldingManager = FoldingManager.Install(_editor.TextArea);
+				_foldingStrategy.UpdateFoldings(_currentFoldingManager, _currentDocument);
+
+				IEnumerable<NewFolding> foldings;
+				if (_documents.TryGetValue(_currentDocument, out foldings))
+					_currentFoldingManager.UpdateFoldings(foldings, -1);
+				else
+					_documents.Add(_currentDocument, Enumerable.Empty<NewFolding>());
+
+				_editor.Document.Changed += document_Changed;
+			}
+		}
+
+		void document_Changed(object sender, DocumentChangeEventArgs e)
+		{
+			var document = sender as TextDocument;
+			if (document == null)
+				return;
+
+			if (document != _editor.Document)
+				return;
+
+			_foldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+		}
+
+		private FoldingManager _currentFoldingManager;
+		private TextDocument _currentDocument;
+		private readonly TextEditor _editor;
 		private readonly AbstractFoldingStrategy _foldingStrategy;
+
+		private readonly ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>> _documents = new ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>>();
 	}
 }

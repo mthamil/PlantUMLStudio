@@ -10,7 +10,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Interface for a diagram editor.
 	/// </summary>
-	public interface IDiagramEditor : INotifyPropertyChanged
+	public interface IDiagramEditor : INotifyPropertyChanged, IDisposable
 	{
 		/// <summary>
 		/// Whether an editor is currently busy with some task.

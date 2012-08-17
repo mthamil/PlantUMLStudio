@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Reflection;
 using System.Windows;
-using System.Xml;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Rendering;
 
 namespace Utilities.Controls.Behaviors.AvalonEdit
 {
@@ -102,75 +96,70 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			if (editor == null)
 				return;
 
+			bool firstUpdate = false;
 			TextEditorContentIndexBehavior contentIndexBehavior;
 			if (!contentIndexBehaviors.TryGetValue(editor, out contentIndexBehavior))
 			{
 				contentIndexBehavior = new TextEditorContentIndexBehavior(editor);
 				contentIndexBehaviors[editor] = contentIndexBehavior;
+				firstUpdate = true;
 			}
 
-			contentIndexBehavior.UpdateIndex((int)e.NewValue);
+			contentIndexBehavior.UpdateIndex((int)e.NewValue, firstUpdate);
 		}
 
 		private static readonly IDictionary<TextEditor, TextEditorContentIndexBehavior> contentIndexBehaviors = new Dictionary<TextEditor, TextEditorContentIndexBehavior>();
 
 		#endregion ContentIndex
 
-		#region HighlightingDefinition
+		#region Scrolloffset
 
 		/// <summary>
-		/// Gets the syntax highlighting definition.
+		/// Gets the scroll offset.
 		/// </summary>
 		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
-		public static Uri GetHighlightingDefinition(TextEditor textEditor)
+		public static Vector GetScrollOffset(TextEditor textEditor)
 		{
-			return (Uri)textEditor.GetValue(ContentProperty);
+			return (Vector)textEditor.GetValue(ScrollOffsetProperty);
 		}
 
 		/// <summary>
-		/// Sets the syntax highlighting definition.
+		/// Sets the scroll offset.
 		/// </summary>
-		public static void SetHighlightingDefinition(TextEditor textEditor, Uri value)
+		public static void SetScrollOffset(TextEditor textEditor, Vector value)
 		{
-			textEditor.SetValue(ContentProperty, value);
+			textEditor.SetValue(ScrollOffsetProperty, value);
 		}
 
 		/// <summary>
-		/// The HighlightingDefinition property.
+		/// The ScrollOffset property.
 		/// </summary>
-		public static readonly DependencyProperty HighlightingDefinitionProperty =
+		public static readonly DependencyProperty ScrollOffsetProperty =
 			DependencyProperty.RegisterAttached(
-			"HighlightingDefinition",
-			typeof(Uri),
+			"ScrollOffset",
+			typeof(Vector),
 			typeof(AvalonEditor),
-			new UIPropertyMetadata(null, OnHighlightingDefinitionChanged));
+			new UIPropertyMetadata(new Vector(-1, -1), OnScrollOffsetChanged));
 
-		private static void OnHighlightingDefinitionChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		private static void OnScrollOffsetChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
-			if (DesignerProperties.GetIsInDesignMode(dependencyObject))
-				return;
-
 			var editor = dependencyObject as TextEditor;
 			if (editor == null)
 				return;
 
-			var definitionUri = e.NewValue as Uri;
-			if (definitionUri == null)
-				return;
-
-			var definitionPath = definitionUri.IsAbsoluteUri ? 
-				definitionUri.LocalPath : 
-				Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + definitionUri);
-			using (var stream = new StreamReader(definitionPath))
+			BindableScrollOffsetBehavior behavior;
+			if (!scrollOffsetBehaviors.TryGetValue(editor, out behavior))
 			{
-				using (var reader = new XmlTextReader(stream))
-				{
-					editor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-				}
+				behavior = new BindableScrollOffsetBehavior(editor);
+				scrollOffsetBehaviors[editor] = behavior;
 			}
+
+			behavior.UpdateOffset((Vector)e.NewValue);
 		}
 
-		#endregion SyntaxHighlightingDefinition
+		private static readonly IDictionary<TextEditor, BindableScrollOffsetBehavior> scrollOffsetBehaviors = new Dictionary<TextEditor, BindableScrollOffsetBehavior>();
+
+		#endregion ScrollOffset
 
 		#region FoldingStrategy
 
@@ -211,69 +200,25 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				return;
 
 			var foldingStrategy = e.NewValue as AbstractFoldingStrategy;
-			if (foldingStrategy == null)
-				return;
 
 			FoldingStrategyBehavior foldingStrategyBehavior;
 			if (!foldingBehaviors.TryGetValue(editor, out foldingStrategyBehavior))
 			{
-				var foldingBehavior = new FoldingStrategyBehavior(editor.Document, editor.TextArea, foldingStrategy);
+				var foldingBehavior = new FoldingStrategyBehavior(editor, foldingStrategy);
 				foldingBehaviors[editor] = foldingBehavior;
 			}
+			else
+			{
+				if (foldingStrategy == null)
+				{
+					foldingBehaviors.Remove(editor);
+				}
+			}
+
 		}
 
 		private static readonly IDictionary<TextEditor, FoldingStrategyBehavior> foldingBehaviors = new Dictionary<TextEditor, FoldingStrategyBehavior>();
 
 		#endregion FoldingStrategy
-
-		#region BinableUndoStack
-
-		/// <summary>
-		/// Gets the undo stack.
-		/// </summary>
-		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
-		public static UndoStack GetBindableUndoStack(TextEditor textEditor)
-		{
-			return (UndoStack)textEditor.GetValue(ContentProperty);
-		}
-
-		/// <summary>
-		/// Sets the undo stack.
-		/// </summary>
-		public static void SetBindableUndoStack(TextEditor textEditor, UndoStack value)
-		{
-			textEditor.SetValue(ContentProperty, value);
-		}
-
-		/// <summary>
-		/// The BindableUndoStack property.
-		/// </summary>
-		public static readonly DependencyProperty BindableUndoStackProperty =
-			DependencyProperty.RegisterAttached(
-			"BindableUndoStack",
-			typeof(UndoStack),
-			typeof(AvalonEditor),
-			new UIPropertyMetadata(null, OnBindableUndoStackChanged));
-
-		private static void OnBindableUndoStackChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-		{
-			var editor = dependencyObject as TextEditor;
-			if (editor == null)
-				return;
-
-			TextEditorUndoStackBehavior behavior;
-			if (!undoStackBehaviors.TryGetValue(editor, out behavior))
-			{
-				behavior = new TextEditorUndoStackBehavior(editor);
-				undoStackBehaviors[editor] = behavior;
-			}
-
-			var newUndoStack = (UndoStack)e.NewValue;
-			behavior.UpdateUndoStack(newUndoStack);
-		}
-
-		private static readonly IDictionary<TextEditor, TextEditorUndoStackBehavior> undoStackBehaviors = new Dictionary<TextEditor, TextEditorUndoStackBehavior>();
-
-		#endregion BinableUndoStack
 	}
 }

@@ -17,22 +17,23 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			editor.DataContextChanged += editor_DataContextChanged;
 		}
 
-		internal void UpdateIndex(int index)
+		internal void UpdateIndex(int index, bool firstUpdate)
 		{
 			// If the change came from the editor itself, don't update.
-			if (!_positionChanged)
+			if (!_lastUpdateFromControl)
 			{
-				_indexBindingChanged = true;
-
-				if (0 <= index && index <= _editor.Text.Length)	 // TODO: Really fix this.
+				if (0 <= index && index <= _editor.Text.Length) // TODO: Really fix this.
 				{
-					_editor.TextArea.Caret.Offset = index;
-					_editor.TextArea.Caret.BringCaretToView();
+					_editor.Select(index, 0);
+					//_editor.TextArea.Caret.BringCaretToView();
 				}
+
+				if (!firstUpdate)
+					_lastUpdateFromBinding = true;
 			}
 			else
 			{
-				_positionChanged = false;
+				_lastUpdateFromControl = false;
 			}
 		}
 
@@ -44,31 +45,31 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 			if (!_dataContextChanged)
 			{
-				if (!_indexBindingChanged)
+				if (!_lastUpdateFromBinding)
 				{
-					_positionChanged = true;
+					_lastUpdateFromControl = true;
 					AvalonEditor.SetContentIndex(_editor, caret.Offset);
 				}
 				else
 				{
-					_indexBindingChanged = false;
+					_lastUpdateFromBinding = false;
 				}
 			}
 			else
 			{
-				_dataContextChanged = false;
+			    _dataContextChanged = false;
 			}
 		}
 
 		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			_dataContextChanged = true;
-			_positionChanged = false;
-			_indexBindingChanged = false;
+			_lastUpdateFromControl = false;
+			_lastUpdateFromBinding = false;
 		}
 
-		private bool _positionChanged;
-		private bool _indexBindingChanged;
+		private bool _lastUpdateFromControl;
+		private bool _lastUpdateFromBinding;
 		private bool _dataContextChanged;
 
 		private readonly TextEditor _editor;

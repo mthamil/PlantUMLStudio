@@ -276,11 +276,11 @@
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                     <ctrl:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}"
-                                                     Trigger="{Binding ElementName=BrowseForFile, Path=IsPressed}" 
+                                                     Trigger="{Binding ElementName=BrowseForFile, Path=(attached:BindableClick.IsClicked)}" 
                                                      InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
                                                      Mode="Directory"/>
                       
-                                    <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..." ToolTip="Browse..."/>
+                                    <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..." ToolTip="Browse..." attached:BindableClick.Enabled="True"/>
 
                                 </Grid>                            
                             </StackPanel>

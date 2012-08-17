@@ -338,9 +338,9 @@
                                             <MenuItem Header="Open"
                                                       Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.RequestOpenPreviewCommand}"
                                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CurrentPreviewDiagram}">
-                                                <!--<MenuItem.Icon>
-                                                    <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
-                                                </MenuItem.Icon>-->
+                                                <MenuItem.Icon>
+                                                    <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                </MenuItem.Icon>
                                             </MenuItem>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>

@@ -213,6 +213,7 @@
     <Resource Include="Resources\Icons\arrow-circle-double-135-24x24.png" />
     <Resource Include="Resources\Icons\folder-open-slide-16x16.png" />
     <Resource Include="Resources\Icons\image-copy-16x16.png" />
+    <Resource Include="Resources\Icons\document-arrow-16x16.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

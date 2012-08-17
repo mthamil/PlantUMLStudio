@@ -268,7 +268,7 @@ namespace PlantUmlEditor.ViewModel
 
 		void refreshTimer_Elapsed(object sender, EventArgs e)
 		{
-			Refresh();
+			Task.Factory.StartNew(Refresh, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 			_refreshTimer.TryStop();
 		}
 

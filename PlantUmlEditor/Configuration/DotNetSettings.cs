@@ -14,6 +14,7 @@ namespace PlantUmlEditor.Configuration
 			_settings = settings;
 
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
+			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
 
 			LastDiagramLocation = String.IsNullOrEmpty(_settings.LastPath)
 				? defaultDiagramLocation
@@ -21,24 +22,20 @@ namespace PlantUmlEditor.Configuration
 		}
 
 		/// <see cref="ISettings.GraphVizExecutable"/>
-		public FileInfo GraphVizExecutable
-		{
-			get;
-			set;
-		}
+		public FileInfo GraphVizExecutable { get; set; }
+
+		/// <see cref="ISettings.PlantUmlJar"/>
+		public FileInfo PlantUmlJar { get; set; }
 
 		/// <see cref="ISettings.LastDiagramLocation"/>
-		public DirectoryInfo LastDiagramLocation
-		{
-			get;
-			set;
-		}
+		public DirectoryInfo LastDiagramLocation { get; set; }
 
 		/// <see cref="ISettings.Save"/>
 		public void Save()
 		{
 			_settings.LastPath = LastDiagramLocation.FullName;
 			_settings.GraphVizLocation = GraphVizExecutable.FullName;
+			_settings.PlantUmlLocation = PlantUmlJar.FullName;
 
 			_settings.Save();
 		}

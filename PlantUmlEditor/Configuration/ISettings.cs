@@ -13,6 +13,11 @@ namespace PlantUmlEditor.Configuration
 		FileInfo GraphVizExecutable { get; set; }
 
 		/// <summary>
+		/// The PlantUML jar.
+		/// </summary>
+		FileInfo PlantUmlJar { get; set; }
+
+		/// <summary>
 		/// The last directory diagrams were loaded from.
 		/// </summary>
 		DirectoryInfo LastDiagramLocation { get; set; }

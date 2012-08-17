@@ -33,8 +33,11 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler>()
-				.WithProperty(c => c.PlantUmlJar, new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Thirdparty\plantuml.jar")))
-				.OnActivating(c => c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable);
+				.OnActivating(c =>
+				{
+					c.Instance.PlantUmlJar = c.Context.Resolve<ISettings>().PlantUmlJar;
+					c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
+				});
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>();
 

@@ -146,6 +146,11 @@ end box", new [] { new NewFolding(0, 30) } };
 	jufcjsffj
 end boxghghg", new List<NewFolding>() };
 
+				yield return new object[] { 
+@"boxsdsds ""A""
+	jufcjsffj
+end box", new List<NewFolding>() };
+
             }
 		}
 

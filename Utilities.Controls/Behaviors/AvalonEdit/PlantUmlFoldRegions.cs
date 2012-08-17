@@ -31,7 +31,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			{ new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)[^\S\n]*$",													@"(^|\s+)deactivate +") },
 			{ new FoldedRegionDefinition(@"(^|\s+)if.+then[^\S\n]*$",																@"(^|\s+)endif($|\s+)") },
 			{ new FoldedRegionDefinition(@"^[^\S\n]*title[^\S\n]*$",																@"(^|\s+)end title($|\s+)") },
-			{ new FoldedRegionDefinition(@"^[^\S\n]*box[^\S\n]*.*$",																@"(^|\s+)end box($|\s+)") },
+			{ new FoldedRegionDefinition(@"^[^\S\n]*box[^\S\n]+.*$",																@"(^|\s+)end box($|\s+)") },
 			{ new FoldedRegionDefinition(@"(^|\s+)(partition|package|namespace|abstract class|class|enum)[^\S\n]+.+{[^\S\n]*$",		@"(^|\s+)}.*$") },
 		};
 	}

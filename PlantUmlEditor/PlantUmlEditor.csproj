@@ -398,9 +398,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Thirdparty\plantuml.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Thirdparty\plantuml.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

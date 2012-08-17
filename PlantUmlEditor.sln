@@ -1,13 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantUmlEditor", "PlantUmlEditor\PlantUmlEditor.csproj", "{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{573D5F8C-4C19-42C3-B84B-BC585008B505}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit.Tests", "Unit.Tests\Unit.Tests.csproj", "{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PlantUmlEditorSetup", "PlantUmlEditor.Setup\PlantUmlSetup.vdproj", "{3CF050EC-DCBF-4B95-B384-852C475705B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Controls", "Utilities.Controls\Utilities.Controls.csproj", "{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}"
 EndProject
@@ -66,15 +64,6 @@ Global
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|x86.ActiveCfg = Release|Any CPU
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Debug|Any CPU.ActiveCfg = Debug
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Debug|x86.ActiveCfg = Debug
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Debug|x86.Build.0 = Debug
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Release|Any CPU.ActiveCfg = Release
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Release|Mixed Platforms.ActiveCfg = Release
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Release|Mixed Platforms.Build.0 = Release
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Release|x86.ActiveCfg = Release
-		{3CF050EC-DCBF-4B95-B384-852C475705B4}.Release|x86.Build.0 = Release
 		{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

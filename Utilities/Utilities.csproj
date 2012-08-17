@@ -110,6 +110,7 @@
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="PlantUmlUpdateChecker.cs" />
     <Compile Include="Weak.cs" />
+    <Compile Include="WeakEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

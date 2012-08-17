@@ -32,6 +32,9 @@ namespace PlantUmlEditor.DesignTimeData
 			get { return _diagrams.Select(d => new PreviewDiagramViewModel(d) { ImagePreview = _renderer.Render(d) }).ToList(); }
 		}
 
+		/// <see cref="IDiagramExplorer.OpenPreviewRequested"/>
+		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
+
 		#endregion
 
 		private readonly ICollection<Diagram> _diagrams = new DiagramFiles();

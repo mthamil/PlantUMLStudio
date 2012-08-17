@@ -10,6 +10,7 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
 {
@@ -155,6 +156,51 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Verify(io => io.SaveAsync(
 				It.Is<Diagram>(d => d.File.FullName == diagramLocation.FullName + @"\test-diagram.puml"), 
 				It.IsAny<bool>()));
+		}
+
+		[Theory]
+		[Synchronous]
+		[PropertyData("CanRequestOpenPreviewData")]
+		public void Test_CanRequestOpenPreview(bool expected, PreviewDiagramViewModel preview)
+		{
+			// Arrange.
+			var explorer = CreateExplorer();
+
+			// Act.
+			bool actual = explorer.RequestOpenPreviewCommand.CanExecute(preview);
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		public static IEnumerable<object[]> CanRequestOpenPreviewData
+		{
+			get
+			{
+				yield return new object[] { false, null };
+				yield return new object[] { true, new PreviewDiagramViewModel(new Diagram()) };
+			}
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_RequestOpenPreviewCommand()
+		{
+			// Arrange.
+			var preview = new PreviewDiagramViewModel(new Diagram());
+
+			var explorer = CreateExplorer();
+
+			OpenPreviewRequestedEventArgs args = null;
+			EventHandler<OpenPreviewRequestedEventArgs> handler = (o, e) => args = e;
+			explorer.OpenPreviewRequested += handler;
+
+			// Act.
+			explorer.RequestOpenPreviewCommand.Execute(preview);
+
+			// Assert.
+			Assert.NotNull(args);
+			Assert.Equal(preview, args.RequestedPreview);
 		}
 
 		private DiagramExplorerViewModel CreateExplorer()

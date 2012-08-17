@@ -23,5 +23,10 @@ namespace PlantUmlEditor.ViewModel
 		/// The currently available diagrams.
 		/// </summary>
 		ICollection<PreviewDiagramViewModel> PreviewDiagrams { get; }
+
+		/// <summary>
+		/// Event raised when a preview diagram should be opened for editing.
+		/// </summary>
+		event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
 	}
 }

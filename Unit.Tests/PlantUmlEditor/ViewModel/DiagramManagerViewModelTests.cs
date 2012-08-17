@@ -260,6 +260,28 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
+		public void Test_OpenPreviewRequested()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = testDiagramFile };
+			var diagramPreview = new PreviewDiagramViewModel(diagram);
+
+			var editor = new Mock<IDiagramEditor>();
+			editor.SetupGet(e => e.Diagram).Returns(diagram);
+
+			var diagramManager = CreateManager(d => editor.Object);
+
+			// Act.
+			explorer.Raise(p => p.OpenPreviewRequested += null, new OpenPreviewRequestedEventArgs(diagramPreview));
+
+			// Assert.
+			Assert.Single(diagramManager.OpenDiagrams);
+			Assert.Equal(editor.Object, diagramManager.OpenDiagrams.Single());
+			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
+		}
+
+		[Fact]
+		[Synchronous]
 		public void Test_CloseCommand_UnsavedDiagram()
 		{
 			// Arrange.

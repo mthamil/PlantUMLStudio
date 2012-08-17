@@ -300,7 +300,7 @@
                                      SelectedItem="{Binding CurrentPreviewDiagram}"
                                      ItemContainerStyle="{StaticResource ListBoxItemStyle}"
                                      ItemsSource="{Binding PreviewDiagrams}" 
-                                     attached:DoubleClickCommandBehavior.Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenDiagramCommand}"
+                                     attached:DoubleClickCommandBehavior.Command="{Binding RequestOpenPreviewCommand}"
                                      attached:DoubleClickCommandBehavior.CommandParameter="{Binding CurrentPreviewDiagram}">
                     
                                     <ListBox.ItemTemplate>
@@ -325,15 +325,27 @@
                                                                 MaxHeight="100" 
                                                                 ClipToBounds="True" 
                                                                 VerticalAlignment="Top" />
-                                                        </StackPanel>                      
+                                                        </StackPanel>
                                                     </WrapPanel>
                                                     <Separator Foreground="Green" Opacity="0.5" />
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
-                    
-                            </ListBox>
+
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                            <MenuItem Header="Open"
+                                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.RequestOpenPreviewCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CurrentPreviewDiagram}">
+                                                <!--<MenuItem.Icon>
+                                                    <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                </MenuItem.Icon>-->
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+
+                                </ListBox>
             
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
                                 <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" 

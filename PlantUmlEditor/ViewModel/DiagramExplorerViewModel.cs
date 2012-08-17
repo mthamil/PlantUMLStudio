@@ -42,6 +42,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
+			_requestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 		}
 
 		/// <summary>
@@ -109,6 +110,31 @@ namespace PlantUmlEditor.ViewModel
 		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
 		{
 			get { return _previewDiagrams.Value; }
+		}
+
+		/// <summary>
+		/// Opens a preview for editing.
+		/// </summary>
+		public ICommand RequestOpenPreviewCommand
+		{
+			get { return _requestOpenPreviewCommand; }
+		}
+
+		private void RequestOpenPreview(PreviewDiagramViewModel preview)
+		{
+			OnOpenPreviewRequested(preview);
+		}
+
+		/// <summary>
+		/// Event raised when a preview diagram should be opened for editing.
+		/// </summary>
+		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
+
+		private void OnOpenPreviewRequested(PreviewDiagramViewModel preview)
+		{
+			var localEvent = OpenPreviewRequested;
+			if (localEvent != null)
+				localEvent(this, new OpenPreviewRequestedEventArgs(preview));
 		}
 
 		/// <summary>
@@ -211,6 +237,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly ICommand _loadDiagramsCommand;
 		private readonly ICommand _addNewDiagramCommand;
+		private readonly ICommand _requestOpenPreviewCommand;
 
 		private readonly IDiagramIOService _diagramIO;
 
@@ -237,5 +264,25 @@ namespace PlantUmlEditor.ViewModel
 		/// The preview of the newly created diagram.
 		/// </summary>
 		public PreviewDiagramViewModel NewDiagramPreview { get; private set; }
+	}
+
+	/// <summary>
+	/// Event args containing information about when a diagram should be opened for editing.
+	/// </summary>
+	public class OpenPreviewRequestedEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Creates new event args.
+		/// </summary>
+		/// <param name="requestedPreview">The preview to open for editing</param>
+		public OpenPreviewRequestedEventArgs(PreviewDiagramViewModel requestedPreview)
+		{
+			RequestedPreview = requestedPreview;
+		}
+
+		/// <summary>
+		/// The preview to open for editing.
+		/// </summary>
+		public PreviewDiagramViewModel RequestedPreview { get; private set; }
 	}
 }

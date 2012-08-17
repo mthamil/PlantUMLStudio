@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,7 +7,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors
+namespace Utilities.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Behavior for managing a text editor's folding strategy.

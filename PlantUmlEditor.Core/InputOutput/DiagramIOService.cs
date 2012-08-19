@@ -113,6 +113,17 @@ namespace PlantUmlEditor.Core.InputOutput
 			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
 		}
 
+		/// <see cref="IDiagramIOService.DeleteAsync"/>
+		public Task DeleteAsync(Diagram diagram)
+		{
+			return Task.Factory.StartNew(() =>
+			{
+				diagram.File.Delete();
+				if (File.Exists(diagram.ImageFilePath))
+					File.Delete(diagram.ImageFilePath);
+			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
+		}
+
 		#endregion
 
 		private readonly TaskScheduler _scheduler;

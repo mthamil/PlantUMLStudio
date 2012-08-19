@@ -33,5 +33,12 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <param name="makeBackup">Whether to first back up the existing file before saving</param>
 		/// <returns>A task representing the save operation</returns>
 		Task SaveAsync(Diagram diagram, bool makeBackup);
+
+		/// <summary>
+		/// Asynchronously deletes a diagram file.
+		/// </summary>
+		/// <param name="diagram">The diagram to delete</param>
+		/// <returns>A task representing the delete operation</returns>
+		Task DeleteAsync(Diagram diagram);
 	}
 }

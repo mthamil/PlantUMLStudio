@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Utilities</RootNamespace>
     <AssemblyName>Utilities</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -43,6 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +53,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -80,12 +82,11 @@
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemClock.cs" />
     <Compile Include="Chronology\SystemTimer.cs" />
-    <Compile Include="Concurrency\IProgress.cs" />
+    <Compile Include="Concurrency\ProgressExtensions.cs" />
     <Compile Include="Concurrency\Processes\IProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Processes\ProcessErrorException.cs" />
     <Compile Include="Concurrency\Processes\ProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Processes\ProcessTaskExtensions.cs" />
-    <Compile Include="Concurrency\Progress.cs" />
     <Compile Include="Concurrency\ReaderWriterLockSlimExtensions.cs" />
     <Compile Include="Concurrency\SynchronousSynchronizationContext.cs" />
     <Compile Include="Concurrency\SynchronousTaskScheduler.cs" />

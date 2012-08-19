@@ -1,5 +1,4 @@
 ﻿using System;
-using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 

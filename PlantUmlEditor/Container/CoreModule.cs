@@ -9,6 +9,7 @@ using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
+using Utilities.InputOutput;
 
 namespace PlantUmlEditor.Container
 {
@@ -29,6 +30,9 @@ namespace PlantUmlEditor.Container
 				.SingleInstance();
 
 			builder.RegisterType<SystemTimer>().As<ITimer>();
+
+			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>()
+				.WithProperty(p => p.Filter, "*.puml");
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 

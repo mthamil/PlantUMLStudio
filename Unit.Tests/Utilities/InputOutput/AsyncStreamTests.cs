@@ -73,5 +73,25 @@ namespace Unit.Tests.Utilities.InputOutput
 			// Assert.
 			AssertThat.SequenceEqual(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, streamData);
 		}
+
+		[Fact]
+		public void Test_CopyToAsync()
+		{
+			// Arrange.
+			var data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			var source = new MemoryStream(data);
+			var destination = new MemoryStream();
+
+			// Act.
+			var copyTask = source.Async().CopyToAsync(destination);
+			copyTask.Wait();
+
+			byte[] destinationData = new byte[data.Length];
+			destination.Seek(0, SeekOrigin.Begin);
+			destination.Read(destinationData, 0, destinationData.Length);
+
+			// Assert.
+			AssertThat.SequenceEqual(data, destinationData);
+		}
 	}
 }

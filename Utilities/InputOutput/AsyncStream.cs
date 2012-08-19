@@ -40,6 +40,14 @@ namespace Utilities.InputOutput
 		/// <param name="data">The bytes to write</param>
 		/// <returns>A task that can be used to wait for the operation to complete</returns>
 		Task WriteAllBytesAsync(byte[] data);
+
+		/// <summary>
+		/// Asynchronously reads all bytes from the current stream and writes them to a 
+		/// destination stream.
+		/// </summary>
+		/// <param name="destination">The stream being copied to</param>
+		/// <returns>A Task representing the copy operation</returns>
+		Task CopyToAsync(Stream destination);
 	}
 
 	/// <summary>
@@ -71,11 +79,7 @@ namespace Utilities.InputOutput
 			/// <see cref="IAsyncStreamOperations.ReadAsync"/>
 			public Task<int> ReadAsync(byte[] buffer, int offset, int count)
 			{
-				return Task<int>.Factory.FromAsync(
-					_stream.BeginRead,
-					_stream.EndRead,
-					buffer, offset, count,
-					TaskCreationOptions.None);
+				return _stream.ReadAsync(buffer, offset, count);
 			}
 
 			/// <see cref="IAsyncStreamOperations.ReadAllBytesAsync"/>
@@ -102,11 +106,7 @@ namespace Utilities.InputOutput
 			/// <see cref="IAsyncStreamOperations.WriteAsync"/>
 			public Task WriteAsync(byte[] buffer, int offset, int count)
 			{
-				return Task.Factory.FromAsync(
-					_stream.BeginWrite,
-					_stream.EndWrite,
-					buffer, offset, count,
-					TaskCreationOptions.None);
+				return _stream.WriteAsync(buffer, offset, count);
 			}
 
 			/// <see cref="IAsyncStreamOperations.WriteAllBytesAsync"/>
@@ -115,16 +115,11 @@ namespace Utilities.InputOutput
 				return WriteAsync(data, 0, data.Length);
 			}
 
-			///// <summary>
-			///// Asynchronously reads all bytes from the current stream and writes them to a 
-			///// destination stream.
-			///// </summary>
-			///// <param name="destination">The stream being copied to</param>
-			///// <returns>A Task representing the copy operation</returns>
-			//public Task CopyToAsync(Stream destination)
-			//{
-			//    return Task.Factory.StartNew(() => _stream.CopyTo(destination), CancellationToken.None, TaskCreationOptions.None, _;
-			//}
+			/// <see cref="IAsyncStreamOperations.CopyToAsync"/>
+			public Task CopyToAsync(Stream destination)
+			{
+				return _stream.CopyToAsync(destination);
+			}
 
 			#endregion
 

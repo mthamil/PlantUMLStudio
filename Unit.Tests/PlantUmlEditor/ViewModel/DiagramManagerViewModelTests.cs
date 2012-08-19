@@ -238,28 +238,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_NewDiagramCreated()
-		{
-			// Arrange.
-			var diagram = new Diagram { File = testDiagramFile };
-			var diagramPreview = new PreviewDiagramViewModel(diagram);
-
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(diagram);
-
-			var diagramManager = CreateManager(d => editor.Object);
-
-			// Act.
-			explorer.Raise(p => p.NewDiagramCreated += null, new NewDiagramCreatedEventArgs(diagramPreview));
-
-			// Assert.
-			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editor.Object, diagramManager.OpenDiagrams.Single());
-			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
-		}
-
-		[Fact]
-		[Synchronous]
 		public void Test_OpenPreviewRequested()
 		{
 			// Arrange.

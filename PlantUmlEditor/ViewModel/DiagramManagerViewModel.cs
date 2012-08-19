@@ -32,18 +32,12 @@ namespace PlantUmlEditor.ViewModel
 			_openDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
 			_closeCommand = new RelayCommand(Close);
 
-			_explorer.NewDiagramCreated += explorer_NewDiagramCreated;
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}
 
 		void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
 		{
 			OpenDiagramForEdit(e.RequestedPreview);
-		}
-
-		void explorer_NewDiagramCreated(object sender, NewDiagramCreatedEventArgs e)
-		{
-			OpenDiagramForEdit(e.NewDiagramPreview);
 		}
 
 		/// <summary>

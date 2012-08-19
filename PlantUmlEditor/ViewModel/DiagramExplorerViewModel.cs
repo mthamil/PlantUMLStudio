@@ -46,18 +46,6 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Event raised when a new diagram is created.
-		/// </summary>
-		public event EventHandler<NewDiagramCreatedEventArgs> NewDiagramCreated;
-
-		private void OnNewDiagramCreated(PreviewDiagramViewModel newPreview)
-		{
-			var localEvent = NewDiagramCreated;
-			if (localEvent != null)
-				localEvent(this, new NewDiagramCreatedEventArgs(newPreview));
-		}
-
-		/// <summary>
 		/// The code used for new diagrams.
 		/// </summary>
 		public string NewDiagramTemplate { get; set; }
@@ -169,7 +157,7 @@ namespace PlantUmlEditor.ViewModel
 			saveNewTask.ContinueWith(t =>
 			{
 				CurrentPreviewDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
-				OnNewDiagramCreated(CurrentPreviewDiagram);
+				OnOpenPreviewRequested(CurrentPreviewDiagram);
 			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
 
 			saveNewTask.ContinueWith(t =>

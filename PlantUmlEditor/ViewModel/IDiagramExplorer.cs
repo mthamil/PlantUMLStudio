@@ -15,11 +15,6 @@ namespace PlantUmlEditor.ViewModel
 		DirectoryInfo DiagramLocation { get; }
 
 		/// <summary>
-		/// Event raised when a new diagram is created.
-		/// </summary>
-		event EventHandler<NewDiagramCreatedEventArgs> NewDiagramCreated;
-
-		/// <summary>
 		/// The currently available diagrams.
 		/// </summary>
 		ICollection<PreviewDiagramViewModel> PreviewDiagrams { get; }

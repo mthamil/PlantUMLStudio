@@ -113,8 +113,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
-			NewDiagramCreatedEventArgs newDiagramArgs = null;
-			explorer.NewDiagramCreated += (o, e) => newDiagramArgs = e;
+			OpenPreviewRequestedEventArgs newDiagramArgs = null;
+			explorer.OpenPreviewRequested += (o, e) => newDiagramArgs = e;
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
@@ -125,7 +125,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal("New Diagram", explorer.PreviewDiagrams.Single().Diagram.Content);
 
 			Assert.NotNull(newDiagramArgs);
-			Assert.Equal(explorer.PreviewDiagrams.Single(), newDiagramArgs.NewDiagramPreview);
+			Assert.Equal(explorer.PreviewDiagrams.Single(), newDiagramArgs.RequestedPreview);
 			Assert.Equal(explorer.PreviewDiagrams.Single(), explorer.CurrentPreviewDiagram);
 
 			diagramIO.Verify(dio => dio.SaveAsync(

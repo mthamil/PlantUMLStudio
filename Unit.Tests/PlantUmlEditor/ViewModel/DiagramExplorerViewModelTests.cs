@@ -23,7 +23,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
 
-			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			progress.Setup(p => p.New(It.IsAny<bool>()))
+				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 		}
 
 		[Fact]

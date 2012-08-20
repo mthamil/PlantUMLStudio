@@ -21,6 +21,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			autoSaveTimer.SetupProperty(t => t.Interval);
 			previewDiagram = new PreviewDiagramViewModel(diagram);
+
+			progress.Setup(p => p.New(It.IsAny<bool>()))
+				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 		}
 
 		[Fact]
@@ -354,6 +357,26 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 				.Returns(Tasks.FromException<BitmapSource, InvalidOperationException>(new InvalidOperationException()));
+
+			// Act.
+			editor.RefreshCommand.Execute(null);
+
+			// Assert.
+			Assert.Null(editor.DiagramImage);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_RefreshCommand_Canceled()
+		{
+			// Arrange.
+			editor = CreateEditor();
+			codeEditor.SetupProperty(ce => ce.Content);
+
+			codeEditor.Object.Content = "Diagram code goes here";
+
+			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+				.Returns(Tasks.FromCanceled<BitmapSource>());
 
 			// Act.
 			editor.RefreshCommand.Execute(null);

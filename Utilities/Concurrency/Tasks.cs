@@ -31,6 +31,29 @@ namespace Utilities.Concurrency
 		}
 
 		/// <summary>
+		/// Creates an already canceled task.
+		/// </summary>
+		/// <typeparam name="TResult">The type of the result the task was supposed to return</typeparam>
+		/// <returns>A canceled task</returns>
+		public static Task<TResult> FromCanceled<TResult>()
+		{
+			var taskSource = new TaskCompletionSource<TResult>();
+			taskSource.SetCanceled();
+			return taskSource.Task;
+		}
+
+		/// <summary>
+		/// Creates an already canceled task.
+		/// </summary>
+		/// <returns>A canceled task</returns>
+		public static Task FromCanceled()
+		{
+			var taskSource = new TaskCompletionSource<object>();
+			taskSource.SetCanceled();
+			return taskSource.Task;
+		}
+
+		/// <summary>
 		/// Creates an already completed task from an exception.
 		/// </summary>
 		/// <typeparam name="TResult">The expected result type</typeparam>

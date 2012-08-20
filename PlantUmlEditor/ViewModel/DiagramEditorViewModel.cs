@@ -244,26 +244,33 @@ namespace PlantUmlEditor.ViewModel
 			get { return _refreshCommand; }
 		}
 
-		private void Refresh()
+		private async void Refresh()
 		{
 			if (_saveExecuting)
 				return;
 
 			var tcs = new CancellationTokenSource();
-			Task refreshTask = null;
 			var progress = _progressFactory.New(false);
-			refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token)
-				 .ContinueWith(t =>
-				 {
-					 if (t.IsFaulted && t.Exception != null)
-						 progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
-					 else if (!t.IsCanceled)
-					 	DiagramImage = t.Result;
 
-				 	_refreshCancellations.Remove(refreshTask);
-				 }, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
-
+			var refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
+
+			try
+			{
+				DiagramImage = await refreshTask;
+			}
+			catch (TaskCanceledException)
+			{
+				// We don't care if refresh is canceled.
+			}
+			catch (Exception e)
+			{
+				progress.Report(ProgressUpdate.Failed(e));
+			}
+			finally
+			{
+				_refreshCancellations.Remove(refreshTask);
+			}	
 		}
 
 		void refreshTimer_Elapsed(object sender, EventArgs e)

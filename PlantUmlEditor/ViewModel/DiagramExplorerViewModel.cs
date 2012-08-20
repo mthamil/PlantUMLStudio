@@ -156,15 +156,16 @@ namespace PlantUmlEditor.ViewModel
 
 			saveNewTask.ContinueWith(t =>
 			{
-				CurrentPreviewDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
-				OnOpenPreviewRequested(CurrentPreviewDiagram);
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
-
-			saveNewTask.ContinueWith(t =>
-			{
 				if (t.IsFaulted && t.Exception != null)
+				{
 					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
+				}
+				else if (!t.IsCanceled)
+				{
+					CurrentPreviewDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
+					OnOpenPreviewRequested(CurrentPreviewDiagram);
+				}
+			}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>
@@ -175,12 +176,12 @@ namespace PlantUmlEditor.ViewModel
 			get { return _loadDiagramsCommand; }
 		}
 
-		private Task<ICollection<PreviewDiagramViewModel>> LoadDiagrams()
+		private async Task<ICollection<PreviewDiagramViewModel>> LoadDiagrams()
 		{
-			_previewDiagrams.Value.Clear();
+			PreviewDiagrams.Clear();
 
 			if (!IsDiagramLocationValid)
-				return Tasks.FromResult(_previewDiagrams.Value);
+				return PreviewDiagrams;
 
 			var progress = _progressFactory.New();
 			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
@@ -192,24 +193,20 @@ namespace PlantUmlEditor.ViewModel
 				Message = String.Format(Resources.Progress_LoadingFile, p.Item1, p.Item2)
 			});
 
-			var loadTask = _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
-
-			loadTask.ContinueWith(t =>
+			try
 			{
-				if (t.Exception != null)
-					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
-
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
-
-			return loadTask.ContinueWith(t =>
-			{
-				foreach (var diagramFile in t.Result)
-					_previewDiagrams.Value.Add(_previewDiagramFactory(diagramFile));
+				var diagrams = await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
+				foreach (var diagramFile in diagrams)
+					PreviewDiagrams.Add(_previewDiagramFactory(diagramFile));
 
 				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
+			}
+			catch (Exception e)
+			{
+				progress.Report(ProgressUpdate.Failed(e));
+			}
 
-				return _previewDiagrams.Value;
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
+			return PreviewDiagrams;
 		}
 
 		/// <summary>

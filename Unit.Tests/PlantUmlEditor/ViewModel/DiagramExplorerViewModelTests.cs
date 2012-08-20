@@ -159,6 +159,37 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				It.IsAny<bool>()));
 		}
 
+		[Fact]
+		[Synchronous]
+		public void Test_AddNewDiagramCommand_Unsuccessful()
+		{
+			// Arrange.
+			string newDiagramFilePath = Path.Combine(diagramLocation.FullName, "new-diagram.puml");
+
+			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
+				.Returns(Tasks.FromException(new InvalidOperationException()));
+
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
+				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
+
+			var explorer = CreateExplorer();
+			explorer.DiagramLocation = diagramLocation;
+			explorer.NewDiagramTemplate = "New Diagram";
+
+			OpenPreviewRequestedEventArgs newDiagramArgs = null;
+			explorer.OpenPreviewRequested += (o, e) => newDiagramArgs = e;
+
+			// Act.
+			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
+
+			// Assert.
+			Assert.Null(newDiagramArgs);
+
+			diagramIO.Verify(dio => dio.SaveAsync(
+				It.Is<Diagram>(d => d.Content == "New Diagram" && d.File.FullName == newDiagramFilePath),
+				false));
+		}
+
 		[Theory]
 		[Synchronous]
 		[PropertyData("CanRequestOpenPreviewData")]

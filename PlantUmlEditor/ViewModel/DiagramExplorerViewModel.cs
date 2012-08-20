@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
@@ -223,27 +222,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Func<Diagram, PreviewDiagramViewModel> _previewDiagramFactory;
 		private readonly ISettings _settings;
-		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-	}
-
-	/// <summary>
-	/// Event args containing information about new diagrams.
-	/// </summary>
-	public class NewDiagramCreatedEventArgs : EventArgs
-	{
-		/// <summary>
-		/// Creates new event args.
-		/// </summary>
-		/// <param name="newDiagramPreview">The preview of the newly created diagram</param>
-		public NewDiagramCreatedEventArgs(PreviewDiagramViewModel newDiagramPreview)
-		{
-			NewDiagramPreview = newDiagramPreview;
-		}
-
-		/// <summary>
-		/// The preview of the newly created diagram.
-		/// </summary>
-		public PreviewDiagramViewModel NewDiagramPreview { get; private set; }
 	}
 
 	/// <summary>

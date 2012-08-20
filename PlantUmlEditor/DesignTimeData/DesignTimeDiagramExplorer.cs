@@ -23,9 +23,6 @@ namespace PlantUmlEditor.DesignTimeData
 		/// <see cref="IDiagramExplorer.DiagramLocation"/>
 		public DirectoryInfo DiagramLocation { get; set; }
 
-		/// <see cref="IDiagramExplorer.NewDiagramCreated"/>
-		public event EventHandler<NewDiagramCreatedEventArgs> NewDiagramCreated;
-
 		/// <see cref="IDiagramExplorer.PreviewDiagrams"/>
 		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
 		{

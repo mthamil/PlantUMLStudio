@@ -51,7 +51,7 @@ namespace PlantUmlEditor.ViewModel
 		/// Asynchronously saves a diagram editor.
 		/// </summary>
 		/// <returns>A task representing the save operation</returns>
-		Task Save();
+		Task SaveAsync();
 
 		/// <summary>
 		/// Whether a diagram's image can currently be refreshed.

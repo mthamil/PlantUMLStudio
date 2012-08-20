@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
@@ -99,20 +98,22 @@ namespace PlantUmlEditor.ViewModel
 			var diagramEditor = (IDiagramEditor)sender;
 			if (_editorsNeedingSaving.Contains(diagramEditor))
 			{
-				var saveTask = diagramEditor.Save();
-				_editorSaveTasks.Add(saveTask);
-				saveTask.ContinueWith(t =>
-				{
-					_editorSaveTasks.Remove(t);
-					RemoveEditor(diagramEditor);
-				}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
-
-				_editorsNeedingSaving.Remove(diagramEditor);
+				SaveClosingEditor(diagramEditor);
 			}
 			else
 			{
 				RemoveEditor(diagramEditor);
 			}
+		}
+
+		private async void SaveClosingEditor(IDiagramEditor diagramEditor)
+		{
+			var saveTask = diagramEditor.SaveAsync();
+			_editorSaveTasks.Add(saveTask);
+			_editorsNeedingSaving.Remove(diagramEditor);
+			await saveTask;
+			_editorSaveTasks.Remove(saveTask);
+			RemoveEditor(diagramEditor);
 		}
 
 		private void RemoveEditor(IDiagramEditor editor)
@@ -184,6 +185,5 @@ namespace PlantUmlEditor.ViewModel
 		private readonly IDiagramExplorer _explorer;
 		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;
 		private readonly ISettings _settings;
-		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 	}
 }

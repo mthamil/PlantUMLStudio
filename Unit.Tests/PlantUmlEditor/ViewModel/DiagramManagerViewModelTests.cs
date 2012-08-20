@@ -81,7 +81,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
-			editor.Verify(e => e.Save(), Times.Never());
+			editor.Verify(e => e.SaveAsync(), Times.Never());
 			editor.Verify(e => e.Dispose());
 		}
 
@@ -95,7 +95,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.Setup(e => e.Save()).Returns(Tasks.FromSuccess());
+			editor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
 
 			var diagramManager = CreateManager(d => editor.Object);
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
@@ -112,7 +112,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
-			editor.Verify(e => e.Save(), Times.Exactly(1));
+			editor.Verify(e => e.SaveAsync(), Times.Exactly(1));
 			editor.Verify(e => e.Dispose());
 		}
 
@@ -141,7 +141,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Empty(diagramManager.OpenDiagrams);
-			editor.Verify(e => e.Save(), Times.Never());
+			editor.Verify(e => e.SaveAsync(), Times.Never());
 			editor.Verify(e => e.Dispose());
 		}
 
@@ -183,8 +183,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
 			Assert.Equal(editor2.Object, diagramManager.OpenDiagrams.Single());
-			editor1.Verify(e => e.Save(), Times.Never());
-			editor2.Verify(e => e.Save(), Times.Never());
+			editor1.Verify(e => e.SaveAsync(), Times.Never());
+			editor2.Verify(e => e.SaveAsync(), Times.Never());
 		}
 
 		[Fact]

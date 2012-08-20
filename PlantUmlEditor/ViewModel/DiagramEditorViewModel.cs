@@ -66,7 +66,7 @@ namespace PlantUmlEditor.ViewModel
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
-			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Save(), p => p.CanSave, this);
+			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => SaveAsync(), p => p.CanSave, this);
 			_refreshCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Refresh(), p => p.CanRefresh, this);
 			_closeCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Close(), p => p.CanClose, this);
 
@@ -157,8 +157,8 @@ namespace PlantUmlEditor.ViewModel
 			get { return _saveCommand; }
 		}
 
-		/// <see cref="IDiagramEditor.Save"/>
-		public Task Save()
+		/// <see cref="IDiagramEditor.SaveAsync"/>
+		public Task SaveAsync()
 		{
 			_autoSaveTimer.TryStop();
 
@@ -223,7 +223,7 @@ namespace PlantUmlEditor.ViewModel
 		{
 			// We must begin the Save operation on the UI thread in order to update the UI 
 			// with pre-save state.
-			Task.Factory.StartNew(() => Save(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
+			Task.Factory.StartNew(() => SaveAsync(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 		/// <summary>

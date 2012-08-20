@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Core;
@@ -336,7 +337,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			var result = new BitmapImage();
 
 			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromResult<BitmapSource>(result));
+				.Returns(Task.FromResult<BitmapSource>(result));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);

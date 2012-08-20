@@ -14,20 +14,7 @@ namespace Utilities.Concurrency
 		/// <returns>A successfully completed task</returns>
 		public static Task FromSuccess()
 		{
-			return FromResult<object>(null);
-		}
-
-		/// <summary>
-		/// Creates an already completed task from an existing result value.
-		/// </summary>
-		/// <typeparam name="TResult">The type of the result</typeparam>
-		/// <param name="result">The existing result</param>
-		/// <returns>A completed task</returns>
-		public static Task<TResult> FromResult<TResult>(TResult result)
-		{
-			var taskSource = new TaskCompletionSource<TResult>();
-			taskSource.SetResult(result);
-			return taskSource.Task;
+			return Task.FromResult<object>(null);
 		}
 
 		/// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
@@ -33,7 +34,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram>
+				.Returns(Task.FromResult<IEnumerable<Diagram>>(new List<Diagram>
 				{
 					new Diagram { Content = "Diagram 1"},
 					new Diagram { Content = "Diagram 2" }
@@ -78,7 +79,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
+				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			var explorer = CreateExplorer();
 
@@ -101,7 +102,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			string newDiagramFilePath = Path.Combine(diagramLocation.FullName, "new-diagram.puml");
 
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Tasks.FromResult<IEnumerable<Diagram>>(new List<Diagram> 
+				.Returns(Task.FromResult<IEnumerable<Diagram>>(new List<Diagram> 
 				{ 
 					new Diagram 
 					{ 
@@ -144,7 +145,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
+				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			var explorer = CreateExplorer();
 			explorer.DiagramLocation = diagramLocation;
@@ -170,7 +171,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				.Returns(Tasks.FromException(new InvalidOperationException()));
 
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Tasks.FromResult(Enumerable.Empty<Diagram>()));
+				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			var explorer = CreateExplorer();
 			explorer.DiagramLocation = diagramLocation;

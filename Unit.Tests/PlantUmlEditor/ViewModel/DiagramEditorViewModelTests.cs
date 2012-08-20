@@ -312,7 +312,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromException(new AggregateException()));
+				.Returns(Tasks.FromException(new InvalidOperationException()));
 
 			// Act.
 			editor.SaveCommand.Execute(null);

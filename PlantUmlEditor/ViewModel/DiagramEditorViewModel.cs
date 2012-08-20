@@ -198,25 +198,23 @@ namespace PlantUmlEditor.ViewModel
 
 			saveTask.ContinueWith(t =>
 			{
-				_saveExecuting = false;
-				DiagramImage = _diagramRenderer.Render(Diagram);
-				CodeEditor.IsModified = false;
-				IsIdle = true;
-				_refreshTimer.TryStop();
-				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramSaved));
-
-				OnSaved();
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, _uiScheduler);
-
-			saveTask.ContinueWith(t =>
-			{
-				_saveExecuting = false;
-				IsIdle = true;
-				_refreshTimer.TryStop();
-				if (t.Exception != null)
+				if (t.IsFaulted && t.Exception != null)
+				{
 					progress.Report(ProgressUpdate.Failed(t.Exception.InnerExceptions.First()));
+				}
+				else if (!t.IsCanceled)
+				{
+					DiagramImage = _diagramRenderer.Render(Diagram);
+					CodeEditor.IsModified = false;
+					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramSaved));
+					OnSaved();
+				}
 
-			}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, _uiScheduler);
+				_saveExecuting = false;
+				IsIdle = true;
+				_refreshTimer.TryStop();
+
+			}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
 
 			return saveTask;
 		}

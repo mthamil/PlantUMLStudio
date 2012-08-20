@@ -26,6 +26,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			progress.Setup(p => p.New(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object);
 		}
 
 		[Fact]
@@ -39,8 +41,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 					new Diagram { Content = "Diagram 1"},
 					new Diagram { Content = "Diagram 2" }
 				}));
-
-			var explorer = CreateExplorer();
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
@@ -61,8 +61,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
-			var explorer = CreateExplorer();
-
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
 			bool isValid = explorer.IsDiagramLocationValid;
@@ -80,8 +78,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
-
-			var explorer = CreateExplorer();
 
 			// Act.
 			bool isValid = explorer.IsDiagramLocationValid;
@@ -111,7 +107,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 					} 
 				}));
 
-			var explorer = CreateExplorer();
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -147,7 +142,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
-			var explorer = CreateExplorer();
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -173,7 +167,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
-			var explorer = CreateExplorer();
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -192,13 +185,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		}
 
 		[Theory]
-		[Synchronous]
 		[PropertyData("CanRequestOpenPreviewData")]
 		public void Test_CanRequestOpenPreview(bool expected, PreviewDiagramViewModel preview)
 		{
-			// Arrange.
-			var explorer = CreateExplorer();
-
 			// Act.
 			bool actual = explorer.RequestOpenPreviewCommand.CanExecute(preview);
 
@@ -216,13 +205,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_RequestOpenPreviewCommand()
 		{
 			// Arrange.
 			var preview = new PreviewDiagramViewModel(new Diagram());
-
-			var explorer = CreateExplorer();
 
 			OpenPreviewRequestedEventArgs args = null;
 			EventHandler<OpenPreviewRequestedEventArgs> handler = (o, e) => args = e;
@@ -236,10 +222,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(preview, args.RequestedPreview);
 		}
 
-		private DiagramExplorerViewModel CreateExplorer()
-		{
-			return new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object);
-		}
+		private readonly DiagramExplorerViewModel explorer;
 
 		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();

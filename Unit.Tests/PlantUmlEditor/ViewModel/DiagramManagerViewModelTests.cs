@@ -24,7 +24,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_OpenDiagramCommand()
 		{
 			// Arrange.
@@ -42,7 +41,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_OpenDiagramCommand_DiagramAlreadyOpenedOnce()
 		{
 			// Arrange.

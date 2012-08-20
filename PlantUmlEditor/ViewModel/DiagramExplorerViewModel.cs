@@ -133,7 +133,7 @@ namespace PlantUmlEditor.ViewModel
 			get { return _addNewDiagramCommand; }
 		}
 
-		private void AddNewDiagram(Uri newDiagramUri)
+		private async void AddNewDiagram(Uri newDiagramUri)
 		{
 			string newFilePath = newDiagramUri.LocalPath;
 
@@ -149,23 +149,18 @@ namespace PlantUmlEditor.ViewModel
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
 			var progress = _progressFactory.New(false);
-
-			var saveNewTask = _diagramIO.SaveAsync(newDiagram, false)
-				.Then(() => Task.Factory.StartNew(() =>
-					LoadDiagrams(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap());
-
-			saveNewTask.ContinueWith(t =>
+			try
 			{
-				if (t.IsFaulted && t.Exception != null)
-				{
-					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
-				}
-				else if (!t.IsCanceled)
-				{
-					CurrentPreviewDiagram = t.Result.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
-					OnOpenPreviewRequested(CurrentPreviewDiagram);
-				}
-			}, CancellationToken.None, TaskContinuationOptions.None, _uiScheduler);
+				await _diagramIO.SaveAsync(newDiagram, false);
+				var diagrams = await LoadDiagrams();
+
+				CurrentPreviewDiagram = diagrams.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
+				OnOpenPreviewRequested(CurrentPreviewDiagram);
+			}
+			catch (Exception e)
+			{
+				progress.Report(ProgressUpdate.Failed(e));
+			}
 		}
 
 		/// <summary>

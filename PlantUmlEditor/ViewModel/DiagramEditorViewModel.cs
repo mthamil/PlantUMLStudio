@@ -190,7 +190,7 @@ namespace PlantUmlEditor.ViewModel
 			progress.Report(new ProgressUpdate 
 			{ 
 				PercentComplete = 100, 
-				Message = String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileNameOnly) 
+				Message = String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileName) 
 			});
 
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)

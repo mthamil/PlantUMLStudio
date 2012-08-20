@@ -26,7 +26,7 @@ namespace PlantUmlEditor.Core
 		/// <summary>
 		/// Just the diagram's file name.
 		/// </summary>
-		public string DiagramFileNameOnly
+		public string DiagramFileName
 		{
 			get { return File.Name; }
 		}
@@ -39,7 +39,7 @@ namespace PlantUmlEditor.Core
 		/// <summary>
 		/// Just the diagram image's file name.
 		/// </summary>
-		public string ImageFileNameOnly
+		public string ImageFileName
 		{
 			get { return Path.GetFileName(ImageFilePath); }
 		}

@@ -39,7 +39,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
-			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagrams(), p => p.IsDiagramLocationValid, this);
+			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			_requestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 		}
@@ -60,7 +60,7 @@ namespace PlantUmlEditor.ViewModel
 					if (IsDiagramLocationValid)
 						_settings.LastDiagramLocation = value;
 
-					LoadDiagrams();
+					LoadDiagramsAsync();
 				}
 			}
 		}
@@ -151,9 +151,9 @@ namespace PlantUmlEditor.ViewModel
 			try
 			{
 				await _diagramIO.SaveAsync(newDiagram, false);
-				var diagrams = await LoadDiagrams();
+				await LoadDiagramsAsync();
 
-				CurrentPreviewDiagram = diagrams.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
+				CurrentPreviewDiagram = PreviewDiagrams.SingleOrDefault(d => d.Diagram.File.FullName == newFilePath);
 				OnOpenPreviewRequested(CurrentPreviewDiagram);
 			}
 			catch (Exception e)
@@ -170,12 +170,12 @@ namespace PlantUmlEditor.ViewModel
 			get { return _loadDiagramsCommand; }
 		}
 
-		private async Task<ICollection<PreviewDiagramViewModel>> LoadDiagrams()
+		private async Task LoadDiagramsAsync()
 		{
 			PreviewDiagrams.Clear();
 
 			if (!IsDiagramLocationValid)
-				return PreviewDiagrams;
+				return;
 
 			var progress = _progressFactory.New();
 			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
@@ -199,8 +199,6 @@ namespace PlantUmlEditor.ViewModel
 			{
 				progress.Report(ProgressUpdate.Failed(e));
 			}
-
-			return PreviewDiagrams;
 		}
 
 		/// <summary>

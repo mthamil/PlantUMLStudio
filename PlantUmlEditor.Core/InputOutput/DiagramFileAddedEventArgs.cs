@@ -5,13 +5,13 @@ namespace PlantUmlEditor.Core.InputOutput
 	/// <summary>
 	/// Information about when a new diagram is detected.
 	/// </summary>
-	public class DiagramAddedEventArgs : EventArgs
+	public class DiagramFileAddedEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Creates new event args.
 		/// </summary>
 		/// <param name="newDiagram">The new diagram</param>
-		public DiagramAddedEventArgs(Diagram newDiagram)
+		public DiagramFileAddedEventArgs(Diagram newDiagram)
 		{
 			NewDiagram = newDiagram;
 		}

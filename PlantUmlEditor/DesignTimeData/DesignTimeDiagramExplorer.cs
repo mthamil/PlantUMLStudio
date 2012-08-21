@@ -32,6 +32,9 @@ namespace PlantUmlEditor.DesignTimeData
 		/// <see cref="IDiagramExplorer.OpenPreviewRequested"/>
 		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
 
+		/// <see cref="IDiagramExplorer.DiagramDeleted"/>
+		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
+
 		#endregion
 
 		private readonly ICollection<Diagram> _diagrams = new DiagramFiles();

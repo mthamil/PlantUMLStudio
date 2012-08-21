@@ -137,23 +137,23 @@ namespace PlantUmlEditor.Core.InputOutput
 		}
 
 		/// <see cref="IDiagramIOService.DiagramAdded"/>
-		public event EventHandler<DiagramAddedEventArgs> DiagramAdded;
+		public event EventHandler<DiagramFileAddedEventArgs> DiagramAdded;
 
 		private void OnDiagramAdded(Diagram newDiagram)
 		{
 			var localEvent = DiagramAdded;
 			if (localEvent != null)
-				localEvent(this, new DiagramAddedEventArgs(newDiagram));
+				localEvent(this, new DiagramFileAddedEventArgs(newDiagram));
 		}
 
 		/// <see cref="IDiagramIOService.DiagramDeleted"/>
-		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
+		public event EventHandler<DiagramFileDeletedEventArgs> DiagramDeleted;
 
 		private void OnDiagramDeleted(FileInfo deletedDiagramFile)
 		{
 			var localEvent = DiagramDeleted;
 			if (localEvent != null)
-				localEvent(this, new DiagramDeletedEventArgs(deletedDiagramFile));
+				localEvent(this, new DiagramFileDeletedEventArgs(deletedDiagramFile));
 		}
 
 		#endregion
@@ -165,8 +165,8 @@ namespace PlantUmlEditor.Core.InputOutput
 
 		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			var newDiagram = ReadImpl(new FileInfo(e.FullPath));
-			OnDiagramAdded(newDiagram);
+			//var newDiagram = ReadImpl(new FileInfo(e.FullPath));
+			//OnDiagramAdded(newDiagram);
 		}
 
 		private readonly TaskScheduler _scheduler;

@@ -23,5 +23,10 @@ namespace PlantUmlEditor.ViewModel
 		/// Event raised when a preview diagram should be opened for editing.
 		/// </summary>
 		event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
+
+		/// <summary>
+		/// Event raised when a diagram has been deleted.
+		/// </summary>
+		event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
 	}
 }

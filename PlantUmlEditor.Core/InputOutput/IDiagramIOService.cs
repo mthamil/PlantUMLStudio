@@ -54,11 +54,11 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <summary>
 		/// Raised when a new diagram is added.
 		/// </summary>
-		event EventHandler<DiagramAddedEventArgs> DiagramAdded;
+		event EventHandler<DiagramFileAddedEventArgs> DiagramAdded;
 
 		/// <summary>
 		/// Raised when a diagram is deleted.
 		/// </summary>
-		event EventHandler<DiagramDeletedEventArgs> DiagramDeleted; 
+		event EventHandler<DiagramFileDeletedEventArgs> DiagramDeleted; 
 	}
 }

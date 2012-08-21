@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
 using ICSharpCode.AvalonEdit.Folding;
@@ -59,6 +60,7 @@ namespace PlantUmlEditor.Container
 				.WithProperty(p => p.AutoSave, true);
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
+				.WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
 				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
 				.OnActivating(c => c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation);
 

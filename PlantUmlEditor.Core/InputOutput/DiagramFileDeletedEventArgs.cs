@@ -6,13 +6,13 @@ namespace PlantUmlEditor.Core.InputOutput
 	/// <summary>
 	/// Information about when a diagram deletion is detected.
 	/// </summary>
-	public class DiagramDeletedEventArgs : EventArgs
+	public class DiagramFileDeletedEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Creates new event args.
 		/// </summary>
 		/// <param name="deletedDiagramFile">The deleted diagram file</param>
-		public DiagramDeletedEventArgs(FileInfo deletedDiagramFile)
+		public DiagramFileDeletedEventArgs(FileInfo deletedDiagramFile)
 		{
 			DeletedDiagramFile = deletedDiagramFile;
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
@@ -22,12 +23,13 @@ namespace PlantUmlEditor.ViewModel
 	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
 		public DiagramExplorerViewModel(IProgressRegistration progressFactory, IDiagramIOService diagramIO, 
-			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings)
+			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings, TaskScheduler uiScheduler)
 		{
 			_progressFactory = progressFactory;
 			_diagramIO = diagramIO;
 			_previewDiagramFactory = previewDiagramFactory;
 			_settings = settings;
+			_uiScheduler = uiScheduler;
 
 			_previewDiagrams = Property.New(this, p => PreviewDiagrams, OnPropertyChanged);
 			_previewDiagrams.Value = new ObservableCollection<PreviewDiagramViewModel>();
@@ -42,6 +44,8 @@ namespace PlantUmlEditor.ViewModel
 			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
 			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			_requestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
+
+			_diagramIO.DiagramDeleted += diagramIO_DiagramDeleted;
 		}
 
 		/// <summary>
@@ -131,6 +135,16 @@ namespace PlantUmlEditor.ViewModel
 				localEvent(this, new OpenPreviewRequestedEventArgs(preview));
 		}
 
+		/// <see cref="IDiagramExplorer.DiagramDeleted"/>
+		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
+
+		private void OnDiagramDeleted(Diagram deletedDiagram)
+		{
+			var localEvent = DiagramDeleted;
+			if (localEvent != null)
+				localEvent(this, new DiagramDeletedEventArgs(deletedDiagram));
+		}
+
 		/// <summary>
 		/// Adds a new diagram with a given URI.
 		/// </summary>
@@ -208,6 +222,19 @@ namespace PlantUmlEditor.ViewModel
 			}
 		}
 
+		void diagramIO_DiagramDeleted(object sender, DiagramFileDeletedEventArgs e)
+		{
+			Task.Factory.StartNew(() =>
+			{
+				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => pd.Diagram.File.FullName == e.DeletedDiagramFile.FullName);
+				if (existingPreview != null)
+				{
+					OnDiagramDeleted(existingPreview.Diagram);
+					PreviewDiagrams.Remove(existingPreview);
+				}
+			}, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
+		}
+
 		/// <summary>
 		/// Contains current task progress information.
 		/// </summary>
@@ -227,25 +254,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Func<Diagram, PreviewDiagramViewModel> _previewDiagramFactory;
 		private readonly ISettings _settings;
-	}
-
-	/// <summary>
-	/// Event args containing information about when a diagram should be opened for editing.
-	/// </summary>
-	public class OpenPreviewRequestedEventArgs : EventArgs
-	{
-		/// <summary>
-		/// Creates new event args.
-		/// </summary>
-		/// <param name="requestedPreview">The preview to open for editing</param>
-		public OpenPreviewRequestedEventArgs(PreviewDiagramViewModel requestedPreview)
-		{
-			RequestedPreview = requestedPreview;
-		}
-
-		/// <summary>
-		/// The preview to open for editing.
-		/// </summary>
-		public PreviewDiagramViewModel RequestedPreview { get; private set; }
+		private readonly TaskScheduler _uiScheduler;
 	}
 }

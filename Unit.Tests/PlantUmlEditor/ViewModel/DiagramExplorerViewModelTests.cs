@@ -26,7 +26,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			progress.Setup(p => p.New(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object);
+			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
 		}
 
 		[Fact]
@@ -222,11 +222,32 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(preview, args.RequestedPreview);
 		}
 
+		[Fact]
+		public void Test_DiagramFileDeleted()
+		{
+			// Arrange.
+			var preview = new PreviewDiagramViewModel(new Diagram { File = new FileInfo("test.puml")});
+			explorer.PreviewDiagrams.Add(preview);
+
+			DiagramDeletedEventArgs deleteArgs = null;
+			EventHandler<DiagramDeletedEventArgs> deleteHandler = (o, e) => deleteArgs = e;
+			explorer.DiagramDeleted += deleteHandler;
+
+			// Act.
+			diagramIO.Raise(dio => dio.DiagramDeleted += null, new DiagramFileDeletedEventArgs(new FileInfo("test.puml")));
+
+			// Assert.
+			Assert.Empty(explorer.PreviewDiagrams);
+			Assert.NotNull(deleteArgs);
+			Assert.Equal("test.puml", deleteArgs.DeletedDiagram.File.Name);
+		}
+
 		private readonly DiagramExplorerViewModel explorer;
 
 		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
+		private readonly TaskScheduler uiScheduler = new SynchronousTaskScheduler();
 
 		private static readonly DirectoryInfo diagramLocation = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDiagrams"));
 	}

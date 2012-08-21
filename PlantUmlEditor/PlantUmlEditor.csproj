@@ -125,6 +125,7 @@
     <Compile Include="ViewModel\Commands\EditorCommands.cs" />
     <Compile Include="ViewModel\Commands\ImageCommands.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
+    <Compile Include="ViewModel\DiagramDeletedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
     <Compile Include="ViewModel\ICodeEditor.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="ViewModel\IProgressViewModel.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
+    <Compile Include="ViewModel\OpenPreviewRequestedEventArgs.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\SnippetsMenu.cs" />

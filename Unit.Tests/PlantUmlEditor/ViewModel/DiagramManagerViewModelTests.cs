@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Moq;
@@ -299,6 +298,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly Mock<IDiagramExplorer> explorer = new Mock<IDiagramExplorer>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 
-		private static readonly FileInfo testDiagramFile = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"TestDiagrams\class.puml"));
+		private static readonly FileInfo testDiagramFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestDiagrams\class.puml"));
 	}
 }

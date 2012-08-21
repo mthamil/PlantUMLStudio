@@ -58,7 +58,14 @@ namespace PlantUmlEditor.ViewModel
 				if (_diagramLocation.TrySetValue(value))
 				{
 					if (IsDiagramLocationValid)
+					{
 						_settings.LastDiagramLocation = value;
+						_diagramIO.StartMonitoring(value);
+					}
+					else
+					{
+						_diagramIO.StopMonitoring();
+					}
 
 					LoadDiagramsAsync();
 				}

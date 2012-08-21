@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Utilities.Concurrency;
 
 namespace PlantUmlEditor.Core.InputOutput
 {
@@ -40,5 +39,26 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <param name="diagram">The diagram to delete</param>
 		/// <returns>A task representing the delete operation</returns>
 		Task DeleteAsync(Diagram diagram);
+
+		/// <summary>
+		/// Begins monitoring a directory for changes.
+		/// </summary>
+		/// <param name="directory">The directory to monitor</param>
+		void StartMonitoring(DirectoryInfo directory);
+
+		/// <summary>
+		/// Stops monitoring file system changes.
+		/// </summary>
+		void StopMonitoring();
+
+		/// <summary>
+		/// Raised when a new diagram is added.
+		/// </summary>
+		event EventHandler<DiagramAddedEventArgs> DiagramAdded;
+
+		/// <summary>
+		/// Raised when a diagram is deleted.
+		/// </summary>
+		event EventHandler<DiagramDeletedEventArgs> DiagramDeleted; 
 	}
 }

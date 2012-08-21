@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace Utilities.InputOutput
@@ -51,6 +52,15 @@ namespace Utilities.InputOutput
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the component is enabled.
+		/// </summary>
+		public bool EnableRaisingEvents
+		{
+			get { return _fileSystemWatcher.EnableRaisingEvents; }
+			set { _fileSystemWatcher.EnableRaisingEvents = value; }
+		}
+
+		/// <summary>
 		/// Occurs when a file or directory in the specified <see cref="P:System.IO.FileSystemWatcher.Path"/> is changed.
 		/// </summary>
 		public event FileSystemEventHandler Changed
@@ -93,6 +103,12 @@ namespace Utilities.InputOutput
 		{
 			add { _fileSystemWatcher.Error += value; }
 			remove { _fileSystemWatcher.Error -= value; }
+		}
+
+		/// <see cref="IDisposable.Dispose"/>
+		public void Dispose()
+		{
+			_fileSystemWatcher.Dispose();
 		}
 
 		private readonly FileSystemWatcher _fileSystemWatcher;

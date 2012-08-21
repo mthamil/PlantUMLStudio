@@ -52,6 +52,8 @@
     </Compile>
     <Compile Include="Diagram.cs" />
     <Compile Include="IDiagramCompiler.cs" />
+    <Compile Include="InputOutput\DiagramAddedEventArgs.cs" />
+    <Compile Include="InputOutput\DiagramDeletedEventArgs.cs" />
     <Compile Include="InputOutput\DiagramIOService.cs" />
     <Compile Include="InputOutput\IDiagramIOService.cs" />
     <Compile Include="PlantUml.cs" />

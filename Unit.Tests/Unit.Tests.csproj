@@ -98,6 +98,7 @@
     <Compile Include="AssertThatTests.cs" />
     <Compile Include="CultureAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
+    <Compile Include="PlantUmlEditor.Core\InputOutput\DiagramIOServiceTests.cs" />
     <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />
     <Compile Include="PlantUmlEditor\Model\Snippets\SnippetParserTests.cs" />

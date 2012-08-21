@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Configuration;
@@ -51,6 +50,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(2, explorer.PreviewDiagrams.Count);
 			AssertThat.SequenceEqual(new [] { "Diagram 1", "Diagram 2" }, explorer.PreviewDiagrams.Select(d => d.Diagram.Content));
 			Assert.Equal(diagramLocation.FullName, settings.Object.LastDiagramLocation.FullName);
+			diagramIO.Verify(dio => dio.StartMonitoring(diagramLocation));
 		}
 
 		[Fact]
@@ -228,6 +228,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 
-		private static readonly DirectoryInfo diagramLocation = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+		private static readonly DirectoryInfo diagramLocation = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDiagrams"));
 	}
 }

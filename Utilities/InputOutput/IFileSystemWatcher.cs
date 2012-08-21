@@ -1,11 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Utilities.InputOutput
 {
 	/// <summary>
 	/// Interface for a an object that monitors file system changes.
 	/// </summary>
-	public interface IFileSystemWatcher
+	public interface IFileSystemWatcher : IDisposable
 	{
 		/// <summary>
 		/// Gets or sets the path of the directory to watch.
@@ -26,6 +27,11 @@ namespace Utilities.InputOutput
 		/// The filter string. The default is "*.*" (Watches all files.)
 		/// </returns>
 		string Filter { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the component is enabled.
+		/// </summary>
+		bool EnableRaisingEvents { get; set; }
 
 		/// <summary>
 		/// Occurs when a file or directory in the specified <see cref="P:System.IO.FileSystemWatcher.Path"/> is changed.

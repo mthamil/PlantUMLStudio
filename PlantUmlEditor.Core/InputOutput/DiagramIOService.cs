@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Utilities.InputOutput;
 
 namespace PlantUmlEditor.Core.InputOutput
 {
@@ -17,9 +18,14 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// Initializes the service.
 		/// </summary>
 		/// <param name="scheduler">The scheduler to use for executing tasks</param>
-		public DiagramIOService(TaskScheduler scheduler)
+		/// <param name="fileSystemWatcher">Monitors the file system</param>
+		public DiagramIOService(TaskScheduler scheduler, IFileSystemWatcher fileSystemWatcher)
 		{
 			_scheduler = scheduler;
+			_fileSystemWatcher = fileSystemWatcher;
+
+			_fileSystemWatcher.Created += fileSystemWatcher_Created;
+			_fileSystemWatcher.Deleted += fileSystemWatcher_Deleted;
 		}
 
 		#region Implementation of IDiagramIOService
@@ -69,13 +75,7 @@ namespace PlantUmlEditor.Core.InputOutput
 			if (!String.IsNullOrWhiteSpace(content))
 			{
 				// Check that the given file's content appears to be a plantUML diagram.
-				Match match = Regex.Match(content, @"@startuml\s*(?:"")*([^\r\n""]*)",
-										  RegexOptions.IgnoreCase
-										  | RegexOptions.Multiline
-										  | RegexOptions.IgnorePatternWhitespace
-										  | RegexOptions.Compiled
-					);
-
+				Match match = diagramStartPattern.Match(content);
 				if (match.Success && match.Groups.Count > 1)
 				{
 					string imageFileName = match.Groups[1].Value;
@@ -123,8 +123,59 @@ namespace PlantUmlEditor.Core.InputOutput
 			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
 		}
 
+		/// <see cref="IDiagramIOService.StartMonitoring"/>
+		public void StartMonitoring(DirectoryInfo directory)
+		{
+			_fileSystemWatcher.Path = directory.FullName;
+			_fileSystemWatcher.EnableRaisingEvents = true;
+		}
+
+		/// <see cref="IDiagramIOService.StopMonitoring"/>
+		public void StopMonitoring()
+		{
+			_fileSystemWatcher.EnableRaisingEvents = false;
+		}
+
+		/// <see cref="IDiagramIOService.DiagramAdded"/>
+		public event EventHandler<DiagramAddedEventArgs> DiagramAdded;
+
+		private void OnDiagramAdded(Diagram newDiagram)
+		{
+			var localEvent = DiagramAdded;
+			if (localEvent != null)
+				localEvent(this, new DiagramAddedEventArgs(newDiagram));
+		}
+
+		/// <see cref="IDiagramIOService.DiagramDeleted"/>
+		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
+
+		private void OnDiagramDeleted(FileInfo deletedDiagramFile)
+		{
+			var localEvent = DiagramDeleted;
+			if (localEvent != null)
+				localEvent(this, new DiagramDeletedEventArgs(deletedDiagramFile));
+		}
+
 		#endregion
 
+		void fileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
+		{
+			OnDiagramDeleted(new FileInfo(e.FullPath));
+		}
+
+		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
+		{
+			var newDiagram = ReadImpl(new FileInfo(e.FullPath));
+			OnDiagramAdded(newDiagram);
+		}
+
 		private readonly TaskScheduler _scheduler;
+		private readonly IFileSystemWatcher _fileSystemWatcher;
+
+		private static readonly Regex diagramStartPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)", 
+			RegexOptions.IgnoreCase |
+			RegexOptions.Multiline |
+			RegexOptions.IgnorePatternWhitespace |
+			RegexOptions.Compiled);
 	}
 }

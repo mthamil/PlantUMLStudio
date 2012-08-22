@@ -33,8 +33,8 @@ namespace Utilities.InputOutput
 		public void StartMonitoring(DirectoryInfo directory)
 		{
 			_fileSystemWatcher.Path = directory.FullName;
-			_fileSystemWatcher.EnableRaisingEvents = true;
 			MonitoredDirectory = directory;
+			_fileSystemWatcher.EnableRaisingEvents = true;
 		}
 
 		/// <see cref="IDirectoryMonitor.RestartMonitoring"/>

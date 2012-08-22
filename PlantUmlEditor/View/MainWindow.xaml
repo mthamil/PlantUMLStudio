@@ -13,7 +13,8 @@
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
-    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
+    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands"
+    xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -252,7 +253,16 @@
                     <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0">
                         <Grid DataContext="{Binding Explorer}" d:DataContext="{d:DesignInstance design:DesignTimeDiagramExplorer, IsDesignTimeCreatable=True}">
-                            <Grid.ColumnDefinitions>
+
+                            <Grid.Resources>
+                                <CollectionViewSource x:Key="PreviewView" Source="{Binding PreviewDiagrams}">
+                                    <CollectionViewSource.SortDescriptions>
+                                        <ComponentModel:SortDescription PropertyName="Diagram.DiagramFileName"/>
+                                    </CollectionViewSource.SortDescriptions>
+                                </CollectionViewSource>
+                            </Grid.Resources>
+
+                                    <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
             
@@ -299,7 +309,7 @@
                                      VerticalAlignment="Stretch" 
                                      SelectedItem="{Binding CurrentPreviewDiagram}"
                                      ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-                                     ItemsSource="{Binding PreviewDiagrams}" 
+                                     ItemsSource="{Binding Source={StaticResource PreviewView}}"
                                      attached:DoubleClickCommandBehavior.Command="{Binding RequestOpenPreviewCommand}"
                                      attached:DoubleClickCommandBehavior.CommandParameter="{Binding CurrentPreviewDiagram}">
                     

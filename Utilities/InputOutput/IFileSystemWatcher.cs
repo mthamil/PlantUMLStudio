@@ -34,6 +34,11 @@ namespace Utilities.InputOutput
 		bool EnableRaisingEvents { get; set; }
 
 		/// <summary>
+		/// Gets or sets the type of changes to watch for.
+		/// </summary>
+		NotifyFilters NotifyFilter { get; set; }
+
+		/// <summary>
 		/// Occurs when a file or directory in the specified <see cref="P:System.IO.FileSystemWatcher.Path"/> is changed.
 		/// </summary>
 		event FileSystemEventHandler Changed;

@@ -61,6 +61,15 @@ namespace Utilities.InputOutput
 		}
 
 		/// <summary>
+		/// Gets or sets the type of changes to watch for.
+		/// </summary>
+		public NotifyFilters NotifyFilter
+		{
+			get { return _fileSystemWatcher.NotifyFilter; }
+			set { _fileSystemWatcher.NotifyFilter = value; }
+		}
+
+		/// <summary>
 		/// Occurs when a file or directory in the specified <see cref="P:System.IO.FileSystemWatcher.Path"/> is changed.
 		/// </summary>
 		public event FileSystemEventHandler Changed

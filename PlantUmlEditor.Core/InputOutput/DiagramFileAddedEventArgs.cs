@@ -1,24 +1,25 @@
 using System;
+using System.IO;
 
 namespace PlantUmlEditor.Core.InputOutput
 {
 	/// <summary>
-	/// Information about when a new diagram is detected.
+	/// Information about when a new diagram file is detected.
 	/// </summary>
 	public class DiagramFileAddedEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Creates new event args.
 		/// </summary>
-		/// <param name="newDiagram">The new diagram</param>
-		public DiagramFileAddedEventArgs(Diagram newDiagram)
+		/// <param name="newDiagramFile">The new diagram file</param>
+		public DiagramFileAddedEventArgs(FileInfo newDiagramFile)
 		{
-			NewDiagram = newDiagram;
+			NewDiagramFile = newDiagramFile;
 		}
 
 		/// <summary>
-		/// The new diagram.
+		/// The new diagram file.
 		/// </summary>
-		public Diagram NewDiagram { get; private set; }
+		public FileInfo NewDiagramFile { get; private set; }
 	}
 }

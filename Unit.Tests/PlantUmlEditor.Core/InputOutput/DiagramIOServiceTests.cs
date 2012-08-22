@@ -17,13 +17,13 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			diagramIO = new DiagramIOService(scheduler, monitor.Object);
 		}
 
-		[Fact(Skip="File system watcher created event needs better handling")]
+		[Fact]
 		public void Test_DiagramAdded()
 		{
 			// Arrange.
 			DiagramFileAddedEventArgs args = null;
 			EventHandler<DiagramFileAddedEventArgs> addHandler = (o, e) => args = e;
-			diagramIO.DiagramAdded += addHandler;
+			diagramIO.DiagramFileAdded += addHandler;
 
 			// Act.
 			monitor.Raise(m => m.Created += null, 
@@ -31,8 +31,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 
 			// Assert.
 			Assert.NotNull(args);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), args.NewDiagram.File.FullName);
-			Assert.True(!String.IsNullOrWhiteSpace(args.NewDiagram.Content));
+			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), args.NewDiagramFile.FullName);
 		}
 
 		[Fact]
@@ -41,7 +40,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			// Arrange.
 			DiagramFileDeletedEventArgs args = null;
 			EventHandler<DiagramFileDeletedEventArgs> deleteHandler = (o, e) => args = e;
-			diagramIO.DiagramDeleted += deleteHandler;
+			diagramIO.DiagramFileDeleted += deleteHandler;
 
 			// Act.
 			monitor.Raise(m => m.Deleted += null,
@@ -102,9 +101,11 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 
 			// Assert.
 			Assert.Single(diagrams);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), diagrams.Single().File.FullName);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagrams.Single().ImageFilePath);
-			Assert.True(!String.IsNullOrWhiteSpace(diagrams.Single().Content));
+
+			var diagram = diagrams.Single();
+			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), diagram.File.FullName);
+			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFilePath);
+			Assert.True(!String.IsNullOrWhiteSpace(diagram.Content));
 
 			progress.Verify(p => p.Report(Tuple.Create(1, 1)));
 		}

@@ -97,16 +97,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			string newDiagramFilePath = Path.Combine(diagramLocation.FullName, "new-diagram.puml");
 
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Task.FromResult<IEnumerable<Diagram>>(new List<Diagram> 
-				{ 
-					new Diagram 
-					{ 
-						File = new FileInfo(newDiagramFilePath), 
-						Content = "New Diagram" 
-					} 
-				}));
-
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -115,6 +105,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
+			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(new FileInfo(newDiagramFilePath)));
 
 			// Assert.
 			Assert.Single(explorer.PreviewDiagrams);
@@ -128,10 +119,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Verify(dio => dio.SaveAsync(
 				It.Is<Diagram>(d => d.Content == "New Diagram" && d.File.FullName == newDiagramFilePath), 
 				false));
-
-			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
-				It.Is<DirectoryInfo>(d => d.FullName == diagramLocation.FullName), 
-				It.IsAny<IProgress<Tuple<int, int>>>()), Times.AtLeastOnce());
 		}
 
 		[Fact]
@@ -139,9 +126,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_AddNewDiagramCommand_FileNameWithoutExtension()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
-
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -164,9 +148,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromException(new InvalidOperationException()));
 
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
-
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
 
@@ -175,6 +156,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
+			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(new FileInfo(newDiagramFilePath)));
 
 			// Assert.
 			Assert.Null(newDiagramArgs);
@@ -234,12 +216,35 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			explorer.DiagramDeleted += deleteHandler;
 
 			// Act.
-			diagramIO.Raise(dio => dio.DiagramDeleted += null, new DiagramFileDeletedEventArgs(new FileInfo("test.puml")));
+			diagramIO.Raise(dio => dio.DiagramFileDeleted += null, new DiagramFileDeletedEventArgs(new FileInfo("test.puml")));
 
 			// Assert.
 			Assert.Empty(explorer.PreviewDiagrams);
 			Assert.NotNull(deleteArgs);
 			Assert.Equal("test.puml", deleteArgs.DeletedDiagram.File.Name);
+		}
+
+		[Fact]
+		public void Test_DiagramFileAdded()
+		{
+			// Arrange.
+			var newFile = new FileInfo("test.puml");
+
+			explorer.DiagramLocation = newFile.Directory;
+
+			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
+				.Returns(Task.FromResult(new Diagram
+				{
+					File = newFile,
+					Content = "New Diagram"
+				}));
+
+			// Act.
+			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(newFile));
+
+			// Assert.
+			Assert.Single(explorer.PreviewDiagrams);
+			Assert.Equal(newFile.FullName, explorer.PreviewDiagrams.Single().Diagram.File.FullName);
 		}
 
 		private readonly DiagramExplorerViewModel explorer;

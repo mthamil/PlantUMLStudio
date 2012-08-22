@@ -23,17 +23,20 @@ namespace PlantUmlEditor.Container
 		{
 			builder.Register(c => TaskScheduler.Default);
 
+			builder.RegisterType<SystemTimer>().As<ITimer>();
+
+			builder.RegisterType<SystemClock>().As<IClock>();
+
 			builder.Register(c => new DotNetSettings(
 					Settings.Default,
 					new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlEditor\samples\"))))
 				.As<ISettings>()
 				.SingleInstance();
 
-			builder.RegisterType<SystemTimer>().As<ITimer>();
-
 			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
 			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()
-				.WithProperty(p => p.Filter, "*.puml");
+				.WithProperty(p => p.Filter, "*.puml")
+				.WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(20));
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 

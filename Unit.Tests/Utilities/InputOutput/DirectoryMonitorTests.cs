@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Moq;
+using Utilities.Chronology;
+using Utilities.Concurrency;
 using Utilities.InputOutput;
 using Xunit;
 
@@ -10,7 +15,10 @@ namespace Unit.Tests.Utilities.InputOutput
 	{
 		public DirectoryMonitorTests()
 		{
-			monitor = new DirectoryMonitor(watcher.Object);
+			monitor = new DirectoryMonitor(watcher.Object, clock.Object, scheduler)
+				{
+					FileCreationWaitTimeout = TimeSpan.FromSeconds(2)
+				};
 		}
 
 		[Fact]
@@ -79,16 +87,19 @@ namespace Unit.Tests.Utilities.InputOutput
 		public void Test_Watcher_Created()
 		{
 			// Arrange.
-			FileSystemEventArgs createdArgs = null;
-			EventHandler<FileSystemEventArgs> createdHandler = (o, e) => createdArgs = e;
+			var testFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestDiagrams\class.puml"));
+
+			var createdArgs = new List<FileSystemEventArgs>();
+			EventHandler<FileSystemEventArgs> createdHandler = (o, e) => createdArgs.Add(e);
 			monitor.Created += createdHandler;
 
-			// Act.
-			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, "Dir", "File"));
+			// Act: the create event is raised twice, processing occurs on second event.
+			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, testFile.Directory.FullName, testFile.Name));
+			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, testFile.Directory.FullName, testFile.Name));
 
 			// Assert.
-			Assert.NotNull(createdArgs);
-			Assert.Equal(@"Dir\File", createdArgs.FullPath);
+			Assert.Single(createdArgs);
+			Assert.Equal(testFile.FullName, createdArgs.Single().FullPath);
 		}
 
 		[Fact]
@@ -180,5 +191,7 @@ namespace Unit.Tests.Utilities.InputOutput
 		private readonly DirectoryMonitor monitor;
 
 		private readonly Mock<IFileSystemWatcher> watcher = new Mock<IFileSystemWatcher>();
+		private readonly Mock<IClock> clock = new Mock<IClock>(); 
+		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();
 	}
 }

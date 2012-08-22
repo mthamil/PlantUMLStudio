@@ -135,22 +135,22 @@ namespace PlantUmlEditor.Core.InputOutput
 			_monitor.StopMonitoring();
 		}
 
-		/// <see cref="IDiagramIOService.DiagramAdded"/>
-		public event EventHandler<DiagramFileAddedEventArgs> DiagramAdded;
+		/// <see cref="IDiagramIOService.DiagramFileAdded"/>
+		public event EventHandler<DiagramFileAddedEventArgs> DiagramFileAdded;
 
-		private void OnDiagramAdded(Diagram newDiagram)
+		private void OnDiagramFileAdded(FileInfo newDiagramFile)
 		{
-			var localEvent = DiagramAdded;
+			var localEvent = DiagramFileAdded;
 			if (localEvent != null)
-				localEvent(this, new DiagramFileAddedEventArgs(newDiagram));
+				localEvent(this, new DiagramFileAddedEventArgs(newDiagramFile));
 		}
 
-		/// <see cref="IDiagramIOService.DiagramDeleted"/>
-		public event EventHandler<DiagramFileDeletedEventArgs> DiagramDeleted;
+		/// <see cref="IDiagramIOService.DiagramFileDeleted"/>
+		public event EventHandler<DiagramFileDeletedEventArgs> DiagramFileDeleted;
 
-		private void OnDiagramDeleted(FileInfo deletedDiagramFile)
+		private void OnDiagramFileDeleted(FileInfo deletedDiagramFile)
 		{
-			var localEvent = DiagramDeleted;
+			var localEvent = DiagramFileDeleted;
 			if (localEvent != null)
 				localEvent(this, new DiagramFileDeletedEventArgs(deletedDiagramFile));
 		}
@@ -159,13 +159,12 @@ namespace PlantUmlEditor.Core.InputOutput
 
 		void monitor_Deleted(object sender, FileSystemEventArgs e)
 		{
-			OnDiagramDeleted(new FileInfo(e.FullPath));
+			OnDiagramFileDeleted(new FileInfo(e.FullPath));
 		}
 
 		void monitor_Created(object sender, FileSystemEventArgs e)
 		{
-			//var newDiagram = ReadImpl(new FileInfo(e.FullPath));
-			//OnDiagramAdded(newDiagram);
+			OnDiagramFileAdded(new FileInfo(e.FullPath));
 		}
 
 		private readonly TaskScheduler _scheduler;

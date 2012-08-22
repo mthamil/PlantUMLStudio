@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Utilities.Chronology;
 
 namespace Utilities.InputOutput
 {
@@ -9,9 +13,11 @@ namespace Utilities.InputOutput
 	/// </summary>
 	public class DirectoryMonitor : IDirectoryMonitor
 	{
-		public DirectoryMonitor(IFileSystemWatcher fileSystemWatcher)
+		public DirectoryMonitor(IFileSystemWatcher fileSystemWatcher, IClock clock, TaskScheduler scheduler)
 		{
 			_fileSystemWatcher = fileSystemWatcher;
+			_clock = clock;
+			_scheduler = scheduler;
 
 			_fileSystemWatcher.Created += fileSystemWatcher_Created;
 			_fileSystemWatcher.Deleted += fileSystemWatcher_Deleted;
@@ -72,7 +78,32 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			OnCreated(e);
+			// The Created event fires twice, so only process the second event.
+
+			string path;
+			if (_createdFiles.TryTake(out path))
+			{
+				Task.Factory.StartNew(async () =>
+				{
+					// Wait for file to be actually created.  Sometimes the event fires before the file
+					// actually exists. If after FileCreationTimeout amount of time the file
+					// still does not exist, just give up.
+					DateTimeOffset start = _clock.Now;
+					while (!File.Exists(e.FullPath))
+					{
+						await Task.Delay(TimeSpan.FromSeconds(1));
+						if ((_clock.Now - start) > FileCreationWaitTimeout)
+							return;
+					}
+
+					OnCreated(e);
+
+				}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
+			}
+			else
+			{
+				_createdFiles.Add(e.FullPath);
+			}
 		}
 
 		private void OnCreated(FileSystemEventArgs args)
@@ -111,6 +142,12 @@ namespace Utilities.InputOutput
 			if (localEvent != null)
 				localEvent(this, args);
 		}
+
+		/// <summary>
+		/// The maximum amount of time to wait for a file to be created after receiving
+		/// the Created event.
+		/// </summary>
+		public TimeSpan FileCreationWaitTimeout { get; set; }
 
 		#region IDisposable Members
 
@@ -168,6 +205,10 @@ namespace Utilities.InputOutput
 
 		#endregion
 
+		private readonly ConcurrentBag<string> _createdFiles = new ConcurrentBag<string>();  
+
 		private readonly IFileSystemWatcher _fileSystemWatcher;
+		private readonly IClock _clock;
+		private readonly TaskScheduler _scheduler;
 	}
 }

@@ -31,7 +31,8 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<SystemTimer>().As<ITimer>();
 
-			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>()
+			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
+			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()
 				.WithProperty(p => p.Filter, "*.puml");
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();

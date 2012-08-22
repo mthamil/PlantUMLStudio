@@ -14,7 +14,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 	{
 		public DiagramIOServiceTests()
 		{
-			diagramIO = new DiagramIOService(scheduler, fileSystemWatcher.Object);
+			diagramIO = new DiagramIOService(scheduler, monitor.Object);
 		}
 
 		[Fact(Skip="File system watcher created event needs better handling")]
@@ -26,7 +26,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			diagramIO.DiagramAdded += addHandler;
 
 			// Act.
-			fileSystemWatcher.Raise(fsw => fsw.Created += null, 
+			monitor.Raise(m => m.Created += null, 
 				new FileSystemEventArgs(WatcherChangeTypes.Created, currentDirectory.FullName, "class.puml"));
 
 			// Assert.
@@ -44,7 +44,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			diagramIO.DiagramDeleted += deleteHandler;
 
 			// Act.
-			fileSystemWatcher.Raise(fsw => fsw.Deleted += null,
+			monitor.Raise(m => m.Deleted += null,
 				new FileSystemEventArgs(WatcherChangeTypes.Deleted, currentDirectory.FullName, "class.puml"));
 
 			// Assert.
@@ -59,8 +59,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			diagramIO.StartMonitoring(currentDirectory);
 
 			// Assert.
-			fileSystemWatcher.VerifySet(fsw => fsw.Path = currentDirectory.FullName);
-			fileSystemWatcher.VerifySet(fsw => fsw.EnableRaisingEvents = true);
+			monitor.Verify(m => m.StartMonitoring(currentDirectory));
 		}
 
 		[Fact]
@@ -70,7 +69,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			diagramIO.StopMonitoring();
 
 			// Assert.
-			fileSystemWatcher.VerifySet(fsw => fsw.EnableRaisingEvents = false);
+			monitor.Verify(m => m.StopMonitoring());
 		}
 
 		[Fact]
@@ -113,7 +112,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 		private readonly DiagramIOService diagramIO;
 
 		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();
-		private readonly Mock<IFileSystemWatcher> fileSystemWatcher = new Mock<IFileSystemWatcher>();
+		private readonly Mock<IDirectoryMonitor> monitor = new Mock<IDirectoryMonitor>();
 
 		private static readonly DirectoryInfo currentDirectory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDiagrams"));
 	}

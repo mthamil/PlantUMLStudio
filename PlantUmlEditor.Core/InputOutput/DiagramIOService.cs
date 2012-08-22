@@ -18,14 +18,14 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// Initializes the service.
 		/// </summary>
 		/// <param name="scheduler">The scheduler to use for executing tasks</param>
-		/// <param name="fileSystemWatcher">Monitors the file system</param>
-		public DiagramIOService(TaskScheduler scheduler, IFileSystemWatcher fileSystemWatcher)
+		/// <param name="monitor">Monitors the file system</param>
+		public DiagramIOService(TaskScheduler scheduler, IDirectoryMonitor monitor)
 		{
 			_scheduler = scheduler;
-			_fileSystemWatcher = fileSystemWatcher;
+			_monitor = monitor;
 
-			_fileSystemWatcher.Created += fileSystemWatcher_Created;
-			_fileSystemWatcher.Deleted += fileSystemWatcher_Deleted;
+			_monitor.Created += monitor_Created;
+			_monitor.Deleted += monitor_Deleted;
 		}
 
 		#region Implementation of IDiagramIOService
@@ -126,14 +126,13 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <see cref="IDiagramIOService.StartMonitoring"/>
 		public void StartMonitoring(DirectoryInfo directory)
 		{
-			_fileSystemWatcher.Path = directory.FullName;
-			_fileSystemWatcher.EnableRaisingEvents = true;
+			_monitor.StartMonitoring(directory);
 		}
 
 		/// <see cref="IDiagramIOService.StopMonitoring"/>
 		public void StopMonitoring()
 		{
-			_fileSystemWatcher.EnableRaisingEvents = false;
+			_monitor.StopMonitoring();
 		}
 
 		/// <see cref="IDiagramIOService.DiagramAdded"/>
@@ -158,19 +157,19 @@ namespace PlantUmlEditor.Core.InputOutput
 
 		#endregion
 
-		void fileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
+		void monitor_Deleted(object sender, FileSystemEventArgs e)
 		{
 			OnDiagramDeleted(new FileInfo(e.FullPath));
 		}
 
-		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
+		void monitor_Created(object sender, FileSystemEventArgs e)
 		{
 			//var newDiagram = ReadImpl(new FileInfo(e.FullPath));
 			//OnDiagramAdded(newDiagram);
 		}
 
 		private readonly TaskScheduler _scheduler;
-		private readonly IFileSystemWatcher _fileSystemWatcher;
+		private readonly IDirectoryMonitor _monitor;
 
 		private static readonly Regex diagramStartPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)", 
 			RegexOptions.IgnoreCase |

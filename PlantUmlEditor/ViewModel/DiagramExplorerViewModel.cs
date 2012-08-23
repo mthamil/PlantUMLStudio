@@ -200,19 +200,23 @@ namespace PlantUmlEditor.ViewModel
 			var progress = _progressFactory.New();
 			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
 
-			var readProgress = new Progress<Tuple<int, int>>();
+			// Capture diagrams as they are read for a more responsive UI.
+			var readProgress = new Progress<ReadDiagramsProgress>(p =>
+			{
+				if (p.Diagram.HasValue)
+					PreviewDiagrams.Add(_previewDiagramFactory(p.Diagram.Value));
+			});
+
+			// Report progress to UI by passing up progress data.
 			progress.Wrap(readProgress, p => new ProgressUpdate
 			{
-				PercentComplete = (int?)(p.Item1 / (double)p.Item2 * 100),
-				Message = String.Format(Resources.Progress_LoadingFile, p.Item1, p.Item2)
+				PercentComplete = (int?)(p.ProcessedDiagramCount / (double)p.TotalDiagramCount * 100),
+				Message = String.Format(Resources.Progress_LoadingFile, p.ProcessedDiagramCount, p.TotalDiagramCount)
 			});
 
 			try
 			{
-				var diagrams = await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
-				foreach (var diagramFile in diagrams)
-					PreviewDiagrams.Add(_previewDiagramFactory(diagramFile));
-
+				await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
 				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
 			}
 			catch (Exception e)

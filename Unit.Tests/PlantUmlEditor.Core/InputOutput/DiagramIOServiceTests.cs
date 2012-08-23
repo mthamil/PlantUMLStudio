@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -92,7 +93,11 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 		public void Test_ReadDiagramsAsync()
 		{
 			// Arrange.
-			var progress = new Mock<IProgress<Tuple<int, int>>>();
+			var progressData = new List<ReadDiagramsProgress>();
+
+			var progress = new Mock<IProgress<ReadDiagramsProgress>>();
+			progress.Setup(p => p.Report(It.IsAny<ReadDiagramsProgress>()))
+				.Callback((ReadDiagramsProgress p) => progressData.Add(p));
 
 			// Act.
 			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, progress.Object);
@@ -107,7 +112,10 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFilePath);
 			Assert.True(!String.IsNullOrWhiteSpace(diagram.Content));
 
-			progress.Verify(p => p.Report(Tuple.Create(1, 1)));
+			Assert.Single(progressData);
+			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), progressData.Single().Diagram.Value.File.FullName);
+			Assert.Equal(1, progressData.Single().ProcessedDiagramCount);
+			Assert.Equal(1, progressData.Single().TotalDiagramCount);
 		}
 
 		private readonly DiagramIOService diagramIO;

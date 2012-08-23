@@ -23,10 +23,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
 
-			progress.Setup(p => p.New(It.IsAny<bool>()))
+			progressFactory.Setup(p => p.New(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			explorer = new DiagramExplorerViewModel(progress.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
+			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
 		}
 
 		[Fact]
@@ -34,12 +34,20 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_SuccessfulLoad()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
-				.Returns(Task.FromResult<IEnumerable<Diagram>>(new List<Diagram>
+			var diagrams = new List<Diagram>
+			{
+				new Diagram { Content = "Diagram 1"},
+				new Diagram { Content = "Diagram 2" },
+				null
+			};
+
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
+				.Returns(() => Task.FromResult<IEnumerable<Diagram>>(diagrams))
+				.Callback((DirectoryInfo dir, IProgress<ReadDiagramsProgress> prog) =>
 				{
-					new Diagram { Content = "Diagram 1"},
-					new Diagram { Content = "Diagram 2" }
-				}));
+					foreach (var diagram in diagrams)
+						prog.Report(new ReadDiagramsProgress(1, 1, diagram));
+				});
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
@@ -48,7 +56,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.True(isValid);
 			Assert.Equal(2, explorer.PreviewDiagrams.Count);
-			AssertThat.SequenceEqual(new [] { "Diagram 1", "Diagram 2" }, explorer.PreviewDiagrams.Select(d => d.Diagram.Content));
+			AssertThat.SequenceEqual(new[] { "Diagram 1", "Diagram 2" }, explorer.PreviewDiagrams.Select(d => d.Diagram.Content));
+
 			Assert.Equal(diagramLocation.FullName, settings.Object.LastDiagramLocation.FullName);
 			diagramIO.Verify(dio => dio.StartMonitoring(diagramLocation));
 		}
@@ -58,7 +67,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_UnsuccessfulLoad()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
 			// Act.
@@ -76,7 +85,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_False()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<Tuple<int, int>>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			// Act.
@@ -85,9 +94,24 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.False(isValid);
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
-				It.IsAny<DirectoryInfo>(), 
-				It.IsAny<IProgress<Tuple<int, int>>>()), Times.Never());
+				It.IsAny<DirectoryInfo>(),
+				It.IsAny<IProgress<ReadDiagramsProgress>>()), Times.Never());
 			settings.VerifySet(s => s.LastDiagramLocation = It.IsAny<DirectoryInfo>(), Times.Never());
+		}
+
+		[Fact]
+		public void Test_LoadDiagramsCommand_InvalidDirectory()
+		{
+			// Arrange.
+			explorer.DiagramLocation = new DirectoryInfo("test");
+
+			// Act.
+			explorer.LoadDiagramsCommand.Execute(null);
+
+			// Assert.
+			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
+				It.IsAny<DirectoryInfo>(),
+				It.IsAny<IProgress<ReadDiagramsProgress>>()), Times.Never());
 		}
 
 		[Fact]
@@ -249,7 +273,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private readonly DiagramExplorerViewModel explorer;
 
-		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
+		private readonly Mock<IProgressRegistration> progressFactory = new Mock<IProgressRegistration>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 		private readonly TaskScheduler uiScheduler = new SynchronousTaskScheduler();

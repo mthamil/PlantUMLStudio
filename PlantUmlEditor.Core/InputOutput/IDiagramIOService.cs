@@ -16,7 +16,7 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <param name="directory">The directory to load from</param>
 		/// <param name="progress">An optional progress reporter</param>
 		/// <returns>A task with the loaded diagrams</returns>
-		Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<Tuple<int, int>> progress = null);
+		Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<ReadDiagramsProgress> progress = null);
 
 		/// <summary>
 		/// Asynchronously reads a single diagram from a file.

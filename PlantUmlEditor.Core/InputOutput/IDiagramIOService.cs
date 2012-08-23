@@ -22,7 +22,7 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// Asynchronously reads a single diagram from a file.
 		/// </summary>
 		/// <param name="file">The diagram file to read</param>
-		/// <returns>The loaded diagram</returns>
+		/// <returns>The loaded diagram or null if a file was not a diagram file</returns>
 		Task<Diagram> ReadAsync(FileInfo file);
 
 		/// <summary>

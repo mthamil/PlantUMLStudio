@@ -264,7 +264,8 @@ namespace PlantUmlEditor.ViewModel
 					else
 					{
 						newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
-						PreviewDiagrams.Add(_previewDiagramFactory(newlyAddedDiagram));
+						if (newlyAddedDiagram != null)
+							PreviewDiagrams.Add(_previewDiagramFactory(newlyAddedDiagram));
 					}
 				}
 			}, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);

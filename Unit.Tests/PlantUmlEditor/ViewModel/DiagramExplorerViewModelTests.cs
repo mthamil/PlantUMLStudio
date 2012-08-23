@@ -26,7 +26,8 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			progressFactory.Setup(p => p.New(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object, d => new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
+			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object, 
+				d => d == null ? null : new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
 		}
 
 		[Fact]
@@ -269,6 +270,24 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Single(explorer.PreviewDiagrams);
 			Assert.Equal(newFile.FullName, explorer.PreviewDiagrams.Single().Diagram.File.FullName);
+		}
+
+		[Fact]
+		public void Test_DiagramFileAdded_NullDiagram()
+		{
+			// Arrange.
+			var newFile = new FileInfo("test.puml");
+
+			explorer.DiagramLocation = newFile.Directory;
+
+			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
+				.Returns(Task.FromResult<Diagram>(null));
+
+			// Act.
+			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(newFile));
+
+			// Assert.
+			Assert.Empty(explorer.PreviewDiagrams);
 		}
 
 		private readonly DiagramExplorerViewModel explorer;

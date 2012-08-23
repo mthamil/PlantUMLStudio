@@ -43,6 +43,11 @@ namespace Utilities.Chronology
 		bool TryStop();
 
 		/// <summary>
+		/// Stops a timer if it was already started, and then starts it again.
+		/// </summary>
+		void Restart();
+
+		/// <summary>
 		/// Whether a timer is running.
 		/// </summary>
 		bool Started { get; }

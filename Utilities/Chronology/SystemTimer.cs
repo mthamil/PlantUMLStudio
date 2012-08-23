@@ -78,11 +78,21 @@ namespace Utilities.Chronology
 
 				_largeIntervalRemaining = 0;
 
-				_timer.Elapsed -= new ElapsedEventHandler(timer_Elapsed);
+				_timer.Elapsed -= timer_Elapsed;
 				_timer.Stop();
 				_running = false;
 
 				return true;
+			}
+		}
+
+		/// <see cref="ITimer.Restart"/>
+		public void Restart()
+		{
+			lock (_syncObject)
+			{
+				TryStop();
+				Start();
 			}
 		}
 

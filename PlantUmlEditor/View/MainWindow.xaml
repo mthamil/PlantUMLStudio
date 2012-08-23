@@ -262,7 +262,7 @@
                                 </CollectionViewSource>
                             </Grid.Resources>
 
-                                    <Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
             

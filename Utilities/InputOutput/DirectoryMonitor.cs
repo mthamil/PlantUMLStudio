@@ -13,11 +13,10 @@ namespace Utilities.InputOutput
 	/// </summary>
 	public class DirectoryMonitor : IDirectoryMonitor
 	{
-		public DirectoryMonitor(IFileSystemWatcher fileSystemWatcher, IClock clock, TaskScheduler scheduler)
+		public DirectoryMonitor(IFileSystemWatcher fileSystemWatcher, Func<ITimer> timerFactory)
 		{
 			_fileSystemWatcher = fileSystemWatcher;
-			_clock = clock;
-			_scheduler = scheduler;
+			_timerFactory = timerFactory;
 
 			_fileSystemWatcher.Created += fileSystemWatcher_Created;
 			_fileSystemWatcher.Deleted += fileSystemWatcher_Deleted;
@@ -63,6 +62,10 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
 		{
+			ITimer timer;
+			if (fileTimers.TryGetValue(e.FullPath, out timer))
+				timer.Restart(e.FullPath);	// The created file is still changing, reset the timer.
+
 			OnChanged(e);
 		}
 
@@ -78,32 +81,14 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			// The Created event fires twice, so only process the second event.
-
-			string path;
-			if (_createdFiles.TryTake(out path))
+			fileTimers.GetOrAdd(e.FullPath, path =>
 			{
-				Task.Factory.StartNew(async () =>
-				{
-					// Wait for file to be actually created.  Sometimes the event fires before the file
-					// actually exists. If after FileCreationTimeout amount of time the file
-					// still does not exist, just give up.
-					DateTimeOffset start = _clock.Now;
-					while (!File.Exists(e.FullPath))
-					{
-						await Task.Delay(TimeSpan.FromSeconds(1));
-						if ((_clock.Now - start) > FileCreationWaitTimeout)
-							return;
-					}
-
-					OnCreated(e);
-
-				}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
-			}
-			else
-			{
-				_createdFiles.Add(e.FullPath);
-			}
+				var timer = _timerFactory();
+				timer.Interval = FileCreationWaitTimeout;
+				timer.Elapsed += fileTimer_Elapsed;
+				timer.Restart(path);
+				return timer;
+			});
 		}
 
 		private void OnCreated(FileSystemEventArgs args)
@@ -111,6 +96,19 @@ namespace Utilities.InputOutput
 			var localEvent = Created;
 			if (localEvent != null)
 				localEvent(this, args);
+		}
+
+		void fileTimer_Elapsed(object sender, TimerElapsedEventArgs e)
+		{
+			var path = (string)e.State;
+			ITimer timer;
+			if (fileTimers.TryRemove(path, out timer))
+			{
+				timer.TryStop();
+				timer.Elapsed -= fileTimer_Elapsed;
+				if (File.Exists(path))
+					OnCreated(new FileSystemEventArgs(WatcherChangeTypes.Created, Path.GetDirectoryName(path), Path.GetFileName(path)));
+			}
 		}
 
 		/// <see cref="IDirectoryMonitor.Deleted"/>
@@ -205,10 +203,12 @@ namespace Utilities.InputOutput
 
 		#endregion
 
-		private readonly ConcurrentBag<string> _createdFiles = new ConcurrentBag<string>();  
+		/// <summary>
+		/// Timers used to track file changes.
+		/// </summary>
+		private readonly ConcurrentDictionary<string, ITimer> fileTimers = new ConcurrentDictionary<string, ITimer>();
 
 		private readonly IFileSystemWatcher _fileSystemWatcher;
-		private readonly IClock _clock;
-		private readonly TaskScheduler _scheduler;
+		private readonly Func<ITimer> _timerFactory;
 	}
 }

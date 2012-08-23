@@ -130,7 +130,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
-			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(new FileInfo(newDiagramFilePath)));
 
 			// Assert.
 			Assert.Single(explorer.PreviewDiagrams);
@@ -181,7 +180,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
-			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(new FileInfo(newDiagramFilePath)));
 
 			// Assert.
 			Assert.Null(newDiagramArgs);

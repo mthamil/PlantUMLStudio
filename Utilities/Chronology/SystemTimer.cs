@@ -14,17 +14,17 @@ namespace Utilities.Chronology
 		public TimeSpan Interval { get; set; }
 
 		/// <see cref="ITimer.Start"/>
-		public void Start()
+		public void Start(object state = null)
 		{
 			lock (_syncObject)
 			{
-				if (!TryStart())
+				if (!TryStart(state))
 					throw new InvalidOperationException("Timer is already started.");
 			}
 		}
 
 		/// <see cref="ITimer.TryStart"/>
-		public bool TryStart()
+		public bool TryStart(object state = null)
 		{
 			lock (_syncObject)
 			{
@@ -42,6 +42,7 @@ namespace Utilities.Chronology
 					_largeIntervalRemaining = _timer.Interval = Int32.MaxValue;
 				}
 
+				_state = state;
 				_timer.Elapsed += timer_Elapsed;
 				try
 				{
@@ -87,12 +88,12 @@ namespace Utilities.Chronology
 		}
 
 		/// <see cref="ITimer.Restart"/>
-		public void Restart()
+		public void Restart(object state = null)
 		{
 			lock (_syncObject)
 			{
 				TryStop();
-				Start();
+				Start(state);
 			}
 		}
 
@@ -109,7 +110,14 @@ namespace Utilities.Chronology
 		}
 
 		/// <see cref="ITimer.Elapsed"/>
-		public event EventHandler Elapsed;
+		public event EventHandler<TimerElapsedEventArgs> Elapsed;
+
+		private void OnElapsed(ElapsedEventArgs e)
+		{
+			var localEvent = Elapsed;
+			if (localEvent != null)
+				localEvent(this, new TimerElapsedEventArgs(e.SignalTime, _state));
+		}
 
 		#endregion
 
@@ -132,16 +140,12 @@ namespace Utilities.Chronology
 
 						return;
 					}
-					else
-					{
-						_largeIntervalRemaining = -1;
-					}
+
+					_largeIntervalRemaining = -1;
 				}
 			}
 
-			EventHandler handler = Elapsed;
-			if (handler != null)
-				handler(this, EventArgs.Empty);
+			OnElapsed(e);
 		}
 
 		#region IDisposable Members
@@ -190,6 +194,8 @@ namespace Utilities.Chronology
 		private bool _disposed;
 
 		#endregion
+
+		private object _state;
 
 		/// <summary>
 		/// The number of milliseconds remaining in the countdown 

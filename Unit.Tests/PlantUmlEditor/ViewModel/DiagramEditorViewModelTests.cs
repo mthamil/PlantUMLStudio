@@ -41,7 +41,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.True(editor.AutoSave);
-			autoSaveTimer.Verify(t => t.TryStart(), Times.Once());
+			autoSaveTimer.Verify(t => t.TryStart(It.IsAny<object>()), Times.Once());
 		}
 
 		[Fact]
@@ -58,7 +58,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.True(editor.AutoSave);
-			autoSaveTimer.Verify(t => t.TryStart(), Times.Never());
+			autoSaveTimer.Verify(t => t.TryStart(It.IsAny<object>()), Times.Never());
 		}
 
 		[Fact]
@@ -161,7 +161,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.True(editor.CanSave);
-			autoSaveTimer.Verify(t => t.TryStart());
+			autoSaveTimer.Verify(t => t.TryStart(It.IsAny<object>()));
 		}
 
 		[Fact]

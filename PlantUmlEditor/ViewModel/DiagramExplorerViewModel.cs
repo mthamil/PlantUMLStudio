@@ -172,12 +172,16 @@ namespace PlantUmlEditor.ViewModel
 			var progress = _progressFactory.New(false);
 			try
 			{
-				_newDiagrams.Add(newDiagram);
 				await _diagramIO.SaveAsync(newDiagram, false);
+
+				var preview = _previewDiagramFactory(newDiagram);
+				PreviewDiagrams.Add(preview);
+
+				CurrentPreviewDiagram = preview;
+				OnOpenPreviewRequested(preview);
 			}
 			catch (Exception e)
 			{
-				_newDiagrams.Remove(newDiagram);
 				progress.Report(ProgressUpdate.Failed(e));
 			}
 		}
@@ -243,30 +247,13 @@ namespace PlantUmlEditor.ViewModel
 		{
 			Task.Factory.StartNew(async () =>
 			{
-				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => pd.Diagram.File.FullName == e.NewDiagramFile.FullName);
-
 				// Make sure a preview doesn't already exist for the file and make sure the current directory still matches.
+				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => pd.Diagram.File.FullName == e.NewDiagramFile.FullName);
 				if (existingPreview == null && e.NewDiagramFile.Directory.FullName == DiagramLocation.FullName)
 				{
-					Diagram newlyAddedDiagram = _newDiagrams.SingleOrDefault(d => d.File.FullName == e.NewDiagramFile.FullName);
+					var newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
 					if (newlyAddedDiagram != null)
-					{
-						_newDiagrams.Remove(newlyAddedDiagram);
-
-						// No need to read a diagram file if it was new, we already have it in memory.
-						var preview = _previewDiagramFactory(newlyAddedDiagram);
-						PreviewDiagrams.Add(preview);
-
-						// Select and open explicitly added diagrams.
-						CurrentPreviewDiagram = preview;
-						OnOpenPreviewRequested(preview);
-					}
-					else
-					{
-						newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
-						if (newlyAddedDiagram != null)
-							PreviewDiagrams.Add(_previewDiagramFactory(newlyAddedDiagram));
-					}
+						PreviewDiagrams.Add(_previewDiagramFactory(newlyAddedDiagram));
 				}
 			}, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
@@ -278,7 +265,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<PreviewDiagramViewModel> _currentPreviewDiagram;
 		private readonly Property<ICollection<PreviewDiagramViewModel>> _previewDiagrams;
-		private readonly ICollection<Diagram> _newDiagrams = new HashSet<Diagram>();
 
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;

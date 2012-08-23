@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Moq;
 using Utilities.Chronology;
-using Utilities.Concurrency;
 using Utilities.InputOutput;
 using Xunit;
 
@@ -15,7 +13,14 @@ namespace Unit.Tests.Utilities.InputOutput
 	{
 		public DirectoryMonitorTests()
 		{
-			monitor = new DirectoryMonitor(watcher.Object, clock.Object, scheduler)
+			var timerFactory = new Func<ITimer>(() =>
+			{
+				var timer = new Mock<ITimer>();
+				timers.Add(timer);
+				return timer.Object;
+			});
+
+			monitor = new DirectoryMonitor(watcher.Object, timerFactory)
 				{
 					FileCreationWaitTimeout = TimeSpan.FromSeconds(2)
 				};
@@ -93,9 +98,44 @@ namespace Unit.Tests.Utilities.InputOutput
 			EventHandler<FileSystemEventArgs> createdHandler = (o, e) => createdArgs.Add(e);
 			monitor.Created += createdHandler;
 
-			// Act: the create event is raised twice, processing occurs on second event.
+			// Act.
 			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, testFile.Directory.FullName, testFile.Name));
+
+			// Assert.
+			Assert.Single(timers);
+			timers.Single().VerifySet(t => t.Interval = TimeSpan.FromSeconds(2));
+			timers.Single().Verify(t => t.Restart(testFile.FullName));
+
+			// Act.
+			timers.Single().Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now, testFile.FullName));
+
+			// Assert.
+			Assert.Single(createdArgs);
+			Assert.Equal(testFile.FullName, createdArgs.Single().FullPath);
+		}
+
+		[Fact]
+		public void Test_Watcher_Created_ThenChanged()
+		{
+			// Arrange.
+			var testFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestDiagrams\class.puml"));
+
+			var createdArgs = new List<FileSystemEventArgs>();
+			EventHandler<FileSystemEventArgs> createdHandler = (o, e) => createdArgs.Add(e);
+			monitor.Created += createdHandler;
+
 			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, testFile.Directory.FullName, testFile.Name));
+
+			// Act.
+			watcher.Raise(w => w.Changed += null, new FileSystemEventArgs(WatcherChangeTypes.Changed, testFile.Directory.FullName, testFile.Name));
+
+			// Assert.
+			Assert.Single(timers);
+			timers.Single().VerifySet(t => t.Interval = TimeSpan.FromSeconds(2));
+			timers.Single().Verify(t => t.Restart(testFile.FullName), Times.Exactly(2));
+
+			// Act.
+			timers.Single().Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now, testFile.FullName));
 
 			// Assert.
 			Assert.Single(createdArgs);
@@ -191,7 +231,6 @@ namespace Unit.Tests.Utilities.InputOutput
 		private readonly DirectoryMonitor monitor;
 
 		private readonly Mock<IFileSystemWatcher> watcher = new Mock<IFileSystemWatcher>();
-		private readonly Mock<IClock> clock = new Mock<IClock>(); 
-		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();
+		private readonly IList<Mock<ITimer>> timers = new List<Mock<ITimer>>(); 
 	}
 }

@@ -14,8 +14,9 @@ namespace Utilities.Concurrency
 		/// <returns>A successfully completed task</returns>
 		public static Task FromSuccess()
 		{
-			return Task.FromResult<object>(null);
+			return completed;
 		}
+		private static readonly Task completed = Task.FromResult<object>(null);
 
 		/// <summary>
 		/// Creates an already canceled task.

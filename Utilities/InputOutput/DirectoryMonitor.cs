@@ -61,7 +61,7 @@ namespace Utilities.InputOutput
 		void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
 		{
 			ITimer timer;
-			if (fileTimers.TryGetValue(e.FullPath, out timer))
+			if (fileCreationTimers.TryGetValue(e.FullPath, out timer))
 				timer.Restart(e.FullPath);	// The created file is still changing, reset the timer.
 
 			OnChanged(e);
@@ -79,7 +79,7 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			fileTimers.GetOrAdd(e.FullPath, path =>
+			fileCreationTimers.GetOrAdd(e.FullPath, path =>
 			{
 				var timer = _timerFactory();
 				timer.Interval = FileCreationWaitTimeout;
@@ -100,7 +100,7 @@ namespace Utilities.InputOutput
 		{
 			var path = (string)e.State;
 			ITimer timer;
-			if (fileTimers.TryRemove(path, out timer))
+			if (fileCreationTimers.TryRemove(path, out timer))
 			{
 				timer.TryStop();
 				timer.Elapsed -= fileTimer_Elapsed;
@@ -204,7 +204,7 @@ namespace Utilities.InputOutput
 		/// <summary>
 		/// Timers used to track file changes.
 		/// </summary>
-		private readonly ConcurrentDictionary<string, ITimer> fileTimers = new ConcurrentDictionary<string, ITimer>();
+		private readonly ConcurrentDictionary<string, ITimer> fileCreationTimers = new ConcurrentDictionary<string, ITimer>();
 
 		private readonly IFileSystemWatcher _fileSystemWatcher;
 		private readonly Func<ITimer> _timerFactory;

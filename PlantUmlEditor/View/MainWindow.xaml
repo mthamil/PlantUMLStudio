@@ -169,6 +169,11 @@
                                 <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
+                        <MenuItem Header="Save_All" Command="{Binding SaveAllCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource SaveAllIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
                                 <utilcmd:CloseWindowCommand/>
@@ -225,6 +230,14 @@
                         <MenuItem.Header>
                             <StackPanel>
                                 <Image Source="{StaticResource SaveIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Command="{Binding SaveAllCommand}" ToolTip="Save all modified diagrams.">
+                        <MenuItem.Header>
+                            <StackPanel>
+                                <Image Source="{StaticResource SaveAllIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>

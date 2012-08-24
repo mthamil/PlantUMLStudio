@@ -9,6 +9,7 @@ using PlantUmlEditor.Configuration;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
+using Utilities.Reflection;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -27,9 +28,10 @@ namespace PlantUmlEditor.ViewModel
 
 			_closingDiagram = Property.New(this, p => p.ClosingDiagram, OnPropertyChanged);
 
-			_saveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
-			_openDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
-			_closeCommand = new RelayCommand(Close);
+			SaveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
+			OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
+			CloseCommand = new RelayCommand(Close);
+			SaveAllCommand = new BoundRelayCommand<DiagramManagerViewModel>(_ => SaveAll(), p => p.CanSaveAll, this);
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}
@@ -59,10 +61,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Command to open a diagram for editing.
 		/// </summary>
-		public ICommand OpenDiagramCommand
-		{
-			get { return _openDiagramCommand; }
-		}
+		public ICommand OpenDiagramCommand { get; private set; }
 
 		private void OpenDiagramForEdit(PreviewDiagramViewModel diagram)
 		{
@@ -73,10 +72,39 @@ namespace PlantUmlEditor.ViewModel
 				diagramEditor.Closing += diagramEditor_Closing;
 				diagramEditor.Closed += diagramEditor_Closed;
 				diagramEditor.Saved += diagramEditor_Saved;
+				diagramEditor.PropertyChanged += diagramEditor_PropertyChanged;
 				OpenDiagrams.Add(diagramEditor);
 			}
 
 			OpenDiagram = diagramEditor;
+		}
+
+		void diagramEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == canSavePropertyName)
+				OnPropertyChanged(canSaveAllPropertyName);
+		}
+		private static readonly string canSavePropertyName = Reflect.PropertyOf<IDiagramEditor>(p => p.CanSave).Name;
+
+		/// <summary>
+		/// Whether any diagrams need saving.
+		/// </summary>
+		public bool CanSaveAll
+		{
+			get { return OpenDiagrams.Any(d => d.CanSave); }
+		}
+		private static readonly string canSaveAllPropertyName = Reflect.PropertyOf<DiagramManagerViewModel>(p => p.CanSaveAll).Name;
+
+		/// <summary>
+		/// Command to save all modified open diagrams.
+		/// </summary>
+		public ICommand SaveAllCommand { get; private set; }
+
+		private async void SaveAll()
+		{
+			var modifiedEditors = OpenDiagrams.Where(d => d.CanSave).ToList();
+			await Task.WhenAll(modifiedEditors.Select(d => d.SaveAsync()));
+			OnPropertyChanged(canSaveAllPropertyName);
 		}
 
 		void diagramEditor_Saved(object sender, EventArgs e)
@@ -118,6 +146,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private void RemoveEditor(IDiagramEditor editor)
 		{
+			editor.PropertyChanged -= diagramEditor_PropertyChanged;
 			editor.Closing -= diagramEditor_Closing;
 			editor.Closed -= diagramEditor_Closed;
 			editor.Saved -= diagramEditor_Saved;
@@ -128,10 +157,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Saves the currently closing diagram.
 		/// </summary>
-		public ICommand SaveClosingDiagramCommand
-		{
-			get { return _saveClosingDiagramCommand; }
-		}
+		public ICommand SaveClosingDiagramCommand { get; private set; }
 
 		/// <summary>
 		/// The diagram currently being closed, if any.
@@ -145,17 +171,14 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Command executed when closing the main application window.
 		/// </summary>
-		public ICommand CloseCommand
-		{
-			get { return _closeCommand; }
-		}
+		public ICommand CloseCommand { get; private set; }
 
 		private void Close()
 		{
 			var unsavedOpenDiagrams = OpenDiagrams.Where(od => od.CodeEditor.IsModified).ToList();
 			foreach (var openDiagram in unsavedOpenDiagrams)
 			{
-				openDiagram.CloseCommand.Execute(null);
+				openDiagram.Close();
 			}
 
 			Task.WaitAll(_editorSaveTasks.ToArray());
@@ -175,10 +198,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<ICollection<IDiagramEditor>> _openDiagrams;
 		private readonly Property<IDiagramEditor> _closingDiagram;
 
-		private readonly ICommand _openDiagramCommand;
-		private readonly ICommand _closeCommand;
-
-		private readonly ICommand _saveClosingDiagramCommand;
 		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
 		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
 

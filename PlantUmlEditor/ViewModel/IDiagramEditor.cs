@@ -43,35 +43,20 @@ namespace PlantUmlEditor.ViewModel
 		bool CanSave { get; }
 
 		/// <summary>
-		/// Command that saves a diagram's changes.
-		/// </summary>
-		ICommand SaveCommand { get; }
-
-		/// <summary>
 		/// Asynchronously saves a diagram editor.
 		/// </summary>
 		/// <returns>A task representing the save operation</returns>
 		Task SaveAsync();
 
 		/// <summary>
-		/// Whether a diagram's image can currently be refreshed.
+		/// Event raised when a diagram editor saves.
 		/// </summary>
-		bool CanRefresh { get; }
+		event EventHandler Saved;
 
 		/// <summary>
-		/// Refreshes a diagram's image without saving.
+		/// Closes a diagram editor.
 		/// </summary>
-		ICommand RefreshCommand { get; }
-
-		/// <summary>
-		/// Command that closes a diagram editor.
-		/// </summary>
-		ICommand CloseCommand { get; }
-
-		/// <summary>
-		/// The code editor.
-		/// </summary>
-		ICodeEditor CodeEditor { get; }
+		void Close();
 
 		/// <summary>
 		/// Event raised when a diagram editor indicates it will be closing.
@@ -84,8 +69,8 @@ namespace PlantUmlEditor.ViewModel
 		event EventHandler Closed;
 
 		/// <summary>
-		/// Event raised when a diagram editor saves.
+		/// The code editor.
 		/// </summary>
-		event EventHandler Saved;
+		ICodeEditor CodeEditor { get; }
 	}
 }

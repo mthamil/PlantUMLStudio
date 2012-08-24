@@ -219,6 +219,16 @@ namespace PlantUmlEditor.ViewModel
 			return saveTask;
 		}
 
+		/// <see cref="IDiagramEditor.Saved"/>
+		public event EventHandler Saved;
+
+		private void OnSaved()
+		{
+			var localEvent = Saved;
+			if (localEvent != null)
+				localEvent(this, EventArgs.Empty);
+		}
+
 		void autoSaveTimerElapsed(object sender, EventArgs e)
 		{
 			// We must begin the Save operation on the UI thread in order to update the UI 
@@ -293,7 +303,10 @@ namespace PlantUmlEditor.ViewModel
 			get { return _closeCommand; }
 		}
 
-		private void Close()
+		/// <summary>
+		/// Closes a diagram editor.
+		/// </summary>
+		public void Close()
 		{
 			var cancelArgs = new CancelEventArgs();
 			OnClosing(cancelArgs);
@@ -321,16 +334,6 @@ namespace PlantUmlEditor.ViewModel
 		private void OnClosed()
 		{
 			var localEvent = Closed;
-			if (localEvent != null)
-				localEvent(this, EventArgs.Empty);
-		}
-
-		/// <see cref="IDiagramEditor.Saved"/>
-		public event EventHandler Saved;
-
-		private void OnSaved()
-		{
-			var localEvent = Saved;
 			if (localEvent != null)
 				localEvent(this, EventArgs.Empty);
 		}

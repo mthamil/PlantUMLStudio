@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Configuration;
@@ -11,6 +10,7 @@ using PlantUmlEditor.Core;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel
 {
@@ -264,19 +264,15 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			var unsavedCodeEditor = new Mock<ICodeEditor>();
 			unsavedCodeEditor.SetupGet(ce => ce.IsModified).Returns(true);
-			var unsavedEditorCloseCommand = new Mock<ICommand>();
 			var unsavedEditor = new Mock<IDiagramEditor>();
 			unsavedEditor.SetupGet(e => e.Diagram).Returns(diagram);
 			unsavedEditor.SetupGet(e => e.CodeEditor).Returns(unsavedCodeEditor.Object);
-			unsavedEditor.SetupGet(e => e.CloseCommand).Returns(unsavedEditorCloseCommand.Object);
 
 			var codeEditor = new Mock<ICodeEditor>();
 			codeEditor.SetupGet(ce => ce.IsModified).Returns(false);
-			var editorCloseCommand = new Mock<ICommand>();
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
 			editor.SetupGet(e => e.CodeEditor).Returns(codeEditor.Object);
-			editor.SetupGet(e => e.CloseCommand).Returns(editorCloseCommand.Object);
 
 			var diagramManager = CreateManager(d => unsavedEditor.Object);
 			diagramManager.OpenDiagrams.Add(unsavedEditor.Object);
@@ -286,8 +282,81 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramManager.CloseCommand.Execute(null);
 
 			// Assert.
-			unsavedEditorCloseCommand.Verify(c => c.Execute(It.IsAny<object>()));
-			editorCloseCommand.Verify(c => c.Execute(It.IsAny<object>()), Times.Never());
+			unsavedEditor.Verify(c => c.Close());
+			editor.Verify(c => c.Close(), Times.Never());
+		}
+
+		[Fact]
+		public void Test_SaveAllCommand()
+		{
+			// Arrange.
+			var diagramManager = CreateManager(d => null);
+
+			var modifiedEditors = new List<Mock<IDiagramEditor>>();
+			for (int i = 0; i < 2; i++)
+			{
+				var modifiedEditor = new Mock<IDiagramEditor>();
+				modifiedEditor.SetupGet(ce => ce.CanSave).Returns(true);
+				modifiedEditor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
+				modifiedEditors.Add(modifiedEditor);
+				diagramManager.OpenDiagrams.Add(modifiedEditor.Object);
+			}
+
+			var unmodifiedEditor = new Mock<IDiagramEditor>();
+			unmodifiedEditor.SetupGet(ce => ce.CanSave).Returns(false);
+			unmodifiedEditor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
+			diagramManager.OpenDiagrams.Add(unmodifiedEditor.Object);
+			
+			// Act/Assert.
+			var args = AssertThat.RaisesWithEventArgs<PropertyChangedEventArgs>(diagramManager,
+				"PropertyChanged",
+				() => diagramManager.SaveAllCommand.Execute(null));
+
+			// Assert.
+			modifiedEditors.ForEach(e => e.Verify(ed => ed.SaveAsync()));
+			unmodifiedEditor.Verify(e => e.SaveAsync(), Times.Never());
+			Assert.Equal("CanSaveAll", args.PropertyName);
+		}
+
+		[Theory]
+		[InlineData(true, new []{ true, true, true })]
+		[InlineData(true, new[] { true, true, false })]
+		[InlineData(true, new[] { true, false, false })]
+		[InlineData(false, new[] { false, false, false })]
+		public void Test_CanSaveAll(bool expected, bool[] modified)
+		{
+			// Arrange.
+			var diagramManager = CreateManager(d => null);
+
+			foreach (bool value in modified)
+			{
+				var editor = new Mock<IDiagramEditor>();
+				editor.SetupGet(e => e.CanSave).Returns(value);
+				diagramManager.OpenDiagrams.Add(editor.Object);
+			}
+
+			// Act.
+			bool actual = diagramManager.CanSaveAll;
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void Test_Editor_CanSaveChanged_Triggers_CanSaveAllChanged()
+		{
+			// Arrange.
+			var editor = new Mock<IDiagramEditor>();
+
+			var diagramManager = CreateManager(d => editor.Object);
+			diagramManager.OpenDiagramCommand.Execute(new PreviewDiagramViewModel(new Diagram { File = new FileInfo("test") }));
+
+			// Act/Assert.
+			var args = AssertThat.RaisesWithEventArgs<PropertyChangedEventArgs>(diagramManager,
+				"PropertyChanged",
+				() => editor.Raise(e => e.PropertyChanged += null, new PropertyChangedEventArgs("CanSave")));
+
+			Assert.Equal("CanSaveAll", args.PropertyName);
 		}
 
 		private DiagramManagerViewModel CreateManager(Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)

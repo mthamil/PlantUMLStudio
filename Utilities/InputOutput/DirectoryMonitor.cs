@@ -114,11 +114,11 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
 		{
-			ITimer creationTImer;
-			if (fileCreationTimers.TryRemove(e.FullPath, out creationTImer))
+			ITimer creationTimer;
+			if (fileCreationTimers.TryRemove(e.FullPath, out creationTimer))
 			{
-				creationTImer.TryStop();
-				creationTImer.Elapsed -= fileTimer_Elapsed;
+				creationTimer.TryStop();
+				creationTimer.Elapsed -= fileTimer_Elapsed;
 			}
 
 			OnDeleted(e);

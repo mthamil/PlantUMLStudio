@@ -41,9 +41,10 @@ namespace PlantUmlEditor.ViewModel
 
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
-			_loadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
-			_addNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
-			_requestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
+			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
+			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
+			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
+			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
 
 			_diagramIO.DiagramFileDeleted += diagramIO_DiagramFileDeleted;
 			_diagramIO.DiagramFileAdded += diagramIO_DiagramFileAdded;
@@ -114,10 +115,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Opens a preview for editing.
 		/// </summary>
-		public ICommand RequestOpenPreviewCommand
-		{
-			get { return _requestOpenPreviewCommand; }
-		}
+		public ICommand RequestOpenPreviewCommand { get; private set; }
 
 		private void RequestOpenPreview(PreviewDiagramViewModel preview)
 		{
@@ -149,10 +147,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Adds a new diagram with a given URI.
 		/// </summary>
-		public ICommand AddNewDiagramCommand
-		{
-			get { return _addNewDiagramCommand; }
-		}
+		public ICommand AddNewDiagramCommand { get; private set; }
 
 		private async void AddNewDiagram(Uri newDiagramUri)
 		{
@@ -189,10 +184,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Command that loads diagrams from the current diagram location.
 		/// </summary>
-		public ICommand LoadDiagramsCommand
-		{
-			get { return _loadDiagramsCommand; }
-		}
+		public ICommand LoadDiagramsCommand { get; private set; }
 
 		private async Task LoadDiagramsAsync()
 		{
@@ -222,6 +214,25 @@ namespace PlantUmlEditor.ViewModel
 			{
 				await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
 				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
+			}
+			catch (Exception e)
+			{
+				progress.Report(ProgressUpdate.Failed(e));
+			}
+		}
+
+		/// <summary>
+		/// Command to delete a diagram.
+		/// </summary>
+		public ICommand DeleteDiagramCommand { get; private set; }
+
+		private async void DeleteDiagram(PreviewDiagramViewModel preview)
+		{
+			var progress = _progressFactory.New(false);
+			try
+			{
+				await _diagramIO.DeleteAsync(preview.Diagram);
+				PreviewDiagrams.Remove(preview);
 			}
 			catch (Exception e)
 			{
@@ -268,10 +279,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;
-
-		private readonly ICommand _loadDiagramsCommand;
-		private readonly ICommand _addNewDiagramCommand;
-		private readonly ICommand _requestOpenPreviewCommand;
 
 		private readonly IDiagramIOService _diagramIO;
 

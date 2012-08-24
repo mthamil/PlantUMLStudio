@@ -352,6 +352,13 @@
                                                     <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                                 </MenuItem.Icon>
                                             </MenuItem>
+                                            <MenuItem Header="Delete"
+                                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.DeleteDiagramCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CurrentPreviewDiagram}">
+                                                <MenuItem.Icon>
+                                                    <Image Source="{StaticResource DeleteDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>
 

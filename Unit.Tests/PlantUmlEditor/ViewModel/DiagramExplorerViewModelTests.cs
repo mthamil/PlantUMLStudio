@@ -227,6 +227,45 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(preview, args.RequestedPreview);
 		}
 
+		[Theory]
+		[PropertyData("CanDeleteDiagramData")]
+		public void Test_CanDeleteDiagram(bool expected, PreviewDiagramViewModel preview)
+		{
+			// Act.
+			bool actual = explorer.DeleteDiagramCommand.CanExecute(preview);
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void Test_DeleteDiagramCommand()
+		{
+			// Arrange.
+			diagramIO.Setup(dio => dio.DeleteAsync(It.IsAny<Diagram>()))
+				.Returns(Tasks.FromSuccess());
+
+			var preview = new PreviewDiagramViewModel(new Diagram { File = new FileInfo("TestFile") });
+			explorer.PreviewDiagrams.Add(preview);
+
+			// Act.
+			explorer.DeleteDiagramCommand.Execute(preview);
+
+			// Assert.
+			Assert.Empty(explorer.PreviewDiagrams);
+			diagramIO.Verify(dio => dio.DeleteAsync(preview.Diagram));
+		}
+
+		public static IEnumerable<object[]> CanDeleteDiagramData
+		{
+			get
+			{
+				yield return new object[] { false, null };
+				yield return new object[] { true, new PreviewDiagramViewModel(new Diagram()) };
+			}
+		}
+
+
 		[Fact]
 		public void Test_DiagramFileDeleted()
 		{

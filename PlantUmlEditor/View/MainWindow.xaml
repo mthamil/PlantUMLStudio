@@ -204,9 +204,9 @@
                     </MenuItem>
 
                     <MenuItem Header="_Help">
-                        <MenuItem Header="About" CommandParameter="{x:Type vw:About}">
+                        <MenuItem Header="About">
                             <MenuItem.Command>
-                                <utilcmd:OpenWindowCommand/>
+                                <utilcmd:OpenWindowCommand Type="{x:Type vw:About}"/>
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>

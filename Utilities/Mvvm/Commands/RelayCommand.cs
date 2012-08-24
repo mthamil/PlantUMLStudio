@@ -9,7 +9,7 @@ namespace Utilities.Mvvm.Commands
 	/// objects by invoking delegates. The default return value for the CanExecute
 	/// method is 'true'.  This command does not take any parameters.
 	/// </summary>
-	public class RelayCommand : ICommand
+	public class RelayCommand : CommandBase
 	{
 		/// <summary>
 		/// Creates a new command that can always execute.
@@ -36,7 +36,7 @@ namespace Utilities.Mvvm.Commands
 
 		/// <see cref="ICommand.CanExecute"/>
 		[DebuggerStepThrough]
-		public bool CanExecute(object parameter)
+		public override bool CanExecute(object parameter)
 		{
 			if (_canExecute == null)
 				return true;
@@ -45,16 +45,9 @@ namespace Utilities.Mvvm.Commands
 		}
 
 		/// <see cref="ICommand.Execute"/>
-		public void Execute(object parameter)
+		public override void Execute(object parameter)
 		{
 			_execute();
-		}
-
-		/// <see cref="ICommand.CanExecuteChanged"/>
-		public event EventHandler CanExecuteChanged
-		{
-			add { CommandManager.RequerySuggested += value; }
-			remove { CommandManager.RequerySuggested -= value; }
 		}
 
 		#endregion
@@ -69,7 +62,7 @@ namespace Utilities.Mvvm.Commands
 	/// true, the command parameter must of type T.
 	/// </summary>
 	/// <typeparam name="T">The type of parameter to be passed to the command</typeparam>
-	public class RelayCommand<T> : ICommand
+	public class RelayCommand<T> : CommandBase
 	{
 		/// <summary>
 		/// Creates a new command that can always execute.
@@ -96,7 +89,7 @@ namespace Utilities.Mvvm.Commands
 
 		/// <see cref="ICommand.CanExecute"/>
 		[DebuggerStepThrough]
-		public bool CanExecute(object parameter)
+		public override bool CanExecute(object parameter)
 		{
 			if (_canExecute == null)
 				return true;
@@ -108,16 +101,9 @@ namespace Utilities.Mvvm.Commands
 		}
 
 		/// <see cref="ICommand.Execute"/>
-		public void Execute(object parameter)
+		public override void Execute(object parameter)
 		{
 			_execute((T)parameter);
-		}
-
-		/// <see cref="ICommand.CanExecuteChanged"/>
-		public event EventHandler CanExecuteChanged
-		{
-			add { CommandManager.RequerySuggested += value; }
-			remove { CommandManager.RequerySuggested -= value; }
 		}
 
 		#endregion

@@ -220,6 +220,7 @@
     <Resource Include="Resources\Icons\document-arrow-16x16.png" />
     <Resource Include="Resources\Icons\disks-black-16x16.png" />
     <Resource Include="Resources\Icons\document-minus-16x16.png" />
+    <Resource Include="Resources\Icons\disks-black-24x24.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

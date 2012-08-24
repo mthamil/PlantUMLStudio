@@ -5,6 +5,7 @@
     <BitmapImage x:Key="SaveIcon_Medium" UriSource="../Icons/disk-black-24x24.png"/>
 
     <BitmapImage x:Key="SaveAllIcon_Small" UriSource="../Icons/disks-black-16x16.png"/>
+    <BitmapImage x:Key="SaveAllIcon_Medium" UriSource="../Icons/disks-black-24x24.png"/>
 
     <BitmapImage x:Key="RefreshIcon_Small" UriSource="../Icons/arrow-circle-double-135-16x16.png"/>
     <BitmapImage x:Key="RefreshIcon_Medium" UriSource="../Icons/arrow-circle-double-135-24x24.png"/>

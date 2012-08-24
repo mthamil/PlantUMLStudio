@@ -99,11 +99,11 @@ namespace Utilities.InputOutput
 		void fileTimer_Elapsed(object sender, TimerElapsedEventArgs e)
 		{
 			var path = (string)e.State;
-			ITimer timer;
-			if (fileCreationTimers.TryRemove(path, out timer))
+			ITimer creationTimer;
+			if (fileCreationTimers.TryRemove(path, out creationTimer))
 			{
-				timer.TryStop();
-				timer.Elapsed -= fileTimer_Elapsed;
+				creationTimer.TryStop();
+				creationTimer.Elapsed -= fileTimer_Elapsed;
 				if (File.Exists(path))
 					OnCreated(new FileSystemEventArgs(WatcherChangeTypes.Created, Path.GetDirectoryName(path), Path.GetFileName(path)));
 			}
@@ -114,6 +114,13 @@ namespace Utilities.InputOutput
 
 		void fileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
 		{
+			ITimer creationTImer;
+			if (fileCreationTimers.TryRemove(e.FullPath, out creationTImer))
+			{
+				creationTImer.TryStop();
+				creationTImer.Elapsed -= fileTimer_Elapsed;
+			}
+
 			OnDeleted(e);
 		}
 

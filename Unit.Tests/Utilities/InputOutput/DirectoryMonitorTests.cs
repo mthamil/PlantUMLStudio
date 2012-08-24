@@ -112,6 +112,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			// Assert.
 			Assert.Single(createdArgs);
 			Assert.Equal(testFile.FullName, createdArgs.Single().FullPath);
+			timers.Single().Verify(t => t.TryStop());
 		}
 
 		[Fact]
@@ -140,6 +141,33 @@ namespace Unit.Tests.Utilities.InputOutput
 			// Assert.
 			Assert.Single(createdArgs);
 			Assert.Equal(testFile.FullName, createdArgs.Single().FullPath);
+			timers.Single().Verify(t => t.TryStop());
+		}
+
+		[Fact]
+		public void Test_Watcher_Created_ThenDeleted()
+		{
+			// Arrange.
+			var testFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestDiagrams\class.puml"));
+
+			var createdArgs = new List<FileSystemEventArgs>();
+			EventHandler<FileSystemEventArgs> createdHandler = (o, e) => createdArgs.Add(e);
+			monitor.Created += createdHandler;
+
+			watcher.Raise(w => w.Created += null, new FileSystemEventArgs(WatcherChangeTypes.Created, testFile.Directory.FullName, testFile.Name));
+
+			// Act.
+			watcher.Raise(w => w.Deleted += null, new FileSystemEventArgs(WatcherChangeTypes.Deleted, testFile.Directory.FullName, testFile.Name));
+
+			// Assert.
+			Assert.Single(timers);
+			timers.Single().Verify(t => t.TryStop());
+
+			// Act.
+			timers.Single().Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now, testFile.FullName));
+
+			// Assert.
+			Assert.Empty(createdArgs);
 		}
 
 		[Fact]

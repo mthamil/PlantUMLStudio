@@ -42,7 +42,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 				_documents.Remove(_currentDocument);
 				_documents.Add(_currentDocument, foldings.ToList());
-				_currentDocument.Changed -= document_Changed;
+				WeakEventManager<TextDocument, DocumentChangeEventArgs>.RemoveHandler(_currentDocument, "Changed", document_Changed);
 				FoldingManager.Uninstall(_currentFoldingManager);
 			}
 		}
@@ -65,8 +65,8 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 					_currentFoldingManager.UpdateFoldings(foldings, -1);
 				else
 					_documents.Add(_currentDocument, Enumerable.Empty<NewFolding>());
-
-				_editor.Document.Changed += document_Changed;
+				
+				WeakEventManager<TextDocument, DocumentChangeEventArgs>.AddHandler(_editor.Document, "Changed", document_Changed);
 			}
 		}
 

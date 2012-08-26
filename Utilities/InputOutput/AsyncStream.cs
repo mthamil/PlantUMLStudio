@@ -16,14 +16,16 @@ namespace Utilities.InputOutput
 		/// <param name="buffer">The buffer to read bytes into</param>
 		/// <param name="offset">The byte offset into the buffer at which to begin writing</param>
 		/// <param name="count">The number of bytes to read from the stream</param>
+		/// <param name="cancellationToken">Allows cancellation of the read operation</param>
 		/// <returns>A task with the total number of bytes read</returns>
-		Task<int> ReadAsync(byte[] buffer, int offset, int count);
+		Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Reads all bytes in a stream asynchronously.
 		/// </summary>
+		/// <param name="cancellationToken">Allows cancellation of the read operation</param>
 		/// <returns>A task that can be used to retrieve the result</returns>
-		Task<byte[]> ReadAllBytesAsync();
+		Task<byte[]> ReadAllBytesAsync(CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Writes bytes to a stream asynchronously.
@@ -31,15 +33,17 @@ namespace Utilities.InputOutput
 		/// <param name="buffer">The buffer to write data from</param>
 		/// <param name="offset">The byte offset into the buffer at which to begin copying</param>
 		/// <param name="count">The number of bytes to write</param>
+		/// <param name="cancellationToken">Allows cancellation of the write operation</param>
 		/// <returns>A task representing the write operation</returns>
-		Task WriteAsync(byte[] buffer, int offset, int count);
+		Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Writes the given bytes to a stream asynchronously.
 		/// </summary>
 		/// <param name="data">The bytes to write</param>
+		/// <param name="cancellationToken">Allows cancellation of the write operation</param>
 		/// <returns>A task that can be used to wait for the operation to complete</returns>
-		Task WriteAllBytesAsync(byte[] data);
+		Task WriteAllBytesAsync(byte[] data, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Asynchronously reads all bytes from the current stream and writes them to a 
@@ -77,42 +81,46 @@ namespace Utilities.InputOutput
 			#region Implementation of IAsyncStreamOperations
 
 			/// <see cref="IAsyncStreamOperations.ReadAsync"/>
-			public Task<int> ReadAsync(byte[] buffer, int offset, int count)
+			public Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
-				return _stream.ReadAsync(buffer, offset, count);
+				return _stream.ReadAsync(buffer, offset, count, cancellationToken);
 			}
 
 			/// <see cref="IAsyncStreamOperations.ReadAllBytesAsync"/>
-			public Task<byte[]> ReadAllBytesAsync()
+			public async Task<byte[]> ReadAllBytesAsync(CancellationToken cancellationToken)
 			{
 				byte[] buffer = new byte[_stream.Length];
-				var readTask = ReadAsync(buffer, 0, buffer.Length);
+				var readTask = ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 
 				// We don't really care about the number of bytes read, so return the buffer instead.
-				return readTask.ContinueWith(t =>
+				var tcs = new TaskCompletionSource<byte[]>();
+				try
 				{
-					var tcs = new TaskCompletionSource<byte[]>();
-					if (t.IsFaulted && t.Exception != null)
-						tcs.TrySetException(t.Exception);
-					else if (t.IsCanceled)
-						tcs.TrySetCanceled();
-					else
-						tcs.TrySetResult(buffer);
+					await readTask;
+					tcs.TrySetResult(buffer);
+				}
+				catch (TaskCanceledException)
+				{
+					tcs.TrySetCanceled();
+				}
+				catch (Exception e)
+				{
+					tcs.TrySetException(e);
+				}
 
-					return tcs.Task;
-				}).Unwrap();
+				return await tcs.Task;
 			}
 
 			/// <see cref="IAsyncStreamOperations.WriteAsync"/>
-			public Task WriteAsync(byte[] buffer, int offset, int count)
+			public Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
-				return _stream.WriteAsync(buffer, offset, count);
+				return _stream.WriteAsync(buffer, offset, count, cancellationToken);
 			}
 
 			/// <see cref="IAsyncStreamOperations.WriteAllBytesAsync"/>
-			public Task WriteAllBytesAsync(byte[] data)
+			public Task WriteAllBytesAsync(byte[] data, CancellationToken cancellationToken)
 			{
-				return WriteAsync(data, 0, data.Length);
+				return WriteAsync(data, 0, data.Length, cancellationToken);
 			}
 
 			/// <see cref="IAsyncStreamOperations.CopyToAsync"/>

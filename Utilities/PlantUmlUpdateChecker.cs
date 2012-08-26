@@ -5,7 +5,8 @@ using System.Net;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Concurrency;
+using Utilities.Chronology;
+using Utilities.InputOutput;
 using Utilities.Net;
 
 namespace Utilities
@@ -15,6 +16,11 @@ namespace Utilities
 	/// </summary>
     public class PlantUmlUpdateChecker
     {
+		public PlantUmlUpdateChecker(IClock clock)
+		{
+			_clock = clock;
+		}
+
 		/// <summary>
 		/// The location to download updates from.
 		/// </summary>
@@ -28,7 +34,7 @@ namespace Utilities
 		/// <summary>
 		/// Whether an update is available.
 		/// </summary>
-    	public bool HasUpdate(string versionUrl, string currentVersion)
+    	public bool HasUpdate(Uri versionUrl, string currentVersion)
         {
             using (WebClient client = new WebClient())
             {
@@ -43,31 +49,25 @@ namespace Utilities
 		/// <summary>
 		/// Retrieves the latest PlantUML version.
 		/// </summary>
-        public Task DownloadLatestAsync()
+        public async Task DownloadLatestAsync(CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null)
         {
 			if (LocalVersion.Exists)
 			{
-				var backupFilePath = String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", LocalVersion.FullName, DateTime.Now);
-				LocalVersion.CopyTo(backupFilePath, true);
+				var backupFile = new FileInfo(String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", LocalVersion.FullName, DateTime.Now));
+				await LocalVersion.CopyToAsync(backupFile, true);
 			}
-
-			var progress = new Progress<DownloadProgressChangedEventArgs>(p =>
-			{
-
-			});
 
 			var temp = new FileInfo(LocalVersion.FullName + ".tmp");
 
-			var webClient = new WebClient();
-			return webClient.Async()
-				.DownloadFileAsync(DownloadUrl, temp.FullName, CancellationToken.None, progress)
-				.Then(() =>
-				{
-					LocalVersion.Delete();
-					temp.CopyTo(LocalVersion.FullName);
-					temp.Delete();
-				})
-				.ContinueWith(t => webClient.Dispose());
+			using (var webClient = new WebClient())
+			{
+				await webClient.Async().DownloadFileAsync(DownloadUrl, temp.FullName, cancellationToken, progress);
+				LocalVersion.Delete();
+				await temp.CopyToAsync(LocalVersion, false);
+				temp.Delete();
+			}
         }
+
+		private readonly IClock _clock;
     }
 }

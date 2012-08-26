@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using Utilities.InputOutput;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			byte[] buffer = new byte[9];
 
 			// Act.
-			var readTask = stream.Async().ReadAsync(buffer, 4, 3);
+			var readTask = stream.Async().ReadAsync(buffer, 4, 3, CancellationToken.None);
 			readTask.Wait();
 
 			// Assert.
@@ -29,7 +30,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			var stream = new MemoryStream(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
 			// Act.
-			var readTask = stream.Async().ReadAllBytesAsync();
+			var readTask = stream.Async().ReadAllBytesAsync(CancellationToken.None);
 			readTask.Wait();
 
 			// Assert.
@@ -44,7 +45,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			var stream = new MemoryStream();
 
 			// Act.
-			var writeTask = stream.Async().WriteAsync(data, 4, 3);
+			var writeTask = stream.Async().WriteAsync(data, 4, 3, CancellationToken.None);
 			writeTask.Wait();
 
 			byte[] streamData = new byte[data.Length];
@@ -63,7 +64,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			var stream = new MemoryStream();
 
 			// Act.
-			var writeTask = stream.Async().WriteAllBytesAsync(data);
+			var writeTask = stream.Async().WriteAllBytesAsync(data, CancellationToken.None);
 			writeTask.Wait();
 
 			byte[] streamData = new byte[data.Length];

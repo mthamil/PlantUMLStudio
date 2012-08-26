@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -190,7 +191,7 @@ namespace PlantUmlEditor.ViewModel
 			progress.Report(new ProgressUpdate 
 			{ 
 				PercentComplete = 100, 
-				Message = String.Format(Resources.Progress_SavingDiagram, Diagram.DiagramFileName) 
+				Message = String.Format(CultureInfo.CurrentCulture, Resources.Progress_SavingDiagram, Diagram.DiagramFileName) 
 			});
 
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)

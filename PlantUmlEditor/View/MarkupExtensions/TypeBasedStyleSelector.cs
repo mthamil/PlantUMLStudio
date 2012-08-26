@@ -79,6 +79,9 @@ namespace PlantUmlEditor.View.MarkupExtensions
 		/// <see cref="StyleSelector.SelectStyle"/>
 		public override Style SelectStyle(object item, DependencyObject container)
 		{
+			if (item == null) 
+				throw new ArgumentNullException("item");
+
 			Style style;
 			if (_styleMap.TryGetValue(item.GetType(), out style))
 				return style;

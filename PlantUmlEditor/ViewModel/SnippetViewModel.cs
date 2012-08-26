@@ -13,6 +13,9 @@ namespace PlantUmlEditor.ViewModel
 	{
 		public SnippetViewModel(CodeSnippet codeSnippet)
 		{
+			if (codeSnippet == null) 
+				throw new ArgumentNullException("codeSnippet");
+
 			_snippet = codeSnippet.Code;
 			Name = codeSnippet.Name;
 			Command = new RelayCommand<TextEditor>(Insert);

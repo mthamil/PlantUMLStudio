@@ -62,6 +62,9 @@ namespace PlantUmlEditor.View.MarkupExtensions
 		/// <see cref="DataTemplateSelector.SelectTemplate"/>
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)
 		{
+			if (item == null) 
+				throw new ArgumentNullException("item");
+
 			return _dataTemplateMap[item.GetType()];
 		}
 

@@ -23,7 +23,7 @@ namespace PlantUmlEditor.Converters
 			var fileName = (string)values[0];
 			bool isModified = (bool)values[1];
 			return isModified 
-				? String.Format(ModifiedFormat, fileName) 
+				? String.Format(culture, ModifiedFormat, fileName) 
 				: fileName;
 		}
 

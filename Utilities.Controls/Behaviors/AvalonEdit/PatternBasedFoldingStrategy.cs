@@ -12,6 +12,10 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 	/// </summary>
 	public class PatternBasedFoldingStrategy : AbstractFoldingStrategy
 	{
+		/// <summary>
+		/// Initializes a new folding strategy.
+		/// </summary>
+		/// <param name="foldRegions">The patterns that define fold regions</param>
 		public PatternBasedFoldingStrategy(IEnumerable<FoldedRegionDefinition> foldRegions)
 		{
 			int counter = 1;

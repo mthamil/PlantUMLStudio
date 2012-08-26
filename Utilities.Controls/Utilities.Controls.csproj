@@ -67,7 +67,6 @@
     <Compile Include="Behaviors\AvalonEdit\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\PatternBasedFoldingStrategy.cs" />
     <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldRegions.cs" />
-    <Compile Include="Behaviors\AvalonEdit\StubFoldingStrategy.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentIndexBehavior.cs" />
     <Compile Include="Behaviors\CollectionViewSourceItemFilter.cs" />

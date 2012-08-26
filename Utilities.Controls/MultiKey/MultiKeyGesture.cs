@@ -13,9 +13,18 @@ namespace Utilities.Controls.MultiKey
 	[TypeConverter(typeof(MultiKeyGestureConverter))]
 	public class MultiKeyGesture : KeyGesture
 	{
+		/// <summary>
+		/// Creates a gesture with no display string.
+		/// </summary>
+		/// <param name="keys">The key gesture</param>
 		public MultiKeyGesture(IEnumerable<KeyInput> keys)
 			: this(keys, string.Empty) { }
 
+		/// <summary>
+		/// Creates a gesture with a display string.
+		/// </summary>
+		/// <param name="keys">The key gesture</param>
+		/// <param name="displayString">A display string</param>
 		public MultiKeyGesture(IEnumerable<KeyInput> keys, string displayString)
 			: base(Key.None, ModifierKeys.None, displayString)
 		{

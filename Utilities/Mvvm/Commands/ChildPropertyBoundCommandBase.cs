@@ -35,7 +35,7 @@ namespace Utilities.Mvvm.Commands
 			var collectionFunc = collectionExpression.Compile();
 			_collectionGetter = () => collectionFunc(parent);
 
-			var collection = _collectionGetter();
+			var collection = GetCollection();
 			WeakEventManager<INotifyCollectionChanged, NotifyCollectionChangedEventArgs>.AddHandler((INotifyCollectionChanged)collection, "CollectionChanged", collection_CollectionChanged);
 			foreach (var existingChild in collection)
 				WeakEventManager<INotifyPropertyChanged, PropertyChangedEventArgs>.AddHandler(existingChild, "PropertyChanged", item_PropertyChanged);

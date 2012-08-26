@@ -8,6 +8,9 @@ namespace Utilities.Controls.Commands
 	/// </summary>
 	public class OpenContextMenuCommand : RelayCommand<FrameworkElement>
 	{
+		/// <summary>
+		/// Creates a new command.
+		/// </summary>
 		public OpenContextMenuCommand()
 			: base(OpenContextMenu) { }
 

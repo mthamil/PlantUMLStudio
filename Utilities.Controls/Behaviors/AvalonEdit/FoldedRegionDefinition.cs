@@ -5,6 +5,11 @@
 	/// </summary>
 	public sealed class FoldedRegionDefinition
 	{
+		/// <summary>
+		/// Creates a new fold region definition.
+		/// </summary>
+		/// <param name="startPattern">The fold region start pattern</param>
+		/// <param name="endPattern">The fold region end pattern</param>
 		public FoldedRegionDefinition(string startPattern, string endPattern)
 		{
 			StartPattern = startPattern;

@@ -29,11 +29,16 @@ namespace PlantUmlEditor.DesignTimeData
 			get { return _diagrams.Select(d => new PreviewDiagramViewModel(d) { ImagePreview = _renderer.Render(d) }).ToList(); }
 		}
 
+#pragma warning disable 67
+
 		/// <see cref="IDiagramExplorer.OpenPreviewRequested"/>
 		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
 
 		/// <see cref="IDiagramExplorer.DiagramDeleted"/>
 		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
+
+#pragma warning restore 67
+
 
 		#endregion
 

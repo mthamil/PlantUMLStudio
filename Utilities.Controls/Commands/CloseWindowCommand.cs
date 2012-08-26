@@ -8,6 +8,9 @@ namespace Utilities.Controls.Commands
 	/// </summary>
 	public class CloseWindowCommand : RelayCommand<Window>
 	{
+		/// <summary>
+		/// Creates a new command.
+		/// </summary>
 		public CloseWindowCommand() 
 			: base(w => w.Close()) { }
 	}

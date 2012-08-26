@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace Unit.Tests.Utilities.Controls.Behaviors.AvalonEdit
 {
 	public class StubFoldingStrategy : AbstractFoldingStrategy
 	{

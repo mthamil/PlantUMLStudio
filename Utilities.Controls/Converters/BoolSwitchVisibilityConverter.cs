@@ -5,6 +5,9 @@ using System.Windows.Data;
 
 namespace Utilities.Controls.Converters
 {
+	/// <summary>
+	/// A multi-value converter that converters boolean conditions to Visibility values.
+	/// </summary>
 	public class BoolSwitchVisibilityConverter : IMultiValueConverter
 	{
 		#region IMultiValueConverter Members
@@ -25,6 +28,7 @@ namespace Utilities.Controls.Converters
 		}
 
 		/// <see cref="IMultiValueConverter.ConvertBack"/>
+		/// <exception cref="NotSupportedException">Always throws</exception>
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
 			throw new NotSupportedException();

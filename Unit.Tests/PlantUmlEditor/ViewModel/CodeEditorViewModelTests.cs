@@ -1,11 +1,9 @@
-using System;
 using System.ComponentModel;
 using System.Linq;
-using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Moq;
 using PlantUmlEditor.ViewModel;
-using Utilities.Controls.Behaviors.AvalonEdit;
+using Unit.Tests.Utilities.Controls.Behaviors.AvalonEdit;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel

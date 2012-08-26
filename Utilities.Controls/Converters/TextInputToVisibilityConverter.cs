@@ -5,8 +5,12 @@ using System.Windows.Data;
 
 namespace Utilities.Controls.Converters
 {
+	/// <summary>
+	/// A multi-value converter that uses test input to determine Visibility.
+	/// </summary>
     public class TextInputToVisibilityConverter : IMultiValueConverter
     {
+		/// <see cref="IMultiValueConverter.Convert"/>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             // Always test MultiValueConverter inputs for non-null
@@ -23,7 +27,8 @@ namespace Utilities.Controls.Converters
             return Visibility.Visible;
         }
 
-
+		/// <see cref="IMultiValueConverter.ConvertBack"/>
+		/// <exception cref="NotImplementedException">Always throws</exception>
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

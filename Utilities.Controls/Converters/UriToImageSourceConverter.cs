@@ -6,6 +6,9 @@ using System.Windows.Media.Imaging;
 
 namespace Utilities.Controls.Converters
 {
+	/// <summary>
+	/// Converts a URI to a bitmap image.
+	/// </summary>
 	public class UriToImageSourceConverter : IValueConverter
 	{
 		/// <see cref="IValueConverter.Convert"/>

@@ -112,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousAttribute.cs" />
     <Compile Include="Utilities.Controls\Behaviors\AvalonEdit\PlantUmlFoldingStrategyTests.cs" />
+    <Compile Include="Utilities.Controls\Behaviors\AvalonEdit\StubFoldingStrategy.cs" />
     <Compile Include="Utilities.Controls\Behaviors\CollectionViewSourceItemFilterTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\TextBoxAutoSelectOnFocusBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\TreeViewBindableSelectedItemBehaviorTests.cs" />

@@ -5,8 +5,12 @@ using System.Windows.Media.Imaging;
 
 namespace Utilities.Controls.Converters
 {
+	/// <summary>
+	/// Converts a URI source to a bitmap image.
+	/// </summary>
 	public class UriToCachedImageConverter : IValueConverter
 	{
+		/// <see cref="IValueConverter.Convert"/>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null)
@@ -41,6 +45,8 @@ namespace Utilities.Controls.Converters
 			return null;
 		}
 
+		/// <see cref="IValueConverter.ConvertBack"/>
+		/// <exception cref="NotImplementedException">Always throws</exception>
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotImplementedException("Two way conversion is not supported.");

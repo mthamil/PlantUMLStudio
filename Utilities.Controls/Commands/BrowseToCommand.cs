@@ -9,6 +9,9 @@ namespace Utilities.Controls.Commands
 	/// </summary>
 	public class BrowseToCommand : RelayCommand<Hyperlink>
 	{
+		/// <summary>
+		/// Creates a new command.
+		/// </summary>
 		public BrowseToCommand()
 			: base(BrowseTo) { }
 

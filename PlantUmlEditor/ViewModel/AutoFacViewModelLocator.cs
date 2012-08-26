@@ -17,10 +17,10 @@ namespace PlantUmlEditor.ViewModel
 			_name = name;
 			_container = container;
 
-			_runtimeViewModel = Property.New(this, p => p.RuntimeViewModel, OnPropertyChanged)
+			_runTimeViewModel = Property.New(this, p => p.RuntimeViewModel, OnPropertyChanged)
 				.AlsoChanges(p => p.ViewModel);
 
-			_designtimeViewModel = Property.New(this, p => p.DesigntimeViewModel, OnPropertyChanged)
+			_designTimeViewModel = Property.New(this, p => p.DesigntimeViewModel, OnPropertyChanged)
 				.AlsoChanges(p => p.ViewModel);
 		}
 
@@ -49,18 +49,18 @@ namespace PlantUmlEditor.ViewModel
 		{
 			get
 			{
-				if (_runtimeViewModel.Value == null)
+				if (_runTimeViewModel.Value == null)
 				{
 					RuntimeViewModel = String.IsNullOrEmpty(_name) 
 						? _container.Resolve<TViewModel>() 
 						: _container.ResolveNamed<TViewModel>(_name);
 				}
-				return _runtimeViewModel.Value;
+				return _runTimeViewModel.Value;
 			}
 
 			set
 			{
-				_runtimeViewModel.Value = value;
+				_runTimeViewModel.Value = value;
 			}
 		}
 
@@ -80,8 +80,8 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public TViewModel DesigntimeViewModel
 		{
-			get { return _designtimeViewModel.Value; }
-			set { _designtimeViewModel.Value = value; }
+			get { return _designTimeViewModel.Value; }
+			set { _designTimeViewModel.Value = value; }
 		}
 
 		#region INotifyPropertyChanged Members
@@ -99,8 +99,8 @@ namespace PlantUmlEditor.ViewModel
 		#endregion
 
 		private static bool? _isInDesignMode;
-		private readonly Property<TViewModel> _runtimeViewModel;
-		private readonly Property<TViewModel> _designtimeViewModel;
+		private readonly Property<TViewModel> _runTimeViewModel;
+		private readonly Property<TViewModel> _designTimeViewModel;
 		private readonly string _name;
 		private readonly Autofac.IContainer _container;
 	}

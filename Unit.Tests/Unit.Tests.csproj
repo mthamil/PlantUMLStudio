@@ -128,6 +128,8 @@
     <Compile Include="Utilities\InputOutput\DirectoryMonitorTests.cs" />
     <Compile Include="Utilities\InputOutput\StreamExtensionsTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />
+    <Compile Include="Utilities\Mvvm\Commands\AggregateBoundRelayCommandTests.cs" />
+    <Compile Include="Utilities\Mvvm\Commands\DependentBoundRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\RelayCommandTests.cs" />
     <Compile Include="Utilities\OptionTests.cs" />
     <Compile Include="Utilities\PropertyChanged\PropertyTests.cs" />

@@ -50,8 +50,9 @@ namespace Utilities.InputOutput
 		/// destination stream.
 		/// </summary>
 		/// <param name="destination">The stream being copied to</param>
+		/// <param name="cancellationToken">Allows cancellation of the copy operation</param>
 		/// <returns>A Task representing the copy operation</returns>
-		Task CopyToAsync(Stream destination);
+		Task CopyToAsync(Stream destination, CancellationToken cancellationToken);
 	}
 
 	/// <summary>
@@ -124,14 +125,16 @@ namespace Utilities.InputOutput
 			}
 
 			/// <see cref="IAsyncStreamOperations.CopyToAsync"/>
-			public Task CopyToAsync(Stream destination)
+			public Task CopyToAsync(Stream destination, CancellationToken cancellationToken)
 			{
-				return _stream.CopyToAsync(destination);
+				return _stream.CopyToAsync(destination, DefaultCopyBufferSize, cancellationToken);
 			}
 
 			#endregion
 
 			private readonly Stream _stream;
+
+			private const int DefaultCopyBufferSize = 81920; 
 		}
 	}
 }

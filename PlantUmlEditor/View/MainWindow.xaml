@@ -381,7 +381,7 @@
                                 <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" 
                                                  AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
                                                  InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
-                                                 Mode="Save" Filter="PlantUML Diagram Files (*.puml)|*.puml">
+                                                 Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
                                     <ctrl:FilePicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">
                                             <Binding ElementName="NewDiagramMenuItem" Path="(attached:BindableClick.IsClicked)"/>

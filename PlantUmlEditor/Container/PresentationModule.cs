@@ -62,7 +62,11 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
 				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
-				.OnActivating(c => c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation);
+				.OnActivating(c =>
+				{
+					c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
+					c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
+				});;
 
 			builder.RegisterType<DiagramManagerViewModel>()
 				.SingleInstance();

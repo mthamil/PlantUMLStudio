@@ -84,7 +84,7 @@ namespace Unit.Tests.Utilities.InputOutput
 			var destination = new MemoryStream();
 
 			// Act.
-			var copyTask = source.Async().CopyToAsync(destination);
+			var copyTask = source.Async().CopyToAsync(destination, CancellationToken.None);
 			copyTask.Wait();
 
 			byte[] destinationData = new byte[data.Length];

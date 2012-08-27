@@ -19,6 +19,9 @@ namespace PlantUmlEditor.Configuration
 			LastDiagramLocation = String.IsNullOrEmpty(_settings.LastPath)
 				? defaultDiagramLocation
 				: new DirectoryInfo(_settings.LastPath);
+
+			PlantUmlDownloadLocation = new Uri(settings.DownloadUrl);
+			DiagramFileExtension = settings.PlantUmlFileExtension;
 		}
 
 		/// <see cref="ISettings.GraphVizExecutable"/>
@@ -29,6 +32,12 @@ namespace PlantUmlEditor.Configuration
 
 		/// <see cref="ISettings.LastDiagramLocation"/>
 		public DirectoryInfo LastDiagramLocation { get; set; }
+
+		/// <see cref="ISettings.PlantUmlDownloadLocation"/>
+		public Uri PlantUmlDownloadLocation { get; private set; }
+
+		/// <see cref="ISettings.DiagramFileExtension"/>
+		public string DiagramFileExtension { get; private set; }
 
 		/// <see cref="ISettings.Save"/>
 		public void Save()

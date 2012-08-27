@@ -1,15 +1,18 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
+using PlantUmlEditor.Core.Update;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
 using Utilities.InputOutput;
+using Module = Autofac.Module;
 
 namespace PlantUmlEditor.Container
 {
@@ -25,7 +28,8 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<SystemTimer>().As<ITimer>();
 
-			builder.RegisterType<SystemClock>().As<IClock>();
+			builder.RegisterType<SystemClock>().As<IClock>()
+				.SingleInstance();
 
 			builder.Register(c => new DotNetSettings(
 					Settings.Default,
@@ -35,8 +39,8 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
 			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()
-				.WithProperty(p => p.Filter, "*.puml")
-				.WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(2));
+				.WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(2))
+				.OnActivating(c => c.Instance.Filter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
@@ -47,7 +51,16 @@ namespace PlantUmlEditor.Container
 					c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
 				});
 
-			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>();
+			builder.RegisterType<PlantUmlUpdateChecker>().As<IDependencyUpdateChecker>()
+				.OnActivating(c =>
+				{
+					c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
+					c.Instance.RemoteLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
+					c.Instance.VersionLocation = new Uri("http://plantuml.sourceforge.net/download.html");
+				});
+
+			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()
+				.OnActivating(c => c.Instance.FileFilter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
 
 			builder.RegisterType<SnippetParser>().As<ISnippetParser>();
 

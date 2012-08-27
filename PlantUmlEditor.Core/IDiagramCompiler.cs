@@ -25,5 +25,11 @@ namespace PlantUmlEditor.Core
 		/// <param name="diagramFile">The diagram file to compile</param>
 		/// <returns>A Task representing the compilation operation</returns>
 		Task CompileToFile(FileInfo diagramFile);
+
+		/// <summary>
+		/// Gets the current compiler version.
+		/// </summary>
+		/// <returns>The version string</returns>
+		Task<string> GetCurrentVersion();
 	}
 }

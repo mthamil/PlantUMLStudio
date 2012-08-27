@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Utilities.InputOutput
@@ -21,7 +22,7 @@ namespace Utilities.InputOutput
 			using (var sourceStream = source.OpenRead())
 			using (var destinationStream = destination.Open(destinationOverwriteMode))
 			{
-				await sourceStream.Async().CopyToAsync(destinationStream);
+				await sourceStream.Async().CopyToAsync(destinationStream, CancellationToken.None);
 			}
 		}
 	}

@@ -15,7 +15,10 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 	{
 		public DiagramIOServiceTests()
 		{
-			diagramIO = new DiagramIOService(scheduler, monitor.Object);
+			diagramIO = new DiagramIOService(scheduler, monitor.Object)
+			{
+				FileFilter = "*.puml"
+			};
 		}
 
 		[Fact]

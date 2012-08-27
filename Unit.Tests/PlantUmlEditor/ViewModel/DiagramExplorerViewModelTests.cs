@@ -26,8 +26,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			progressFactory.Setup(p => p.New(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object, 
-				d => d == null ? null : new PreviewDiagramViewModel(d), settings.Object, uiScheduler);
+			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object,
+				d => d == null ? null : new PreviewDiagramViewModel(d), settings.Object, uiScheduler)
+			{
+				FileExtension = ".puml"
+			};
 		}
 
 		[Fact]

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PlantUmlEditor.Configuration
@@ -21,6 +22,16 @@ namespace PlantUmlEditor.Configuration
 		/// The last directory diagrams were loaded from.
 		/// </summary>
 		DirectoryInfo LastDiagramLocation { get; set; }
+
+		/// <summary>
+		/// The URL where PlantUML can be downloaded.
+		/// </summary>
+		Uri PlantUmlDownloadLocation { get; }
+
+		/// <summary>
+		/// The file extension to use for diagrams.
+		/// </summary>
+		string DiagramFileExtension { get; }
 
 		/// <summary>
 		/// Stores the current settings. 

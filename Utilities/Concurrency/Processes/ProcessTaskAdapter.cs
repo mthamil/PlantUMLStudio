@@ -126,8 +126,8 @@ namespace Utilities.Concurrency.Processes
 
 				// Launch a task to read output. This technique is used instead 
 				// of BeginOutputReadLine because that method only returns strings.
-				Task.Factory.StartNew(() => 
-					process.StandardOutput.BaseStream.CopyTo(outputStream), 
+				Task.Factory.StartNew(() =>
+					process.StandardOutput.BaseStream.CopyTo(outputStream),
 						cancellationToken, TaskCreationOptions.None, _taskScheduler);
 
 				// Launch another task to write input.

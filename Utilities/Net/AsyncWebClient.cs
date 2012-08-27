@@ -31,13 +31,7 @@ namespace Utilities.Net
 			var cookie = Guid.NewGuid();
 			var tcs = new TaskCompletionSource<object>();
 
-			DownloadProgressChangedEventHandler progressHandler = (o, e) =>
-			{
-				if (!Equals(e.UserState, cookie))
-					return;
-
-				progress.Report(e);
-			};
+			DownloadProgressChangedEventHandler progressHandler = CreateProgressHandler(cookie, progress);
 			if (progress != null)
 				_webClient.DownloadProgressChanged += progressHandler;
 
@@ -63,7 +57,52 @@ namespace Utilities.Net
 			return tcs.Task;
 		}
 
+		/// <see cref="IAsyncWebClient.DownloadDataAsync"/>
+		public Task<byte[]> DownloadDataAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		{
+			cancellationToken.Register(() => _webClient.CancelAsync());
+
+			var cookie = Guid.NewGuid();
+			var tcs = new TaskCompletionSource<byte[]>();
+
+			DownloadProgressChangedEventHandler progressHandler = CreateProgressHandler(cookie, progress);
+			if (progress != null)
+				_webClient.DownloadProgressChanged += progressHandler;
+
+			DownloadDataCompletedEventHandler completedHandler = null;
+			completedHandler = (o, e) =>
+			{
+				if (!Equals(e.UserState, cookie))
+					return;
+
+				_webClient.DownloadProgressChanged -= progressHandler;
+				_webClient.DownloadDataCompleted -= completedHandler;
+
+				if (e.Cancelled)
+					tcs.SetCanceled();
+				else if (e.Error != null)
+					tcs.SetException(e.Error);
+				else
+					tcs.SetResult(e.Result);
+			};
+			_webClient.DownloadDataCompleted += completedHandler;
+
+			_webClient.DownloadDataAsync(address, cookie);
+			return tcs.Task;
+		}
+
 		#endregion
+
+		private static DownloadProgressChangedEventHandler CreateProgressHandler(object cookie, IProgress<DownloadProgressChangedEventArgs> progress)
+		{
+			return (o, e) =>
+			{
+				if (!Equals(e.UserState, cookie))
+					return;
+
+				progress.Report(e);
+			};
+		}
 
 		private readonly WebClient _webClient;
 	}

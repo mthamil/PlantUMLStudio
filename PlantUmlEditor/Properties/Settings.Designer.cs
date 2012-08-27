@@ -23,15 +23,6 @@ namespace PlantUmlEditor.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PlantUmlSetup.exe")]
-        public string SetupExeName {
-            get {
-                return ((string)(this["SetupExeName"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -74,6 +65,15 @@ namespace PlantUmlEditor.Properties {
             }
             set {
                 this["PlantUmlLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".puml")]
+        public string PlantUmlFileExtension {
+            get {
+                return ((string)(this["PlantUmlFileExtension"]));
             }
         }
     }

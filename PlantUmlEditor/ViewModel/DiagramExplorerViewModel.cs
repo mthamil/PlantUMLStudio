@@ -55,6 +55,11 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public string NewDiagramTemplate { get; set; }
 
+		/// <summary>
+		/// The diagram file extension.
+		/// </summary>
+		public string FileExtension { get; set; }
+
 		/// <see cref="IDiagramExplorer.DiagramLocation"/>
 		public DirectoryInfo DiagramLocation
 		{
@@ -154,7 +159,7 @@ namespace PlantUmlEditor.ViewModel
 			string newFilePath = newDiagramUri.LocalPath;
 
 			if (String.IsNullOrEmpty(Path.GetExtension(newFilePath)))
-				newFilePath += ".puml";
+				newFilePath += FileExtension;
 
 			var newDiagram = new Diagram
 			{

@@ -117,7 +117,6 @@
     <Compile Include="PropertyChanged\PropertyChangedBase.cs" />
     <Compile Include="Reflection\Reflect.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
-    <Compile Include="PlantUmlUpdateChecker.cs" />
     <Compile Include="Weak.cs" />
     <Compile Include="WeakEventHandler.cs" />
   </ItemGroup>

@@ -12,10 +12,10 @@ namespace Utilities.Net
 	public interface IAsyncWebClient
 	{
 		/// <summary>
-		/// Downloads, to a local file, the resource with the specified URI. This method does not block the calling thread.
+		/// Asynchronously downloads, to a local file, the resource with the specified URI.
 		/// </summary>
-		/// <param name="address">The URI of the resource to download. </param>
-		/// <param name="fileName">The name of the file to be placed on the local computer. </param>
+		/// <param name="address">The URI of the resource to download.</param>
+		/// <param name="fileName">The name of the file to be placed on the local computer.</param>
 		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <param name="progress">An optional progress reporter</param>
 		/// 
@@ -30,5 +30,14 @@ namespace Utilities.Net
 		/// 
 		/// <returns>A task representing the asynchronous operation</returns>
 		Task DownloadFileAsync(Uri address, string fileName, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+
+		/// <summary>
+		/// Asynchronously downloads the specified resource as a System.Byte array.
+		/// </summary>
+		/// <param name="address">The URI of the resource to download</param>
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
+		/// <param name="progress">An optional progress reporter</param>
+		/// <returns>A task representing the downloaded data</returns>
+		Task<byte[]> DownloadDataAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
 	}
 }

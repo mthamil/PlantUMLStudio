@@ -28,6 +28,11 @@ namespace PlantUmlEditor.Core.InputOutput
 			_monitor.Deleted += monitor_Deleted;
 		}
 
+		/// <summary>
+		/// The diagram file filter.
+		/// </summary>
+		public string FileFilter { get; set; }
+
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
@@ -37,7 +42,7 @@ namespace PlantUmlEditor.Core.InputOutput
 			{
 				var diagrams = new List<Diagram>();
 
-				FileInfo[] files = directory.GetFiles("*.puml");
+				FileInfo[] files = directory.GetFiles(FileFilter);
 				int numberOfFiles = files.Length;
 				int processed = 0;
 				foreach (FileInfo file in files)

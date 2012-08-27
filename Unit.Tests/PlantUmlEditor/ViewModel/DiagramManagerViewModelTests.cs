@@ -308,14 +308,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramManager.OpenDiagrams.Add(unmodifiedEditor.Object);
 			
 			// Act/Assert.
-			var args = AssertThat.RaisesWithEventArgs<PropertyChangedEventArgs>(diagramManager,
-				"PropertyChanged",
-				() => diagramManager.SaveAllCommand.Execute(null));
+			diagramManager.SaveAllCommand.Execute(null);
 
 			// Assert.
 			modifiedEditors.ForEach(e => e.Verify(ed => ed.SaveAsync()));
 			unmodifiedEditor.Verify(e => e.SaveAsync(), Times.Never());
-			Assert.Equal("CanSaveAll", args.PropertyName);
 		}
 
 		[Theory]
@@ -336,27 +333,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			}
 
 			// Act.
-			bool actual = diagramManager.CanSaveAll;
+			bool actual = diagramManager.SaveAllCommand.CanExecute(null);
 
 			// Assert.
 			Assert.Equal(expected, actual);
-		}
-
-		[Fact]
-		public void Test_Editor_CanSaveChanged_Triggers_CanSaveAllChanged()
-		{
-			// Arrange.
-			var editor = new Mock<IDiagramEditor>();
-
-			var diagramManager = CreateManager(d => editor.Object);
-			diagramManager.OpenDiagramCommand.Execute(new PreviewDiagramViewModel(new Diagram { File = new FileInfo("test") }));
-
-			// Act/Assert.
-			var args = AssertThat.RaisesWithEventArgs<PropertyChangedEventArgs>(diagramManager,
-				"PropertyChanged",
-				() => editor.Raise(e => e.PropertyChanged += null, new PropertyChangedEventArgs("CanSave")));
-
-			Assert.Equal("CanSaveAll", args.PropertyName);
 		}
 
 		private DiagramManagerViewModel CreateManager(Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory)

@@ -50,9 +50,9 @@ namespace PlantUmlEditor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://downloads.sourceforge.net/sourceforge/plantuml/plantuml.jar")]
-        public string DownloadUrl {
+        public global::System.Uri DownloadUrl {
             get {
-                return ((string)(this["DownloadUrl"]));
+                return ((global::System.Uri)(this["DownloadUrl"]));
             }
         }
         

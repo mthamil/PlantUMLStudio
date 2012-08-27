@@ -20,7 +20,7 @@ namespace PlantUmlEditor.Configuration
 				? defaultDiagramLocation
 				: new DirectoryInfo(_settings.LastPath);
 
-			PlantUmlDownloadLocation = new Uri(settings.DownloadUrl);
+			PlantUmlDownloadLocation = settings.DownloadUrl;
 			DiagramFileExtension = settings.PlantUmlFileExtension;
 		}
 

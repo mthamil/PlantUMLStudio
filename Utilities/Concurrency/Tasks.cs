@@ -47,10 +47,8 @@ namespace Utilities.Concurrency
 		/// <typeparam name="TResult">The expected result type</typeparam>
 		/// <typeparam name="TException">The type of exception that was "thrown"</typeparam>
 		/// <param name="exception">An exception</param>
-		/// <param name="result">A value of the expected result type that may be supplied to help type inference.
-		/// This value will not be used otherwise.</param>
 		/// <returns>A Task that has failed due to the given exception</returns>
-		public static Task<TResult> FromException<TResult, TException>(TException exception, TResult result = default(TResult))
+		public static Task<TResult> FromException<TResult, TException>(TException exception)
 			where TException : Exception
 		{
 			var taskSource = new TaskCompletionSource<TResult>();

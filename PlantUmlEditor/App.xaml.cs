@@ -101,13 +101,13 @@ namespace PlantUmlEditor
 		void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			e.Handled = true;
-			uiDispatcher.Invoke(new Action(() => ShowMessageBox(e.Exception)));
+			uiDispatcher.Invoke(() => ShowMessageBox(e.Exception));
 		}
 
 		void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
 		{
 			e.SetObserved();
-			uiDispatcher.Invoke(new Action(() => ShowMessageBox(e.Exception)));
+			uiDispatcher.Invoke(() => ShowMessageBox(e.Exception));
 		}
 
 		private static void ShowMessageBox(Exception exception)

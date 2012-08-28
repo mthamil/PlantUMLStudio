@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Net;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Chronology;
@@ -30,6 +30,11 @@ namespace PlantUmlEditor.Core.Update
 		/// </summary>
 		public Uri VersionLocation { get; set; }
 
+		/// <summary>
+		/// Pattern used to find the latest version.
+		/// </summary>
+		public Regex VersionMatchingPattern { get; set; }
+
 		/// <see cref="IDependencyUpdateChecker.HasUpdateAsync"/>
 		public override async Task<bool> HasUpdateAsync()
 		{
@@ -38,20 +43,12 @@ namespace PlantUmlEditor.Core.Update
 			// Scrape the PlantUML downloads page for the latest version number.
 			using (var client = new WebClient())
 			{
-				var serverVersionBytes = await client.Async().DownloadDataAsync(VersionLocation, CancellationToken.None);
-				var downloadPage = Encoding.Unicode.GetString(Encoding.Convert(
-					Encoding.UTF8,
-					Encoding.Unicode, serverVersionBytes));
-				int versionIndex = downloadPage.IndexOf(versionToken);
-				if (versionIndex > -1)
+				var downloadPage = await client.Async().DownloadStringAsync(VersionLocation, CancellationToken.None);
+				var match = VersionMatchingPattern.Match(downloadPage);
+				if (match.Success)
 				{
-					int versionEndIndex = downloadPage.IndexOf(')', versionIndex + versionToken.Length);
-					if (versionEndIndex > -1)
-					{
-						string latestVersion = downloadPage.Substring(versionIndex + versionToken.Length, versionEndIndex - (versionIndex + versionToken.Length));
-						bool versionsNotEqual = String.Compare(latestVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
-						return versionsNotEqual;
-					}
+					bool versionsNotEqual = String.Compare(match.Groups["version"].Value, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+					return versionsNotEqual;
 				}
 			}
 
@@ -59,7 +56,5 @@ namespace PlantUmlEditor.Core.Update
 		}
 
 		private readonly IDiagramCompiler _plantUml;
-
-		private const string versionToken = "PlantUML compiled Jar (Version ";
 	}
 }

@@ -91,6 +91,40 @@ namespace Utilities.Net
 			return tcs.Task;
 		}
 
+		/// <see cref="IAsyncWebClient.DownloadStringAsync"/>
+		public Task<string> DownloadStringAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		{
+			cancellationToken.Register(() => _webClient.CancelAsync());
+
+			var cookie = Guid.NewGuid();
+			var tcs = new TaskCompletionSource<string>();
+
+			DownloadProgressChangedEventHandler progressHandler = CreateProgressHandler(cookie, progress);
+			if (progress != null)
+				_webClient.DownloadProgressChanged += progressHandler;
+
+			DownloadStringCompletedEventHandler completedHandler = null;
+			completedHandler = (o, e) =>
+			{
+				if (!Equals(e.UserState, cookie))
+					return;
+
+				_webClient.DownloadProgressChanged -= progressHandler;
+				_webClient.DownloadStringCompleted -= completedHandler;
+
+				if (e.Cancelled)
+					tcs.SetCanceled();
+				else if (e.Error != null)
+					tcs.SetException(e.Error);
+				else
+					tcs.SetResult(e.Result);
+			};
+			_webClient.DownloadStringCompleted += completedHandler;
+
+			_webClient.DownloadStringAsync(address, cookie);
+			return tcs.Task;
+		}
+
 		#endregion
 
 		private static DownloadProgressChangedEventHandler CreateProgressHandler(object cookie, IProgress<DownloadProgressChangedEventArgs> progress)

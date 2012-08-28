@@ -17,5 +17,11 @@
     <Setting Name="PlantUmlFileExtension" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.puml</Value>
     </Setting>
+    <Setting Name="PlantUmlVersionSource" Type="System.Uri" Scope="Application">
+      <Value Profile="(Default)">http://plantuml.sourceforge.net/download.html</Value>
+    </Setting>
+    <Setting Name="PlantUmlVersionPattern" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">.*\(Version (?&lt;version&gt;\d{4,5})\).*</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

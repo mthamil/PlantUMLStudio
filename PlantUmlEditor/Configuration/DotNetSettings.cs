@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using PlantUmlEditor.Properties;
 
 namespace PlantUmlEditor.Configuration
@@ -21,6 +22,8 @@ namespace PlantUmlEditor.Configuration
 				: new DirectoryInfo(_settings.LastPath);
 
 			PlantUmlDownloadLocation = settings.DownloadUrl;
+			PlantUmlVersionSource = settings.PlantUmlVersionSource;
+			PlantUmlVersionPattern = new Regex(settings.PlantUmlVersionPattern);
 			DiagramFileExtension = settings.PlantUmlFileExtension;
 		}
 
@@ -35,6 +38,12 @@ namespace PlantUmlEditor.Configuration
 
 		/// <see cref="ISettings.PlantUmlDownloadLocation"/>
 		public Uri PlantUmlDownloadLocation { get; private set; }
+
+		/// <see cref="ISettings.PlantUmlVersionSource"/>
+		public Uri PlantUmlVersionSource { get; private set; }
+
+		/// <see cref="ISettings.PlantUmlVersionPattern"/>
+		public Regex PlantUmlVersionPattern { get; private set; }
 
 		/// <see cref="ISettings.DiagramFileExtension"/>
 		public string DiagramFileExtension { get; private set; }

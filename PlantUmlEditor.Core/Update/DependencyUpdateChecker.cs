@@ -38,7 +38,7 @@ namespace PlantUmlEditor.Core.Update
 		/// <see cref="IDependencyUpdateChecker.HasUpdateAsync"/>
     	public virtual Task<bool> HasUpdateAsync()
         {
-			return Task.FromResult(true);
+			return Task.FromResult(false);
         }
 
 		/// <see cref="IDependencyUpdateChecker.DownloadLatestAsync"/>

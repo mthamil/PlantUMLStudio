@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
@@ -56,7 +55,8 @@ namespace PlantUmlEditor.Container
 				{
 					c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
 					c.Instance.RemoteLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
-					c.Instance.VersionLocation = new Uri("http://plantuml.sourceforge.net/download.html");
+					c.Instance.VersionLocation = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
+					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlVersionPattern;
 				});
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()

@@ -76,5 +76,23 @@ namespace PlantUmlEditor.Properties {
                 return ((string)(this["PlantUmlFileExtension"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://plantuml.sourceforge.net/download.html")]
+        public global::System.Uri PlantUmlVersionSource {
+            get {
+                return ((global::System.Uri)(this["PlantUmlVersionSource"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*\\(Version (?<version>\\d{4,5})\\).*")]
+        public string PlantUmlVersionPattern {
+            get {
+                return ((string)(this["PlantUmlVersionPattern"]));
+            }
+        }
     }
 }

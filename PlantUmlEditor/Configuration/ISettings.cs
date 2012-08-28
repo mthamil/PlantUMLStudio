@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace PlantUmlEditor.Configuration
 {
@@ -27,6 +28,16 @@ namespace PlantUmlEditor.Configuration
 		/// The URL where PlantUML can be downloaded.
 		/// </summary>
 		Uri PlantUmlDownloadLocation { get; }
+
+		/// <summary>
+		/// The location where information about the latest PlantUML version can be found.
+		/// </summary>
+		Uri PlantUmlVersionSource { get; }
+
+		/// <summary>
+		/// The pattern used to find the latest PlantUML version at PlantUMLVersionSource.
+		/// </summary>
+		Regex PlantUmlVersionPattern { get; }
 
 		/// <summary>
 		/// The file extension to use for diagrams.

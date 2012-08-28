@@ -39,5 +39,14 @@ namespace Utilities.Net
 		/// <param name="progress">An optional progress reporter</param>
 		/// <returns>A task representing the downloaded data</returns>
 		Task<byte[]> DownloadDataAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+
+		/// <summary>
+		/// Asynchronously downloads the specified resource as a string.
+		/// </summary>
+		/// <param name="address">The URI of the resource to download</param>
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
+		/// <param name="progress">An optional progress reporter</param>
+		/// <returns>A task representing the downloaded data</returns>
+		Task<string> DownloadStringAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
 	}
 }

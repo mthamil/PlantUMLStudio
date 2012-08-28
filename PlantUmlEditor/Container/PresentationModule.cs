@@ -44,8 +44,7 @@ namespace PlantUmlEditor.Container
 
 			builder.Register(c =>
 			{
-				using (var stream = new StreamReader(c.Resolve<ISettings>().PlantUmlHighlightingDefinition.FullName))
-				using (var reader = new XmlTextReader(stream))
+				using (var reader = XmlReader.Create(c.Resolve<ISettings>().PlantUmlHighlightingDefinition.OpenRead()))
 					return HighlightingLoader.Load(reader, HighlightingManager.Instance);
 			}).SingleInstance();
 

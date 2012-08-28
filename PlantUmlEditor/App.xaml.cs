@@ -84,7 +84,7 @@ namespace PlantUmlEditor
 				// See if graphviz is there in environment PATH
 				string envPath = Environment.GetEnvironmentVariable("PATH");
 				string[] paths = envPath.Split(';');
-				dialog.InitialDirectory = paths.Where(p => p.ToLower().Contains("graphviz")).FirstOrDefault();
+				dialog.InitialDirectory = paths.FirstOrDefault(p => p.ToLower().Contains("graphviz"));
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
 					Settings.Default.GraphVizLocation = dialog.FileName;

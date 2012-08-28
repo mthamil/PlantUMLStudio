@@ -25,6 +25,7 @@ namespace PlantUmlEditor.Configuration
 			PlantUmlVersionSource = settings.PlantUmlVersionSource;
 			PlantUmlVersionPattern = new Regex(settings.PlantUmlVersionPattern);
 			DiagramFileExtension = settings.PlantUmlFileExtension;
+			PlantUmlHighlightingDefinition = new FileInfo(settings.PlantUmlHighlightingDefinition);
 		}
 
 		/// <see cref="ISettings.GraphVizExecutable"/>
@@ -47,6 +48,9 @@ namespace PlantUmlEditor.Configuration
 
 		/// <see cref="ISettings.DiagramFileExtension"/>
 		public string DiagramFileExtension { get; private set; }
+
+		/// <see cref="ISettings.PlantUmlHighlightingDefinition"/>
+		public FileInfo PlantUmlHighlightingDefinition { get; private set; }
 
 		/// <see cref="ISettings.Save"/>
 		public void Save()

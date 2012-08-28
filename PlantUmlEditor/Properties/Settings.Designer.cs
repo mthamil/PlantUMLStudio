@@ -94,5 +94,14 @@ namespace PlantUmlEditor.Properties {
                 return ((string)(this["PlantUmlVersionPattern"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\PlantUML.xshd")]
+        public string PlantUmlHighlightingDefinition {
+            get {
+                return ((string)(this["PlantUmlHighlightingDefinition"]));
+            }
+        }
     }
 }

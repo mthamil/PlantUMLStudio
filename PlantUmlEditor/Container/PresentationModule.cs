@@ -44,7 +44,7 @@ namespace PlantUmlEditor.Container
 
 			builder.Register(c =>
 			{
-				using (var stream = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\PlantUML.xshd")))
+				using (var stream = new StreamReader(c.Resolve<ISettings>().PlantUmlHighlightingDefinition.FullName))
 				using (var reader = new XmlTextReader(stream))
 					return HighlightingLoader.Load(reader, HighlightingManager.Instance);
 			}).SingleInstance();

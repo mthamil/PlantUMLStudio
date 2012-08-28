@@ -45,6 +45,11 @@ namespace PlantUmlEditor.Configuration
 		string DiagramFileExtension { get; }
 
 		/// <summary>
+		/// The file containing syntax highlighting rules for PlantUML diagrams.
+		/// </summary>
+		FileInfo PlantUmlHighlightingDefinition { get; }
+
+		/// <summary>
 		/// Stores the current settings. 
 		/// </summary>
 		void Save();

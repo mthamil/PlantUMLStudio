@@ -14,7 +14,8 @@
     xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
     xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands"
-    xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" 
+    xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -211,7 +212,8 @@
                     <MenuItem Header="_Help">
                         <MenuItem Header="About">
                             <MenuItem.Command>
-                                <utilcmd:OpenWindowCommand Type="{x:Type vw:About}"/>
+                                <utilcmd:OpenDialogCommand Type="{x:Type vw:About}" 
+                                                           Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
                             </MenuItem.Command>
                         </MenuItem>
                     </MenuItem>

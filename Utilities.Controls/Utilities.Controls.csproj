@@ -83,8 +83,9 @@
     <Compile Include="Behaviors\WindowBehaviors.cs" />
     <Compile Include="Commands\BrowseToCommand.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\DependencyCommandBase.cs" />
     <Compile Include="Commands\OpenContextMenuCommand.cs" />
-    <Compile Include="Commands\OpenWindowCommand.cs" />
+    <Compile Include="Commands\OpenDialogCommand.cs" />
     <Compile Include="Converters\BooleanToVisibilityValueConverter.cs" />
     <Compile Include="Converters\BoolSwitchVisibilityConverter.cs" />
     <Compile Include="Converters\ComposingConverter.cs" />

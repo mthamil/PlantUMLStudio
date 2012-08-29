@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows;
-using Utilities.Mvvm.Commands;
 
 namespace Utilities.Controls.Commands
 {
 	/// <summary>
-	/// Creates an displays a window of a given type.
+	/// Creates and displays a window of a given type.
 	/// </summary>
-	public class OpenWindowCommand : CommandBase
+	public class OpenDialogCommand : DependencyCommandBase
 	{
 		/// <summary>
 		/// Creates and opens a new instance of the specified Window
@@ -23,6 +22,10 @@ namespace Utilities.Controls.Commands
 			var window = (Window)Activator.CreateInstance(Type);
 			if (parameter != null)
 				window.DataContext = parameter;
+
+			if (Owner != null)
+				window.Owner = Owner;
+
 			window.ShowDialog();
 		}
 
@@ -30,5 +33,24 @@ namespace Utilities.Controls.Commands
 		/// The type of window to create.
 		/// </summary>
 		public Type Type { get; set; }
+
+		/// <summary>
+		/// The new window's owner.
+		/// </summary>
+		public Window Owner
+		{
+			get { return (Window)GetValue(OwnerProperty); }
+			set { SetValue(OwnerProperty, value); }
+		}
+
+		/// <summary>
+		/// The Owner dependency property.
+		/// </summary>
+		public static readonly DependencyProperty OwnerProperty =
+			DependencyProperty.RegisterAttached(
+			"Owner",
+			typeof(Window),
+			typeof(OpenDialogCommand),
+			new FrameworkPropertyMetadata(null));
 	}
 }

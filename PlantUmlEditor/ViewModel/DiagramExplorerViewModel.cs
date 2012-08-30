@@ -173,9 +173,14 @@ namespace PlantUmlEditor.ViewModel
 			try
 			{
 				await _diagramIO.SaveAsync(newDiagram, false);
+				var refreshedDiagram = await _diagramIO.ReadAsync(newDiagram.File);
 
-				var preview = _previewDiagramFactory(newDiagram);
-				PreviewDiagrams.Add(preview);
+				var preview = PreviewDiagrams.SingleOrDefault(p => p.Diagram.File.FullName == refreshedDiagram.File.FullName);
+				if (preview == null)
+				{
+					preview = _previewDiagramFactory(refreshedDiagram);
+					PreviewDiagrams.Add(preview);
+				}
 
 				CurrentPreviewDiagram = preview;
 				OnOpenPreviewRequested(preview);

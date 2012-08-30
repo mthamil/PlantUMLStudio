@@ -131,20 +131,22 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			OpenPreviewRequestedEventArgs newDiagramArgs = null;
 			explorer.OpenPreviewRequested += (o, e) => newDiagramArgs = e;
 
+			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
+				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
 
 			// Assert.
 			Assert.Single(explorer.PreviewDiagrams);
 			Assert.Equal(newDiagramFilePath, explorer.PreviewDiagrams.Single().Diagram.File.FullName);
-			Assert.Equal("New Diagram", explorer.PreviewDiagrams.Single().Diagram.Content);
 
 			Assert.NotNull(newDiagramArgs);
 			Assert.Equal(explorer.PreviewDiagrams.Single(), newDiagramArgs.RequestedPreview);
 			Assert.Equal(explorer.PreviewDiagrams.Single(), explorer.CurrentPreviewDiagram);
 
 			diagramIO.Verify(dio => dio.SaveAsync(
-				It.Is<Diagram>(d => d.Content == "New Diagram" && d.File.FullName == newDiagramFilePath), 
+				It.Is<Diagram>(d => d.File.FullName == newDiagramFilePath), 
 				false));
 		}
 

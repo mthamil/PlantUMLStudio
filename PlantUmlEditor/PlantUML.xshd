@@ -7,9 +7,9 @@
 
 	<!-- This is the main ruleset. -->
 	<RuleSet>
-		<Span color="Comment" begin="//" />
+		<Span color="Comment" begin="'" />
 		<Span color="Comment" multiline="true"
-			 begin="/\*" end="\*/" />
+			 begin="/'" end="'/" />
 
     <!-- Actions/Misc -->
     <Keywords color="Keyword">

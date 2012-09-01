@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Folding;
-using ICSharpCode.AvalonEdit.Rendering;
 
 namespace Utilities.Controls.Behaviors.AvalonEdit
 {
@@ -220,5 +219,99 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		private static readonly IDictionary<TextEditor, FoldingStrategyBehavior> foldingBehaviors = new Dictionary<TextEditor, FoldingStrategyBehavior>();
 
 		#endregion FoldingStrategy
+
+		#region BindableSelectionStart
+
+		/// <summary>
+		/// Gets the selection start.
+		/// </summary>
+		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
+		public static int GetBindableSelectionStart(TextEditor textEditor)
+		{
+			return (int)textEditor.GetValue(BindableSelectionStartProperty);
+		}
+
+		/// <summary>
+		/// Sets the selection start.
+		/// </summary>
+		public static void SetBindableSelectionStart(TextEditor textEditor, int value)
+		{
+			textEditor.SetValue(BindableSelectionStartProperty, value);
+		}
+
+		/// <summary>
+		/// The BindableSelectionStart property.
+		/// </summary>
+		public static readonly DependencyProperty BindableSelectionStartProperty =
+			DependencyProperty.RegisterAttached(
+			"BindableSelectionStart",
+			typeof(int),
+			typeof(AvalonEditor),
+			new UIPropertyMetadata(-1, OnBindableSelectionStartChanged));
+
+		private static void OnBindableSelectionStartChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var editor = dependencyObject as TextEditor;
+			if (editor == null)
+				return;
+
+			BindableSelectionStartBehavior behavior;
+			if (!selectionStartBehaviors.TryGetValue(editor, out behavior))
+			{
+				behavior = new BindableSelectionStartBehavior(editor);
+				selectionStartBehaviors[editor] = behavior;
+			}
+
+			behavior.UpdateSelectionStart((int)e.NewValue);
+		}
+
+		private static readonly IDictionary<TextEditor, BindableSelectionStartBehavior> selectionStartBehaviors = new Dictionary<TextEditor, BindableSelectionStartBehavior>();
+
+		#endregion BindableSelectionStart
+
+		#region BindableSelectionLength
+
+		/// <summary>
+		/// Sets the selection length.
+		/// </summary>
+		public static void SetBindableSelectionLength(TextEditor textEditor, int value)
+		{
+			textEditor.SetValue(BindableSelectionLengthProperty, value);
+		}
+
+		/// <summary>
+		/// Gets the selection length.
+		/// </summary>
+		public static int GetBindableSelectionLength(TextEditor textEditor)
+		{
+			return (int)textEditor.GetValue(BindableSelectionLengthProperty);
+		}
+
+		public static readonly DependencyProperty BindableSelectionLengthProperty =
+			DependencyProperty.RegisterAttached(
+			"BindableSelectionLength", 
+			typeof(int), 
+			typeof(AvalonEditor),
+			new UIPropertyMetadata(-1, OnBindableSelectionLengthChanged));
+
+		private static void OnBindableSelectionLengthChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var editor = dependencyObject as TextEditor;
+			if (editor == null)
+				return;
+
+			BindableSelectionLengthBehavior behavior;
+			if (!selectionLengthBehaviors.TryGetValue(editor, out behavior))
+			{
+				behavior = new BindableSelectionLengthBehavior(editor);
+				selectionLengthBehaviors[editor] = behavior;
+			}
+
+			behavior.UpdateSelectionLength((int)e.NewValue);
+		}
+
+		private static readonly IDictionary<TextEditor, BindableSelectionLengthBehavior> selectionLengthBehaviors = new Dictionary<TextEditor, BindableSelectionLengthBehavior>();
+
+		#endregion BindableSelectionLength
 	}
 }

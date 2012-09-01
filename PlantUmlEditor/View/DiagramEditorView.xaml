@@ -49,6 +49,8 @@
                                        Document="{Binding CodeEditor.Document}"
                                        SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}"
                                        avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       avalon:AvalonEditor.BindableSelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       avalon:AvalonEditor.BindableSelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        avalon:AvalonEditor.ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        avalon:AvalonEditor.FoldingStrategy="{Binding CodeEditor.FoldingStrategy}">
                     

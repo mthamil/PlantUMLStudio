@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using ICSharpCode.AvalonEdit.Document;
@@ -26,6 +27,9 @@ namespace PlantUmlEditor.ViewModel
 
 			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
 			_contentIndex.Value = 0;
+
+			_selectionStart = Property.New(this, p => p.SelectionStart, OnPropertyChanged);
+			_selectionLength = Property.New(this, p => p.SelectionLength, OnPropertyChanged);
 
 			_document = Property.New(this, p => p.Document, OnPropertyChanged);
 
@@ -102,6 +106,24 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The current selection start position.
+		/// </summary>
+		public int SelectionStart
+		{
+			get { return _selectionStart.Value; }
+			set { _selectionStart.Value = value; }
+		}
+
+		/// <summary>
+		/// The current selection length.
+		/// </summary>
+		public int SelectionLength
+		{
+			get { return _selectionLength.Value; }
+			set { _selectionLength.Value = value; }
+		}
+
+		/// <summary>
 		/// The current scroll offset of a code editor.
 		/// </summary>
 		public Vector ScrollOffset
@@ -148,6 +170,8 @@ namespace PlantUmlEditor.ViewModel
 		private bool _disposed;
 
 		private readonly Property<int> _contentIndex;
+		private readonly Property<int> _selectionStart;
+		private readonly Property<int> _selectionLength; 
 		private readonly Property<TextDocument> _document;
 		private readonly Property<Vector> _scrollOffset;
 		private readonly Property<bool> _isModified;

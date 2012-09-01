@@ -63,6 +63,8 @@
     </Compile>
     <Compile Include="Behaviors\AvalonEdit\AvalonEditor.cs" />
     <Compile Include="Behaviors\AvalonEdit\BindableScrollOffsetBehavior.cs" />
+    <Compile Include="Behaviors\AvalonEdit\BindableSelectionStartBehavior.cs" />
+    <Compile Include="Behaviors\AvalonEdit\BindableSelectionLengthBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\FoldedRegionDefinition.cs" />
     <Compile Include="Behaviors\AvalonEdit\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\PatternBasedFoldingStrategy.cs" />

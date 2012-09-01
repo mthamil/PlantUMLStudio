@@ -106,7 +106,7 @@ namespace PlantUmlEditor
 		void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
 		{
 			e.SetObserved();
-			uiDispatcher.Invoke(() => ShowMessageBox(e.Exception));
+			uiDispatcher.BeginInvoke(new Action(() => ShowMessageBox(e.Exception)));
 		}
 
 		private static void ShowMessageBox(Exception exception)

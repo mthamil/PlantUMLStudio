@@ -240,7 +240,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		}
 
 		/// <summary>
-		/// The BindableSelectionStart property.
+		/// The BindableSelectionStart attached property.
 		/// </summary>
 		public static readonly DependencyProperty BindableSelectionStartProperty =
 			DependencyProperty.RegisterAttached(
@@ -287,6 +287,9 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			return (int)textEditor.GetValue(BindableSelectionLengthProperty);
 		}
 
+		/// <summary>
+		/// The BindableSelectionLength attached property.
+		/// </summary>
 		public static readonly DependencyProperty BindableSelectionLengthProperty =
 			DependencyProperty.RegisterAttached(
 			"BindableSelectionLength", 

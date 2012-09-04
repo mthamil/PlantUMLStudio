@@ -64,30 +64,21 @@
                     <avalonEdit:TextEditor.ContextMenu>
                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                             <MenuItem Header="Cut" 
-                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
-                                <MenuItem.Command>
-                                    <cmd:CutCommand/>
-                                </MenuItem.Command>
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CutCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Header="Copy" 
-                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
-                                <MenuItem.Command>
-                                    <cmd:CopyCommand/>
-                                </MenuItem.Command>
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CopyCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Header="Paste" 
-                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}">
-                                <MenuItem.Command>
-                                    <cmd:PasteCommand/>
-                                </MenuItem.Command>
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.PasteCommand}">
                                 <MenuItem.Icon>
-                                    <Image Source="{StaticResource PasteIconSmall}" Style="{StaticResource DisableableIcon}"/>
+                                    <Image Source="{StaticResource PasteIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <Separator/>

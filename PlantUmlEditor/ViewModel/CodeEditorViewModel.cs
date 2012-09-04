@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using Utilities.Clipboard;
 using Utilities.Mvvm;
+using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Utilities.Reflection;
 
@@ -19,8 +21,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, IHighlightingDefinition highlightingDefinition, IEnumerable<MenuViewModel> snippets)
+		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, IHighlightingDefinition highlightingDefinition, IEnumerable<MenuViewModel> snippets,
+			IClipboard clipboard)
 		{
+			_clipboard = clipboard;
 			FoldingStrategy = foldingStrategy;
 			HighlightingDefinition = highlightingDefinition;
 			Snippets = snippets;
@@ -36,6 +40,13 @@ namespace PlantUmlEditor.ViewModel
 			_scrollOffset = Property.New(this, p => p.ScrollOffset, OnPropertyChanged);
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
+
+			UndoCommand = new RelayCommand(() => Document.UndoStack.Undo(), () => Document.UndoStack.CanUndo);
+			RedoCommand = new RelayCommand(() => Document.UndoStack.Redo(), () => Document.UndoStack.CanRedo);
+
+			CopyCommand = new RelayCommand(Copy);
+			CutCommand = new RelayCommand(Cut);
+			PasteCommand = new RelayCommand(Paste, () => _clipboard.ContainsText);
 		}
 
 		/// <summary>
@@ -149,6 +160,65 @@ namespace PlantUmlEditor.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Copies selected text.
+		/// </summary>
+		public ICommand CopyCommand { get; private set; }
+
+		private void Copy()
+		{
+			if (SelectionLength != 0)
+			{
+				var selectedText = Document.GetText(SelectionStart, SelectionLength);
+				_clipboard.SetText(selectedText);
+			}
+		}
+
+		/// <summary>
+		/// Cuts selected text.
+		/// </summary>
+		public ICommand CutCommand { get; private set; }
+
+		private void Cut()
+		{
+			if (SelectionLength != 0)
+			{
+				var selectedText = Document.GetText(SelectionStart, SelectionLength);
+				_clipboard.SetText(selectedText);
+				Document.Remove(SelectionStart, SelectionLength);
+			}
+		}
+
+		/// <summary>
+		/// Pastes text.
+		/// </summary>
+		public ICommand PasteCommand { get; private set; }
+
+		private void Paste()
+		{
+			var clipboardText = _clipboard.GetText();
+			if (SelectionLength != 0)
+			{
+				Document.Replace(SelectionStart, SelectionLength, clipboardText);
+				SelectionLength = 0;
+				ContentIndex = ContentIndex + clipboardText.Length;
+			}
+			else
+			{
+				Document.Insert(ContentIndex, clipboardText);
+			}
+		}
+
+		/// <summary>
+		/// Undoes the last operation.
+		/// </summary>
+		public ICommand UndoCommand { get; private set; }
+
+		/// <summary>
+		/// Redoes the last operation.
+		/// </summary>
+		public ICommand RedoCommand { get; private set; }
+
 		/// <see cref="ViewModelBase.Dispose(bool)"/>
 		protected override void Dispose(bool disposing)
 		{
@@ -175,5 +245,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<TextDocument> _document;
 		private readonly Property<Vector> _scrollOffset;
 		private readonly Property<bool> _isModified;
+
+		private readonly IClipboard _clipboard;
 	}
 }

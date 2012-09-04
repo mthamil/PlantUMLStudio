@@ -183,28 +183,30 @@
                     </MenuItem>
 
                     <MenuItem Header="_Edit">
-                        <MenuItem Header="Cut">
-                            <MenuItem.Command>
-                                <cmd:CutCommand/>
-                            </MenuItem.Command>
+                        <MenuItem Header="Undo" Command="{Binding OpenDiagram.CodeEditor.UndoCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource UndoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Redo" Command="{Binding OpenDiagram.CodeEditor.RedoCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource RedoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="Cut" Command="{Binding OpenDiagram.CodeEditor.CutCommand}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Copy">
-                            <MenuItem.Command>
-                                <cmd:CopyCommand/>
-                            </MenuItem.Command>
+                        <MenuItem Header="Copy" Command="{Binding OpenDiagram.CodeEditor.CopyCommand}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Paste">
-                            <MenuItem.Command>
-                                <cmd:PasteCommand/>
-                            </MenuItem.Command>
+                        <MenuItem Header="Paste" Command="{Binding OpenDiagram.CodeEditor.PasteCommand}">
                             <MenuItem.Icon>
-                                <Image Source="{StaticResource PasteIconSmall}" Style="{StaticResource DisableableIcon}"/>
+                                <Image Source="{StaticResource PasteIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>

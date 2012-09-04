@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
@@ -13,6 +11,7 @@ using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.ViewModel;
 using Utilities.Chronology;
+using Utilities.Clipboard;
 using Utilities.Controls.Behaviors.AvalonEdit;
 using Module = Autofac.Module;
 
@@ -27,6 +26,9 @@ namespace PlantUmlEditor.Container
 		protected override void Load(ContainerBuilder builder)
 		{
 			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel, IProgressRegistration>()
+				.SingleInstance();
+
+			builder.RegisterType<ClipboardWrapper>().As<IClipboard>()
 				.SingleInstance();
 
 			builder.RegisterType<PreviewDiagramViewModel>()
@@ -51,7 +53,8 @@ namespace PlantUmlEditor.Container
 			builder.Register(c => new CodeEditorViewModel(
 				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
 				c.Resolve<IHighlightingDefinition>(),
-				c.Resolve<SnippetsMenu>())).As<ICodeEditor>();
+				c.Resolve<SnippetsMenu>(),
+				c.Resolve<IClipboard>())).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })

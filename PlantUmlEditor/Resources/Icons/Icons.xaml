@@ -16,7 +16,10 @@
 
     <BitmapImage x:Key="CutIcon_Small" UriSource="../Icons/scissors-blue-16x16.png"/>
     <BitmapImage x:Key="CopyIcon_Small" UriSource="../Icons/document-copy-16x16.png"/>
-    <BitmapImage x:Key="PasteIconSmall" UriSource="../Icons/clipboard-paste-document-text-16x16.png"/>
+    <BitmapImage x:Key="PasteIcon_Small" UriSource="../Icons/clipboard-paste-document-text-16x16.png"/>
+
+    <BitmapImage x:Key="UndoIcon_Small" UriSource="../Icons/arrow-circle-225-left-16x16.png"/>
+    <BitmapImage x:Key="RedoIcon_Small" UriSource="../Icons/arrow-circle-315-16x16.png"/>
 
     <BitmapImage x:Key="CopyImageIcon_Small" UriSource="../Icons/image-copy-16x16.png"/>
 

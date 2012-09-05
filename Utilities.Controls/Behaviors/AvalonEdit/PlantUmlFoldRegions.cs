@@ -26,13 +26,13 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		private static readonly IList<FoldedRegionDefinition> regions = new List<FoldedRegionDefinition>
 		{
-			{ new FoldedRegionDefinition(@"(^|\s+)note (left|right|top|bottom|over)([^\S\n]+.*)?$",											@"(^|\s+)end note($|\s+)") },
-			{ new FoldedRegionDefinition(@"(^|\s+)package[^\S\n]+[^{]+$",																	@"(^|\s+)end package($|\s+)") },
-			{ new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)[^\S\n]*$",															@"(^|\s+)deactivate +") },
-			{ new FoldedRegionDefinition(@"(^|\s+)if.+then[^\S\n]*$",																		@"(^|\s+)endif($|\s+)") },
-			{ new FoldedRegionDefinition(@"^[^\S\n]*title[^\S\n]*$",																		@"(^|\s+)end title($|\s+)") },
-			{ new FoldedRegionDefinition(@"^[^\S\n]*box[^\S\n]+.*$",																		@"(^|\s+)end box($|\s+)") },
-			{ new FoldedRegionDefinition(@"(^|\s+)(partition|package|namespace|abstract class|class|enum|state)[^\S\n]+.+{[^\S\n]*$",		@"(^|\s+)}.*$") },
+			{ new FoldedRegionDefinition(@"(^|\s+)note (left|right|top|bottom|over)([^\S\n]+.*)?$",													@"(^|\s+)end note($|\s+)") },
+			{ new FoldedRegionDefinition(@"(^|\s+)package[^\S\n]+[^{]+$",																			@"(^|\s+)end package($|\s+)") },
+			{ new FoldedRegionDefinition(@"(^|\s+)activate\s+(?<id>\w+)[^\S\n]*$",																	@"(^|\s+)deactivate +") },
+			{ new FoldedRegionDefinition(@"(^|\s+)if.+then[^\S\n]*$",																				@"(^|\s+)endif($|\s+)") },
+			{ new FoldedRegionDefinition(@"^[^\S\n]*title[^\S\n]*$",																				@"(^|\s+)end title($|\s+)") },
+			{ new FoldedRegionDefinition(@"^[^\S\n]*box[^\S\n]+.*$",																				@"(^|\s+)end box($|\s+)") },
+			{ new FoldedRegionDefinition(@"(^|\s+)(partition|package|namespace|abstract class|class|interface|enum|state)[^\S\n]+.+{[^\S\n]*$",		@"(^|\s+)}.*$") },
 		};
 	}
 }

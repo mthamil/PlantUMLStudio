@@ -102,6 +102,11 @@ endif", new [] { new NewFolding(13, 49) } };
 }", new [] { new NewFolding(0, 24) } };
 
 				yield return new object[] { 
+@"interface I {
+	jufcjsffj
+}", new [] { new NewFolding(0, 28) } };
+
+				yield return new object[] { 
 @"state S {
 	jufcjsffj
 }", new [] { new NewFolding(0, 24) } };

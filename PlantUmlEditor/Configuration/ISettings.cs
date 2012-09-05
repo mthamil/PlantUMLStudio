@@ -37,7 +37,12 @@ namespace PlantUmlEditor.Configuration
 		/// <summary>
 		/// The pattern used to find the latest PlantUML version at PlantUMLVersionSource.
 		/// </summary>
-		Regex PlantUmlVersionPattern { get; }
+		Regex PlantUmlRemoteVersionPattern { get; }
+
+		/// <summary>
+		/// The pattern used to find the current PlantUML version from PlantUML itself.
+		/// </summary>
+		Regex PlantUmlLocalVersionPattern { get; }
 
 		/// <summary>
 		/// The file extension to use for diagrams.

@@ -23,7 +23,8 @@ namespace PlantUmlEditor.Configuration
 
 			PlantUmlDownloadLocation = settings.DownloadUrl;
 			PlantUmlVersionSource = settings.PlantUmlVersionSource;
-			PlantUmlVersionPattern = new Regex(settings.PlantUmlVersionPattern);
+			PlantUmlRemoteVersionPattern = new Regex(settings.PlantUmlRemoteVersionPattern);
+			PlantUmlLocalVersionPattern = new Regex(settings.PlantUmlLocalVersionPattern);
 			DiagramFileExtension = settings.PlantUmlFileExtension;
 			PlantUmlHighlightingDefinition = new FileInfo(settings.PlantUmlHighlightingDefinition);
 		}
@@ -43,8 +44,11 @@ namespace PlantUmlEditor.Configuration
 		/// <see cref="ISettings.PlantUmlVersionSource"/>
 		public Uri PlantUmlVersionSource { get; private set; }
 
-		/// <see cref="ISettings.PlantUmlVersionPattern"/>
-		public Regex PlantUmlVersionPattern { get; private set; }
+		/// <see cref="ISettings.PlantUmlRemoteVersionPattern"/>
+		public Regex PlantUmlRemoteVersionPattern { get; private set; }
+
+		/// <see cref="ISettings.PlantUmlLocalVersionPattern"/>
+		public Regex PlantUmlLocalVersionPattern { get; private set; }
 
 		/// <see cref="ISettings.DiagramFileExtension"/>
 		public string DiagramFileExtension { get; private set; }

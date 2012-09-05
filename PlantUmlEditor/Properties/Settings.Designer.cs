@@ -89,9 +89,9 @@ namespace PlantUmlEditor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".*\\(Version (?<version>\\d{4,5})\\).*")]
-        public string PlantUmlVersionPattern {
+        public string PlantUmlRemoteVersionPattern {
             get {
-                return ((string)(this["PlantUmlVersionPattern"]));
+                return ((string)(this["PlantUmlRemoteVersionPattern"]));
             }
         }
         
@@ -101,6 +101,15 @@ namespace PlantUmlEditor.Properties {
         public string PlantUmlHighlightingDefinition {
             get {
                 return ((string)(this["PlantUmlHighlightingDefinition"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*version (?<version>\\d{4,5})[\\s].*")]
+        public string PlantUmlLocalVersionPattern {
+            get {
+                return ((string)(this["PlantUmlLocalVersionPattern"]));
             }
         }
     }

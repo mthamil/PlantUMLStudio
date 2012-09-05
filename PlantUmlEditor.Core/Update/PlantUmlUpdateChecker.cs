@@ -19,7 +19,7 @@ namespace PlantUmlEditor.Core.Update
 		/// </summary>
 		/// <param name="clock">The system clock</param>
 		/// <param name="plantUml">The PlantUML API</param>
-		public PlantUmlUpdateChecker(IClock clock, IDiagramCompiler plantUml)
+		public PlantUmlUpdateChecker(IClock clock, IPlantUml plantUml)
 			: base(clock)
 		{
 			_plantUml = plantUml;
@@ -55,6 +55,6 @@ namespace PlantUmlEditor.Core.Update
 			return false;
 		}
 
-		private readonly IDiagramCompiler _plantUml;
+		private readonly IPlantUml _plantUml;
 	}
 }

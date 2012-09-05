@@ -21,7 +21,7 @@ namespace Utilities.Concurrency.Processes
 		/// <returns>A Task representing the process</returns>
 		public static Task<Stream> ToTask(this ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
-			return ProcessAdapterFactory().Execute(processInfo, input, cancellationToken);
+			return ProcessAdapterFactory().StartNew(processInfo, input, cancellationToken);
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace Utilities.Concurrency.Processes
 		/// <returns>A Task representing the process</returns>
 		public static Task ToTask(this ProcessStartInfo processInfo, CancellationToken cancellationToken)
 		{
-			return ProcessAdapterFactory().Execute(processInfo, cancellationToken);
+			return ProcessAdapterFactory().StartNew(processInfo, cancellationToken);
 		}
 
 		internal static Func<IProcessTaskAdapter> ProcessAdapterFactory = () => new ProcessTaskAdapter(TaskScheduler.Default);

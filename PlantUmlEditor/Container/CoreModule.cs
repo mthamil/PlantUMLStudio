@@ -43,11 +43,12 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
-			builder.RegisterType<PlantUml>().As<IDiagramCompiler>()
+			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IPlantUml>()
 				.OnActivating(c =>
 				{
 					c.Instance.PlantUmlJar = c.Context.Resolve<ISettings>().PlantUmlJar;
 					c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
+					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
 				});
 
 			builder.RegisterType<PlantUmlUpdateChecker>().As<IDependencyUpdateChecker>()
@@ -56,7 +57,7 @@ namespace PlantUmlEditor.Container
 					c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
 					c.Instance.RemoteLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
 					c.Instance.VersionLocation = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
-					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlVersionPattern;
+					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
 				});
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()

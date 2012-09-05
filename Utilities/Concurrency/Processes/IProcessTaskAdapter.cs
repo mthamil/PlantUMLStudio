@@ -16,7 +16,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns>A Task that can be used to wait for the Process to complete</returns>
-		Task Execute(ProcessStartInfo processInfo, CancellationToken cancellationToken);
+		Task StartNew(ProcessStartInfo processInfo, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Executes a Process that takes data written to its input stream
@@ -26,6 +26,6 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns> A Task that, when completed successfully, contains a Process's output</returns>
-		Task<Stream> Execute(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken);
+		Task<Stream> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken);
 	}
 }

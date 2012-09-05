@@ -2,18 +2,19 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Utilities.Concurrency;
 using Utilities.Concurrency.Processes;
+using Utilities.InputOutput;
 
 namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Provides an interface to PlantUML.
 	/// </summary>
-	public class PlantUml : IDiagramCompiler
+	public class PlantUml : IPlantUml
 	{
 		/// <see cref="IDiagramCompiler.CompileToImage"/>
 		public async Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken)
@@ -52,38 +53,25 @@ namespace PlantUmlEditor.Core
 			}.ToTask(CancellationToken.None);
 		}
 
-		/// <see cref="IDiagramCompiler.GetCurrentVersion"/>
+		/// <see cref="IPlantUml.GetCurrentVersion"/>
 		public async Task<string> GetCurrentVersion()
 		{
-			// For some reason PlantUML writes this data to the error stream.
-			try
+			var outputStream = await new ProcessStartInfo
 			{
-				await new ProcessStartInfo
-				{
-					FileName = "java",
-					Arguments = String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
-					WindowStyle = ProcessWindowStyle.Hidden,
-					CreateNoWindow = true,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					RedirectStandardInput = true,
-					UseShellExecute = false
-				}.ToTask(new MemoryStream(), CancellationToken.None);
-			}
-			catch (ProcessErrorException ex)
-			{
-				int versionIndex = ex.Message.IndexOf(versionToken);
-				if (versionIndex > -1)
-				{
-					string version = ex.Message.Substring(versionIndex + versionToken.Length).Trim();
-					int versionEndIndex = version.IndexOf(' ');
-					version = version.Substring(0, versionEndIndex);
-					return version;
-				}
-				throw;
-			}
+				FileName = "java",
+				Arguments = String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
+				WindowStyle = ProcessWindowStyle.Hidden,
+				CreateNoWindow = true,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				RedirectStandardInput = true,
+				UseShellExecute = false
+			}.ToTask(new MemoryStream(), CancellationToken.None);
 
-			return null;
+			var resultData = await outputStream.Async().ReadAllBytesAsync(CancellationToken.None);
+			var output = Encoding.Default.GetString(resultData);
+			var match = VersionMatchingPattern.Match(output);
+			return match.Groups["version"].Value;
 		}
 
 		/// <summary>
@@ -96,6 +84,9 @@ namespace PlantUmlEditor.Core
 		/// </summary>
 		public FileInfo PlantUmlJar { get; set; }
 
-		private const string versionToken = "version";
+		/// <summary>
+		/// Pattern used to extract the current version.
+		/// </summary>
+		public Regex VersionMatchingPattern { get; set; }
 	}
 }

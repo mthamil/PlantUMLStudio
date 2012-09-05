@@ -27,7 +27,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns>A Task that can be used to wait for the Process to complete</returns>
-		public Task Execute(ProcessStartInfo processInfo, CancellationToken cancellationToken)
+		public Task StartNew(ProcessStartInfo processInfo, CancellationToken cancellationToken)
 		{
 			var process = new Process
 			{
@@ -79,7 +79,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns> A Task that, when completed successfully, contains a Process's output</returns>
-		public Task<Stream> Execute(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		public Task<Stream> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
 			var process = new Process
 			{

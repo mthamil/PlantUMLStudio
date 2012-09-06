@@ -11,6 +11,11 @@ namespace Utilities
 	public abstract class Option<T>
 	{
 		/// <summary>
+		/// This constructor is internal to disallow further subclassing.
+		/// </summary>
+		internal Option() { }
+
+		/// <summary>
 		/// Returns a None Option of a given type.
 		/// </summary>
 		public static Option<T> None()

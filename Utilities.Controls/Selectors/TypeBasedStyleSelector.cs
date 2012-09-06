@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace PlantUmlEditor.View.MarkupExtensions
+namespace Utilities.Controls.Selectors
 {
 	/// <summary>
 	/// A markup extension that allows definition of a style selector that is composed of multiple individual

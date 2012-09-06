@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace PlantUmlEditor.View.MarkupExtensions
+namespace Utilities.Controls.Selectors
 {
 	/// <summary>
 	/// A markup extension that allows definition of a data template selector that is composed of multiple individual
@@ -56,7 +56,15 @@ namespace PlantUmlEditor.View.MarkupExtensions
 		/// <param name="dataTemplates">The data templates to select from</param>
 		public TypeMapDataTemplateSelector(IEnumerable<DataTemplate> dataTemplates)
 		{
-			_dataTemplateMap = dataTemplates.ToDictionary(k => (Type)k.DataType, v => v);
+			int order = 0;
+			var templateOrder = new Dictionary<Type, int>();
+			_dataTemplateMap = dataTemplates.ToDictionary(k =>
+			{
+				templateOrder[(Type)k.DataType] = order++;
+				return (Type)k.DataType;
+			}, v => v);
+
+			_orderedTemplates = _dataTemplateMap.OrderBy(dt => templateOrder[dt.Key]).ToList();
 		}
 
 		/// <see cref="DataTemplateSelector.SelectTemplate"/>
@@ -65,9 +73,23 @@ namespace PlantUmlEditor.View.MarkupExtensions
 			if (item == null) 
 				throw new ArgumentNullException("item");
 
-			return _dataTemplateMap[item.GetType()];
+			var dataType = item.GetType();
+
+			DataTemplate template;
+			if (_dataTemplateMap.TryGetValue(dataType, out template))
+				return template;
+
+			// Fallback to assignability.
+			foreach (var dataTemplate in _orderedTemplates)
+			{
+				if (dataTemplate.Key.IsAssignableFrom(dataType))
+					return dataTemplate.Value;
+			}
+
+			return null;
 		}
 
 		private readonly IDictionary<Type, DataTemplate> _dataTemplateMap;
+		private readonly IList<KeyValuePair<Type, DataTemplate>> _orderedTemplates;
 	}
 }

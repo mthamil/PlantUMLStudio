@@ -148,8 +148,6 @@
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MarkupExtensions\TypeBasedStyleSelector.cs" />
-    <Compile Include="View\MarkupExtensions\TypeBasedDataTemplateSelector.cs" />
     <Compile Include="View\MarkupExtensions\ViewModelLocator.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

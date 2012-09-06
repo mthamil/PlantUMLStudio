@@ -127,6 +127,8 @@
     <Compile Include="ScrollableMessageBox.xaml.cs">
       <DependentUpon>ScrollableMessageBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Selectors\TypeBasedDataTemplateSelector.cs" />
+    <Compile Include="Selectors\TypeBasedStyleSelector.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

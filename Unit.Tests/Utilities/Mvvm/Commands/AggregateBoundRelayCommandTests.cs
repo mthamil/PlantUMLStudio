@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -77,8 +78,8 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			foreach (var child in parent.Items)
 			{
 				var localChild = child;
-				AssertThat.Raises(command, "CanExecuteChanged", () => localChild.BoolValue = true);
-				AssertThat.DoesNotRaise(command, "CanExecuteChanged", () => localChild.BoolValue = true);
+				AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
+				AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
 			}
 		}
 
@@ -102,7 +103,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			foreach (var child in new [] { child1, child2 })
 			{
 				var localChild = child;
-				AssertThat.DoesNotRaise(command, "CanExecuteChanged", () => localChild.BoolValue = true);
+				AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
 			}
 		}
 
@@ -120,7 +121,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 
 			// Act/Assert.
 			parent.Items.Remove(child);
-			AssertThat.DoesNotRaise(command, "CanExecuteChanged", () => child.BoolValue = true);
+			AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => child.BoolValue = true);
 		}
 
 		[Fact]

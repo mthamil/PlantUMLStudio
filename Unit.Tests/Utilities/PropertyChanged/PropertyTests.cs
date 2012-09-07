@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Unit.Tests.Utilities.PropertyChanged
 {
-	public class PropertyTests : INotifyPropertyChanged
+	public class PropertyTests : PropertyChangedBase
 	{
 		[Fact]
 		public void Test_PropertyChanged()
@@ -15,9 +15,9 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			var property = new Property<int>("property", OnPropertyChanged);
 
 			// Act/Assert.
-			var args = AssertThat.RaisesWithEventArgs<PropertyChangedEventArgs>(
+			var args = AssertThat.RaisesWithEventArgs<INotifyPropertyChanged, PropertyChangedEventArgs>(
 				this,
-				"PropertyChanged",
+				p => p.PropertyChanged += null,
 				() => property.Value = 30);
 
 			Assert.Equal(30, property.Value);
@@ -35,9 +35,9 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			};
 
 			// Act/Assert.
-			AssertThat.DoesNotRaise(
+			AssertThat.DoesNotRaise<INotifyPropertyChanged>(
 				this,
-				"PropertyChanged",
+				p => p.PropertyChanged += null,
 				() => property.Value = 5);
 
 			Assert.Equal(5, property.Value);
@@ -53,9 +53,9 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			};
 
 			// Act/Assert.
-			AssertThat.Raises(
+			AssertThat.Raises<INotifyPropertyChanged>(
 				this,
-				"PropertyChanged",
+				p => p.PropertyChanged += null,
 				() => property.Value = new CustomEquals(-1));
 
 			Assert.Equal(-1, property.Value.Value);
@@ -71,9 +71,9 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			};
 
 			// Act/Assert.
-			AssertThat.DoesNotRaise(
+			AssertThat.DoesNotRaise<INotifyPropertyChanged>(
 				this,
-				"PropertyChanged",
+				p => p.PropertyChanged += null,
 				() => property.Value = new CustomEquals(0));
 
 			Assert.Equal(2, property.Value.Value);
@@ -141,18 +141,6 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			AssertThat.SequenceEqual(new[] { "IntValue", "StringValue" }, changedPropertyNames);
 			Assert.Equal("IntValue", property.Name);
 		}
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
 
 		public int IntValue { get; set; }
 		public string StringValue { get { return IntValue.ToString(); } }

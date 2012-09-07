@@ -1,4 +1,5 @@
-﻿using Utilities.Mvvm;
+﻿using System.Windows.Input;
+using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -49,7 +50,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			var command = new BoundRelayCommand<TestClass>(_ => { }, p => p.BoolValue, propertyOwner);
 
 			// Act/Assert.
-			AssertThat.Raises(command, "CanExecuteChanged", () => propertyOwner.BoolValue = true);
+			AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue = true);
 		}
 
 		[Fact]
@@ -60,7 +61,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			var command = new BoundRelayCommand<TestClass>(_ => { }, p => p.BoolValue, propertyOwner);
 
 			// Act/Assert.
-			AssertThat.DoesNotRaise(command, "CanExecuteChanged", () => propertyOwner.BoolValue2 = true);
+			AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue2 = true);
 		}
 
 		private class TestClass : ViewModelBase

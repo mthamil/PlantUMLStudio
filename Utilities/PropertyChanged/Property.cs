@@ -44,7 +44,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="propertyChangedRaiser">A function that raises a property changed event</param>
 		public PropertyBuilder(T owner, Expression<Func<T, V>> propertyAccessor, Action<string> propertyChangedRaiser)
 		{
-			_propertyName = Reflect.PropertyOf(typeof(T), propertyAccessor).Name;
+			_propertyName = Reflect.PropertyOf(typeof(T), UnwrapPropertyExpression(propertyAccessor)).Name;
 			_propertyChangedRaiser = propertyChangedRaiser;
 		}
 
@@ -56,7 +56,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="otherPropertyAccessor">An expression that references the dependent property</param>
 		public PropertyBuilder<T, V> AlsoChanges<VOther>(Expression<Func<T, VOther>> otherPropertyAccessor)
 		{
-			var dependentProperty = Reflect.PropertyOf(typeof(T), otherPropertyAccessor);
+			var dependentProperty = Reflect.PropertyOf(typeof(T), UnwrapPropertyExpression(otherPropertyAccessor));
 			if (dependentProperty.GetSetMethod(true) != null)
 				throw new ArgumentException("Properties with setters cannot be dependent!");
 
@@ -79,6 +79,30 @@ namespace Utilities.PropertyChanged
 		public static implicit operator Property<V>(PropertyBuilder<T, V> builder)
 		{
 			return builder.Get();
+		}
+
+		/// <summary>
+		/// The following method is necessary to allow a Property to be created that is accessed using a 
+		/// property of a different type than it is actually declaring.
+		/// For example, we have the following property:
+		/// <code>
+		/// public IEnumerable&lt;int&gt; Integers { get { return _integers.Value; } }
+		/// private readonly Property&lt;IList&lt;int&gt;&gt; _integers;
+		/// </code>
+		/// That is created using the following:
+		/// <code>
+		/// _integers = Property.New(this, p => p.Integers as IList&lt;int&gt;, OnPropertyChanged);
+		/// </code>
+		/// </summary>
+		private static LambdaExpression UnwrapPropertyExpression<V>(Expression<Func<T, V>> propertyAccessor)
+		{
+			if (propertyAccessor.Body.NodeType == ExpressionType.TypeAs)
+			{
+				var typeAs = (UnaryExpression)propertyAccessor.Body;
+				return Expression.Lambda(typeAs.Operand, propertyAccessor.Parameters);
+			}
+
+			return propertyAccessor;
 		}
 
 		private readonly string _propertyName;

@@ -142,6 +142,17 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			Assert.Equal("IntValue", property.Name);
 		}
 
+		[Fact]
+		public void Test_PropertyBuilder_PropertyAsDifferentType()
+		{
+			// Arrange.
+			Property<object> property = Property.New(this, p => p.IntValue as object, OnPropertyChanged);
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(this, p => p.IntValue, () => property.Value = 10);
+			Assert.Equal(10, property.Value);
+		}
+
 		public int IntValue { get; set; }
 		public string StringValue { get { return IntValue.ToString(); } }
 		public object ObjectValue { get; set; }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using Utilities.Reflection;
 using Xunit;
@@ -128,68 +129,68 @@ namespace Unit.Tests
 				throw new DoesNotThrowException(exception);
 		}
 
-		///// <summary>
-		///// Asserts that the given event is raised.
-		///// </summary>
-		///// <param name="target">The object raising the event</param>
-		///// <param name="subscriber">An action adding or removing a null handler from the target event</param>
-		///// <param name="eventDelegate">The delegate to invoke which should trigger the event</param>
-		//public static void Raises<T>(T target, Action<T> subscriber, EventDelegate eventDelegate)
-		//{
-		//    Raises(target, subscriber, eventDelegate, true);
-		//}
+		/// <summary>
+		/// Asserts that the given event is raised.
+		/// </summary>
+		/// <param name="target">The object raising the event</param>
+		/// <param name="subscriber">An action adding or removing a null handler from the target event</param>
+		/// <param name="eventDelegate">The delegate to invoke which should trigger the event</param>
+		public static void Raises<T>(T target, Action<T> subscriber, EventDelegate eventDelegate)
+		{
+			Raises(target, subscriber, eventDelegate, true);
+		}
 
-		///// <summary>
-		///// Asserts that the given event is not raised.
-		///// </summary>
-		///// <param name="target">The object raising the event</param>
-		///// <param name="subscriber">An action adding or removing a null handler from the target event</param>
-		///// <param name="eventDelegate">The delegate to invoke which shouldn't trigger the event</param>
-		//public static void DoesNotRaise<T>(T target, Action<T> subscriber, EventDelegate eventDelegate)
-		//{
-		//    Raises(target, subscriber, eventDelegate, false);
-		//}
+		/// <summary>
+		/// Asserts that the given event is not raised.
+		/// </summary>
+		/// <param name="target">The object raising the event</param>
+		/// <param name="subscriber">An action adding or removing a null handler from the target event</param>
+		/// <param name="eventDelegate">The delegate to invoke which shouldn't trigger the event</param>
+		public static void DoesNotRaise<T>(T target, Action<T> subscriber, EventDelegate eventDelegate)
+		{
+			Raises(target, subscriber, eventDelegate, false);
+		}
 
-		///// <summary>
-		///// Asserts that an event is raised and returns the event arguments.
-		///// </summary>
-		///// <typeparam name="TTarget">The type of the target object</typeparam>
-		///// <typeparam name="TArgs">The event argument type, must be of type EventArgs</typeparam>
-		///// <param name="target">The object raising the event</param>
-		///// <param name="subscriber">An action adding or removing a null handler from the target event</param>
-		///// <param name="eventDelegate">The delegate to invoke which should trigger the event</param>
-		///// <returns>The captured event args of the event if it is successfully raised</returns>
-		//public static TArgs RaisesWithEventArgs<TTarget, TArgs>(TTarget target, Action<TTarget> subscriber, EventDelegate eventDelegate)
-		//    where TArgs : EventArgs
-		//{
-		//    EventProxy proxy = Raises(target, subscriber, eventDelegate, true);
-		//    return (TArgs)proxy.ArgsReceived;
-		//}
+		/// <summary>
+		/// Asserts that an event is raised and returns the event arguments.
+		/// </summary>
+		/// <typeparam name="TTarget">The type of the target object</typeparam>
+		/// <typeparam name="TArgs">The event argument type, must be of type EventArgs</typeparam>
+		/// <param name="target">The object raising the event</param>
+		/// <param name="subscriber">An action adding or removing a null handler from the target event</param>
+		/// <param name="eventDelegate">The delegate to invoke which should trigger the event</param>
+		/// <returns>The captured event args of the event if it is successfully raised</returns>
+		public static TArgs RaisesWithEventArgs<TTarget, TArgs>(TTarget target, Action<TTarget> subscriber, EventDelegate eventDelegate)
+			where TArgs : EventArgs
+		{
+			EventProxy proxy = Raises(target, subscriber, eventDelegate, true);
+			return (TArgs)proxy.ArgsReceived;
+		}
 
-		//private static EventProxy Raises<T>(T target, Action<T> subscriber, EventDelegate eventDelegate, bool expectEventReceived)
-		//{
-		//    EventInfo eventInfo = ExtractEvent(subscriber, target);
-		//    EventProxy proxy = InternalRaises(target, eventInfo, eventDelegate);
+		private static EventProxy Raises<T>(T target, Action<T> subscriber, EventDelegate eventDelegate, bool expectEventReceived)
+		{
+			EventInfo eventInfo = ExtractEvent(subscriber, target);
+			EventProxy proxy = InternalRaises(target, eventInfo, eventDelegate);
 
-		//    if (expectEventReceived != proxy.EventReceived)
-		//        throw new RaisesException(typeof(T), eventInfo.Name, expectEventReceived, proxy.EventReceived);
+			if (expectEventReceived != proxy.EventReceived)
+				throw new RaisesException(typeof(T), eventInfo.Name, expectEventReceived, proxy.EventReceived);
 
-		//    return proxy;
-		//}
+			return proxy;
+		}
 
-		//private static EventInfo ExtractEvent<T>(Action<T> eventAccessor, T target)
-		//{
-		//    var recorder = new MethodRecorder<T>(target);
-		//    recorder.Record(eventAccessor);
+		private static EventInfo ExtractEvent<T>(Action<T> eventAccessor, T target)
+		{
+			var recorder = new MethodRecorder<T>();
+			eventAccessor(recorder.Proxy);
 
-		//    MemberInfo eventMember = recorder.LastInvocation;
-		//    if (!(eventMember.Name.StartsWith("add_") || eventMember.Name.StartsWith("remove_")) || !(eventMember is EventInfo))
-		//        throw new ArgumentException(@"Invocation must be an event subscription or unsubscription", "eventAccessor");
+			IMethodCallMessage eventMember = recorder.LastInvocation;
+			if (!(eventMember.MethodName.StartsWith("add_") || eventMember.MethodName.StartsWith("remove_")))
+				throw new ArgumentException(@"Invocation must be an event subscription or unsubscription", "eventAccessor");
 
-		//    string eventName = eventMember.Name.Replace("add_", string.Empty).Replace("remove_", string.Empty);
-		//    EventInfo eventInfo = typeof(T).GetEvent(eventName);
-		//    return eventInfo;
-		//}
+			string eventName = eventMember.MethodName.Replace("add_", string.Empty).Replace("remove_", string.Empty);
+			EventInfo eventInfo = typeof(T).GetEvent(eventName);
+			return eventInfo;
+		}
 
 		/// <summary>
 		/// Asserts that the given event is raised.

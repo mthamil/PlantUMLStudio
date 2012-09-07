@@ -144,31 +144,31 @@ namespace Unit.Tests
 			Assert.False(test.EventRaised);
 		}
 
-		//[Fact]
-		//public void Test_Raises_WithEventSubscriber_Success()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_Raises_WithEventSubscriber_Success()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    Assert.DoesNotThrow(() =>
-		//        AssertThat.Raises(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.Raises(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
-		//    Assert.True(test.EventRaised);
-		//}
+			Assert.True(test.EventRaised);
+		}
 
-		//[Fact]
-		//public void Test_Raises_WithEventSubscriber_Failure()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_Raises_WithEventSubscriber_Failure()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    Assert.Throws<RaisesException>(() =>
-		//        AssertThat.Raises(test, t => t.TestEvent += null, () => test.ToString()));
+			// Act/Assert.
+			Assert.Throws<RaisesException>(() =>
+				AssertThat.Raises(test, t => t.TestEvent += null, () => test.ToString()));
 
-		//    Assert.False(test.EventRaised);
-		//}
+			Assert.False(test.EventRaised);
+		}
 
 		[Fact]
 		public void Test_DoesNotRaise_WithEventName_Success()
@@ -196,31 +196,31 @@ namespace Unit.Tests
 			Assert.False(test.EventRaised);
 		}
 
-		//[Fact]
-		//public void Test_DoesNotRaise_WithEventSubscriber_Success()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_DoesNotRaise_WithEventSubscriber_Success()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    Assert.Throws<RaisesException>(() =>
-		//        AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
+			// Act/Assert.
+			Assert.Throws<RaisesException>(() =>
+				AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
-		//    Assert.True(test.EventRaised);
-		//}
+			Assert.True(test.EventRaised);
+		}
 
-		//[Fact]
-		//public void Test_DoesNotRaise_WithEventSubscriber_Failure()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_DoesNotRaise_WithEventSubscriber_Failure()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    Assert.DoesNotThrow(() =>
-		//        AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.ToString()));
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.DoesNotRaise(test, t => t.TestEvent += null, () => test.ToString()));
 
-		//    Assert.False(test.EventRaised);
-		//}
+			Assert.False(test.EventRaised);
+		}
 
 		[Fact]
 		public void Test_RaisesWithEventArgs_WithEventName_Success()
@@ -250,33 +250,33 @@ namespace Unit.Tests
 			Assert.False(test.EventRaised);
 		}
 
-		//[Fact]
-		//public void Test_RaisesWithEventArgs_WithEventSubscriber_Success()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_RaisesWithEventArgs_WithEventSubscriber_Success()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    TestEventArgs args = null;
-		//    Assert.DoesNotThrow(() =>
-		//        args = AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
+			// Act/Assert.
+			TestEventArgs args = null;
+			Assert.DoesNotThrow(() =>
+				args = AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.OnTestEvent(4)));
 
-		//    Assert.Equal(4, args.Value);
-		//    Assert.True(test.EventRaised);
-		//}
+			Assert.Equal(4, args.Value);
+			Assert.True(test.EventRaised);
+		}
 
-		//[Fact]
-		//public void Test_RaisesWithEventArgs_WithEventSubscriber_Failure_EventNotRaised()
-		//{
-		//    // Arrange.
-		//    IEventTest test = new EventTest();
+		[Fact]
+		public void Test_RaisesWithEventArgs_WithEventSubscriber_Failure_EventNotRaised()
+		{
+			// Arrange.
+			IEventTest test = new EventTest();
 
-		//    // Act/Assert.
-		//    Assert.Throws<RaisesException>(() =>
-		//        AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.ToString()));
+			// Act/Assert.
+			Assert.Throws<RaisesException>(() =>
+				AssertThat.RaisesWithEventArgs<IEventTest, TestEventArgs>(test, t => t.TestEvent += null, () => test.ToString()));
 
-		//    Assert.False(test.EventRaised);
-		//}
+			Assert.False(test.EventRaised);
+		}
 
 		[Fact]
 		public void Test_Throws_Task_Success()

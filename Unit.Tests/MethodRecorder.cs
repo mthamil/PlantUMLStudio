@@ -1,90 +1,55 @@
 ﻿using System;
-using System.Dynamic;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using System.Runtime.Remoting.Proxies;
 
 namespace Unit.Tests
 {
 	/// <summary>
-	/// Class that records methods invoked on a proxy.
+	/// Proxy that records method invocations.
 	/// </summary>
-	/// <typeparam name="T">The type that is being proxied</typeparam>
-	public class MethodRecorder<T> : DynamicObject
+	public class MethodRecorder<T> : RealProxy
 	{
-		private readonly T _proxied;
-
 		/// <summary>
-		/// Creates a new MethodRecorder.
+		/// Creates a new interceptor that records method invocations.
 		/// </summary>
-		public MethodRecorder(T proxied)
+		public MethodRecorder()
+			: base(typeof(T))
 		{
-			_proxied = proxied;
-		}
-
-		public override System.Collections.Generic.IEnumerable<string> GetDynamicMemberNames()
-		{
-			return base.GetDynamicMemberNames();
-		}
-
-		public override bool TryConvert(ConvertBinder binder, out object result)
-		{
-			result = this;
-			return binder.Type == typeof(T);
-		}
-
-		public override bool TryGetMember(GetMemberBinder binder, out object result)
-		{
-			return base.TryGetMember(binder, out result);
-		}
-
-		public override bool TrySetMember(SetMemberBinder binder, object value)
-		{
-			return base.TrySetMember(binder, value);
-		}
-
-		public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
-		{
-			return base.TryInvokeMember(binder, args, out result);
-		}
-
-		public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
-		{
-			return base.TryInvoke(binder, args, out result);
+			_proxy = new Lazy<T>(() => (T)base.GetTransparentProxy());
 		}
 
 		/// <summary>
-		/// Records a method invocation on the proxied member.
+		/// The underlying proxy.
 		/// </summary>
-		/// <param name="invocation">The recorded method invocation</param>
-		public MemberInfo Record(Action<T> invocation)
+		public T Proxy
 		{
-			return Record(invocation, this);
+			get { return _proxy.Value; }
 		}
 
 		/// <summary>
-		/// Records a method invocation on the proxied member.
+		/// The most recent invocation made on the proxy.
 		/// </summary>
-		/// <param name="invocation">The recorded method invocation</param>
-		public MemberInfo Record<V>(Func<T, V> invocation)
-		{
-			return Record(invocation, this);
-		}
+		public IMethodCallMessage LastInvocation { get; private set; }
 
-		private MemberInfo Record(Delegate invocation, dynamic argument)
+		/// <see cref="RealProxy.Invoke"/>
+		public override IMessage Invoke(IMessage msg)
 		{
-			try
+			var methodCall = msg as IMethodCallMessage;
+			LastInvocation = methodCall;
+
+			object returnValue = null;
+			var method = methodCall.MethodBase as MethodInfo;
+			if (method != null)
 			{
-				T proxy = argument;
-				invocation.DynamicInvoke(proxy);
+				Type returnType = method.ReturnType;
+				if (returnType.IsValueType && returnType != typeof(void)) // can't create an instance of Void
+					returnValue = Activator.CreateInstance(returnType);
 			}
-			catch (TargetException) { }
-			catch (NotSupportedException) { }
 
-			return LastInvocation;
+			return new ReturnMessage(returnValue, new object[0], 0, methodCall.LogicalCallContext, methodCall);
 		}
 
-		/// <summary>
-		/// The last recorded invoked member.
-		/// </summary>
-		public MemberInfo LastInvocation { get; private set; }
+		private readonly Lazy<T> _proxy;
 	}
 }

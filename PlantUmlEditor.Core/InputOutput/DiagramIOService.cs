@@ -36,7 +36,7 @@ namespace PlantUmlEditor.Core.InputOutput
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
-		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<ReadDiagramsProgress> progress)
+		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, CancellationToken cancellationToken, IProgress<ReadDiagramsProgress> progress)
 		{
 			return Task<IEnumerable<Diagram>>.Factory.StartNew(() =>
 			{
@@ -47,6 +47,9 @@ namespace PlantUmlEditor.Core.InputOutput
 				int processed = 0;
 				foreach (FileInfo file in files)
 				{
+					if (cancellationToken.IsCancellationRequested)
+						break;
+
 					var diagram = ReadImpl(file);
 					
 					if (diagram != null)

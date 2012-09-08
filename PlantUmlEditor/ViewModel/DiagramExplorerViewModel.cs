@@ -46,6 +46,7 @@ namespace PlantUmlEditor.ViewModel
 			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
+			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
 
 			_diagramIO.DiagramFileDeleted += diagramIO_DiagramFileDeleted;
 			_diagramIO.DiagramFileAdded += diagramIO_DiagramFileAdded;
@@ -209,29 +210,45 @@ namespace PlantUmlEditor.ViewModel
 			var progress = _notifications.StartProgress();
 			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
 
-			// Capture diagrams as they are read for a more responsive UI.
-			var readProgress = new Progress<ReadDiagramsProgress>(p =>
+			using (var cts = new CancellationTokenSource())
 			{
-				if (p.Diagram.HasValue)
-					PreviewDiagrams.Add(_previewDiagramFactory(p.Diagram.Value));
-			});
+				CancelLoadDiagramsCommand = new CancelTaskCommand(cts);
 
-			// Report progress to UI by passing up progress data.
-			progress.Wrap(readProgress, p => new ProgressUpdate
-			{
-				PercentComplete = (int?)(p.ProcessedDiagramCount / (double)p.TotalDiagramCount * 100),
-				Message = String.Format(Resources.Progress_LoadingFile, p.ProcessedDiagramCount, p.TotalDiagramCount)
-			});
+				// Capture diagrams as they are read for a more responsive UI.
+				var readProgress = new Progress<ReadDiagramsProgress>(p =>
+				{
+					if (p.Diagram.HasValue)
+						PreviewDiagrams.Add(_previewDiagramFactory(p.Diagram.Value));
+				});
 
-			try
-			{
-				await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress);
-				progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
+				// Report progress to UI by passing up progress data.
+				progress.Wrap(readProgress, p => new ProgressUpdate
+				{
+					PercentComplete = (int?)(p.ProcessedDiagramCount/(double)p.TotalDiagramCount*100),
+					Message = String.Format(Resources.Progress_LoadingFile, p.ProcessedDiagramCount, p.TotalDiagramCount)
+				});
+
+				try
+				{
+					await _diagramIO.ReadDiagramsAsync(DiagramLocation, cts.Token, readProgress);
+					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
+				}
+				catch (Exception e)
+				{
+					progress.Report(ProgressUpdate.Failed(e));
+				}
+
+				CancelLoadDiagramsCommand = null;
 			}
-			catch (Exception e)
-			{
-				progress.Report(ProgressUpdate.Failed(e));
-			}
+		}
+
+		/// <summary>
+		/// Cancels loading of diagrams.
+		/// </summary>
+		public ICommand CancelLoadDiagramsCommand
+		{
+			get { return _cancelLoadDiagramsCommand.Value; }
+			private set { _cancelLoadDiagramsCommand.Value = value; }
 		}
 
 		/// <summary>
@@ -291,6 +308,8 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;
+
+		private readonly Property<ICommand> _cancelLoadDiagramsCommand; 
 
 		private readonly IDiagramIOService _diagramIO;
 

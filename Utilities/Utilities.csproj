@@ -104,6 +104,7 @@
     <Compile Include="InputOutput\StreamExtensions.cs" />
     <Compile Include="Mvvm\Commands\AggregateBoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
+    <Compile Include="Mvvm\Commands\CancelTaskCommand.cs" />
     <Compile Include="Mvvm\Commands\ChildPropertyBoundCommandBase.cs" />
     <Compile Include="Mvvm\Commands\CommandBase.cs" />
     <Compile Include="Mvvm\Commands\DependentBoundRelayCommand.cs" />

@@ -25,4 +25,6 @@
 
     <BitmapImage x:Key="BrowseToImageIcon_Small" UriSource="../Icons/folder-open-slide-16x16.png"/>
 
+    <BitmapImage x:Key="CancelIcon_Small" UriSource="../Icons/cross-16x16.png"/>
+
 </ResourceDictionary>

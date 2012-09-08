@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Core.InputOutput;
@@ -103,7 +104,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 				.Callback((ReadDiagramsProgress p) => progressData.Add(p));
 
 			// Act.
-			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, progress.Object);
+			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, CancellationToken.None, progress.Object);
 			readTask.Wait();
 			var diagrams = readTask.Result;
 

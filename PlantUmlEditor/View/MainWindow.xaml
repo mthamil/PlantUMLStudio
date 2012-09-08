@@ -42,6 +42,7 @@
             <utilconvert:UriConverter x:Key="UriConverter"/>
             <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
             <utilconvert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
+            <utilconvert:NullToFalseValueConverter x:Key="NullToFalseConverter"/>
                 
             <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
@@ -393,11 +394,38 @@
                                     </ctrl:FilePicker.Trigger>
                                 </ctrl:FilePicker>
                         
-                                <Button Command="{Binding LoadDiagramsCommand}" Height="25">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None"/>
-                                        <TextBlock Text="Refresh Diagram List" Margin="5,0,0,0"/>
-                                    </StackPanel>
+                                <Button Height="25">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Style.Triggers>
+
+                                                <DataTrigger Binding="{Binding CancelLoadDiagramsCommand, Converter={StaticResource NullToFalseConverter}}" Value="False">
+                                                    <Setter Property="Command" Value="{Binding LoadDiagramsCommand}"/>
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None"/>
+                                                                <TextBlock Text="Refresh Diagram List" Margin="5,0,0,0"/>
+                                                            </StackPanel>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding CancelLoadDiagramsCommand, Converter={StaticResource NullToFalseConverter}}" Value="True">
+                                                    <Setter Property="Command" Value="{Binding CancelLoadDiagramsCommand}"/>
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Source="{StaticResource CancelIcon_Small}" Stretch="None"/>
+                                                                <TextBlock Text="Cancel" Margin="5,0,0,0"/>
+                                                            </StackPanel>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
                                 </Button>
                             </StackPanel>
             

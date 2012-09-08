@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Configuration;
@@ -46,9 +47,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				null
 			};
 
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
 				.Returns(() => Task.FromResult<IEnumerable<Diagram>>(diagrams))
-				.Callback((DirectoryInfo dir, IProgress<ReadDiagramsProgress> prog) =>
+				.Callback((DirectoryInfo dir, CancellationToken ct, IProgress<ReadDiagramsProgress> prog) =>
 				{
 					foreach (var diagram in diagrams)
 						prog.Report(new ReadDiagramsProgress(1, 1, diagram));
@@ -65,6 +66,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			Assert.Equal(diagramLocation.FullName, settings.Object.LastDiagramLocation.FullName);
 			diagramIO.Verify(dio => dio.StartMonitoring(diagramLocation));
+			Assert.Null(explorer.CancelLoadDiagramsCommand);
 		}
 
 		[Fact]
@@ -72,7 +74,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_UnsuccessfulLoad()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
 				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
 
 			// Act.
@@ -90,7 +92,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public void Test_IsDiagramLocationValid_False()
 		{
 			// Arrange.
-			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
+			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			// Act.
@@ -100,6 +102,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.False(isValid);
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.IsAny<DirectoryInfo>(),
+				It.IsAny<CancellationToken>(),
 				It.IsAny<IProgress<ReadDiagramsProgress>>()), Times.Never());
 			settings.VerifySet(s => s.LastDiagramLocation = It.IsAny<DirectoryInfo>(), Times.Never());
 		}
@@ -116,7 +119,9 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
 				It.IsAny<DirectoryInfo>(),
+				It.IsAny<CancellationToken>(),
 				It.IsAny<IProgress<ReadDiagramsProgress>>()), Times.Never());
+			Assert.Null(explorer.CancelLoadDiagramsCommand);
 		}
 
 		[Fact]

@@ -12,6 +12,7 @@ using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
+using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
@@ -31,20 +32,20 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		/// <param name="previewDiagram">A preview of the diagram being edited</param>
 		/// <param name="codeEditor">The code editor</param>
-		/// <param name="progressFactory">Creates objects that report progress</param>
+		/// <param name="notifications">Creates objects that report progress</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
 		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
-		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, IProgressRegistration progressFactory,
+		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, INotifications notifications,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
 			Diagram = previewDiagram.Diagram;
 
-			_progressFactory = progressFactory;
+			_notifications = notifications;
 			_diagramRenderer = diagramRenderer;
 			_diagramIO = diagramIO;
 			_compiler = compiler;
@@ -187,7 +188,7 @@ namespace PlantUmlEditor.ViewModel
 				_firstSaveAfterOpen = false;
 			}
 
-			var progress = _progressFactory.New(false);
+			var progress = _notifications.StartProgress(false);
 			progress.Report(new ProgressUpdate 
 			{ 
 				PercentComplete = 100, 
@@ -201,7 +202,7 @@ namespace PlantUmlEditor.ViewModel
 			{
 				if (t.IsFaulted && t.Exception != null)
 				{
-					progress.Report(ProgressUpdate.Failed(t.Exception.InnerExceptions.First()));
+					progress.Report(ProgressUpdate.Failed(t.Exception.InnerException));
 				}
 				else if (!t.IsCanceled)
 				{
@@ -259,7 +260,6 @@ namespace PlantUmlEditor.ViewModel
 				return;
 
 			var tcs = new CancellationTokenSource();
-			var progress = _progressFactory.New(false);
 
 			var refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
@@ -274,7 +274,7 @@ namespace PlantUmlEditor.ViewModel
 			}
 			catch (Exception e)
 			{
-				progress.Report(ProgressUpdate.Failed(e));
+				_notifications.Notify(new Notification(e));
 			}
 			finally
 			{
@@ -418,7 +418,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
 
-		private readonly IProgressRegistration _progressFactory;
+		private readonly INotifications _notifications;
 		private readonly IDiagramRenderer _diagramRenderer;
 		private readonly IDiagramIOService _diagramIO;
 		private readonly IDiagramCompiler _compiler;

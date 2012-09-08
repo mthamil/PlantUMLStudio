@@ -13,9 +13,9 @@
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
     xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
-    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands"
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-    xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor" 
+    xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor"
+    xmlns:Notifications="clr-namespace:PlantUmlEditor.ViewModel.Notifications" 
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -129,7 +129,7 @@
                 </Style.Triggers>
             </Style>
 
-            <xtn:ViewModelLocator TypeArgument="{x:Type vm:IProgressViewModel}" x:Key="ProgressViewModel"/>
+            <xtn:ViewModelLocator TypeArgument="{x:Type Notifications:NotificationsViewModel}" x:Key="NotificationsViewModel"/>
 
         </ResourceDictionary>
     </Window.Resources>
@@ -507,7 +507,7 @@
       
             <!-- This is the bottom row containing status message and progress bar -->
             <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25" Background="#2B3C59"
-                       DataContext="{Binding Source={StaticResource ProgressViewModel}, Path=ViewModel}">
+                       DataContext="{Binding Source={StaticResource NotificationsViewModel}, Path=ViewModel}">
 
                 <!--<StatusBar.BorderBrush Color="" />-->
                 
@@ -523,7 +523,7 @@
                 </StatusBar.ItemsPanel>
 
                 <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding Message, TargetNullValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White" FontFamily="Segoe UI" >
+                    <TextBlock Text="{Binding LatestNotification.Message, FallbackValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White" FontFamily="Segoe UI" >
                         <!--<TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>
@@ -544,9 +544,26 @@
                 <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
                     <ProgressBar Foreground="LightGreen" Background="Gray" 
                             VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="18" Width="165" 
-                            Minimum="0" Maximum="100" IsIndeterminate="{Binding HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
-                            Value="{Binding PercentComplete, TargetNullValue=-1}"
-                            Visibility="{Binding InProgress, Converter={StaticResource BooleanToVisibilityValueConverter}}"/>
+                            Minimum="0" Maximum="100" IsIndeterminate="{Binding LatestNotification.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                            Value="{Binding LatestNotification.PercentComplete, TargetNullValue=-1}">
+                        
+                        <ProgressBar.Style>
+                            <Style TargetType="{x:Type ProgressBar}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LatestNotification}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LatestNotification.InProgress}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LatestNotification.InProgress}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                        
+                    </ProgressBar>
                 </StatusBarItem>
                     
             </StatusBar>    

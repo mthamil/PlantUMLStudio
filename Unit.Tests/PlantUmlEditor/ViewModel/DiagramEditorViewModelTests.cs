@@ -9,6 +9,7 @@ using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
+using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
 using Utilities.Concurrency;
 using Xunit;
@@ -23,7 +24,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			autoSaveTimer.SetupProperty(t => t.Interval);
 			previewDiagram = new PreviewDiagramViewModel(diagram);
 
-			progress.Setup(p => p.New(It.IsAny<bool>()))
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 		}
 
@@ -241,7 +242,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
-			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -271,7 +272,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
-			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -304,7 +305,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			editor = CreateEditor();
-			progress.Setup(p => p.New(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 			codeEditor.SetupProperty(ce => ce.IsModified);
 			codeEditor.SetupProperty(ce => ce.Content);
 
@@ -410,7 +411,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(previewDiagram, codeEditor.Object, progress.Object, renderer.Object,
+			return new DiagramEditorViewModel(previewDiagram, codeEditor.Object, notifications.Object, renderer.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
@@ -421,7 +422,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly PreviewDiagramViewModel previewDiagram;
 
 		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
-		private readonly Mock<IProgressRegistration> progress = new Mock<IProgressRegistration>();
+		private readonly Mock<INotifications> notifications = new Mock<INotifications>();
 		private readonly Mock<IDiagramRenderer> renderer = new Mock<IDiagramRenderer>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();

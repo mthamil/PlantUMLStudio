@@ -10,6 +10,7 @@ using PlantUmlEditor.Core;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.ViewModel;
+using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
 using Utilities.Clipboard;
 using Utilities.Controls.Behaviors.AvalonEdit;
@@ -25,7 +26,7 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.RegisterType<ProgressViewModel>().As<IProgressViewModel, IProgressRegistration>()
+			builder.RegisterType<NotificationsViewModel>().As<NotificationsViewModel, INotifications>()
 				.SingleInstance();
 
 			builder.RegisterType<ClipboardWrapper>().As<IClipboard>()

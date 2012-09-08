@@ -10,6 +10,7 @@ using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Properties;
+using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -22,10 +23,10 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
-		public DiagramExplorerViewModel(IProgressRegistration progressFactory, IDiagramIOService diagramIO, 
+		public DiagramExplorerViewModel(INotifications notifications, IDiagramIOService diagramIO, 
 			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings, TaskScheduler uiScheduler)
 		{
-			_progressFactory = progressFactory;
+			_notifications = notifications;
 			_diagramIO = diagramIO;
 			_previewDiagramFactory = previewDiagramFactory;
 			_settings = settings;
@@ -169,7 +170,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_diagramLocation.Value = new DirectoryInfo(Path.GetDirectoryName(newFilePath));
 
-			var progress = _progressFactory.New(false);
+			var progress = _notifications.StartProgress(false);
 			try
 			{
 				await _diagramIO.SaveAsync(newDiagram, false);
@@ -184,6 +185,8 @@ namespace PlantUmlEditor.ViewModel
 
 				CurrentPreviewDiagram = preview;
 				OnOpenPreviewRequested(preview);
+
+				progress.Report(ProgressUpdate.Completed(string.Empty));
 			}
 			catch (Exception e)
 			{
@@ -203,7 +206,7 @@ namespace PlantUmlEditor.ViewModel
 			if (!IsDiagramLocationValid)
 				return;
 
-			var progress = _progressFactory.New();
+			var progress = _notifications.StartProgress();
 			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
 
 			// Capture diagrams as they are read for a more responsive UI.
@@ -238,7 +241,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private async void DeleteDiagram(PreviewDiagramViewModel preview)
 		{
-			var progress = _progressFactory.New(false);
 			try
 			{
 				await _diagramIO.DeleteAsync(preview.Diagram);
@@ -246,7 +248,7 @@ namespace PlantUmlEditor.ViewModel
 			}
 			catch (Exception e)
 			{
-				progress.Report(ProgressUpdate.Failed(e));
+				_notifications.Notify(new Notification(e));
 			}
 		}
 
@@ -282,7 +284,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Contains current task progress information.
 		/// </summary>
-		private readonly IProgressRegistration _progressFactory;
+		private readonly INotifications _notifications;
 
 		private readonly Property<PreviewDiagramViewModel> _currentPreviewDiagram;
 		private readonly Property<ICollection<PreviewDiagramViewModel>> _previewDiagrams;

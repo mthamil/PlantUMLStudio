@@ -8,6 +8,7 @@ using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
+using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Concurrency;
 using Xunit;
 using Xunit.Extensions;
@@ -23,10 +24,10 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
 
-			progressFactory.Setup(p => p.New(It.IsAny<bool>()))
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			explorer = new DiagramExplorerViewModel(progressFactory.Object, diagramIO.Object,
+			explorer = new DiagramExplorerViewModel(notifications.Object, diagramIO.Object,
 				d => d == null ? null : new PreviewDiagramViewModel(d), settings.Object, uiScheduler)
 			{
 				FileExtension = ".puml"
@@ -334,7 +335,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private readonly DiagramExplorerViewModel explorer;
 
-		private readonly Mock<IProgressRegistration> progressFactory = new Mock<IProgressRegistration>();
+		private readonly Mock<INotifications> notifications = new Mock<INotifications>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 		private readonly TaskScheduler uiScheduler = new SynchronousTaskScheduler();

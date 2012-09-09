@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,6 +42,9 @@ namespace Utilities.Controls.Behaviors
 
 		private static void OnIsEnabledChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
+			if (DesignerProperties.GetIsInDesignMode(dependencyObject))
+				return;
+
 			var expander = dependencyObject as Expander;
 			if (expander == null)
 				return;

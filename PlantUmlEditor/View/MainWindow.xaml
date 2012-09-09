@@ -381,8 +381,7 @@
                                 </ListBox>
             
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                                <ctrl:FilePicker SelectedUri="{Binding NewDiagramUri, Mode=OneWayToSource}" 
-                                                 AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
+                                <ctrl:FilePicker AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
                                                  InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
                                                  Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
                                     <ctrl:FilePicker.Trigger>

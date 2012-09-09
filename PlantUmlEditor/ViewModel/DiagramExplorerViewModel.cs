@@ -40,8 +40,6 @@ namespace PlantUmlEditor.ViewModel
 			_diagramLocation = Property.New(this, p => p.DiagramLocation, OnPropertyChanged)
 				.AlsoChanges(p => p.IsDiagramLocationValid);
 
-			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
-
 			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
 
 			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
@@ -93,15 +91,6 @@ namespace PlantUmlEditor.ViewModel
 		public bool IsDiagramLocationValid
 		{
 			get { return DiagramLocation != null && DiagramLocation.Exists; }
-		}
-
-		/// <summary>
-		/// A new diagram's selected URI.
-		/// </summary>
-		public Uri NewDiagramUri
-		{
-			get { return _newDiagramUri.Value; }
-			set { _newDiagramUri.Value = value; }
 		}
 
 		/// <summary>
@@ -321,7 +310,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<ICollection<PreviewDiagramViewModel>> _previewDiagrams;
 
 		private readonly Property<DirectoryInfo> _diagramLocation;
-		private readonly Property<Uri> _newDiagramUri;
 
 		private readonly Property<ICommand> _cancelLoadDiagramsCommand;
 		private readonly Property<bool> _isLoadingDiagrams;

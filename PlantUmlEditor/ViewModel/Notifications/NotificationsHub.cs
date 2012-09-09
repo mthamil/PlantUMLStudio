@@ -8,11 +8,11 @@ using Utilities.PropertyChanged;
 namespace PlantUmlEditor.ViewModel.Notifications
 {
 	/// <summary>
-	/// Tracks application messages.
+	/// A centralized reporting hub for application messages to display to the user.
 	/// </summary>
-	public class NotificationsViewModel : ViewModelBase, INotifications
+	public class NotificationsHub : ViewModelBase, INotifications
 	{
-		public NotificationsViewModel()
+		public NotificationsHub()
 		{
 			_notifications = Property.New(this, p => p.Notifications as ICollection<Notification>, OnPropertyChanged);
 			_notifications.Value = new ObservableCollection<Notification>();

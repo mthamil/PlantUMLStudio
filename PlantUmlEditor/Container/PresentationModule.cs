@@ -26,7 +26,7 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.RegisterType<NotificationsViewModel>().As<NotificationsViewModel, INotifications>()
+			builder.RegisterType<NotificationsHub>().As<NotificationsHub, INotifications>()
 				.SingleInstance();
 
 			builder.RegisterType<ClipboardWrapper>().As<IClipboard>()

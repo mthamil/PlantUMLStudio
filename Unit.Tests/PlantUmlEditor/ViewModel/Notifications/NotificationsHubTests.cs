@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.ViewModel.Notifications
 {
-	public class NotificationsViewModelTests
+	public class NotificationsHubTests
 	{
 		[Fact]
 		public void Test_Notify()
@@ -48,6 +48,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel.Notifications
 			Assert.Equal("Finished!", notifications.Notifications.Single().Message);
 		}
 
-		private readonly NotificationsViewModel notifications = new NotificationsViewModel();
+		private readonly NotificationsHub notifications = new NotificationsHub();
 	}
 }

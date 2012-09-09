@@ -18,11 +18,19 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
             <utilcmd:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
+
+            <convert:ComposingConverter x:Key="NullToVisibilityConverter">
+                <convert:ComposingConverter.Converters>
+                    <convert:NullToFalseValueConverter/>
+                    <convert:BooleanToVisibilityValueConverter/>
+                </convert:ComposingConverter.Converters>
+            </convert:ComposingConverter>
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -107,8 +115,6 @@
                         <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" VerticalAlignment="Center" IsChecked="{Binding AutoSave, Mode=TwoWay}" Margin="10,0,5,0" Foreground="White"/>
                         <TextBox Text="{Binding AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" VerticalAlignment="Center" MaxWidth="30"/>
                         <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
-
-                        <Slider x:Name="ZoomSlider" Margin="0,5,0,0" Minimum="0.1" Maximum="2.0" Value="0.9" Width="50" SmallChange="0.1" LargeChange="0.2"/>
                     </WrapPanel>
                 </Border>
         
@@ -116,8 +122,8 @@
 
             <GridSplitter Grid.Row="1" VerticalAlignment="Center" Width="Auto" Height="3"  HorizontalAlignment="Stretch" Background="#66808080"/>
 
-            <Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White" 
-                      attached:GridSplitterSupport.IsEnabled="true">
+            <Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White"
+                      attached:GridSplitterSupport.IsEnabled="True" Style="{StaticResource ExpanderStyle}">
                 <Expander.Content>
                     <Border ScrollViewer.CanContentScroll="True" 
                             ScrollViewer.HorizontalScrollBarVisibility="Visible" 
@@ -179,6 +185,13 @@
                         </ScrollViewer>
                     </Border>
                 </Expander.Content>
+
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                        <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="1.0" Width="50" SmallChange="0.1" LargeChange="0.2"
+                                Visibility="{Binding DiagramImage, Converter={StaticResource NullToVisibilityConverter}}"/>
+                    </StackPanel>
+                </Expander.Header>
             </Expander>
             
         </Grid>

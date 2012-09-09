@@ -37,12 +37,10 @@
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <utilconvert:BooleanToVisibilityValueConverter x:Key="BooleanToVisibilityValueConverter"/>
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
             <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
             <utilconvert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
-            <utilconvert:NullToFalseValueConverter x:Key="NullToFalseConverter"/>
                 
             <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
@@ -399,7 +397,7 @@
                                         <Style TargetType="{x:Type Button}">
                                             <Style.Triggers>
 
-                                                <DataTrigger Binding="{Binding CancelLoadDiagramsCommand, Converter={StaticResource NullToFalseConverter}}" Value="False">
+                                                <DataTrigger Binding="{Binding IsLoadingDiagrams}" Value="False">
                                                     <Setter Property="Command" Value="{Binding LoadDiagramsCommand}"/>
                                                     <Setter Property="Content">
                                                         <Setter.Value>
@@ -411,7 +409,7 @@
                                                     </Setter>
                                                 </DataTrigger>
 
-                                                <DataTrigger Binding="{Binding CancelLoadDiagramsCommand, Converter={StaticResource NullToFalseConverter}}" Value="True">
+                                                <DataTrigger Binding="{Binding IsLoadingDiagrams}" Value="True">
                                                     <Setter Property="Command" Value="{Binding CancelLoadDiagramsCommand}"/>
                                                     <Setter Property="Content">
                                                         <Setter.Value>

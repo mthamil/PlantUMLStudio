@@ -66,7 +66,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			Assert.Equal(diagramLocation.FullName, settings.Object.LastDiagramLocation.FullName);
 			diagramIO.Verify(dio => dio.StartMonitoring(diagramLocation));
-			Assert.Null(explorer.CancelLoadDiagramsCommand);
+			Assert.False(explorer.IsLoadingDiagrams);
 		}
 
 		[Fact]
@@ -121,7 +121,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 				It.IsAny<DirectoryInfo>(),
 				It.IsAny<CancellationToken>(),
 				It.IsAny<IProgress<ReadDiagramsProgress>>()), Times.Never());
-			Assert.Null(explorer.CancelLoadDiagramsCommand);
+			Assert.False(explorer.IsLoadingDiagrams);
 		}
 
 		[Fact]

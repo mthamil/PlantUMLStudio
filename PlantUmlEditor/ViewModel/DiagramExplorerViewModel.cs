@@ -42,6 +42,8 @@ namespace PlantUmlEditor.ViewModel
 
 			_newDiagramUri = Property.New(this, p => p.NewDiagramUri, OnPropertyChanged);
 
+			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
+
 			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
 			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
@@ -196,6 +198,15 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether diagrams are currently being loaded.
+		/// </summary>
+		public bool IsLoadingDiagrams
+		{
+			get { return _isLoadingDiagrams.Value; }
+			private set { _isLoadingDiagrams.Value = value; }
+		}
+
+		/// <summary>
 		/// Command that loads diagrams from the current diagram location.
 		/// </summary>
 		public ICommand LoadDiagramsCommand { get; private set; }
@@ -207,11 +218,13 @@ namespace PlantUmlEditor.ViewModel
 			if (!IsDiagramLocationValid)
 				return;
 
-			var progress = _notifications.StartProgress();
-			progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
-
 			using (var cts = new CancellationTokenSource())
 			{
+				IsLoadingDiagrams = true;
+
+				var progress = _notifications.StartProgress();
+				progress.Report(new ProgressUpdate { PercentComplete = 0, Message = Resources.Progress_LoadingDiagrams });
+
 				CancelLoadDiagramsCommand = new CancelTaskCommand(cts);
 
 				// Capture diagrams as they are read for a more responsive UI.
@@ -239,6 +252,7 @@ namespace PlantUmlEditor.ViewModel
 				}
 
 				CancelLoadDiagramsCommand = null;
+				IsLoadingDiagrams = false;
 			}
 		}
 
@@ -309,7 +323,8 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<DirectoryInfo> _diagramLocation;
 		private readonly Property<Uri> _newDiagramUri;
 
-		private readonly Property<ICommand> _cancelLoadDiagramsCommand; 
+		private readonly Property<ICommand> _cancelLoadDiagramsCommand;
+		private readonly Property<bool> _isLoadingDiagrams;
 
 		private readonly IDiagramIOService _diagramIO;
 

@@ -45,7 +45,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 			Assert.Equal(childView, TreeViewBindableSelectedItemBehavior.GetBindableSelectedItem(treeView));
 		}
 
-		public class TestViewModel : PropertyChangedBase
+		public class TestViewModel : PropertyChangedNotifier
 		{
 			public TestViewModel()
 			{
@@ -61,7 +61,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 			private readonly Property<bool> _isSelected;
 		}
 
-		public class SelectedItemWatcher : PropertyChangedBase
+		public class SelectedItemWatcher : PropertyChangedNotifier
 		{
 			public SelectedItemWatcher()
 			{

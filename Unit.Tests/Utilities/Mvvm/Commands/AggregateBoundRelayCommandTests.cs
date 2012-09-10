@@ -142,7 +142,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			Assert.True(executed);
 		}
 
-		private class TestParent : PropertyChangedBase
+		private class TestParent : PropertyChangedNotifier
 		{
 			public TestParent()
 			{
@@ -158,7 +158,7 @@ namespace Unit.Tests.Utilities.Mvvm.Commands
 			private readonly Property<ObservableCollection<TestItem>> _items;
 		}
 
-		private class TestItem : PropertyChangedBase
+		private class TestItem : PropertyChangedNotifier
 		{
 			public TestItem()
 			{

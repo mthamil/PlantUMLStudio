@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Unit.Tests.Utilities.PropertyChanged
 {
-	public class PropertyTests : PropertyChangedBase
+	public class PropertyTests : PropertyChangedNotifier
 	{
 		[Fact]
 		public void Test_PropertyChanged()

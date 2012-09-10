@@ -7,7 +7,7 @@ namespace Utilities.Mvvm
 	/// This class serves as base class for all ViewModel classes. 
 	/// It provides implementations for interfaces that should be implemented by all view models
 	/// </summary>
-	public abstract class ViewModelBase : PropertyChangedBase, IDisposable
+	public abstract class ViewModelBase : PropertyChangedNotifier, IDisposable
 	{
 		#region IDisposable Members
 

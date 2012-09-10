@@ -5,7 +5,7 @@ namespace Utilities.PropertyChanged
 	/// <summary>
 	/// A base implementation of INotifyPropertyChanged.
 	/// </summary>
-	public abstract class PropertyChangedBase : INotifyPropertyChanged
+	public abstract class PropertyChangedNotifier : INotifyPropertyChanged
 	{
 		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
 		public event PropertyChangedEventHandler PropertyChanged;

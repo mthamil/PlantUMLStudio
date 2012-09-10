@@ -7,7 +7,7 @@ namespace PlantUmlEditor.Core
 	/// <summary>
 	/// Represents a diagram.
 	/// </summary>
-    public class Diagram : PropertyChangedBase
+    public class Diagram : PropertyChangedNotifier
     {
 		/// <summary>
 		/// Initializes a new diagram.

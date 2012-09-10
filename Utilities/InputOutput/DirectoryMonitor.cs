@@ -9,7 +9,7 @@ namespace Utilities.InputOutput
 	/// Monitors a directory for changes.  Provides
 	/// a higher-level of abstraction over a FileSystemWatcher.
 	/// </summary>
-	public class DirectoryMonitor : IDirectoryMonitor
+	public class DirectoryMonitor : DisposableBase, IDirectoryMonitor
 	{
 		public DirectoryMonitor(IFileSystemWatcher fileSystemWatcher, Func<ITimer> timerFactory)
 		{
@@ -152,59 +152,22 @@ namespace Utilities.InputOutput
 		/// </summary>
 		public TimeSpan FileCreationWaitTimeout { get; set; }
 
-		#region IDisposable Members
+		#region DisposableBase Members
 
-		/// <see cref="IDisposable.Dispose"/>
-		public void Dispose()
+		/// <see cref="DisposableBase.OnDisposing"/>
+		protected override void OnDisposing()
 		{
-			Dispose(true);
-			// This object will be cleaned up by the Dispose method.
-			// Therefore, you should call GC.SupressFinalize to
-			// take this object off the finalization queue
-			// and prevent finalization code for this object
-			// from executing a second time.
-			GC.SuppressFinalize(this);
+			_fileSystemWatcher.Created -= fileSystemWatcher_Created;
+			_fileSystemWatcher.Deleted -= fileSystemWatcher_Deleted;
+			_fileSystemWatcher.Changed -= fileSystemWatcher_Changed;
+			_fileSystemWatcher.Renamed -= fileSystemWatcher_Renamed;
 		}
 
-		/// <summary>
-		/// Implements the actual disposal logic.  Subclasses should
-		/// override this method to clean up resources.
-		/// </summary>
-		/// <param name="disposing">Whether the class is disposing from the Dispose() method</param>
-		private void Dispose(bool disposing)
+		/// <see cref="DisposableBase.OnDispose"/>
+		protected override void OnDispose()
 		{
-			if (!_disposed)
-			{
-				if (disposing)
-				{
-					_fileSystemWatcher.Created -= fileSystemWatcher_Created;
-					_fileSystemWatcher.Deleted -= fileSystemWatcher_Deleted;
-					_fileSystemWatcher.Changed -= fileSystemWatcher_Changed;
-					_fileSystemWatcher.Renamed -= fileSystemWatcher_Renamed;
-				}
-
-				_fileSystemWatcher.Dispose();
-
-				_disposed = true;
-			}
+			_fileSystemWatcher.Dispose();
 		}
-
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method
-		/// does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~DirectoryMonitor()
-		{
-			// Do not re-create Dispose clean-up code here.
-			// Calling Dispose(false) is optimal in terms of
-			// readability and maintainability.
-			Dispose(false);
-		}
-
-		private bool _disposed;
 
 		#endregion
 

@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Moq;
 using PlantUmlEditor.Core;
+using Utilities.Chronology;
 using Xunit;
 
 namespace Unit.Tests.PlantUmlEditor.Core
@@ -13,7 +15,7 @@ namespace Unit.Tests.PlantUmlEditor.Core
 		public void Test_CompileDiagramFile()
 		{
 			// Arrange.
-			var plantUml = new PlantUml()
+			var plantUml = new PlantUml(new Mock<IClock>().Object)
 			{
 				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\Thirdparty\plantuml.jar"),
 				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")

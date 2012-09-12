@@ -1,21 +1,37 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using PlantUmlEditor.Core.Dependencies;
+using PlantUmlEditor.Core.Dependencies.Update;
+using Utilities;
+using Utilities.Chronology;
 using Utilities.Concurrency.Processes;
 using Utilities.InputOutput;
+using Utilities.Net;
 
 namespace PlantUmlEditor.Core
 {
 	/// <summary>
 	/// Provides an interface to PlantUML.
 	/// </summary>
-	public class PlantUml : IPlantUml
+	public class PlantUml : ComponentUpdateChecker, IExternalComponent, IDiagramCompiler
 	{
+		/// <summary>
+		/// Initializes the PlantUML wrapper.
+		/// </summary>
+		/// <param name="clock">The system clock</param>
+		public PlantUml(IClock clock) 
+			: base(clock)
+		{
+		}
+
 		/// <see cref="IDiagramCompiler.CompileToImage"/>
 		public async Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken)
 		{
@@ -29,7 +45,7 @@ namespace PlantUmlEditor.Core
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken);
+			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
 
 			var bitmap = new BitmapImage();
 			bitmap.BeginInit();
@@ -53,8 +69,13 @@ namespace PlantUmlEditor.Core
 			}.ToTask(CancellationToken.None);
 		}
 
-		/// <see cref="IPlantUml.GetCurrentVersion"/>
-		public async Task<string> GetCurrentVersion()
+		#region Implementation of IExternalComponent
+
+		/// <see cref="IExternalComponent.Name"/>
+		public string Name { get { return PlantUmlJar.Name; } }
+
+		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
+		public async Task<string> GetCurrentVersionAsync()
 		{
 			var outputStream = await new ProcessStartInfo
 			{
@@ -66,13 +87,51 @@ namespace PlantUmlEditor.Core
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}.ToTask(new MemoryStream(), CancellationToken.None);
+			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
 
 			var resultData = await outputStream.Async().ReadAllBytesAsync(CancellationToken.None);
 			var output = Encoding.Default.GetString(resultData);
-			var match = VersionMatchingPattern.Match(output);
+			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
+
+		#endregion
+
+		#region Implementation of IComponentUpdateChecker
+
+		/// <summary>
+		/// The location of the latest PlantUML version number.
+		/// </summary>
+		public Uri VersionLocation { get; set; }
+
+		/// <summary>
+		/// Pattern used to find the latest version.
+		/// </summary>
+		public Regex RemoteVersionMatchingPattern { get; set; }
+
+		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
+		public override async Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
+		{
+			string currentVersion = await GetCurrentVersionAsync().ConfigureAwait(false);
+
+			// Scrape the PlantUML downloads page for the latest version number.
+			using (var client = new WebClient())
+			{
+				var downloadPage = await client.Async().DownloadStringAsync(VersionLocation, cancellationToken).ConfigureAwait(false);
+				var match = RemoteVersionMatchingPattern.Match(downloadPage);
+				if (match.Success)
+				{
+					string remoteVersion = match.Groups["version"].Value;
+					bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+					if (versionsNotEqual)
+						return remoteVersion;
+				}
+			}
+			
+			return Option<string>.None();
+		}
+
+		#endregion
 
 		/// <summary>
 		/// The location of the GraphViz executable.
@@ -87,6 +146,6 @@ namespace PlantUmlEditor.Core
 		/// <summary>
 		/// Pattern used to extract the current version.
 		/// </summary>
-		public Regex VersionMatchingPattern { get; set; }
+		public Regex LocalVersionMatchingPattern { get; set; }
 	}
 }

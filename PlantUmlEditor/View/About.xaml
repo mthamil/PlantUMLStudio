@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:System="clr-namespace:System;assembly=mscorlib" 
-        xmlns:Reflection="clr-namespace:System.Reflection;assembly=mscorlib" 
         xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
-        xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
-        Title="About" Height="151" Width="266" Background="#2B3C59"
+        xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls"
+        xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
+        Title="About" Height="290" Width="433" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
@@ -20,13 +20,25 @@
         </Style>
 
         <cmd:BrowseToCommand x:Key="BrowseCommand" />
+
+        <utilconvert:BooleanToVisibilityValueConverter x:Key="VisibilityConverter"/>
         
+        <Style TargetType="{x:Type ProgressBar}" x:Key="ProgressStyle">
+            <Setter Property="Foreground" Value="LightGreen"/>
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="100"/>
+        </Style>
+
     </Window.Resources>
     
     <Grid DataContext="{Binding Source={StaticResource ViewModel}, Path=ViewModel}">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".50*"/>
-            <RowDefinition Height=".50*"/>
+            <RowDefinition Height=".20*"/>
+            <RowDefinition Height=".20*"/>
+            <RowDefinition Height=".60*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Style="{StaticResource Font}"> 
@@ -44,7 +56,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="Build " FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
-                <TextBlock Text="{Binding Version}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
+                <TextBlock Text="{Binding ApplicationVersion}" FontSize="14" Foreground="White" Style="{StaticResource Font}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -57,6 +69,60 @@
                     </Hyperlink>
                 </TextBlock>
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Margin="5,0,5,10" Orientation="Vertical">
+            <TextBlock Text="Components:" Style="{StaticResource Font}" FontSize="14" Foreground="White"/>
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Components}" IsReadOnly="True" CanUserReorderColumns="False" CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Width=".33*" Binding="{Binding Name}"/>
+                
+                    <DataGridTemplateColumn Header="Version" Width=".33*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Center" Style="{StaticResource ProgressStyle}"
+                                                 IsIndeterminate="{Binding VersionProgress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                                                 Value="{Binding VersionProgress.PercentComplete, TargetNullValue=-1}"
+                                                 Visibility="{Binding VersionProgress.InProgress, Converter={StaticResource VisibilityConverter}}"/>
+                                    <TextBlock Text="{Binding CurrentVersion}" Visibility="{Binding CurrentVersion, Converter={StaticResource NullToVisibilityConverter}}" 
+                                               HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>      
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Update Available?" Width=".33*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Center" Style="{StaticResource ProgressStyle}"
+                                                 IsIndeterminate="{Binding UpdateCheckProgress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                                                 Value="{Binding UpdateCheckProgress.PercentComplete, TargetNullValue=-1}"
+                                                 Visibility="{Binding UpdateCheckProgress.InProgress, Converter={StaticResource VisibilityConverter}}"/>
+                                    <TextBlock Visibility="{Binding HasUpdate, Converter={StaticResource NullToVisibilityConverter}}" 
+                                               HorizontalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
+                                                        <Setter Property="Text" Value="{Binding LatestVersion, StringFormat='Yes: {0}'}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="False">
+                                                        <Setter Property="Text" Value="No"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+            
+            </DataGrid>
         </StackPanel>
 
     </Grid>

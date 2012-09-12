@@ -41,14 +41,7 @@
             <utilconvert:UriConverter x:Key="UriConverter"/>
             <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
             <utilconvert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
-                
-            <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
-                <utilconvert:ComposingConverter.Converters>
-                    <utilconvert:NullToFalseValueConverter/>
-                    <utilconvert:BooleanToVisibilityValueConverter/>
-                </utilconvert:ComposingConverter.Converters>
-            </utilconvert:ComposingConverter>
-                
+ 
             <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
                     <utilconvert:NullToFalseValueConverter/>
@@ -60,7 +53,6 @@
             <utilconvert:OrConverter x:Key="OrConverter"/>
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
-            <utilconvert:NegatingConverter x:Key="NotConverter"/>
       
             <!-- Custom style for diagram listbox which shows preview of diagram as well as preview of the content -->
             <Style x:Key="ListBoxItemStyle" TargetType="{x:Type ListBoxItem}">        

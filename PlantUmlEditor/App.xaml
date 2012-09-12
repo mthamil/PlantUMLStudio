@@ -1,14 +1,24 @@
 ﻿<Application
     x:Class="PlantUmlEditor.App" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls"
     StartupUri="View/MainWindow.xaml"
     Startup="Application_Startup"
     Exit="Application_Exit">
     
     <Application.Resources>
 
-    	<Style x:Key="ButtonFocusVisual">
+        <utilconvert:NegatingConverter x:Key="NotConverter"/>
+
+        <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
+            <utilconvert:ComposingConverter.Converters>
+                <utilconvert:NullToFalseValueConverter/>
+                <utilconvert:BooleanToVisibilityValueConverter/>
+            </utilconvert:ComposingConverter.Converters>
+        </utilconvert:ComposingConverter>
+
+        <Style x:Key="ButtonFocusVisual">
     		<Setter Property="Control.Template">
     			<Setter.Value>
     				<ControlTemplate>

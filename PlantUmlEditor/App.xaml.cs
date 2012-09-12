@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using Autofac;
 using PlantUmlEditor.Container;
-using PlantUmlEditor.Core.Update;
 using PlantUmlEditor.Properties;
 using Utilities.Controls;
 using Application = System.Windows.Application;
@@ -48,10 +47,6 @@ namespace PlantUmlEditor
 			containerBuilder.RegisterModule<CoreModule>();
 			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
-
-			//var updater = _container.Resolve<IDependencyUpdateChecker>();
-			//updater.HasUpdateAsync();
-			//updater.DownloadLatestAsync(CancellationToken.None);
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

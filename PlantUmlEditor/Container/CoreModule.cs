@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Dependencies;
 using PlantUmlEditor.Core.InputOutput;
-using PlantUmlEditor.Core.Update;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
@@ -43,21 +43,16 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
-			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IPlantUml>()
+			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IExternalComponent>()
 				.OnActivating(c =>
 				{
 					c.Instance.PlantUmlJar = c.Context.Resolve<ISettings>().PlantUmlJar;
 					c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
-					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
-				});
-
-			builder.RegisterType<PlantUmlUpdateChecker>().As<IDependencyUpdateChecker>()
-				.OnActivating(c =>
-				{
+					c.Instance.LocalVersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
 					c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
 					c.Instance.RemoteLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
 					c.Instance.VersionLocation = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
-					c.Instance.VersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
+					c.Instance.RemoteVersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
 				});
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()

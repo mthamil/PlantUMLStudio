@@ -3,22 +3,23 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Utilities;
 using Utilities.Chronology;
 using Utilities.InputOutput;
 using Utilities.Net;
 
-namespace PlantUmlEditor.Core.Update
+namespace PlantUmlEditor.Core.Dependencies.Update
 {
 	/// <summary>
-	/// Checks for and downloads updates of third party dependencies.
+	/// Checks for and downloads updates of third party components.
 	/// </summary>
-    public class DependencyUpdateChecker : IDependencyUpdateChecker
+    public class ComponentUpdateChecker : IComponentUpdateChecker
 	{
 		/// <summary>
 		/// Initializes a new update checker.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
-		public DependencyUpdateChecker(IClock clock)
+		public ComponentUpdateChecker(IClock clock)
 		{
 			_clock = clock;
 		}
@@ -33,15 +34,15 @@ namespace PlantUmlEditor.Core.Update
 		/// </summary>
 		public FileInfo LocalLocation { get; set; }
 
-		#region IDependencyUpdateChecker Members
+		#region IComponentUpdateChecker Members
 
-		/// <see cref="IDependencyUpdateChecker.HasUpdateAsync"/>
-    	public virtual Task<bool> HasUpdateAsync()
+		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
+		public virtual Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
         {
-			return Task.FromResult(false);
+			return Task.FromResult(Option<string>.None());
         }
 
-		/// <see cref="IDependencyUpdateChecker.DownloadLatestAsync"/>
+		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
         public async Task DownloadLatestAsync(CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null)
         {
 			if (LocalLocation.Exists)
@@ -61,7 +62,7 @@ namespace PlantUmlEditor.Core.Update
 			}
         }
 
-		#endregion IDependencyUpdateChecker Members
+		#endregion IComponentUpdateChecker Members
 
 		private readonly IClock _clock;
     }

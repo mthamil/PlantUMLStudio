@@ -1,12 +1,19 @@
+using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using PlantUmlEditor.Core.Dependencies;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Mvvm;
+using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
 {
+	/// <summary>
+	/// Represents an external component.
+	/// </summary>
 	public class ComponentViewModel : ViewModelBase
 	{
 		public ComponentViewModel(IExternalComponent externalComponent)
@@ -20,8 +27,12 @@ namespace PlantUmlEditor.ViewModel
 			_versionProgress = Property.New(this, p => p.VersionProgress, OnPropertyChanged);
 
 			_hasUpdate = Property.New(this, p => p.HasUpdate, OnPropertyChanged);
-			_updateCheckProgress = Property.New(this, p => p.UpdateCheckProgress, OnPropertyChanged);
 			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
+			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
+
+			UpdateCommand = new BoundRelayCommand<ComponentViewModel>(_ => UpdateAsync(), p => p.CanUpdate, this);
+			_canUpdate = Property.New(this, p => p.CanUpdate, OnPropertyChanged);
+			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
 		}
 
 		/// <summary>
@@ -46,17 +57,21 @@ namespace PlantUmlEditor.ViewModel
 
 		private async Task CheckForUpdateAsync()
 		{
-			UpdateCheckProgress = new ProgressNotification
+			UpdateProgress = new ProgressNotification
 			{
 				HasDiscreteProgress = false,
 				PercentComplete = 100
 			};
 
 			var updateCheckResult = await _externalComponent.HasUpdateAsync(CancellationToken.None);
+			UpdateProgress.PercentComplete = null;
+
 			HasUpdate = updateCheckResult.HasValue;
 			if (updateCheckResult.HasValue)
+			{
 				LatestVersion = updateCheckResult.Value;
-			UpdateCheckProgress.PercentComplete = null;
+				CanUpdate = true;
+			}
 		}
 
 		/// <summary>
@@ -96,15 +111,6 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Tracks progress when checking for updates.
-		/// </summary>
-		public IProgressNotification UpdateCheckProgress
-		{
-			get { return _updateCheckProgress.Value; }
-			private set { _updateCheckProgress.Value = value; }
-		}
-
-		/// <summary>
 		/// The component's latest version.
 		/// </summary>
 		public string LatestVersion
@@ -113,12 +119,66 @@ namespace PlantUmlEditor.ViewModel
 			private set { _latestVersion.Value = value; }
 		}
 
+		/// <summary>
+		/// Tracks progress when checking for updates.
+		/// </summary>
+		public IProgressNotification UpdateProgress
+		{
+			get { return _updateProgress.Value; }
+			private set { _updateProgress.Value = value; }
+		}
+
+		/// <summary>
+		/// Whether an update can be performed.
+		/// </summary>
+		public bool CanUpdate
+		{
+			get { return _canUpdate.Value; }
+			private set { _canUpdate.Value = value; }
+		}
+
+		/// <summary>
+		/// Command to update a component.
+		/// </summary>
+		public ICommand UpdateCommand { get; private set; }
+
+		private async Task UpdateAsync()
+		{
+			CanUpdate = false;
+			UpdateProgress = new ProgressNotification
+			{
+				PercentComplete = 0,
+				HasDiscreteProgress = true
+			};
+
+			var progress = new Progress<ProgressChangedEventArgs>(p =>
+			{
+				UpdateProgress.PercentComplete = p.ProgressPercentage;
+			});
+
+			await _externalComponent.DownloadLatestAsync(CancellationToken.None, progress);
+
+			UpdateProgress.PercentComplete = null;
+			UpdateCompleted = true;
+		}
+
+		/// <summary>
+		/// Whether an update has finished.
+		/// </summary>
+		public bool UpdateCompleted
+		{
+			get { return _updateCompleted.Value; }
+			private set { _updateCompleted.Value = value; }
+		}
+
 		private readonly Property<string> _name;
 		private readonly Property<string> _currentVersion;
 		private readonly Property<IProgressNotification> _versionProgress;
 		private readonly Property<bool?> _hasUpdate;
-		private readonly Property<IProgressNotification> _updateCheckProgress;
+		private readonly Property<IProgressNotification> _updateProgress;
 		private readonly Property<string> _latestVersion;
+		private readonly Property<bool> _canUpdate;
+		private readonly Property<bool> _updateCompleted;
 
 		private readonly IExternalComponent _externalComponent;
 	}

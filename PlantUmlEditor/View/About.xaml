@@ -6,7 +6,7 @@
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
         xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls"
         xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
-        Title="About" Height="290" Width="433" Background="#2B3C59"
+        Title="About" Height="290" Width="431" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
@@ -30,6 +30,7 @@
             <Setter Property="Width" Value="100"/>
             <Setter Property="Minimum" Value="0"/>
             <Setter Property="Maximum" Value="100"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
         </Style>
 
     </Window.Resources>
@@ -75,16 +76,18 @@
             <TextBlock Text="Components:" Style="{StaticResource Font}" FontSize="14" Foreground="White"/>
             <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Components}" IsReadOnly="True" CanUserReorderColumns="False" CanUserSortColumns="False">
                 <DataGrid.Columns>
+                    
                     <DataGridTextColumn Header="Name" Width=".33*" Binding="{Binding Name}"/>
                 
                     <DataGridTemplateColumn Header="Version" Width=".33*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Center" Style="{StaticResource ProgressStyle}"
+                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Style="{StaticResource ProgressStyle}"
                                                  IsIndeterminate="{Binding VersionProgress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
                                                  Value="{Binding VersionProgress.PercentComplete, TargetNullValue=-1}"
                                                  Visibility="{Binding VersionProgress.InProgress, Converter={StaticResource VisibilityConverter}}"/>
+                                    
                                     <TextBlock Text="{Binding CurrentVersion}" Visibility="{Binding CurrentVersion, Converter={StaticResource NullToVisibilityConverter}}" 
                                                HorizontalAlignment="Center"/>
                                 </StackPanel>
@@ -96,32 +99,70 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Center" Style="{StaticResource ProgressStyle}"
-                                                 IsIndeterminate="{Binding UpdateCheckProgress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
-                                                 Value="{Binding UpdateCheckProgress.PercentComplete, TargetNullValue=-1}"
-                                                 Visibility="{Binding UpdateCheckProgress.InProgress, Converter={StaticResource VisibilityConverter}}"/>
-                                    <TextBlock Visibility="{Binding HasUpdate, Converter={StaticResource NullToVisibilityConverter}}" 
-                                               HorizontalAlignment="Center">
+                                    <ProgressBar VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Style="{StaticResource ProgressStyle}"
+                                                 IsIndeterminate="{Binding UpdateProgress.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                                                 Value="{Binding UpdateProgress.PercentComplete, TargetNullValue=-1}"
+                                                 Visibility="{Binding UpdateProgress.InProgress, Converter={StaticResource VisibilityConverter}}"/>
+                                    
+                                    <TextBlock HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding LatestVersion, StringFormat='Yes: {0}'}"/>
-                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding HasUpdate}" Value="False">
+                                                        <Setter Property="Visibility" Value="Visible"/>
                                                         <Setter Property="Text" Value="No"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding UpdateCompleted}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="Text" Value="Updated"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding UpdateProgress.InProgress}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
+
+                                    <TextBlock HorizontalAlignment="Center">
+                                        <Hyperlink Command="{Binding UpdateCommand}">
+                                            <TextBlock Text="{Binding LatestVersion, StringFormat='Yes: {0}'}"/>
+                                        </Hyperlink>
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding UpdateCompleted}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding UpdateProgress.InProgress}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
                 </DataGrid.Columns>
-            
             </DataGrid>
         </StackPanel>
 

@@ -197,7 +197,7 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
-				.Then(() => _compiler.CompileToFile(Diagram.File));
+				.Then(() => _compiler.CompileToFileAsync(Diagram.File));
 
 			saveTask.ContinueWith(t =>
 			{
@@ -262,7 +262,7 @@ namespace PlantUmlEditor.ViewModel
 
 			var tcs = new CancellationTokenSource();
 
-			var refreshTask = _compiler.CompileToImage(CodeEditor.Content, tcs.Token);
+			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
 
 			try

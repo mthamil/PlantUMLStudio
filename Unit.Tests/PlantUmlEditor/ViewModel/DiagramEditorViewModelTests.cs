@@ -253,7 +253,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromSuccess());
 
-			compiler.Setup(c => c.CompileToFile(It.IsAny<FileInfo>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
 				.Returns(Tasks.FromSuccess());
 
 			// Act.
@@ -283,7 +283,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 				.Returns(Tasks.FromSuccess());
 
-			compiler.Setup(c => c.CompileToFile(It.IsAny<FileInfo>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
 				.Returns(Tasks.FromSuccess());
 
 			editor.SaveCommand.Execute(null);
@@ -337,7 +337,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 			var result = new BitmapImage();
 
-			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 				.Returns(Task.FromResult<BitmapSource>(result));
 
 			// Act.
@@ -357,7 +357,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 				.Returns(Tasks.FromException<BitmapSource, InvalidOperationException>(new InvalidOperationException()));
 
 			// Act.
@@ -377,7 +377,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImage(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 				.Returns(Tasks.FromCanceled<BitmapSource>());
 
 			// Act.

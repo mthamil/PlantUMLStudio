@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Core;
 using Utilities.Chronology;
@@ -12,7 +11,7 @@ namespace Unit.Tests.PlantUmlEditor.Core
 	public class PlantUmlTests
 	{
 		[Fact]
-		public void Test_CompileDiagramFile()
+		public async Task Test_CompileDiagramFileAsync()
 		{
 			// Arrange.
 			var plantUml = new PlantUml(new Mock<IClock>().Object)
@@ -22,15 +21,10 @@ namespace Unit.Tests.PlantUmlEditor.Core
 			};
 
 			// Act.
-			Task<BitmapSource> compileTask = plantUml.CompileToImage(code, CancellationToken.None);
-			compileTask.Wait();
+			var image = await plantUml.CompileToImageAsync(code, CancellationToken.None);
 
-			//using (var filestream = new FileStream(inputFile.FullName.Replace(".puml", ".png"), FileMode.Create))
-			//{
-			//    var encoder = new PngBitmapEncoder();
-			//    encoder.Frames.Add(BitmapFrame.Create(compileTask.Result));
-			//    encoder.Save(filestream);
-			//}
+			// Assert.
+			Assert.NotNull(image);
 		}
 
 		private const string code = @"
@@ -62,4 +56,11 @@ enum TimeUnit {
 @enduml
 ";
 	}
+
+	//using (var filestream = new FileStream(inputFile.FullName.Replace(".puml", ".png"), FileMode.Create))
+	//{
+	//    var encoder = new PngBitmapEncoder();
+	//    encoder.Frames.Add(BitmapFrame.Create(compileTask.Result));
+	//    encoder.Save(filestream);
+	//}
 }

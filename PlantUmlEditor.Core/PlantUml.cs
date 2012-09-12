@@ -32,8 +32,8 @@ namespace PlantUmlEditor.Core
 		{
 		}
 
-		/// <see cref="IDiagramCompiler.CompileToImage"/>
-		public async Task<BitmapSource> CompileToImage(string diagramCode, CancellationToken cancellationToken)
+		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
+		public async Task<BitmapSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
 		{
 			var output = await new ProcessStartInfo
 			{
@@ -55,8 +55,8 @@ namespace PlantUmlEditor.Core
 			return (BitmapSource)bitmap;
 		}
 		
-		/// <see cref="IDiagramCompiler.CompileToFile"/>
-		public Task CompileToFile(FileInfo diagramFile)
+		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
+		public Task CompileToFileAsync(FileInfo diagramFile)
 		{
 			return new ProcessStartInfo
 			{

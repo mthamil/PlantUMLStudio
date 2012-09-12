@@ -131,7 +131,7 @@
                                     </TextBlock>
 
                                     <TextBlock HorizontalAlignment="Center">
-                                        <Hyperlink Command="{Binding UpdateCommand}">
+                                        <Hyperlink Command="{Binding UpdateCommand}" ToolTip="Perform update">
                                             <TextBlock Text="{Binding LatestVersion, StringFormat='Yes: {0}'}"/>
                                         </Hyperlink>
                                         <TextBlock.Style>

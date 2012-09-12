@@ -27,7 +27,7 @@ namespace Utilities
 		/// override this method to clean up resources.
 		/// </summary>
 		/// <param name="disposing">Whether the class is disposing from the Dispose() method</param>
-		protected virtual void Dispose(bool disposing)
+		protected void Dispose(bool disposing)
 		{
 			if (!IsDisposed)
 			{

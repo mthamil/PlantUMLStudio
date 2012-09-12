@@ -13,6 +13,7 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel.Notifications;
+using Utilities;
 using Utilities.Chronology;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
@@ -378,30 +379,22 @@ namespace PlantUmlEditor.ViewModel
 			_refreshTimer.TryStop();
 		}
 
-		/// <see cref="ViewModelBase.Dispose(bool)"/>
-		protected override void Dispose(bool disposing)
+		/// <see cref="DisposableBase.OnDisposing"/>
+		protected override void OnDisposing()
 		{
-			if (!_disposed)
-			{
-				if (disposing)
-				{
-					CleanUpTimers();
-					var disposableSaveTimer = _autoSaveTimer as IDisposable;
-					if (disposableSaveTimer != null)
-						disposableSaveTimer.Dispose();
+			CleanUpTimers();
+			var disposableSaveTimer = _autoSaveTimer as IDisposable;
+			if (disposableSaveTimer != null)
+				disposableSaveTimer.Dispose();
 
-					var disposableRefreshTimer = _refreshTimer as IDisposable;
-					if (disposableRefreshTimer != null)
-						disposableRefreshTimer.Dispose();
+			var disposableRefreshTimer = _refreshTimer as IDisposable;
+			if (disposableRefreshTimer != null)
+				disposableRefreshTimer.Dispose();
 
-					var disposableCodeEditor = CodeEditor as IDisposable;
-					if (disposableCodeEditor != null)
-						disposableCodeEditor.Dispose();
-				}
-				_disposed = true;
-			}
+			var disposableCodeEditor = CodeEditor as IDisposable;
+			if (disposableCodeEditor != null)
+				disposableCodeEditor.Dispose();
 		}
-		private bool _disposed;
 
 		private bool _firstSaveAfterOpen;
 		private bool _saveExecuting;

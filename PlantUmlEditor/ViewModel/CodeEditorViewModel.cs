@@ -5,6 +5,7 @@ using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using Utilities;
 using Utilities.Clipboard;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -219,25 +220,15 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand RedoCommand { get; private set; }
 
-		/// <see cref="ViewModelBase.Dispose(bool)"/>
-		protected override void Dispose(bool disposing)
+		/// <see cref="DisposableBase.OnDisposing"/>
+		protected override void OnDisposing()
 		{
-			if (disposing)
+			if (Document != null)
 			{
-				if (!_disposed)
-				{
-					if (Document != null)
-					{
-						Document.UndoStack.PropertyChanged -= UndoStack_PropertyChanged;
-						Document.Changed -= Document_Changed;
-					}
-
-					_disposed = true;
-				}
+				Document.UndoStack.PropertyChanged -= UndoStack_PropertyChanged;
+				Document.Changed -= Document_Changed;
 			}
 		}
-
-		private bool _disposed;
 
 		private readonly Property<int> _contentIndex;
 		private readonly Property<int> _selectionStart;

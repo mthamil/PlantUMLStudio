@@ -6,7 +6,7 @@
         xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
         xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls"
         xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
-        Title="About" Height="290" Width="431" Background="#2B3C59"
+        Title="About" Height="270" Width="431" Background="#2B3C59"
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>

@@ -148,11 +148,14 @@ namespace PlantUmlEditor.ViewModel
 			UpdateProgress = new ProgressNotification
 			{
 				PercentComplete = 0,
-				HasDiscreteProgress = true
+				HasDiscreteProgress = false	
 			};
 
 			var progress = new Progress<ProgressChangedEventArgs>(p =>
 			{
+				if (!UpdateProgress.HasDiscreteProgress)
+					UpdateProgress.HasDiscreteProgress = true;
+
 				UpdateProgress.PercentComplete = p.ProgressPercentage;
 			});
 

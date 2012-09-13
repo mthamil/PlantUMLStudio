@@ -115,7 +115,7 @@ namespace PlantUmlEditor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".*version[\\s]+(?<version>[\\d|\\.]+)[\\s]+.*")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*version[\\s]+(?<version>.+)[\\s]+.*")]
         public string GraphVizLocalVersionPattern {
             get {
                 return ((string)(this["GraphVizLocalVersionPattern"]));

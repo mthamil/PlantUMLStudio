@@ -30,7 +30,7 @@
       <Value Profile="(Default)">.*version (?&lt;version&gt;\d{4,5})[\s].*</Value>
     </Setting>
     <Setting Name="GraphVizLocalVersionPattern" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">.*version[\s]+(?&lt;version&gt;[\d|\.]+)[\s]+.*</Value>
+      <Value Profile="(Default)">.*version[\s]+(?&lt;version&gt;.+)[\s]+.*</Value>
     </Setting>
   </Settings>
 </SettingsFile>

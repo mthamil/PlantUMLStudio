@@ -54,6 +54,7 @@
     <Compile Include="Dependencies\Update\ComponentUpdateChecker.cs" />
     <Compile Include="Dependencies\Update\IComponentUpdateChecker.cs" />
     <Compile Include="Diagram.cs" />
+    <Compile Include="GraphViz.cs" />
     <Compile Include="IDiagramCompiler.cs" />
     <Compile Include="InputOutput\DiagramFileAddedEventArgs.cs" />
     <Compile Include="InputOutput\DiagramFileDeletedEventArgs.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="InputOutput\IDiagramIOService.cs" />
     <Compile Include="InputOutput\ReadDiagramsProgress.cs" />
     <Compile Include="PlantUml.cs" />
+    <Compile Include="PlantUmlException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,18 +9,18 @@ namespace Utilities.Concurrency.Processes
 	[Serializable]
 	public class ProcessErrorException : Exception
 	{
-		/// <see cref="ProcessErrorException()"/>
+		/// <see cref="Exception()"/>
 		public ProcessErrorException() { }
 
-		/// <see cref="ProcessErrorException(string)"/>
+		/// <see cref="Exception(string)"/>
 		public ProcessErrorException(string message) 
 			: base(message) { }
 
-		/// <see cref="ProcessErrorException(string, Exception)"/>
+		/// <see cref="Exception(string, Exception)"/>
 		public ProcessErrorException(string message, Exception inner) 
 			: base(message, inner) { }
 
-		/// <see cref="ProcessErrorException(SerializationInfo, StreamingContext)"/>
+		/// <see cref="Exception(SerializationInfo, StreamingContext)"/>
 		protected ProcessErrorException(SerializationInfo info, StreamingContext context) 
 			: base(info, context) { }
 	}

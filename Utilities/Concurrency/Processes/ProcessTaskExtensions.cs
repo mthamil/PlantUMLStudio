@@ -19,7 +19,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The process input stream</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>
-		public static Task<Stream> ToTask(this ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		public static Task<Tuple<Stream, Stream>> ToTask(this ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
 			return ProcessAdapterFactory().StartNew(processInfo, input, cancellationToken);
 		}

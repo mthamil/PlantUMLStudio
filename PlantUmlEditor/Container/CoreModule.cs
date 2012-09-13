@@ -43,6 +43,13 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
 
+			builder.RegisterType<GraphViz>().As<IExternalComponent>()
+				.OnActivating(c =>
+				{
+					c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
+					c.Instance.LocalVersionMatchingPattern = c.Context.Resolve<ISettings>().GraphVizLocalVersionPattern;
+				});
+
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IExternalComponent>()
 				.OnActivating(c =>
 				{

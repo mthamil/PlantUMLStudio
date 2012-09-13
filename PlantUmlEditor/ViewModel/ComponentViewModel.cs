@@ -38,9 +38,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Analyzes a dependency.
 		/// </summary>
-		public async Task AnalyzeAsync()
+		public void AnalyzeAsync()
 		{
-			await Task.WhenAll(CheckVersionAsync(), CheckForUpdateAsync());
+			CheckVersionAsync();
+			CheckForUpdateAsync();
 		}
 
 		private async Task CheckVersionAsync()

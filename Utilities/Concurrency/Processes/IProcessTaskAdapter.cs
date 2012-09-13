@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
-		/// <returns> A Task that, when completed successfully, contains a Process's output</returns>
-		Task<Stream> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken);
+		/// <returns> A Task that, when completed successfully, contains a Process's output and error streams</returns>
+		Task<Tuple<Stream, Stream>> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken);
 	}
 }

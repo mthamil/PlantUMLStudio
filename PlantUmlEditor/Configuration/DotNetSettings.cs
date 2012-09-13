@@ -21,6 +21,7 @@ namespace PlantUmlEditor.Configuration
 				? defaultDiagramLocation
 				: new DirectoryInfo(_settings.LastPath);
 
+			GraphVizLocalVersionPattern = new Regex(settings.GraphVizLocalVersionPattern);
 			PlantUmlDownloadLocation = settings.DownloadUrl;
 			PlantUmlVersionSource = settings.PlantUmlVersionSource;
 			PlantUmlRemoteVersionPattern = new Regex(settings.PlantUmlRemoteVersionPattern);
@@ -31,6 +32,9 @@ namespace PlantUmlEditor.Configuration
 
 		/// <see cref="ISettings.GraphVizExecutable"/>
 		public FileInfo GraphVizExecutable { get; set; }
+
+		/// <see cref="ISettings.GraphVizLocalVersionPattern"/>
+		public Regex GraphVizLocalVersionPattern { get; private set; }
 
 		/// <see cref="ISettings.PlantUmlJar"/>
 		public FileInfo PlantUmlJar { get; set; }

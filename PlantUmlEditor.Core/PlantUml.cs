@@ -35,7 +35,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
 		public async Task<BitmapSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
 		{
-			var output = await new ProcessStartInfo
+			var result = await new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" -pipe", PlantUmlJar.FullName, GraphVizExecutable.FullName),
@@ -47,9 +47,11 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
 
+			await HandleErrorStream(result.Item2);
+
 			var bitmap = new BitmapImage();
 			bitmap.BeginInit();
-			bitmap.StreamSource = output;
+			bitmap.StreamSource = result.Item1;
 			bitmap.EndInit();
 			bitmap.Freeze();
 			return (BitmapSource)bitmap;
@@ -77,7 +79,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
 		public async Task<string> GetCurrentVersionAsync()
 		{
-			var outputStream = await new ProcessStartInfo
+			var result = await new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
@@ -89,7 +91,9 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
 
-			var resultData = await outputStream.Async().ReadAllBytesAsync(CancellationToken.None);
+			await HandleErrorStream(result.Item2);
+
+			var resultData = await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None);
 			var output = Encoding.Default.GetString(resultData);
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
@@ -132,6 +136,16 @@ namespace PlantUmlEditor.Core
 		}
 
 		#endregion
+
+		private static async Task HandleErrorStream(Stream errorStream)
+		{
+			if (errorStream.Length > 0)
+			{
+				var errorData = await errorStream.Async().ReadAllBytesAsync(CancellationToken.None);
+				string errorMessage = Encoding.Default.GetString(errorData);
+				throw new PlantUmlException(errorMessage);
+			}
+		}
 
 		/// <summary>
 		/// The location of the GraphViz executable.

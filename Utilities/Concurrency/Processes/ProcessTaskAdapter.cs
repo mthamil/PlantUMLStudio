@@ -78,8 +78,8 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
-		/// <returns> A Task that, when completed successfully, contains a Process's output</returns>
-		public Task<Stream> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		/// <returns> A Task that, when completed successfully, contains a Process's output and error streams</returns>
+		public Task<Tuple<Stream, Stream>> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
 			var process = new Process
 			{
@@ -93,7 +93,7 @@ namespace Utilities.Concurrency.Processes
 			DataReceivedEventHandler errorHandler = (o, e) => WriteErrorData(errorStream, e.Data);
 			cancellationToken.Register(() => CancelProcess(process), true);
 
-			var tcs = new TaskCompletionSource<Stream>();
+			var tcs = new TaskCompletionSource<Tuple<Stream, Stream>>();
 			EventHandler exitedHandler = null;
 			exitedHandler = (o, e) =>
 			{
@@ -104,14 +104,11 @@ namespace Utilities.Concurrency.Processes
 				{
 					tcs.TrySetCanceled();
 				}
-				else if (errorStream.Length > 0)
-				{
-					tcs.TrySetException(CreateExceptionFromErrorStream(errorStream));
-				}
 				else
 				{
 					outputStream.Position = 0;
-					tcs.TrySetResult(outputStream);
+					errorStream.Position = 0;
+					tcs.TrySetResult(Tuple.Create(outputStream, errorStream));
 				}
 
 				process.Dispose();

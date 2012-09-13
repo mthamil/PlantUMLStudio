@@ -91,6 +91,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Equal(TimeSpan.FromSeconds(7), editor.AutoSaveInterval);
 			Assert.Equal(TimeSpan.FromSeconds(7), autoSaveTimer.Object.Interval);
+			autoSaveTimer.Verify(t => t.Restart(It.IsAny<object>()));
 		}
 
 		[Theory]

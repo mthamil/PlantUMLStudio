@@ -56,8 +56,8 @@ namespace PlantUmlEditor.Core
 			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
 
 			// For some reason output is written to standard error.
-			var resultData = await result.Item2.Async().ReadAllBytesAsync(CancellationToken.None);
-			var output = Encoding.Default.GetString(resultData);
+			var output = Encoding.Default.GetString(
+				await result.Item2.Async().ReadAllBytesAsync(CancellationToken.None));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}

@@ -18,9 +18,12 @@ namespace PlantUmlEditor.ViewModel
 		{
 			_components = Property.New(this, p => p.Components, OnPropertyChanged);
 			Components = new ObservableCollection<ComponentViewModel>(components.Select(d => new ComponentViewModel(d)));
+		}
 
+		public void LoadComponents()
+		{
 			foreach (var component in Components)
-				component.AnalyzeAsync();
+				component.LoadAsync();
 		}
 
 		/// <summary>

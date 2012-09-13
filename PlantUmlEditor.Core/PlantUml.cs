@@ -93,8 +93,8 @@ namespace PlantUmlEditor.Core
 
 			await HandleErrorStream(result.Item2);
 
-			var resultData = await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None);
-			var output = Encoding.Default.GetString(resultData);
+			var output = Encoding.Default.GetString(
+				await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
@@ -141,8 +141,8 @@ namespace PlantUmlEditor.Core
 		{
 			if (errorStream.Length > 0)
 			{
-				var errorData = await errorStream.Async().ReadAllBytesAsync(CancellationToken.None);
-				string errorMessage = Encoding.Default.GetString(errorData);
+				string errorMessage = Encoding.Default.GetString(
+					await errorStream.Async().ReadAllBytesAsync(CancellationToken.None));
 				throw new PlantUmlException(errorMessage);
 			}
 		}

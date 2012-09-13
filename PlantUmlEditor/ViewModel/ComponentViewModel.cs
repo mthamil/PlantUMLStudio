@@ -36,9 +36,9 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Analyzes a dependency.
+		/// Loads a component's information.
 		/// </summary>
-		public void AnalyzeAsync()
+		public void LoadAsync()
 		{
 			CheckVersionAsync();
 			CheckForUpdateAsync();

@@ -74,7 +74,8 @@
 
         <StackPanel Grid.Row="2" Margin="5,0,5,10" Orientation="Vertical">
             <TextBlock Text="Components:" Style="{StaticResource Font}" FontSize="14" Foreground="White"/>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Components}" IsReadOnly="True" CanUserReorderColumns="False" CanUserSortColumns="False">
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Components}" IsReadOnly="True" 
+                      CanUserReorderColumns="False" CanUserSortColumns="False">
                 <DataGrid.Columns>
                     
                     <DataGridTextColumn Header="Name" Width=".33*" Binding="{Binding Name}"/>

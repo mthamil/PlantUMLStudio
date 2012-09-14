@@ -23,7 +23,7 @@ namespace PlantUmlEditor.ViewModel
 		public void LoadComponents()
 		{
 			foreach (var component in Components)
-				component.LoadAsync();
+				component.Load();
 		}
 
 		/// <summary>

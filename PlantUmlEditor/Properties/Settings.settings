@@ -18,10 +18,10 @@
       <Value Profile="(Default)">.puml</Value>
     </Setting>
     <Setting Name="PlantUmlVersionSource" Type="System.Uri" Scope="Application">
-      <Value Profile="(Default)">http://plantuml.sourceforge.net/download.html</Value>
+      <Value Profile="(Default)">http://plantuml.sourceforge.net/plantumlVersionRss.xml</Value>
     </Setting>
     <Setting Name="PlantUmlRemoteVersionPattern" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">.*\(Version (?&lt;version&gt;\d{4,5})\).*</Value>
+      <Value Profile="(Default)">.*version (?&lt;version&gt;\d{4,5})[\s]+.*</Value>
     </Setting>
     <Setting Name="PlantUmlHighlightingDefinition" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.\PlantUML.xshd</Value>

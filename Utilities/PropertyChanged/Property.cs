@@ -94,7 +94,7 @@ namespace Utilities.PropertyChanged
 		/// _integers = Property.New(this, p => p.Integers as IList&lt;int&gt;, OnPropertyChanged);
 		/// </code>
 		/// </summary>
-		private static LambdaExpression UnwrapPropertyExpression<V>(Expression<Func<T, V>> propertyAccessor)
+		private static LambdaExpression UnwrapPropertyExpression<TValue>(Expression<Func<T, TValue>> propertyAccessor)
 		{
 			if (propertyAccessor.Body.NodeType == ExpressionType.TypeAs)
 			{

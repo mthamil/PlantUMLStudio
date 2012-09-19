@@ -40,9 +40,13 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 					.AllFoldings
 					.Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title });
 
-				_documents.Remove(_currentDocument);
-				_documents.Add(_currentDocument, foldings.ToList());
-				WeakEventManager<TextDocument, DocumentChangeEventArgs>.RemoveHandler(_currentDocument, "Changed", document_Changed);
+				TextDocument document;
+				if (_currentDocument.TryGetTarget(out document))
+				{
+					_documents.Remove(document);
+					_documents.Add(document, foldings.ToList());
+					WeakEventManager<TextDocument, DocumentChangeEventArgs>.RemoveHandler(document, "Changed", document_Changed);
+				}
 				FoldingManager.Uninstall(_currentFoldingManager);
 			}
 		}
@@ -54,19 +58,21 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		private void EditorDocumentChanged()
 		{
-			_currentDocument = _editor.Document;
-			if (_currentDocument != null)
+			_currentDocument = new WeakReference<TextDocument>(_editor.Document);
+
+			TextDocument document;
+			if (_currentDocument.TryGetTarget(out document))
 			{
 				_currentFoldingManager = FoldingManager.Install(_editor.TextArea);
-				_foldingStrategy.UpdateFoldings(_currentFoldingManager, _currentDocument);
+				_foldingStrategy.UpdateFoldings(_currentFoldingManager, document);
 
 				IEnumerable<NewFolding> foldings;
-				if (_documents.TryGetValue(_currentDocument, out foldings))
+				if (_documents.TryGetValue(document, out foldings))
 					_currentFoldingManager.UpdateFoldings(foldings, -1);
 				else
-					_documents.Add(_currentDocument, Enumerable.Empty<NewFolding>());
-				
-				WeakEventManager<TextDocument, DocumentChangeEventArgs>.AddHandler(_editor.Document, "Changed", document_Changed);
+					_documents.Add(document, Enumerable.Empty<NewFolding>());
+
+				WeakEventManager<TextDocument, DocumentChangeEventArgs>.AddHandler(document, "Changed", document_Changed);
 			}
 		}
 
@@ -83,7 +89,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		}
 
 		private FoldingManager _currentFoldingManager;
-		private TextDocument _currentDocument;
+		private WeakReference<TextDocument> _currentDocument;
 		private readonly TextEditor _editor;
 		private readonly AbstractFoldingStrategy _foldingStrategy;
 

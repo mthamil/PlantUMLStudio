@@ -121,7 +121,6 @@
     <Compile Include="PropertyChanged\PropertyChangedNotifier.cs" />
     <Compile Include="Reflection\Reflect.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
-    <Compile Include="Weak.cs" />
     <Compile Include="WeakEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>

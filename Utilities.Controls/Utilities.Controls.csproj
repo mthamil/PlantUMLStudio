@@ -117,9 +117,6 @@
     <Compile Include="MultiKey\MultiKeyGesture.cs" />
     <Compile Include="MultiKey\MultiKeyGestureConverter.cs" />
     <Compile Include="MVVMMessageBox.cs" />
-    <Compile Include="ProgressBar.xaml.cs">
-      <DependentUpon>ProgressBar.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -150,10 +147,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ProgressBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ScrollableMessageBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

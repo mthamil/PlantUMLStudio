@@ -10,7 +10,9 @@
     xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:MultiKey="clr-namespace:Utilities.Controls.MultiKey;assembly=Utilities.Controls" 
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
-    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands" 
+    xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">
@@ -123,7 +125,10 @@
             <GridSplitter Grid.Row="1" VerticalAlignment="Center" Width="Auto" Height="3"  HorizontalAlignment="Stretch" Background="#66808080"/>
 
             <Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White"
-                      attached:GridSplitterSupport.IsEnabled="True" Style="{StaticResource ExpanderStyle}">
+                      Style="{StaticResource ExpanderStyle}">
+                <i:Interaction.Behaviors>
+                    <split:GridSplitterExpanderSupportBehavior/>
+                </i:Interaction.Behaviors>
                 <Expander.Content>
                     <Border ScrollViewer.CanContentScroll="True" 
                             ScrollViewer.HorizontalScrollBarVisibility="Visible" 

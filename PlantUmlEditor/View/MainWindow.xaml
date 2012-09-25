@@ -15,7 +15,9 @@
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor"
-    xmlns:Notifications="clr-namespace:PlantUmlEditor.ViewModel.Notifications" 
+    xmlns:Notifications="clr-namespace:PlantUmlEditor.ViewModel.Notifications"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
@@ -257,7 +259,10 @@
                 </Grid.ColumnDefinitions>
         
                 <!-- This is the left column controls -->
-                <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0" attached:GridSplitterSupport.IsEnabled="true">
+                <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0">
+                    <i:Interaction.Behaviors>
+                        <split:GridSplitterExpanderSupportBehavior/>
+                    </i:Interaction.Behaviors>
                     <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0">
                         <Grid DataContext="{Binding Explorer}" d:DataContext="{d:DesignInstance design:DesignTimeDiagramExplorer, IsDesignTimeCreatable=True}">

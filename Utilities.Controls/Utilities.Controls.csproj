@@ -80,7 +80,10 @@
     <Compile Include="Behaviors\CollectionViewSourceItemFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
-    <Compile Include="Behaviors\GridSplitterSupport.cs" />
+    <Compile Include="Behaviors\GridSplitterExpanderSupport\ColumnExpanderSize.cs" />
+    <Compile Include="Behaviors\GridSplitterExpanderSupport\ExpanderSize.cs" />
+    <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />
+    <Compile Include="Behaviors\GridSplitterExpanderSupport\RowExpanderSize.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
     <Compile Include="Behaviors\BindableClick.cs" />
     <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />

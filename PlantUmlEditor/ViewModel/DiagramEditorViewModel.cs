@@ -124,7 +124,9 @@ namespace PlantUmlEditor.ViewModel
 				if (_autoSaveInterval.TrySetValue(value))
 				{
 					_autoSaveTimer.Interval = value;
-					_autoSaveTimer.Restart();
+
+					if (AutoSave && _autoSaveTimer.Started)
+						_autoSaveTimer.Restart();
 				}
 			}
 		}

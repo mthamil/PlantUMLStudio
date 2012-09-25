@@ -78,12 +78,17 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			autoSaveTimer.Verify(t => t.TryStop(), Times.Once());
 		}
 
-		[Fact]
+		[Theory]
+		[InlineData(true, true, true)]
+		[InlineData(false, false, true)]
+		[InlineData(false, true, false)]
 		[Synchronous]
-		public void Test_AutoSaveInterval()
+		public void Test_AutoSaveInterval(bool expectRestart, bool isAutoSaveEnabled, bool isAutoSaveTimerStarted)
 		{
 			// Arrange.
 			editor = CreateEditor();
+			editor.AutoSave = isAutoSaveEnabled;
+			autoSaveTimer.SetupGet(t => t.Started).Returns(isAutoSaveTimerStarted);
 
 			// Act.
 			editor.AutoSaveInterval = TimeSpan.FromSeconds(7);
@@ -91,7 +96,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Equal(TimeSpan.FromSeconds(7), editor.AutoSaveInterval);
 			Assert.Equal(TimeSpan.FromSeconds(7), autoSaveTimer.Object.Interval);
-			autoSaveTimer.Verify(t => t.Restart(It.IsAny<object>()));
+			autoSaveTimer.Verify(t => t.Restart(It.IsAny<object>()), expectRestart ? Times.Exactly(1) : Times.Never());
 		}
 
 		[Theory]

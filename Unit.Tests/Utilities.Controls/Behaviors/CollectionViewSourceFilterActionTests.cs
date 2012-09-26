@@ -22,7 +22,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 
 			var filter = CreateFilter();
 
-			var action = new CollectionViewSourceFilterAction();
+			var action = new CollectionViewSourceFilter();
 			action.Attach(viewSource);
 			action.Filter = filter;
 
@@ -50,7 +50,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 			var filter1 = CreateFilter();
 			var filter2 = CreateFilter();
 
-			var action = new CollectionViewSourceFilterAction();
+			var action = new CollectionViewSourceFilter();
 			action.Attach(viewSource);
 			action.Filter = filter1;
 
@@ -79,7 +79,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 
 			var filter = CreateFilter();
 
-			var action = new CollectionViewSourceFilterAction();
+			var action = new CollectionViewSourceFilter();
 			action.Attach(viewSource);
 			action.Filter = filter;
 
@@ -107,7 +107,7 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 
 			var filter = CreateFilter();
 
-			var action = new CollectionViewSourceFilterAction();
+			var action = new CollectionViewSourceFilter();
 			action.Attach(viewSource);
 			action.Filter = filter;
 

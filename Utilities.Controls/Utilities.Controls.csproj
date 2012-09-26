@@ -77,8 +77,7 @@
     <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldRegions.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentIndexBehavior.cs" />
-    <Compile Include="Behaviors\CollectionViewSourceFilterAction.cs" />
-    <Compile Include="Behaviors\CollectionViewSources.cs" />
+    <Compile Include="Behaviors\CollectionViewSourceFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ColumnExpanderSize.cs" />

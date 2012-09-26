@@ -77,6 +77,8 @@
     <Compile Include="Behaviors\AvalonEdit\PlantUmlFoldRegions.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\TextEditorContentIndexBehavior.cs" />
+    <Compile Include="Behaviors\Clickable\BindableClick.cs" />
+    <Compile Include="Behaviors\Clickable\BindableClickAction.cs" />
     <Compile Include="Behaviors\CollectionViewSourceFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
     <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
@@ -85,7 +87,6 @@
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\RowExpanderSize.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
-    <Compile Include="Behaviors\BindableClick.cs" />
     <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />

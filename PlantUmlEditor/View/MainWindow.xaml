@@ -21,7 +21,6 @@
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
-    attached:WindowBehaviors.ClosingCommand="{Binding CloseCommand}"
     mc:Ignorable="d">
     
     <Window.DataContext>
@@ -31,7 +30,13 @@
             </Binding.Source>
         </Binding>
     </Window.DataContext>
-    
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}" /> 
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -126,7 +131,6 @@
 
         </ResourceDictionary>
     </Window.Resources>
-
 
     <Grid Background="#2B3C59">
         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>

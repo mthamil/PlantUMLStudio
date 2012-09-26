@@ -2,12 +2,15 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     x:Class="PlantUmlEditor.View.MainWindow"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:design="clr-namespace:PlantUmlEditor.DesignTimeData" 
-    xmlns:vw="clr-namespace:PlantUmlEditor.View" 
-    xmlns:convert="clr-namespace:PlantUmlEditor.Converters" 
+    xmlns:design="clr-namespace:PlantUmlEditor.DesignTimeData"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:markup="clr-namespace:Utilities.Controls.Markup;assembly=Utilities.Controls" 
+    xmlns:vw="clr-namespace:PlantUmlEditor.View"
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
+    xmlns:convert="clr-namespace:PlantUmlEditor.Converters" 
     xmlns:attached="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls" 
     xmlns:xtn="clr-namespace:PlantUmlEditor.View.MarkupExtensions" 
@@ -15,8 +18,7 @@
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls" 
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor"
-    xmlns:Notifications="clr-namespace:PlantUmlEditor.ViewModel.Notifications"
-    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:notifications="clr-namespace:PlantUmlEditor.ViewModel.Notifications"
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     xmlns:Clickable="clr-namespace:Utilities.Controls.Behaviors.Clickable;assembly=Utilities.Controls"
     Title="PlantUml Editor" 
@@ -27,7 +29,7 @@
     <Window.DataContext>
         <Binding Path="ViewModel">
             <Binding.Source>
-                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramManagerViewModel}" />
+                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramManagerViewModel}"/>
             </Binding.Source>
         </Binding>
     </Window.DataContext>
@@ -44,7 +46,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
+            
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
             <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
@@ -128,7 +130,7 @@
                 </Style.Triggers>
             </Style>
 
-            <xtn:ViewModelLocator TypeArgument="{x:Type Notifications:NotificationsHub}" x:Key="NotificationsHub"/>
+            <xtn:ViewModelLocator TypeArgument="{x:Type notifications:NotificationsHub}" x:Key="NotificationsHub"/>
 
         </ResourceDictionary>
     </Window.Resources>

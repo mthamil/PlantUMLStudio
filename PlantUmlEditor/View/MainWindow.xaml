@@ -5,9 +5,7 @@
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:design="clr-namespace:PlantUmlEditor.DesignTimeData"
-    xmlns:system="clr-namespace:System;assembly=mscorlib"
-    xmlns:markup="clr-namespace:Utilities.Controls.Markup;assembly=Utilities.Controls" 
+    xmlns:design="clr-namespace:PlantUmlEditor.DesignTimeData" 
     xmlns:vw="clr-namespace:PlantUmlEditor.View"
     xmlns:vm="clr-namespace:PlantUmlEditor.ViewModel" 
     xmlns:convert="clr-namespace:PlantUmlEditor.Converters" 
@@ -24,15 +22,8 @@
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
-    
-    <Window.DataContext>
-        <Binding Path="ViewModel">
-            <Binding.Source>
-                <xtn:ViewModelLocator TypeArgument="{x:Type vm:DiagramManagerViewModel}"/>
-            </Binding.Source>
-        </Binding>
-    </Window.DataContext>
+    mc:Ignorable="d"
+    DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:DiagramManagerViewModel}}, Path=ViewModel}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -129,8 +120,6 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-
-            <xtn:ViewModelLocator TypeArgument="{x:Type notifications:NotificationsHub}" x:Key="NotificationsHub"/>
 
         </ResourceDictionary>
     </Window.Resources>
@@ -547,7 +536,7 @@
       
             <!-- This is the bottom row containing status message and progress bar -->
             <StatusBar Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="25" Background="#2B3C59"
-                       DataContext="{Binding Source={StaticResource NotificationsHub}, Path=ViewModel}">
+                       DataContext="{Binding Source={xtn:ViewModelLocator {x:Type notifications:NotificationsHub}}, Path=ViewModel}">
 
                 <!--<StatusBar.BorderBrush Color="" />-->
                 

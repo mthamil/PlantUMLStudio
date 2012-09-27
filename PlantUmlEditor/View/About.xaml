@@ -7,11 +7,10 @@
         xmlns:cmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls"
         xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
         Title="About" Height="270" Width="431" Background="#2B3C59"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:AboutViewModel}}, Path=ViewModel}">
     
     <Window.Resources>
-
-        <xtn:ViewModelLocator TypeArgument="{x:Type vm:AboutViewModel}" x:Key="ViewModel"/>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="Font">
             <Setter Property="FontFamily" Value="Segoe"/>
@@ -34,8 +33,8 @@
         </Style>
 
     </Window.Resources>
-    
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}, Path=ViewModel}">
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height=".15*"/>
             <RowDefinition Height=".25*"/>
@@ -75,7 +74,7 @@
         <StackPanel Grid.Row="2" Margin="5,0,5,10" Orientation="Vertical">
             <TextBlock Text="Components:" Style="{StaticResource Font}" FontSize="14" Foreground="White"/>
             <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Components}" IsReadOnly="True" 
-                      CanUserReorderColumns="False" CanUserSortColumns="False">
+                      CanUserReorderColumns="False" CanUserSortColumns="False" HeadersVisibility="Column">
                 <DataGrid.Columns>
                     
                     <DataGridTextColumn Header="Name" Width=".33*" Binding="{Binding Name}"/>

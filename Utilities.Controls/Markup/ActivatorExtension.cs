@@ -9,6 +9,7 @@ namespace Utilities.Controls.Markup
 	/// A XAML markup extension to allow creating instances of types using
 	/// generic type arguments and non-default constructors.
 	/// </summary>
+	[MarkupExtensionReturnType(typeof(object))]
 	public class ActivatorExtension : MarkupExtension
 	{
 		/// <summary>
@@ -18,6 +19,16 @@ namespace Utilities.Controls.Markup
 		{
 			_instance = new Lazy<object>(() => 
 				Activator.CreateInstance(ConstructType(), ConstructorArguments.ToArray()));
+		}
+
+		/// <summary>
+		/// Initializes the extension with the type to instantiate.
+		/// </summary>
+		/// <param name="type">The type to instantiate</param>
+		public ActivatorExtension(Type type)
+			: this()
+		{
+			Type = type;
 		}
 
 		#region Overrides of MarkupExtension

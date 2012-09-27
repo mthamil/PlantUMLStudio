@@ -8,21 +8,23 @@ namespace PlantUmlEditor.View.MarkupExtensions
 	/// <summary>
 	/// A XAML markup extension to allow definition of a generic view-model locator.
 	/// </summary>
+	[MarkupExtensionReturnType(typeof(object))]
 	public class ViewModelLocator : ActivatorExtension
 	{
-		#region Overrides of MarkupExtension
+		/// <summary>
+		/// Default constructor required by XAML.
+		/// </summary>
+		public ViewModelLocator()
+			: base(viewModelLocatorType) { }
 
-		/// <see cref="MarkupExtension.ProvideValue"/>
-		public override object ProvideValue(IServiceProvider serviceProvider)
+		/// <summary>
+		/// Default constructor required by XAML.
+		/// </summary>
+		public ViewModelLocator(Type viewModelType)
+			: this()
 		{
-			Type = viewModelLocatorType;
-			TypeArguments.Add(TypeArgument);
-			ConstructorArguments.Add(App.Container);
-			ConstructorArguments.Add(Name);
-			return base.ProvideValue(serviceProvider);
+			TypeArgument = viewModelType;
 		}
-
-		#endregion
 
 		/// <summary>
 		/// The type of the view-model.
@@ -33,6 +35,19 @@ namespace PlantUmlEditor.View.MarkupExtensions
 		/// The object config name of a container-defined view-model.
 		/// </summary>
 		public string Name { get; set; }
+
+		#region Overrides of MarkupExtension
+
+		/// <see cref="MarkupExtension.ProvideValue"/>
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
+			TypeArguments.Add(TypeArgument);
+			ConstructorArguments.Add(App.Container);
+			ConstructorArguments.Add(Name);
+			return base.ProvideValue(serviceProvider);
+		}
+
+		#endregion
 
 		private static readonly Type viewModelLocatorType = typeof(AutofacViewModelLocator<>);
 	}

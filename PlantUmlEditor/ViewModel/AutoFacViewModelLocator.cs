@@ -30,16 +30,7 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public static bool IsInDesignMode
 		{
-			get
-			{
-				if (!_isInDesignMode.HasValue)
-				{
-					_isInDesignMode =
-						((bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue));
-				}
-
-				return _isInDesignMode.Value;
-			}
+			get { return _isInDesignMode.Value; }
 		}
 
 		/// <summary>
@@ -98,7 +89,7 @@ namespace PlantUmlEditor.ViewModel
 
 		#endregion
 
-		private static bool? _isInDesignMode;
+		private static Lazy<bool> _isInDesignMode = new Lazy<bool>(() => (bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue));
 		private readonly Property<TViewModel> _runTimeViewModel;
 		private readonly Property<TViewModel> _designTimeViewModel;
 		private readonly string _name;

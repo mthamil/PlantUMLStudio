@@ -47,7 +47,7 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2);
+			await HandleErrorStream(result.Item2).ConfigureAwait(false);
 
 			var bitmap = new BitmapImage();
 			bitmap.BeginInit();
@@ -91,10 +91,10 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2);
+			await HandleErrorStream(result.Item2).ConfigureAwait(false);
 
 			var output = Encoding.Default.GetString(
-				await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None));
+				await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
@@ -142,7 +142,7 @@ namespace PlantUmlEditor.Core
 			if (errorStream.Length > 0)
 			{
 				string errorMessage = Encoding.Default.GetString(
-					await errorStream.Async().ReadAllBytesAsync(CancellationToken.None));
+					await errorStream.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
 				throw new PlantUmlException(errorMessage);
 			}
 		}

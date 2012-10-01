@@ -90,14 +90,12 @@ namespace Utilities.InputOutput
 			/// <see cref="IAsyncStreamOperations.ReadAllBytesAsync"/>
 			public async Task<byte[]> ReadAllBytesAsync(CancellationToken cancellationToken)
 			{
-				byte[] buffer = new byte[_stream.Length];
-				var readTask = ReadAsync(buffer, 0, buffer.Length, cancellationToken);
-
 				// We don't really care about the number of bytes read, so return the buffer instead.
 				var tcs = new TaskCompletionSource<byte[]>();
 				try
 				{
-					await readTask;
+					byte[] buffer = new byte[_stream.Length];
+					await ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
 					tcs.TrySetResult(buffer);
 				}
 				catch (TaskCanceledException)
@@ -109,7 +107,7 @@ namespace Utilities.InputOutput
 					tcs.TrySetException(e);
 				}
 
-				return await tcs.Task;
+				return await tcs.Task.ConfigureAwait(false);
 			}
 
 			/// <see cref="IAsyncStreamOperations.WriteAsync"/>

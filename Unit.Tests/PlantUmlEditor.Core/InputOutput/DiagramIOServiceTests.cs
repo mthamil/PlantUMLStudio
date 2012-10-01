@@ -77,15 +77,13 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 		}
 
 		[Fact]
-		public void Test_ReadAsync()
+		public async Task Test_ReadAsync()
 		{
 			// Arrange.
 			var file = new FileInfo(Path.Combine(currentDirectory.FullName, "class.puml"));
 
 			// Act.
-			var readTask = diagramIO.ReadAsync(file);
-			readTask.Wait();
-			var diagram = readTask.Result;
+			var diagram = await diagramIO.ReadAsync(file);
 
 			// Assert.
 			Assert.Equal(file.FullName, diagram.File.FullName);
@@ -94,7 +92,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 		}
 
 		[Fact]
-		public void Test_ReadDiagramsAsync()
+		public async Task Test_ReadDiagramsAsync()
 		{
 			// Arrange.
 			var progressData = new List<ReadDiagramsProgress>();
@@ -104,9 +102,7 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 				.Callback((ReadDiagramsProgress p) => progressData.Add(p));
 
 			// Act.
-			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, CancellationToken.None, progress.Object);
-			readTask.Wait();
-			var diagrams = readTask.Result;
+			var diagrams = await diagramIO.ReadDiagramsAsync(currentDirectory, CancellationToken.None, progress.Object);
 
 			// Assert.
 			Assert.Single(diagrams);

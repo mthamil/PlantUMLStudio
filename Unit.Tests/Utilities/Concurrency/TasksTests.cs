@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Utilities.Concurrency;
 using Xunit;
@@ -50,7 +51,7 @@ namespace Unit.Tests.Utilities.Concurrency
 		public void Test_FromException()
 		{
 			// Act.
-			var task = Tasks.FromException<int, InvalidOperationException>(new InvalidOperationException());
+			var task = Tasks.FromException<int>(new InvalidOperationException());
 
 			// Assert.
 			Assert.True(task.IsCompleted);
@@ -89,6 +90,40 @@ namespace Unit.Tests.Utilities.Concurrency
 			Assert.Equal(TaskStatus.Faulted, task.Status);
 			Assert.NotNull(task.Exception);
 			Assert.IsType<InvalidOperationException>(task.Exception.InnerException);
+		}
+
+		[Fact]
+		public void Test_FromExceptions()
+		{
+			// Act.
+			var task = Tasks.FromExceptions<int>(new InvalidOperationException(), new Exception(), new SystemException());
+
+			// Assert.
+			Assert.True(task.IsCompleted);
+			Assert.False(task.IsCanceled);
+			Assert.True(task.IsFaulted);
+			Assert.Equal(TaskStatus.Faulted, task.Status);
+			Assert.NotNull(task.Exception);
+			AssertThat.SequenceEqual(
+				new [] { typeof(InvalidOperationException), typeof(Exception), typeof(SystemException) }, 
+				task.Exception.InnerExceptions.Select(e => e.GetType()));
+		}
+
+		[Fact]
+		public void Test_FromExceptions_NoResult()
+		{
+			// Act.
+			var task = Tasks.FromExceptions(new InvalidOperationException(), new Exception(), new SystemException());
+
+			// Assert.
+			Assert.True(task.IsCompleted);
+			Assert.False(task.IsCanceled);
+			Assert.True(task.IsFaulted);
+			Assert.Equal(TaskStatus.Faulted, task.Status);
+			Assert.NotNull(task.Exception);
+			AssertThat.SequenceEqual(
+				new[] { typeof(InvalidOperationException), typeof(Exception), typeof(SystemException) }, 
+				task.Exception.InnerExceptions.Select(e => e.GetType()));
 		}
 	}
 }

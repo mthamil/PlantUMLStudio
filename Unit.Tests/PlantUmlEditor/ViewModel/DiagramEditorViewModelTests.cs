@@ -364,7 +364,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromException<BitmapSource, InvalidOperationException>(new InvalidOperationException()));
+				.Returns(Tasks.FromException<BitmapSource>(new InvalidOperationException()));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);

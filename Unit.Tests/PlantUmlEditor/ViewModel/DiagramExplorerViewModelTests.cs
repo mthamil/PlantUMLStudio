@@ -75,7 +75,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
-				.Returns(Tasks.FromException<IEnumerable<Diagram>, AggregateException>(new AggregateException()));
+				.Returns(Tasks.FromException<IEnumerable<Diagram>>(new AggregateException()));
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;

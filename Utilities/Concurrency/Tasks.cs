@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Utilities.Concurrency
@@ -43,11 +44,9 @@ namespace Utilities.Concurrency
 		/// Creates an already completed task from an exception.
 		/// </summary>
 		/// <typeparam name="TResult">The expected result type</typeparam>
-		/// <typeparam name="TException">The type of exception that was "thrown"</typeparam>
 		/// <param name="exception">An exception</param>
 		/// <returns>A Task that has failed due to the given exception</returns>
-		public static Task<TResult> FromException<TResult, TException>(TException exception)
-			where TException : Exception
+		public static Task<TResult> FromException<TResult>(Exception exception)
 		{
 			var taskSource = new TaskCompletionSource<TResult>();
 			taskSource.SetException(exception);
@@ -57,13 +56,11 @@ namespace Utilities.Concurrency
 		/// <summary>
 		/// Creates an already completed task from an exception.
 		/// </summary>
-		/// <typeparam name="TException">The type of exception that was "thrown"</typeparam>
 		/// <param name="exception">An existing exception</param>
 		/// <returns>A Task that has failed due to the given exception</returns>
-		public static Task FromException<TException>(TException exception)
-			where TException : Exception
+		public static Task FromException(Exception exception)
 		{
-			return FromException<AsyncUnit, TException>(exception);
+			return FromException<AsyncUnit>(exception);
 		}
 
 		/// <summary>
@@ -75,6 +72,31 @@ namespace Utilities.Concurrency
 			where TException : Exception, new()
 		{
 			return FromException(new TException());
+		}
+
+		/// <summary>
+		/// Creates an already completed task from a collection of exceptions.
+		/// </summary>
+		/// <typeparam name="TResult">The expected result type</typeparam>
+		/// <param name="first">The first exception</param>
+		/// <param name="exceptions">Existing exceptions</param>
+		/// <returns>A Task that has failed due to the given exceptions</returns>
+		public static Task<TResult> FromExceptions<TResult>(Exception first, params Exception[] exceptions)
+		{
+			var taskSource = new TaskCompletionSource<TResult>();
+			taskSource.SetException(new [] { first }.Concat(exceptions));
+			return taskSource.Task;
+		}
+
+		/// <summary>
+		/// Creates an already completed task from a collection of exceptions.
+		/// </summary>
+		/// <param name="first">The first exception</param>
+		/// <param name="exceptions">Existing exceptions</param>
+		/// <returns>A Task that has failed due to the given exceptions</returns>
+		public static Task FromExceptions(Exception first, params Exception[] exceptions)
+		{
+			return FromExceptions<AsyncUnit>(first, exceptions);
 		}
 
 		/// <summary>

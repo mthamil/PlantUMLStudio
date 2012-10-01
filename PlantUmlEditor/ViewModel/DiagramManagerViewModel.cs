@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
+using Utilities.Collections;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -87,8 +88,7 @@ namespace PlantUmlEditor.ViewModel
 
 		private async void SaveAll()
 		{
-			var modifiedEditors = OpenDiagrams.Where(d => d.CanSave).ToList();
-			await Task.WhenAll(modifiedEditors.Select(d => d.SaveAsync()));
+			await OpenDiagrams.Where(d => d.CanSave).Select(d => d.SaveAsync());
 		}
 
 		void diagramEditor_Saved(object sender, EventArgs e)
@@ -152,10 +152,13 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Command executed when closing the main application window.
+		/// Command executed when closing a diagram manager.
 		/// </summary>
 		public ICommand CloseCommand { get; private set; }
 
+		/// <summary>
+		/// Closes a diagram manager.
+		/// </summary>
 		private void Close()
 		{
 			var unsavedOpenDiagrams = OpenDiagrams.Where(od => od.CodeEditor.IsModified).ToList();

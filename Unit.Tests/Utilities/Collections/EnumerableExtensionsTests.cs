@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Utilities.Collections;
+using Utilities.Concurrency;
 using Xunit;
 using Xunit.Extensions;
 
@@ -445,6 +447,34 @@ namespace Unit.Tests.Utilities.Collections
 		private class TestContainer<T>
 		{
 			public T Item { get; set; }
-		} 
+		}
+
+		[Fact]
+		public async Task Test_GetAwaiter_EnumerableOfTasks_WithResults()
+		{
+			// Act.
+			var results = await Enumerable.Range(0, 5).Select(i => Task.FromResult(i));
+
+			// Assert.
+			AssertThat.SequenceEqual(new [] { 0, 1, 2, 3, 4 }, results);
+		}
+
+		[Fact]
+		public async Task Test_GetAwaiter_EnumerableOfTasks()
+		{
+			// Arrange.
+			var results = new bool[5];
+
+			// Act.
+			await Enumerable.Range(0, 5).Select<int, Task>(async i =>
+			{
+				await Tasks.FromSuccess();
+				results[i] = true;
+			});
+
+			// Assert.
+			foreach (var result in results)
+				Assert.True(result);
+		}
 	}
 }

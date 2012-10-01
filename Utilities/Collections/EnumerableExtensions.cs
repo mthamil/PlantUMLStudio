@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Utilities.Collections
 {
@@ -176,6 +178,26 @@ namespace Utilities.Collections
 			});
 
 			return extremum;
+		}
+
+		/// <summary>
+		/// Allows await-ing on an enumerable of Tasks.
+		/// </summary>
+		/// <param name="tasks">The tasks to await</param>
+		/// <returns>An awaiter for the completion of the tasks</returns>
+		public static TaskAwaiter GetAwaiter(this IEnumerable<Task> tasks)
+		{
+			return Task.WhenAll(tasks).GetAwaiter();
+		}
+
+		/// <summary>
+		/// Allows await-ing on an enumerable of Task&lt;T&gt;s.
+		/// </summary>
+		/// <param name="tasks">The tasks to await</param>
+		/// <returns>An awaiter for the completion of the tasks</returns>
+		public static TaskAwaiter<T[]> GetAwaiter<T>(this IEnumerable<Task<T>> tasks)
+		{
+			return Task.WhenAll(tasks).GetAwaiter();
 		}
 
 		/// <summary>

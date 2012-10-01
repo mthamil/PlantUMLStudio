@@ -36,12 +36,11 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Loads a component's information.
+		/// Loads a component's information asynchronously.
 		/// </summary>
-		public void Load()
+		public Task LoadAsync()
 		{
-			CheckVersionAsync();
-			CheckForUpdateAsync();
+			return Task.WhenAll(CheckVersionAsync(), CheckForUpdateAsync());
 		}
 
 		private async Task CheckVersionAsync()

@@ -48,6 +48,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal("Version", viewModel.CurrentVersion);
 			Assert.True(viewModel.HasUpdate.HasValue);
 			Assert.True(viewModel.HasUpdate.Value);
+			Assert.True(viewModel.CanUpdate);
 			Assert.Equal("NewerVersion", viewModel.LatestVersion);
 		}
 

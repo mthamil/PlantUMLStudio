@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.Collections;
 
 namespace Utilities.Concurrency
 {
@@ -84,7 +85,7 @@ namespace Utilities.Concurrency
 		public static Task<TResult> FromExceptions<TResult>(Exception first, params Exception[] exceptions)
 		{
 			var taskSource = new TaskCompletionSource<TResult>();
-			taskSource.SetException(new [] { first }.Concat(exceptions));
+			taskSource.SetException(first.ToEnumerable().Concat(exceptions));
 			return taskSource.Task;
 		}
 

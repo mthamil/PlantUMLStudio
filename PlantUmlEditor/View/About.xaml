@@ -8,6 +8,7 @@
         xmlns:utilconvert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
         Title="About" Height="270" Width="431" Background="#2B3C59"
         WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
         DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:AboutViewModel}}, Path=ViewModel}">
     
     <Window.Resources>

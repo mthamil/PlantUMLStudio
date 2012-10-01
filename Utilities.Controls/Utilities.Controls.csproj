@@ -87,7 +87,7 @@
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\RowExpanderSize.cs" />
     <Compile Include="Behaviors\HideCloseButtonBehavior.cs" />
-    <Compile Include="Behaviors\TextBoxAutoSelectOnFocusBehavior.cs" />
+    <Compile Include="Behaviors\AutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />
     <Compile Include="Behaviors\TreeViewBindableSelectedItemBehavior.cs" />
     <Compile Include="Behaviors\TreeViewItemExpandedCommandBehavior.cs" />

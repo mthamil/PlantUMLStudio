@@ -1,12 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Utilities.Controls.Behaviors;
 using Xunit;
 
 namespace Unit.Tests.Utilities.Controls.Behaviors
 {
-	public class TextBoxAutoSelectOnFocusBehaviorTests
+	public class AutoSelectOnFocusBehaviorTests
 	{
 		[Fact]
 		public void Test_GotKeyboardFocus_ShouldAutoSelect()
@@ -15,14 +14,15 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 			string text = "this is some text";
 			textBox.Text = text;
 
-			TextBoxAutoSelectOnFocusBehavior.SetAutoSelectOnFocus(textBox, true);
+			var behavior = new AutoSelectOnFocusBehavior();
+			behavior.Attach(textBox);
 
 			// Preconditions.
 			Assert.Equal(0, textBox.SelectionLength);
 			Assert.Equal(string.Empty, textBox.SelectedText);
 
 			// Act.
-			textBox.RaiseGotKeyboardFocus();
+			textBox.RaiseGotFocus();
 
 			// Assert.
 			Assert.Equal(text.Length, textBox.SelectionLength);
@@ -36,11 +36,12 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 			string text = "this is some text";
 			textBox.Text = text;
 
-			TextBoxAutoSelectOnFocusBehavior.SetAutoSelectOnFocus(textBox, true);
-			TextBoxAutoSelectOnFocusBehavior.SetAutoSelectOnFocus(textBox, false);
+			var behavior = new AutoSelectOnFocusBehavior();
+			behavior.Attach(textBox);
+			behavior.Detach();
 
 			// Act.
-			textBox.RaiseGotKeyboardFocus();
+			textBox.RaiseGotFocus();
 
 			// Assert.
 			Assert.Equal(0, textBox.SelectionLength);
@@ -51,27 +52,10 @@ namespace Unit.Tests.Utilities.Controls.Behaviors
 
 		public class TextBoxStub : TextBox
 		{
-			public void RaiseGotKeyboardFocus()
+			public void RaiseGotFocus()
 			{
-				var args = new KeyboardFocusChangedEventArgs(new KeyboardDeviceStub(), 100, new UIElement(), this)
-				{
-					RoutedEvent = GotKeyboardFocusEvent
-				};
+				var args = new RoutedEventArgs(GotFocusEvent, this);
 				RaiseEvent(args);
-			}
-
-			private class KeyboardDeviceStub : KeyboardDevice
-			{
-				public KeyboardDeviceStub() : base(InputManager.Current) { }
-
-				#region Overrides of KeyboardDevice
-
-				protected override KeyStates GetKeyStatesFromSystem(Key key)
-				{
-					return KeyStates.Down;
-				}
-
-				#endregion
 			}
 		}
 	}

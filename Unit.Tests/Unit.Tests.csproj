@@ -121,7 +121,7 @@
     <Compile Include="Utilities.Controls\Behaviors\AvalonEdit\PlantUmlFoldingStrategyTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\AvalonEdit\StubFoldingStrategy.cs" />
     <Compile Include="Utilities.Controls\Behaviors\CollectionViewSourceFilterActionTests.cs" />
-    <Compile Include="Utilities.Controls\Behaviors\TextBoxAutoSelectOnFocusBehaviorTests.cs" />
+    <Compile Include="Utilities.Controls\Behaviors\AutoSelectOnFocusBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Behaviors\TreeViewBindableSelectedItemBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Converters\ComposingConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\AndConverterTests.cs" />

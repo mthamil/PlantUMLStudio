@@ -18,6 +18,20 @@ namespace Utilities.Controls.Markup
 	public class CommandExtension : MarkupExtension
 	{
 		/// <summary>
+		/// Initializes a command.
+		/// </summary> 
+		public CommandExtension() { }
+
+		/// <summary>
+        /// Initializes a command.
+        /// </summary> 
+        /// <param name="executePath">Path to Execute method</param>
+		public CommandExtension(string executePath) 
+        {
+			Execute = new PropertyPath(executePath); 
+        } 
+
+		/// <summary>
 		/// The path of the method to invoke.
 		/// </summary>
 		public PropertyPath Execute { get; set; }
@@ -37,6 +51,8 @@ namespace Utilities.Controls.Markup
 
 			var target = serviceProvider.GetService<IProvideValueTarget>();
 			var rootProvider = serviceProvider.GetService<IRootObjectProvider>();
+			if (rootProvider == null)
+				return null;
 
 			var targetObj = target.TargetObject as DependencyObject;
 			if (targetObj == null)
@@ -48,21 +64,18 @@ namespace Utilities.Controls.Markup
 
 			Type delegateType;
 			Type commandType;
-			IEnumerable<ParameterExpression> commandParameters; 
 			if (commandParameter == null)
 			{
 				delegateType = typeof(Action);
 				commandType = typeof(RelayCommand);
-				commandParameters = Enumerable.Empty<ParameterExpression>();
 			}
 			else
 			{
 				delegateType = typeof(Action<>).MakeGenericType(commandParameter.ParameterType);
 				commandType = typeof(RelayCommand<>).MakeGenericType(commandParameter.ParameterType);
-				commandParameters = new [] { Expressions.Expression.Parameter(commandParameter.ParameterType, commandParameter.Name) };
 			}
 
-			var lambda = Expressions.Expression.Lambda(delegateType, methodCall, commandParameters);
+			var lambda = Expressions.Expression.Lambda(delegateType, methodCall, methodCall.Arguments.Cast<ParameterExpression>());
 			var action = lambda.Compile();
 
 			Delegate canExecute = null;
@@ -121,7 +134,9 @@ namespace Utilities.Controls.Markup
 				}
 				else
 				{
-					return Expressions.Expression.Call(current, current.Type.GetMethod(component));
+					var method = current.Type.GetMethod(component);
+					var parameters = method.GetParameters().Select(p => Expressions.Expression.Parameter(p.ParameterType, p.Name));
+					return Expressions.Expression.Call(current, method, parameters);
 				}
 			}
 

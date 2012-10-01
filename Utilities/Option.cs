@@ -33,11 +33,21 @@ namespace Utilities
 		}
 
 		/// <summary>
+		/// Creates an Option from a value that may be null.
+		/// None will be returned if the value is null, otherwise
+		/// Some.
+		/// </summary>
+		public static Option<T> From(T value)
+		{
+			return value == null ? None() : Some(value);
+		}
+
+		/// <summary>
 		/// Converts a value to an Option type.
 		/// </summary>
 		public static implicit operator Option<T>(T value)
 		{
-			return value == null ? None() : Some(value);
+			return From(value);
 		}
 
 		/// <summary>
@@ -49,6 +59,28 @@ namespace Utilities
 		/// The value if it exists.
 		/// </summary>
 		public abstract T Value { get; }
+
+		/// <summary>
+		/// Applies a mapping function to an Option. If the Option is a Some, 
+		/// the value is mapped. If the Option is a None, a None of the 
+		/// destination type is returned.
+		/// </summary>
+		/// <typeparam name="TResult">The type to map to</typeparam>
+		/// <param name="selector">The mapping function</param>
+		/// <returns>A Some with the mapped value or a None</returns>
+		public abstract Option<TResult> Select<TResult>(Func<T, TResult> selector);
+
+		/// <summary>
+		/// Applies a mapping function to an Option.
+		/// </summary>
+		/// <typeparam name="TResult">The type of Option to map to</typeparam>
+		/// <param name="optionSelector">The mapping function</param>
+		public abstract Option<TResult> SelectMany<TResult>(Func<T, Option<TResult>> optionSelector);
+
+		/// <summary>
+		/// Applies a mapping function to an Option.
+		/// </summary>
+		public abstract Option<TResult> SelectMany<TIntermediate, TResult>(Func<T, Option<TIntermediate>> optionSelector, Func<T, TIntermediate, TResult> resultSelector);
 	}
 
 	/// <summary>
@@ -70,6 +102,30 @@ namespace Utilities
 		public override T Value
 		{
 			get { throw new InvalidOperationException(); }
+		}
+
+		/// <summary>
+		/// Returns a None of the result type.
+		/// </summary>
+		public override Option<TResult> Select<TResult>(Func<T, TResult> selector)
+		{
+			return Option<TResult>.None();
+		}
+
+		/// <summary>
+		/// Returns a None of the result type.
+		/// </summary>
+		public override Option<TResult> SelectMany<TResult>(Func<T, Option<TResult>> optionSelector)
+		{
+			return Option<TResult>.None();
+		}
+
+		/// <summary>
+		/// Returns a None of the result type.
+		/// </summary>
+		public override Option<TResult> SelectMany<TIntermediate, TResult>(Func<T, Option<TIntermediate>> optionSelector, Func<T, TIntermediate, TResult> resultSelector)
+		{
+			return Option<TResult>.None(); 
 		}
 	}
 
@@ -102,6 +158,35 @@ namespace Utilities
 		{
 			get { return _value; }
 		}
+
+		/// <summary>
+		/// Applies a mapping function to a Some's value.
+		/// </summary>
+		public override Option<TResult> Select<TResult>(Func<T, TResult> selector)
+		{
+			return Option<TResult>.From(selector(Value));
+		}
+
+		/// <summary>
+		/// Applies a mapping function to a Some's value.
+		/// </summary>
+		public override Option<TResult> SelectMany<TResult>(Func<T, Option<TResult>> optionSelector)
+		{
+			return optionSelector(Value);
+		}
+
+		/// <summary>
+		/// Applies a mapping function to a Some's value.
+		/// </summary>
+		public override Option<TResult> SelectMany<TIntermediate, TResult>(Func<T, Option<TIntermediate>> optionSelector, Func<T, TIntermediate, TResult> resultSelector)
+		{
+			var intermediate = optionSelector(Value);
+			if (intermediate.HasValue)
+				return Option<TResult>.From(resultSelector(Value, intermediate.Value));
+
+			return Option<TResult>.None();
+		}
+
 		private readonly T _value;
 
 		/// <summary>

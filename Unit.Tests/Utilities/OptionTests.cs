@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using Utilities;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Unit.Tests.Utilities
 {
@@ -64,6 +66,17 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
+		public void Test_Option_Some_Conversion_ValueType()
+		{
+			// Act.
+			Option<int> some = 1;
+
+			// Assert.
+			Assert.True(some.HasValue);
+			Assert.Equal(1, some.Value);
+		}
+
+		[Fact]
 		public void Test_Option_Some_Conversion_ReferenceType()
 		{
 			// Arrange.
@@ -78,17 +91,6 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_Option_Some_Conversion_ValueType()
-		{
-			// Act.
-			Option<int> some = 1;
-
-			// Assert.
-			Assert.True(some.HasValue);
-			Assert.Equal(1, some.Value);
-		}
-
-		[Fact]
 		public void Test_Option_None_Conversion_ReferenceType()
 		{
 			// Arrange.
@@ -100,6 +102,126 @@ namespace Unit.Tests.Utilities
 			// Assert.
 			Assert.NotNull(none);
 			Assert.False(none.HasValue);
+		}
+
+		[Theory]
+		[InlineData(true, "value")]
+		[InlineData(false, null)]
+		public void Test_Option_From(bool expectValue, string value)
+		{
+			// Act.
+			Option<string> option = Option<string>.From(value);
+
+			// Assert.
+			Assert.Equal(expectValue, option.HasValue);
+		}
+
+		[Fact]
+		public void Test_Some_Select()
+		{
+			// Arrange.
+			Option<int> someInt = 1;
+
+			// Act.
+			Option<string> result = someInt.Select(x => x.ToString(CultureInfo.InvariantCulture));
+			Option<string> linqResult = from x in someInt select x.ToString(CultureInfo.InvariantCulture);
+
+			// Assert.
+			Assert.True(result.HasValue);
+			Assert.Equal("1", result.Value);
+
+			Assert.True(linqResult.HasValue);
+			Assert.Equal("1", linqResult.Value);
+		}
+
+		[Fact]
+		public void Test_Some_SelectMany()
+		{
+			// Arrange.
+			Option<int> someInt = 1;
+
+			// Act.
+			Option<string> result = someInt.SelectMany(x => new ReturnsOption(x).Get(true));
+			Option<string> linqResult = 
+				from x in someInt
+				from y in new ReturnsOption(x).Get(true)
+				select y;
+
+			// Assert.
+			Assert.True(result.HasValue);
+			Assert.Equal("1", result.Value);
+
+			Assert.True(linqResult.HasValue);
+			Assert.Equal("1", linqResult.Value);
+		}
+
+		[Fact]
+		public void Test_Some_SelectMany_NoResult()
+		{
+			// Arrange.
+			Option<int> someInt = 1;
+
+			// Act.
+			Option<string> result = someInt.SelectMany(x => new ReturnsOption(x).Get(false));
+			Option<string> linqResult =
+				from x in someInt
+				from y in new ReturnsOption(x).Get(false)
+				select y;
+
+			// Assert.
+			Assert.False(result.HasValue);
+			Assert.False(linqResult.HasValue);
+		}
+
+		[Fact]
+		public void Test_None_Select()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+
+			// Act.
+			Option<string> result = noneInt.Select(x => x.ToString(CultureInfo.InvariantCulture));
+			Option<string> linqResult = from x in noneInt select x.ToString(CultureInfo.InvariantCulture);
+
+			// Assert.
+			Assert.False(result.HasValue);
+			Assert.False(linqResult.HasValue);
+		}
+
+		[Fact]
+		public void Test_None_SelectMany()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+
+			// Act.
+			Option<string> result = noneInt.SelectMany(x => new ReturnsOption(x).Get(true));
+			Option<string> linqResult =
+				from x in noneInt
+				from y in new ReturnsOption(x).Get(true)
+				select y;
+
+			// Assert.
+			Assert.False(result.HasValue);
+			Assert.False(linqResult.HasValue);
+		}
+
+		private class ReturnsOption
+		{
+			private readonly int _val;
+
+			public ReturnsOption(int val)
+			{
+				_val = val;
+			}
+
+			public Option<string> Get(bool shouldHaveValue)
+			{
+				if (shouldHaveValue)
+					return Option<string>.Some(_val.ToString(CultureInfo.InvariantCulture));
+
+				return Option<string>.None();
+			}
 		}
 	}
 }

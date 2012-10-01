@@ -44,12 +44,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadFileCompleted -= completedHandler;
 
-				if (e.Cancelled)
-					tcs.SetCanceled();
-				else if (e.Error != null)
-					tcs.SetException(e.Error);
-				else
-					tcs.SetResult(null);
+				tcs.SetFromEventArgs(e, _ => null);
 			};
 			_webClient.DownloadFileCompleted += completedHandler;
 
@@ -78,12 +73,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadDataCompleted -= completedHandler;
 
-				if (e.Cancelled)
-					tcs.SetCanceled();
-				else if (e.Error != null)
-					tcs.SetException(e.Error);
-				else
-					tcs.SetResult(e.Result);
+				tcs.SetFromEventArgs(e, args => args.Result);
 			};
 			_webClient.DownloadDataCompleted += completedHandler;
 
@@ -112,12 +102,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadStringCompleted -= completedHandler;
 
-				if (e.Cancelled)
-					tcs.SetCanceled();
-				else if (e.Error != null)
-					tcs.SetException(e.Error);
-				else
-					tcs.SetResult(e.Result);
+				tcs.SetFromEventArgs(e, args => args.Result);
 			};
 			_webClient.DownloadStringCompleted += completedHandler;
 

@@ -9,14 +9,14 @@ namespace Utilities.Concurrency
 	public static class Tasks
 	{
 		/// <summary>
-		/// Creates an already completed task with no result value.
+		/// Creates an already successfully completed task with no result value.
 		/// </summary>
 		/// <returns>A successfully completed task</returns>
 		public static Task FromSuccess()
 		{
 			return completed;
 		}
-		private static readonly Task completed = Task.FromResult<object>(null);
+		private static readonly Task completed = Task.FromResult(default(AsyncUnit));
 
 		/// <summary>
 		/// Creates an already canceled task.
@@ -36,9 +36,7 @@ namespace Utilities.Concurrency
 		/// <returns>A canceled task</returns>
 		public static Task FromCanceled()
 		{
-			var taskSource = new TaskCompletionSource<object>();
-			taskSource.SetCanceled();
-			return taskSource.Task;
+			return FromCanceled<AsyncUnit>();
 		}
 
 		/// <summary>
@@ -65,9 +63,7 @@ namespace Utilities.Concurrency
 		public static Task FromException<TException>(TException exception)
 			where TException : Exception
 		{
-			var taskSource = new TaskCompletionSource<object>();
-			taskSource.SetException(exception);
-			return taskSource.Task;
+			return FromException<AsyncUnit, TException>(exception);
 		}
 
 		/// <summary>
@@ -80,5 +76,10 @@ namespace Utilities.Concurrency
 		{
 			return FromException(new TException());
 		}
+
+		/// <summary>
+		/// Instead of using System.Object, this type is a clearer indication that a Task does not return a result.
+		/// </summary>
+		struct AsyncUnit { }
 	}
 }

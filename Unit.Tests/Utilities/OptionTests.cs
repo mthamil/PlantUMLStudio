@@ -55,6 +55,13 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
+		public void Test_Some_CannotBeNull()
+		{
+			// Act/Assert.
+			Assert.Throws<ArgumentNullException>(() => new Some<string>(null));
+		}
+
+		[Fact]
 		public void Test_Option_Some_Conversion_StringLiteral()
 		{
 			// Act.
@@ -213,6 +220,20 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
+		public void Test_Some_Do()
+		{
+			// Arrange.
+			Option<int> someInt = 5;
+			int sum = 2;
+
+			// Act.
+			someInt.Do(x => sum += x);
+
+			// Assert.
+			Assert.Equal(7, sum);
+		}
+
+		[Fact]
 		public void Test_None_Select()
 		{
 			// Arrange.
@@ -261,6 +282,20 @@ namespace Unit.Tests.Utilities
 			// Assert.
 			Assert.False(result.HasValue);
 			Assert.False(linqResult.HasValue);
+		}
+
+		[Fact]
+		public void Test_None_Do()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+			int sum = 2;
+
+			// Act.
+			noneInt.Do(x => sum += x);
+
+			// Assert.
+			Assert.Equal(2, sum);
 		}
 
 		private class ReturnsOption

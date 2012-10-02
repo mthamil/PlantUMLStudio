@@ -88,6 +88,13 @@ namespace Utilities
 		/// </summary>
 		/// <param name="predicate">The condition to be met</param>
 		public abstract Option<T> Where(Func<T, bool> predicate);
+
+		/// <summary>
+		/// Performs an action on an Option's value if it is Some,
+		/// otherwise no action is performed.
+		/// </summary>
+		/// <param name="action">The action to perform</param>
+		public abstract void Do(Action<T> action);
 	}
 
 	/// <summary>
@@ -142,6 +149,14 @@ namespace Utilities
 		{
 			return None(); 
 		}
+
+		/// <summary>
+		/// Does nothing.
+		/// </summary>
+		public override void Do(Action<T> action)
+		{
+			// Do nothing.
+		}
 	}
 
 	/// <summary>
@@ -155,6 +170,9 @@ namespace Utilities
 		/// <param name="value">The value of the Option</param>
 		public Some(T value)
 		{
+			if (value == null)
+				throw new ArgumentNullException("value");
+
 			_value = value;
 		}
 
@@ -208,6 +226,14 @@ namespace Utilities
 		public override Option<T> Where(Func<T, bool> predicate)
 		{
 			return predicate(Value) ? this : None();
+		}
+
+		/// <summary>
+		/// Performs an action on the Option's value.
+		/// </summary>
+		public override void Do(Action<T> action)
+		{
+			action(Value);
 		}
 
 		private readonly T _value;

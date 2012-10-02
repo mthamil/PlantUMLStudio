@@ -67,11 +67,11 @@ namespace PlantUmlEditor.ViewModel
 			UpdateProgress.PercentComplete = null;
 
 			HasUpdate = updateCheckResult.HasValue;
-			if (updateCheckResult.HasValue)
+			updateCheckResult.Do(latest =>
 			{
-				LatestVersion = updateCheckResult.Value;
+				LatestVersion = latest;
 				CanUpdate = true;
-			}
+			});
 		}
 
 		/// <summary>

@@ -62,7 +62,7 @@ namespace Utilities
 
 		/// <summary>
 		/// Applies a mapping function to an Option. If the Option is a Some, 
-		/// the value is mapped. If the Option is a None, a None of the 
+		/// its value is mapped. If the Option is a None, a None of the 
 		/// destination type is returned.
 		/// </summary>
 		/// <typeparam name="TResult">The type to map to</typeparam>
@@ -81,6 +81,13 @@ namespace Utilities
 		/// Applies a mapping function to an Option.
 		/// </summary>
 		public abstract Option<TResult> SelectMany<TIntermediate, TResult>(Func<T, Option<TIntermediate>> optionSelector, Func<T, TIntermediate, TResult> resultSelector);
+
+		/// <summary>
+		/// Returns this Option if it is Some and its value matches the given predicate.
+		/// Otherwise, None is returned.
+		/// </summary>
+		/// <param name="predicate">The condition to be met</param>
+		public abstract Option<T> Where(Func<T, bool> predicate);
 	}
 
 	/// <summary>
@@ -105,7 +112,7 @@ namespace Utilities
 		}
 
 		/// <summary>
-		/// Returns a None of the result type.
+		/// Returns None of the result type.
 		/// </summary>
 		public override Option<TResult> Select<TResult>(Func<T, TResult> selector)
 		{
@@ -113,7 +120,7 @@ namespace Utilities
 		}
 
 		/// <summary>
-		/// Returns a None of the result type.
+		/// Returns None of the result type.
 		/// </summary>
 		public override Option<TResult> SelectMany<TResult>(Func<T, Option<TResult>> optionSelector)
 		{
@@ -121,11 +128,19 @@ namespace Utilities
 		}
 
 		/// <summary>
-		/// Returns a None of the result type.
+		/// Returns None of the result type.
 		/// </summary>
 		public override Option<TResult> SelectMany<TIntermediate, TResult>(Func<T, Option<TIntermediate>> optionSelector, Func<T, TIntermediate, TResult> resultSelector)
 		{
 			return Option<TResult>.None(); 
+		}
+
+		/// <summary>
+		/// Returns None.
+		/// </summary>
+		public override Option<T> Where(Func<T, bool> predicate)
+		{
+			return None(); 
 		}
 	}
 
@@ -185,6 +200,14 @@ namespace Utilities
 				return Option<TResult>.From(resultSelector(Value, intermediate.Value));
 
 			return Option<TResult>.None();
+		}
+
+		/// <summary>
+		/// Returns this Option if its value meets the given condition.
+		/// </summary>
+		public override Option<T> Where(Func<T, bool> predicate)
+		{
+			return predicate(Value) ? this : None();
 		}
 
 		private readonly T _value;

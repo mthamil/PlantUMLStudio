@@ -174,6 +174,45 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
+		public void Test_Some_Where_ConditionMet()
+		{
+			// Arrange.
+			Option<int> someInt = 6;
+
+			// Act.
+			var result = someInt.Where(x => x % 2 == 0);
+			var linqResult =
+				from x in someInt
+				where x % 2 == 0
+				select x;
+
+			// Assert.
+			Assert.True(result.HasValue);
+			Assert.Equal(someInt, result);
+
+			Assert.True(linqResult.HasValue);
+			Assert.Equal(someInt, linqResult);
+		}
+
+		[Fact]
+		public void Test_Some_Where_ConditionNotMet()
+		{
+			// Arrange.
+			Option<int> someInt = 5;
+
+			// Act.
+			var result = someInt.Where(x => x % 2 == 0);
+			var linqResult =
+				from x in someInt
+				where x % 2 == 0
+				select x;
+
+			// Assert.
+			Assert.False(result.HasValue);
+			Assert.False(linqResult.HasValue);
+		}
+
+		[Fact]
 		public void Test_None_Select()
 		{
 			// Arrange.
@@ -200,6 +239,24 @@ namespace Unit.Tests.Utilities
 				from x in noneInt
 				from y in new ReturnsOption(x).Get(true)
 				select y;
+
+			// Assert.
+			Assert.False(result.HasValue);
+			Assert.False(linqResult.HasValue);
+		}
+
+		[Fact]
+		public void Test_None_Where()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+
+			// Act.
+			var result = noneInt.Where(x => x % 2 == 0);
+			var linqResult =
+				from x in noneInt
+				where x % 2 == 0
+				select x;
 
 			// Assert.
 			Assert.False(result.HasValue);

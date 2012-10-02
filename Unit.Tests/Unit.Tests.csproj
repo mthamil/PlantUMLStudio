@@ -137,6 +137,7 @@
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />
     <Compile Include="Utilities\Concurrency\TaskExtensionsTests.cs" />
     <Compile Include="Utilities\Concurrency\TasksTests.cs" />
+    <Compile Include="Utilities\DisposableBaseTests.cs" />
     <Compile Include="Utilities\InputOutput\AsyncStreamTests.cs" />
     <Compile Include="Utilities\InputOutput\DirectoryMonitorTests.cs" />
     <Compile Include="Utilities\InputOutput\StreamExtensionsTests.cs" />

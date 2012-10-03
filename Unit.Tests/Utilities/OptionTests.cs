@@ -9,25 +9,37 @@ namespace Unit.Tests.Utilities
 	public class OptionTests
 	{
 		[Fact]
-		public void Test_OptionProperties()
+		public void Test_Some()
 		{
-			// Test the properties of None.
-			var stringNone = Option<string>.None();
-			Assert.False(stringNone.HasValue);
-			Assert.Throws<InvalidOperationException>(() => { var test = stringNone.Value; });
-
-			// Test the properties of Some.
+			// Arrange.
 			var some = Option<string>.Some("some");
-			Assert.True(some.HasValue);
-			Assert.Equal("some", some.Value);
+
+			// Act.
+			bool hasValue = some.HasValue;
+			var value = some.Value;
+
+			// Assert.
+			Assert.True(hasValue);
+			Assert.Equal("some", value);
 		}
 
 		[Fact]
-		public void Test_OptionNoneEquality()
+		public void Test_None()
 		{
-			// Test the singleton nature of None.
+			// Arrange.
+			var stringNone = Option<string>.None();
+
+			// Act/Assert.
+			Assert.False(stringNone.HasValue);
+			Assert.Throws<InvalidOperationException>(() => { var test = stringNone.Value; });
+		}
+
+		[Fact]
+		public void Test_None_Equality()
+		{
 			var stringNone = Option<string>.None();
 			var intNone = Option<int>.None();
+
 			Assert.NotSame(stringNone, intNone);
 			Assert.False(stringNone.Equals(intNone));
 
@@ -36,7 +48,7 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_OptionSomeEquality()
+		public void Test_Some_Equality()
 		{
 			var some = Option<string>.Some("some");
 			Assert.Equal(some, some);
@@ -62,7 +74,7 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_Option_Some_Conversion_StringLiteral()
+		public void Test_Some_Conversion_StringLiteral()
 		{
 			// Act.
 			Option<string> some = "test";
@@ -73,7 +85,7 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_Option_Some_Conversion_ValueType()
+		public void Test_Some_Conversion_ValueType()
 		{
 			// Act.
 			Option<int> some = 1;
@@ -84,7 +96,7 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_Option_Some_Conversion_ReferenceType()
+		public void Test_Some_Conversion_ReferenceType()
 		{
 			// Arrange.
 			var value = new object();
@@ -98,7 +110,7 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
-		public void Test_Option_None_Conversion_ReferenceType()
+		public void Test_None_Conversion_ReferenceType()
 		{
 			// Arrange.
 			string value = null;

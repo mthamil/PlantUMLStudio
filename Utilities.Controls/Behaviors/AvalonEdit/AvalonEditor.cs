@@ -168,7 +168,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		[AttachedPropertyBrowsableForType(typeof(TextEditor))]
 		public static AbstractFoldingStrategy GetFoldingStrategy(TextEditor textEditor)
 		{
-			return (AbstractFoldingStrategy)textEditor.GetValue(ContentProperty);
+			return (AbstractFoldingStrategy)textEditor.GetValue(FoldingStrategyProperty);
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		/// </summary>
 		public static void SetFoldingStrategy(TextEditor textEditor, AbstractFoldingStrategy value)
 		{
-			textEditor.SetValue(ContentProperty, value);
+			textEditor.SetValue(FoldingStrategyProperty, value);
 		}
 
 		/// <summary>

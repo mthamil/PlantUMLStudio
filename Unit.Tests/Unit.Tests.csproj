@@ -126,6 +126,7 @@
     <Compile Include="Utilities.Controls\Behaviors\TreeViewBindableSelectedItemBehaviorTests.cs" />
     <Compile Include="Utilities.Controls\Converters\ComposingConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\AndConverterTests.cs" />
+    <Compile Include="Utilities.Controls\Converters\NegatingConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\OrConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\ReverseConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />

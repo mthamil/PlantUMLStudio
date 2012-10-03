@@ -81,7 +81,6 @@
     <Compile Include="Behaviors\Clickable\BindableClickAction.cs" />
     <Compile Include="Behaviors\CollectionViewSourceFilter.cs" />
     <Compile Include="Behaviors\DataGridCellUnderCursor.cs" />
-    <Compile Include="Behaviors\DoubleClickCommandBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ColumnExpanderSize.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ExpanderSize.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />

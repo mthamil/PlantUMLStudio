@@ -329,10 +329,15 @@
                                      VerticalAlignment="Stretch" 
                                      SelectedItem="{Binding CurrentPreviewDiagram}"
                                      ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-                                     ItemsSource="{Binding Source={StaticResource PreviewView}}"
-                                     attached:DoubleClickCommandBehavior.Command="{Binding RequestOpenPreviewCommand}"
-                                     attached:DoubleClickCommandBehavior.CommandParameter="{Binding CurrentPreviewDiagram}">
+                                     ItemsSource="{Binding Source={StaticResource PreviewView}}">
                     
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding RequestOpenPreviewCommand}" 
+                                                                   CommandParameter="{Binding CurrentPreviewDiagram}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border Padding="0,2,0,2" 

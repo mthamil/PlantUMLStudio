@@ -246,6 +246,25 @@ namespace Unit.Tests.Utilities
 		}
 
 		[Fact]
+		public void Test_Some_OrElse()
+		{
+			// Arrange.
+			Option<int> someInt = 5;
+			bool invoked = false;
+
+			// Act.
+			var result = someInt.OrElse(() =>
+			{ 
+				invoked = true;
+				return Option<int>.None();
+			});
+
+			// Assert.
+			Assert.False(invoked);
+			Assert.Equal(someInt, result);
+		}
+
+		[Fact]
 		public void Test_None_Select()
 		{
 			// Arrange.
@@ -308,6 +327,25 @@ namespace Unit.Tests.Utilities
 
 			// Assert.
 			Assert.Equal(2, sum);
+		}
+
+		[Fact]
+		public void Test_None_OrElse()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+			bool invoked = false;
+
+			// Act.
+			var result = noneInt.OrElse(() =>
+			{
+				invoked = true;
+				return Option<int>.Some(5);
+			});
+
+			// Assert.
+			Assert.True(invoked);
+			Assert.Equal(5, result.Value);
 		}
 
 		private class ReturnsOption

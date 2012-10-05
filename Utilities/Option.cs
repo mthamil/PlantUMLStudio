@@ -95,6 +95,13 @@ namespace Utilities
 		/// </summary>
 		/// <param name="action">The action to perform</param>
 		public abstract void Do(Action<T> action);
+
+		/// <summary>
+		/// Specifies an alternative action that can be used to retrieve a value
+		/// in case this is None.
+		/// </summary>
+		/// <param name="fallbackAction">The alternative function</param>
+		public abstract Option<T> OrElse(Func<Option<T>> fallbackAction);
 	}
 
 	/// <summary>
@@ -156,6 +163,14 @@ namespace Utilities
 		public override void Do(Action<T> action)
 		{
 			// Do nothing.
+		}
+
+		/// <summary>
+		/// Executes an alternative function.
+		/// </summary>
+		public override Option<T> OrElse(Func<Option<T>> fallbackAction)
+		{
+			return fallbackAction();
 		}
 	}
 
@@ -236,7 +251,13 @@ namespace Utilities
 			action(Value);
 		}
 
-		private readonly T _value;
+		/// <summary>
+		/// Returns this.
+		/// </summary>
+		public override Option<T> OrElse(Func<Option<T>> fallbackAction)
+		{
+			return this;
+		}
 
 		/// <summary>
 		/// Whether a Some Option is equal to another.
@@ -263,5 +284,7 @@ namespace Utilities
 		{
 			return Value.GetHashCode();
 		}
+
+		private readonly T _value;
 	}
 }

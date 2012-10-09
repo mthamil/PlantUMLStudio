@@ -57,12 +57,15 @@
                                        ShowLineNumbers="True"
                                        IsEnabled="{Binding IsIdle}"
                                        Document="{Binding CodeEditor.Document}"
-                                       SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}"
-                                       avalon:AvalonEditor.ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       avalon:AvalonEditor.BindableSelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       avalon:AvalonEditor.BindableSelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       avalon:AvalonEditor.ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       avalon:AvalonEditor.FoldingStrategy="{Binding CodeEditor.FoldingStrategy}">
+                                       SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}">
+                    
+                    <i:Interaction.Behaviors>
+                        <avalon:BindableScrollOffsetBehavior ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <avalon:ContentIndexBehavior ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <avalon:FoldingStrategyBehavior FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"/>
+                        <avalon:BindableSelectionBehavior SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </i:Interaction.Behaviors>
                     
                     <avalonEdit:TextEditor.InputBindings>
                         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />

@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Rendering;
 
 namespace Utilities.Controls.Behaviors.AvalonEdit
 {
-	internal class BindableScrollOffsetBehavior
+	/// <summary>
+	/// A behavior that allows binding of scroll offset information.
+	/// </summary>
+	public class BindableScrollOffsetBehavior : Behavior<TextEditor>
 	{
-		public BindableScrollOffsetBehavior(TextEditor textEditor)
+		/// <see cref="Behavior.OnAttached"/>
+		protected override void OnAttached()
 		{
-			_textEditor = textEditor;
+			AssociatedObject.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
+			AssociatedObject.DataContextChanged += textEditor_DataContextChanged;
+		}
 
-			_textEditor.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
-			_textEditor.DataContextChanged += textEditor_DataContextChanged;
+		/// <see cref="Behavior.OnDetaching"/>
+		protected override void OnDetaching()
+		{
+			AssociatedObject.TextArea.TextView.ScrollOffsetChanged -= TextView_ScrollOffsetChanged;
+			AssociatedObject.DataContextChanged -= textEditor_DataContextChanged;
 		}
 
 		void textEditor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -29,10 +39,10 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				if (!_lastUpdatedFromBinding)
 				{
 					var textView = (TextView)sender;
-					if (textView != _textEditor.TextArea.TextView)
+					if (textView != AssociatedObject.TextArea.TextView)
 						return;
 
-					AvalonEditor.SetScrollOffset(_textEditor, textView.ScrollOffset);
+					ScrollOffset = textView.ScrollOffset;
 					_lastUpdatedFromControl = true;
 				}
 				else
@@ -46,12 +56,12 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			}
 		}
 
-		public void UpdateOffset(Vector newValue)
+		private void UpdateOffset(Vector newValue)
 		{
 			if (!_lastUpdatedFromControl)
 			{
-				_textEditor.ScrollToHorizontalOffset(newValue.X);
-				_textEditor.ScrollToVerticalOffset(newValue.Y);
+				AssociatedObject.ScrollToHorizontalOffset(newValue.X);
+				AssociatedObject.ScrollToVerticalOffset(newValue.Y);
 
 				_lastUpdatedFromBinding = true;
 			}
@@ -61,10 +71,33 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the scroll offset.
+		/// </summary>
+		public Vector ScrollOffset
+		{
+			get { return (Vector)GetValue(ScrollOffsetProperty); }
+			set { SetValue(ScrollOffsetProperty, value); }
+		}
+
+		/// <summary>
+		/// The ScrollOffset property.
+		/// </summary>
+		public static readonly DependencyProperty ScrollOffsetProperty =
+			DependencyProperty.Register(
+			"ScrollOffset",
+			typeof(Vector),
+			typeof(BindableScrollOffsetBehavior),
+			new UIPropertyMetadata(new Vector(-1, -1), OnScrollOffsetChanged));
+
+		private static void OnScrollOffsetChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var behavior = (BindableScrollOffsetBehavior)dependencyObject;
+			behavior.UpdateOffset((Vector)e.NewValue);
+		}
+
 		private bool _lastUpdatedFromControl;
 		private bool _lastUpdatedFromBinding;
 		private bool _dataContextChanged;
-
-		private readonly TextEditor _textEditor;
 	}
 }

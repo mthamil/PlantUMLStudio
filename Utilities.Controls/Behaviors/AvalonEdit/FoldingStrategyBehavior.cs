@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
@@ -13,22 +14,22 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 	/// Behavior for managing a text editor's folding strategy.
 	/// </summary>
 	/// <remarks>This is a mess!</remarks>
-	internal class FoldingStrategyBehavior
+	public class FoldingStrategyBehavior : Behavior<TextEditor>
 	{
-		/// <summary>
-		/// Initializes a folding strategy behavior for a text editor.
-		/// </summary>
-		/// <param name="editor">The text editor</param>
-		/// <param name="foldingStrategy">The folding strategy to use</param>
-		public FoldingStrategyBehavior(TextEditor editor, AbstractFoldingStrategy foldingStrategy)
+		/// <see cref="Behavior.OnAttached"/>
+		protected override void OnAttached()
 		{
-			_editor = editor;
-			_foldingStrategy = foldingStrategy;
-
-			editor.DataContextChanged += editor_DataContextChanged;
-			editor.DocumentChanged += editor_DocumentChanged;
+			AssociatedObject.DataContextChanged += editor_DataContextChanged;
+			AssociatedObject.DocumentChanged += editor_DocumentChanged;
 
 			EditorDocumentChanged();
+		}
+
+		/// <see cref="Behavior.OnDetaching"/>
+		protected override void OnDetaching()
+		{
+			AssociatedObject.DataContextChanged -= editor_DataContextChanged;
+			AssociatedObject.DocumentChanged -= editor_DocumentChanged;
 		}
 
 		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -58,13 +59,16 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		private void EditorDocumentChanged()
 		{
-			_currentDocument = new WeakReference<TextDocument>(_editor.Document);
+			if (FoldingStrategy == null)
+				return;
+
+			_currentDocument = new WeakReference<TextDocument>(AssociatedObject.Document);
 
 			TextDocument document;
 			if (_currentDocument.TryGetTarget(out document))
 			{
-				_currentFoldingManager = FoldingManager.Install(_editor.TextArea);
-				_foldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+				_currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
+				FoldingStrategy.UpdateFoldings(_currentFoldingManager, document);
 
 				IEnumerable<NewFolding> foldings;
 				if (_documents.TryGetValue(document, out foldings))
@@ -82,16 +86,39 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			if (document == null)
 				return;
 
-			if (document != _editor.Document)
+			if (document != AssociatedObject.Document)
 				return;
 
-			_foldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+			FoldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+		}
+
+		/// <summary>
+		/// Gets or sets an editor folding strategy.
+		/// </summary>
+		public AbstractFoldingStrategy FoldingStrategy
+		{
+			get { return (AbstractFoldingStrategy)GetValue(FoldingStrategyProperty); }
+			set { SetValue(FoldingStrategyProperty, value); }
+		}
+
+		/// <summary>
+		/// The FoldingStrategy property.
+		/// </summary>
+		public static readonly DependencyProperty FoldingStrategyProperty =
+			DependencyProperty.Register(
+			"FoldingStrategy",
+			typeof(AbstractFoldingStrategy),
+			typeof(FoldingStrategyBehavior),
+			new UIPropertyMetadata(null, OnFoldingStrategyChanged));
+
+		private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			var behavior = (FoldingStrategyBehavior)dependencyObject;
+			behavior.EditorDocumentChanged();
 		}
 
 		private FoldingManager _currentFoldingManager;
 		private WeakReference<TextDocument> _currentDocument;
-		private readonly TextEditor _editor;
-		private readonly AbstractFoldingStrategy _foldingStrategy;
 
 		private readonly ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>> _documents = new ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>>();
 	}

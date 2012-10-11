@@ -32,7 +32,7 @@ namespace PlantUmlEditor.Core
 		}
 
 		/// <summary>
-		/// Tje file path of the diagram's compiled image output.
+		/// The file path of the diagram's compiled image output.
 		/// </summary>
         public string ImageFilePath { get; set; }
 

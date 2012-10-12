@@ -47,7 +47,7 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2).ConfigureAwait(false);
+			await HandleErrorStream(result.Item2, cancellationToken).ConfigureAwait(false);
 
 			var bitmap = new BitmapImage();
 			bitmap.BeginInit();
@@ -91,7 +91,7 @@ namespace PlantUmlEditor.Core
 				UseShellExecute = false
 			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2).ConfigureAwait(false);
+			await HandleErrorStream(result.Item2, CancellationToken.None).ConfigureAwait(false);
 
 			var output = Encoding.Default.GetString(
 				await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
@@ -137,12 +137,12 @@ namespace PlantUmlEditor.Core
 
 		#endregion
 
-		private static async Task HandleErrorStream(Stream errorStream)
+		private static async Task HandleErrorStream(Stream errorStream, CancellationToken cancellationToken)
 		{
 			if (errorStream.Length > 0)
 			{
 				string errorMessage = Encoding.Default.GetString(
-					await errorStream.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
+					await errorStream.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
 				throw new PlantUmlException(errorMessage);
 			}
 		}

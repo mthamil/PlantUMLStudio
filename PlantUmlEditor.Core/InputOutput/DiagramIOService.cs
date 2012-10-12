@@ -63,7 +63,7 @@ namespace PlantUmlEditor.Core.InputOutput
 
 				return diagrams;
 
-			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
+			}, cancellationToken, TaskCreationOptions.None, _scheduler);
 		}
 
 		/// <see cref="IDiagramIOService.ReadAsync"/>

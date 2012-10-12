@@ -49,7 +49,7 @@ namespace PlantUmlEditor.Core.Dependencies.Update
 			{
 				// Make a backup in case the new version has issues.
 				var backupFile = new FileInfo(String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", LocalLocation.FullName, _clock.Now));
-				await LocalLocation.CopyToAsync(backupFile, true).ConfigureAwait(false);
+				await LocalLocation.CopyToAsync(backupFile, true, cancellationToken).ConfigureAwait(false);
 			}
 
 			using (var webClient = new WebClient())
@@ -57,7 +57,7 @@ namespace PlantUmlEditor.Core.Dependencies.Update
 				var temp = new FileInfo(LocalLocation.FullName + ".tmp");
 				await webClient.Async().DownloadFileAsync(RemoteLocation, temp.FullName, cancellationToken, progress).ConfigureAwait(false);
 				LocalLocation.Delete();
-				await temp.CopyToAsync(LocalLocation, false).ConfigureAwait(false);
+				await temp.CopyToAsync(LocalLocation, false, cancellationToken).ConfigureAwait(false);
 				temp.Delete();
 			}
         }

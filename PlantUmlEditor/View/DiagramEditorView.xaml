@@ -61,10 +61,10 @@
                     
                     <i:Interaction.Behaviors>
                         <avalon:BindableScrollOffsetBehavior ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <avalon:ContentIndexBehavior ContentIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <avalon:FoldingStrategyBehavior FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"/>
-                        <avalon:BindableSelectionBehavior SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                          SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <avalon:SelectionManagement CaretIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </i:Interaction.Behaviors>
                     
                     <avalonEdit:TextEditor.InputBindings>

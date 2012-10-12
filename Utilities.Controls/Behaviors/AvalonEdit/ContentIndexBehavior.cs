@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
@@ -27,24 +28,38 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		internal void UpdateIndex(int index)
 		{
-			// If the change came from the editor itself, don't update.
-			if (!_lastUpdateFromControl)
-			{
-				if (0 <= index && index <= AssociatedObject.Text.Length) // TODO: Really fix this.
-				{
-					AssociatedObject.Select(index, 0);
-					//_editor.TextArea.Caret.BringCaretToView();
-				}
+			Debug.WriteLine("<=== UpdateIndex ===>");
 
-				if (!_isFirstUpdate)
-					_lastUpdateFromBinding = true;
-			}
-			else
+			if (_wasNullContext)
 			{
-				_lastUpdateFromControl = false;
+				Debug.WriteLine("Not updating, null data context.");
+				return;
 			}
 
-			_isFirstUpdate = false;
+			//// If the change came from the editor itself, don't update.
+			//if (!_lastIndexUpdateFromControl)
+			//{
+			//	if (0 <= index && index <= AssociatedObject.Text.Length) // TODO: Really fix this.
+			//	{
+					//AssociatedObject.Select(index, 0);
+					Debug.WriteLine("Caret.Offset = " + AssociatedObject.TextArea.Caret.Offset);
+					Debug.WriteLine("index = " + index);
+					if (AssociatedObject.TextArea.Caret.Offset != index)
+					{
+						Debug.WriteLine("Values differ");
+						AssociatedObject.TextArea.Caret.Offset = index;
+					}
+			//	}
+
+			//	if (!_isFirstUpdate)
+			//		_lastIndexUpdateFromBinding = true;
+			//}
+			//else
+			//{
+			//	_lastIndexUpdateFromControl = false;
+			//}
+
+			//_isFirstUpdate = false;
 		}
 
 		void caret_PositionChanged(object sender, EventArgs e)
@@ -53,29 +68,61 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			if (caret == null)
 				return;
 
+			Debug.WriteLine("<=== caret_PositionChanged ===>");
+
+			if (_wasNullContext)
+			{
+				Debug.WriteLine("Not updating, null data context.");
+				return;
+			}
+
 			if (!_dataContextChanged)
 			{
-				if (!_lastUpdateFromBinding)
-				{
-					_lastUpdateFromControl = true;
+			//	if (!_lastIndexUpdateFromBinding)
+			//	{
+			//		_lastIndexUpdateFromControl = true;
+					Debug.WriteLine("ContentIndex = " + ContentIndex);
+					Debug.WriteLine("caret.Offset = " + caret.Offset);
 					ContentIndex = caret.Offset;
-				}
-				else
-				{
-					_lastUpdateFromBinding = false;
-				}
+			//	}
+			//	else
+			//	{
+			//		_lastIndexUpdateFromBinding = false;
+			//	}
 			}
 			else
 			{
-			    _dataContextChanged = false;
+				Debug.WriteLine("Not Updating");
+				_dataContextChanged = false;
 			}
 		}
 
 		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			_dataContextChanged = true;
-			_lastUpdateFromControl = false;
-			_lastUpdateFromBinding = false;
+			Debug.WriteLine("<=== editor_DataContextChanged ===>");
+			if (AssociatedObject.DataContext != null)
+			{
+				Debug.WriteLine("Non-null context.");
+				if (!_isFirstUpdate)
+				{
+					_dataContextChanged = true;
+					_lastIndexUpdateFromControl = false;
+					_lastIndexUpdateFromBinding = false;
+				}
+				else
+				{
+					Debug.WriteLine("Not setting values, is first update.");
+				}
+
+				_wasNullContext = false;
+			}
+			else
+			{
+				Debug.WriteLine("NULL context!");
+				_wasNullContext = true;
+			}
+
+			_isFirstUpdate = false;
 		}
 
 		/// <summary>
@@ -95,7 +142,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			"ContentIndex",
 			typeof(int),
 			typeof(ContentIndexBehavior),
-			new UIPropertyMetadata(-1, OnContentIndexChanged));
+			new UIPropertyMetadata(0, OnContentIndexChanged));
 
 		private static void OnContentIndexChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
@@ -105,8 +152,9 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 
 		private bool _isFirstUpdate = true;
 
-		private bool _lastUpdateFromControl;
-		private bool _lastUpdateFromBinding;
+		private bool _lastIndexUpdateFromControl;
+		private bool _lastIndexUpdateFromBinding;
 		private bool _dataContextChanged;
+		private bool _wasNullContext;
 	}
 }

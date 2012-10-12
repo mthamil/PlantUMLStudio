@@ -68,7 +68,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\AvalonEdit\BindableScrollOffsetBehavior.cs" />
-    <Compile Include="Behaviors\AvalonEdit\BindableSelectionBehavior.cs" />
+    <Compile Include="Behaviors\AvalonEdit\SelectionManagement.cs" />
     <Compile Include="Behaviors\AvalonEdit\FoldedRegionDefinition.cs" />
     <Compile Include="Behaviors\AvalonEdit\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\PatternBasedFoldingStrategy.cs" />
@@ -77,6 +77,7 @@
     <Compile Include="Behaviors\Clickable\BindableClick.cs" />
     <Compile Include="Behaviors\Clickable\BindableClickAction.cs" />
     <Compile Include="Behaviors\CollectionViewSourceFilter.cs" />
+    <Compile Include="Behaviors\FocusOnElementAction.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ColumnExpanderSize.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ExpanderSize.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />

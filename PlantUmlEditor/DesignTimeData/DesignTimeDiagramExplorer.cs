@@ -1,48 +1,42 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 using PlantUmlEditor.Core;
-using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 
 namespace PlantUmlEditor.DesignTimeData
 {
 	/// <summary>
-	/// Used for design-time data.
+	/// Used for designer support.
 	/// </summary>
-	public class DesignTimeDiagramExplorer : IDiagramExplorer
+	public class DesignTimeDiagramExplorer : DiagramExplorerViewModel
 	{
 		public DesignTimeDiagramExplorer()
 		{
-			DiagramLocation = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+			DiagramLocation = GetDesignTimeDiagramPath();
+			foreach (var diagramFile in DiagramLocation.EnumerateFiles("*.puml"))
+			{
+				var imagePath = Path.Combine(diagramFile.DirectoryName, Path.GetFileNameWithoutExtension(diagramFile.Name) + ".png");
+				PreviewDiagrams.Add(
+					new PreviewDiagramViewModel(
+						new Diagram
+						{
+							Content = File.ReadAllText(diagramFile.FullName),
+							File = diagramFile,
+							ImageFilePath = imagePath
+						})
+					{
+						ImagePreview = BitmapFrame.Create(new Uri(imagePath))
+					});
+			}
 		}
 
-		#region Implementation of IDiagramExplorer
-
-		/// <see cref="IDiagramExplorer.DiagramLocation"/>
-		public DirectoryInfo DiagramLocation { get; set; }
-
-		/// <see cref="IDiagramExplorer.PreviewDiagrams"/>
-		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
+		private DirectoryInfo GetDesignTimeDiagramPath([CallerFilePath] string path = "")
 		{
-			get { return _diagrams.Select(d => new PreviewDiagramViewModel(d) { ImagePreview = _renderer.Render(d) }).ToList(); }
+			return new DirectoryInfo(Path.GetDirectoryName(path));
 		}
 
-#pragma warning disable 67
-
-		/// <see cref="IDiagramExplorer.OpenPreviewRequested"/>
-		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
-
-		/// <see cref="IDiagramExplorer.DiagramDeleted"/>
-		public event EventHandler<DiagramDeletedEventArgs> DiagramDeleted;
-
-#pragma warning restore 67
-
-
-		#endregion
-
-		private readonly ICollection<Diagram> _diagrams = new DiagramFiles();
-		private readonly IDiagramRenderer _renderer = new DiagramBitmapRenderer();
+		public new DirectoryInfo DiagramLocation { get; set; }
 	}
 }

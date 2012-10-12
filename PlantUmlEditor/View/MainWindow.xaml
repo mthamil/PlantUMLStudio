@@ -37,6 +37,8 @@
                 <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <design:DesignTimeDiagramExplorer x:Key="DesignTimeExplorer"/>
             
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
@@ -266,10 +268,11 @@
                     </i:Interaction.Behaviors>
                     <Expander.Content>
                         <Border Background="{x:Null}" CornerRadius="0,0,0,0">
-                        <Grid DataContext="{Binding Explorer}" d:DataContext="{d:DesignInstance design:DesignTimeDiagramExplorer, IsDesignTimeCreatable=True}">
+                        <Grid DataContext="{Binding Explorer}" d:DataContext="{StaticResource DesignTimeExplorer}">
 
                             <Grid.Resources>
-                                <CollectionViewSource x:Key="PreviewView" Source="{Binding PreviewDiagrams}">
+                                <CollectionViewSource x:Key="PreviewView" Source="{Binding PreviewDiagrams}"
+                                                      d:DesignSource="{Binding Source={StaticResource DesignTimeExplorer}, Path=PreviewDiagrams}">
                                     <CollectionViewSource.SortDescriptions>
                                         <ComponentModel:SortDescription PropertyName="Diagram.DiagramFileName"/>
                                     </CollectionViewSource.SortDescriptions>

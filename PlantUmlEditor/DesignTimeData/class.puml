@@ -1,0 +1,15 @@
+﻿
+@startuml class.png
+package "Sample Package"
+namespace N1 {
+	class C1 {
+		Method1()
+	}
+	enum E1 {
+		Item1
+		Item2
+		Item3
+	}
+}
+end package
+@enduml

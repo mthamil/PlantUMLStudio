@@ -25,6 +25,7 @@ namespace PlantUmlEditor.ViewModel
 	{
 		public DiagramExplorerViewModel(INotifications notifications, IDiagramIOService diagramIO, 
 			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings, TaskScheduler uiScheduler)
+				: this()
 		{
 			_notifications = notifications;
 			_diagramIO = diagramIO;
@@ -32,6 +33,15 @@ namespace PlantUmlEditor.ViewModel
 			_settings = settings;
 			_uiScheduler = uiScheduler;
 
+			_diagramIO.DiagramFileDeleted += diagramIO_DiagramFileDeleted;
+			_diagramIO.DiagramFileAdded += diagramIO_DiagramFileAdded;
+		}
+
+		/// <summary>
+		/// Handles initialization that does not use injected dependencies.
+		/// </summary>
+		protected DiagramExplorerViewModel()
+		{
 			_previewDiagrams = Property.New(this, p => PreviewDiagrams, OnPropertyChanged);
 			_previewDiagrams.Value = new ObservableCollection<PreviewDiagramViewModel>();
 
@@ -47,9 +57,6 @@ namespace PlantUmlEditor.ViewModel
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
 			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
-
-			_diagramIO.DiagramFileDeleted += diagramIO_DiagramFileDeleted;
-			_diagramIO.DiagramFileAdded += diagramIO_DiagramFileAdded;
 		}
 
 		/// <summary>

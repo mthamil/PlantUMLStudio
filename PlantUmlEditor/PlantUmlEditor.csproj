@@ -181,7 +181,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DesignTimeData\DiagramFiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -205,6 +204,8 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="DesignTimeData\class.puml" />
+    <None Include="DesignTimeData\sequence.puml" />
     <None Include="packages.config" />
     <None Include="PlantUML.xshd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -232,6 +233,8 @@
     <Resource Include="Resources\Icons\document-minus-16x16.png" />
     <Resource Include="Resources\Icons\disks-black-24x24.png" />
     <Resource Include="Resources\Icons\cross-16x16.png" />
+    <None Include="DesignTimeData\class.png" />
+    <None Include="DesignTimeData\sequence.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

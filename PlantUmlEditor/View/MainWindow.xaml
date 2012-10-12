@@ -160,8 +160,8 @@
                                 <Image Source="{StaticResource NewDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        
-                        <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand}">
+
+                        <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
@@ -226,7 +226,7 @@
                         </LinearGradientBrush>
                     </Menu.Background>
 
-                    <MenuItem Command="{Binding OpenDiagram.SaveCommand}" ToolTip="Save diagram.">
+                    <MenuItem Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}" ToolTip="Save diagram.">
                         <MenuItem.Header>
                             <StackPanel>
                                 <Image Source="{StaticResource SaveIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>

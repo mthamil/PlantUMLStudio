@@ -23,13 +23,35 @@ namespace Unit.Tests.Utilities.Controls.Converters
 
 		[Fact]
 		[Culture("en-US")]
+		public void Test_Convert_NullTimeSpan()
+		{
+			// Act.
+			var actual = (string)converter.Convert(null, typeof(string), null, CultureInfo.CurrentCulture);
+
+			// Assert.
+			Assert.Equal("", actual);
+		}
+
+		[Fact]
+		[Culture("en-US")]
 		public void Test_ConvertBack()
 		{
 			// Act.
-			var actual = (TimeSpan)converter.ConvertBack("15", typeof(string), null, CultureInfo.CurrentCulture);
+			var actual = (TimeSpan)converter.ConvertBack("15", typeof(TimeSpan), null, CultureInfo.CurrentCulture);
 
 			// Assert.
 			Assert.Equal(TimeSpan.FromSeconds(15), actual);
+		}
+
+		[Fact]
+		[Culture("en-US")]
+		public void Test_ConvertBack_FailedToParse()
+		{
+			// Act.
+			var actual = converter.ConvertBack("", typeof(TimeSpan), null, CultureInfo.CurrentCulture);
+
+			// Assert.
+			Assert.Equal(null, actual);
 		}
 
 		private readonly SecondsToTimeSpanConverter converter = new SecondsToTimeSpanConverter();

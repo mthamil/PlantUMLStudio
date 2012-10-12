@@ -7,7 +7,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converts between a string representing a quantity of seconds and a TimeSpan.
 	/// </summary>
-	[ValueConversion(typeof(TimeSpan), typeof(string))]
+	[ValueConversion(typeof(TimeSpan?), typeof(string))]
 	public class SecondsToTimeSpanConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter
@@ -15,13 +15,20 @@ namespace Utilities.Controls.Converters
 		/// <see cref="IValueConverter.Convert"/>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			if (value == null)
+				return string.Empty;
+
 			return ((TimeSpan)value).TotalSeconds.ToString(culture);
 		}
 
 		/// <see cref="IValueConverter.ConvertBack"/>
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return TimeSpan.FromSeconds(Int32.Parse((string)value));
+			int seconds;
+			if (Int32.TryParse((string)value, out seconds))
+				return TimeSpan.FromSeconds(seconds);
+
+			return null;
 		}
 
 		#endregion

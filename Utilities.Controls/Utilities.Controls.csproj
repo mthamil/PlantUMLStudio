@@ -82,6 +82,7 @@
     <Compile Include="Behaviors\GridSplitterExpanderSupport\ExpanderSize.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\RowExpanderSize.cs" />
+    <Compile Include="Behaviors\Interactivity\Interactions.cs" />
     <Compile Include="Behaviors\TitleBarOptions.cs" />
     <Compile Include="Behaviors\AutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />

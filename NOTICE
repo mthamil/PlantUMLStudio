@@ -13,9 +13,14 @@
         Copyright (c) 2007-2010 Autofac Contributors
         http://code.google.com/p/autofac/wiki/Contributing
 
-   Attached Behavior and Trigger/Action support is provided by
+   Attached Behavior and Trigger/Action functionality is provided by
    System.Windows.Interactivity from the Microsoft Blend SDK:
         http://www.microsoft.com/en-us/download/details.aspx?id=10801
+
+   The PlantUML software itself is licensed under the GPL:
+        PlantUML : a free UML diagram generator
+        Copyright 2009-2012, Arnaud Roques
+        Project Info:  http://plantuml.sourceforge.net
 
    The following libraries provide testing support: 
         xUnit.net is used as the unit testing framework

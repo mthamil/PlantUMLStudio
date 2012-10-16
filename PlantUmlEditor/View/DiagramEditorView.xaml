@@ -12,7 +12,6 @@
     xmlns:cmd="clr-namespace:PlantUmlEditor.ViewModel.Commands"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
-    xmlns:Behaviors="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls" 
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}">

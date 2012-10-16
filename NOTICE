@@ -1,0 +1,32 @@
+   PlantUML Editor
+   Copyright 2012 Matthew Hamilton - https://github.com/mthamil/PlantUMLEditor
+   Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
+
+   This software makes use of the AvalonEdit component, developed as
+   part of the SharpDevelop project under the LGPL: 
+        Copyright 2012 AlphaSierraPapa for the SharpDevelop team
+        https://github.com/icsharpcode/SharpDevelop
+
+   For dependency injection, the AutoFac framework is utilized.
+   AutoFac is release dunder the MIT license: 
+        Autofac IoC Container
+        Copyright (c) 2007-2010 Autofac Contributors
+        http://code.google.com/p/autofac/wiki/Contributing
+
+   Attached Behavior and Trigger/Action support is provided by
+   System.Windows.Interactivity from the Microsoft Blend SDK:
+        http://www.microsoft.com/en-us/download/details.aspx?id=10801
+
+   The following libraries provide testing support: 
+        xUnit.net is used as the unit testing framework
+        and is released under the Microsoft Public License (Ms-PL):
+            http://xunit.codeplex.com/
+
+        Moq is used for mock objects and is released under the BSD license:
+            Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+            http://code.google.com/p/moq/
+            All rights reserved.
+
+   The PlantUML Editor software originated at: 
+        http://code.google.com/p/plantumleditor/
+   

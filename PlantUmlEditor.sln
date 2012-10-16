@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{387E4E1E-FAE3-4447-9530-160038A09BAA}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
+		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{48B0ABAE-458A-46FD-B548-0EEB50AB3413}"

@@ -149,39 +149,38 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			// Arrange.
 			var previewMap = new Dictionary<PreviewDiagramViewModel, IDiagramEditor>();
 
-			var diagram1 = new Diagram { File = testDiagramFile };
-			var diagramPreview1 = new PreviewDiagramViewModel(diagram1);
-
-			var editor1 = new Mock<IDiagramEditor>();
-			editor1.SetupGet(e => e.Diagram).Returns(diagram1);
-			previewMap[diagramPreview1] = editor1.Object;
-
-			var diagram2 = new Diagram { File = new FileInfo(testDiagramFile.FullName + "2") };
-			var diagramPreview2 = new PreviewDiagramViewModel(diagram2);
-
-			var editor2 = new Mock<IDiagramEditor>();
-			editor2.SetupGet(e => e.Diagram).Returns(diagram2);
-			previewMap[diagramPreview2] = editor2.Object;
-
 			var diagramManager = CreateManager(d => previewMap[d]);
-			diagramManager.OpenDiagramCommand.Execute(diagramPreview1);
-			diagramManager.OpenDiagramCommand.Execute(diagramPreview2);
+
+			var files = new[] { testDiagramFile, new FileInfo(testDiagramFile.FullName + "2") };
+			var editors = new List<Mock<IDiagramEditor>>(files.Length);
+			foreach (var file in files)
+			{
+				var diagram = new Diagram { File = file };
+				var diagramPreview = new PreviewDiagramViewModel(diagram);
+
+				var editor = new Mock<IDiagramEditor>();
+				editor.SetupGet(e => e.Diagram).Returns(diagram);
+				editors.Add(editor);
+				previewMap[diagramPreview] = editor.Object;
+
+				diagramManager.OpenDiagramCommand.Execute(diagramPreview);
+			}
 
 			// Act.
-			editor2.Raise(e => e.Closing += null, new CancelEventArgs());
+			editors.Last().Raise(e => e.Closing += null, new CancelEventArgs());
 			diagramManager.SaveClosingDiagramCommand.Execute(null);
 
 			// Assert.
-			Assert.Equal(editor2.Object, diagramManager.ClosingDiagram);
+			Assert.Equal(editors.Last().Object, diagramManager.ClosingDiagram);
 
 			// Act.
-			editor1.Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the event for a different editor.
+			editors.First().Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the closed event for a different editor.
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editor2.Object, diagramManager.OpenDiagrams.Single());
-			editor1.Verify(e => e.SaveAsync(), Times.Never());
-			editor2.Verify(e => e.SaveAsync(), Times.Never());
+			Assert.Equal(editors.Last().Object, diagramManager.OpenDiagrams.Single());
+			foreach (var editor in editors)
+				editor.Verify(e => e.SaveAsync(), Times.Never());
 		}
 
 		[Fact]

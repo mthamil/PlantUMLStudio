@@ -23,7 +23,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converts between strings and URIs.
 	/// </summary>
-	[ValueConversion(typeof(Uri), typeof(string))]
+	[ValueConversion(typeof(string), typeof(Uri))]
 	public class UriConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter
@@ -31,7 +31,21 @@ namespace Utilities.Controls.Converters
 		/// <see cref="IValueConverter.Convert"/>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			Uri uri = value as Uri;
+			string uriPath = value as string;
+			if (String.IsNullOrEmpty(uriPath))
+				return null;
+
+			Uri uri;
+			if (Uri.TryCreate(uriPath, UriKind.RelativeOrAbsolute, out uri))
+				return uri;
+
+			return null;
+		}
+
+		/// <see cref="IValueConverter.ConvertBack"/>
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var uri = value as Uri;
 			if (uri == null)
 				return string.Empty;
 
@@ -39,16 +53,6 @@ namespace Utilities.Controls.Converters
 				return uri.LocalPath;
 
 			return uri.ToString();
-		}
-
-		/// <see cref="IValueConverter.ConvertBack"/>
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			string uri = value as string;
-			if (String.IsNullOrEmpty(uri))
-				return null;
-
-			return new Uri(uri, UriKind.RelativeOrAbsolute);
 		}
 
 		#endregion

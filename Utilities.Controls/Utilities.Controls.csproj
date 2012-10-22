@@ -109,7 +109,6 @@
     <Compile Include="Converters\TextInputToVisibilityConverter.cs" />
     <Compile Include="Converters\UriConverter.cs" />
     <Compile Include="Converters\UriToCachedImageConverter.cs" />
-    <Compile Include="Converters\UriToImageSourceConverter.cs" />
     <Compile Include="FilePicker.cs" />
     <Compile Include="Markup\ActivatorExtension.cs" />
     <Compile Include="Markup\CommandExtension.cs" />

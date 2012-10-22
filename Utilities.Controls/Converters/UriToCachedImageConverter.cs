@@ -34,40 +34,38 @@ namespace Utilities.Controls.Converters
 			if (value == null)
 				return null;
 
-			string imagePath = value.ToString();
-
-			Uri imageUri;
-			if (!String.IsNullOrEmpty(imagePath) && Uri.TryCreate(imagePath, UriKind.RelativeOrAbsolute, out imageUri))
+			var imageUri = (Uri)value;
+			BitmapImage bi = new BitmapImage();
+			bi.BeginInit();
+			bi.UriSource = imageUri;
+			bi.CacheOption = CacheOption;
+			bi.CreateOptions = InitOptions;
+			try
 			{
-				BitmapImage bi = new BitmapImage();
-				bi.BeginInit();
-				bi.UriSource = imageUri;
-				// OMAR: Trick #6
-				// Unless we use this option, the image file is locked and cannot be modified.
-				// Looks like WPF holds read lock on the images. Very bad.
-				bi.CacheOption = BitmapCacheOption.OnLoad;
-				// Unless we use this option, an image cannot be refreshed. It loads from 
-				// cache. Looks like WPF caches every image it loads in memory. Very bad.
-				bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-				try
-				{
-					bi.EndInit();
-					return bi;
-				}
-				catch
-				{
-					return default(BitmapImage);
-				}
+				bi.EndInit();
+				return bi;
 			}
-
-			return null;
+			catch
+			{
+				return default(BitmapImage);
+			}
 		}
 
 		/// <see cref="IValueConverter.ConvertBack"/>
 		/// <exception cref="NotImplementedException">Always throws</exception>
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			throw new NotImplementedException("Two way conversion is not supported.");
+			throw new NotSupportedException("Two way conversion is not supported.");
 		}
+
+		/// <summary>
+		/// Bitmap initialization options.
+		/// </summary>
+		public BitmapCreateOptions InitOptions { get; set; }
+
+		/// <summary>
+		/// Bitmap cache options.
+		/// </summary>
+		public BitmapCacheOption CacheOption { get; set; }
 	}
 }

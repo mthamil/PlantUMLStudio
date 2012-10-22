@@ -43,8 +43,7 @@
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
             <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
-            <utilconvert:ReverseConverter x:Key="ReverseUriConverter" InnerConverter="{StaticResource UriConverter}"/>
- 
+
             <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
                     <utilconvert:NullToFalseValueConverter/>
@@ -225,6 +224,11 @@
                             <GradientStop Color="#B6C1D3" Offset="1"/>
                         </LinearGradientBrush>
                     </Menu.Background>
+                    <!--<Menu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <DockPanel HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </Menu.ItemsPanel>-->
 
                     <MenuItem Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}" ToolTip="Save diagram.">
                         <MenuItem.Header>
@@ -249,6 +253,14 @@
                             </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
+
+                    <!--<WrapPanel VerticalAlignment="Stretch" HorizontalAlignment="Right" Margin="0,0,0,0">
+                        <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" IsChecked="{Binding OpenDiagram.AutoSave, Mode=TwoWay}" Margin="0,0,0,0" Foreground="Black"/>
+                        <TextBox Text="{Binding OpenDiagram.AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" 
+                                 Margin="10,0,0,0" MinWidth="25" VerticalContentAlignment="Stretch" Padding="0"/>
+                        <TextBlock Text=" Secs" Margin="0,0,5,0" Foreground="Black"/>
+                    </WrapPanel>-->
+
                 </Menu>
             </StackPanel>
       
@@ -394,7 +406,7 @@
             
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
                                 <ctrl:FilePicker AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
-                                                 InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource ReverseUriConverter}, Mode=OneWay}"
+                                                 InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
                                                  Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
                                     <ctrl:FilePicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">

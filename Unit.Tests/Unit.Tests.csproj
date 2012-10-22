@@ -131,6 +131,7 @@
     <Compile Include="Utilities.Controls\Converters\OrConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\ReverseConverterTests.cs" />
     <Compile Include="Utilities.Controls\Converters\SecondsToTimeSpanConverterTests.cs" />
+    <Compile Include="Utilities.Controls\Converters\UriConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureTests.cs" />
     <Compile Include="Utilities.Controls\Selectors\TypeMapDataTemplateSelectorTests.cs" />

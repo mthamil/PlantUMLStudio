@@ -14,10 +14,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
+
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Contains PlantUML syntax fold region definitions.

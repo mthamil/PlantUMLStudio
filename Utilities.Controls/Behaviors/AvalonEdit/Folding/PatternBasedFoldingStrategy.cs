@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor 2
+//  PlantUML Editor 2
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
@@ -14,6 +14,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Creates folding regions based on start and end pattern definitions.

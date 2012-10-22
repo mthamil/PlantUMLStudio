@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor 2
+//  PlantUML Editor 2
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
@@ -14,7 +14,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Defines the start and end patterns of a fold region.

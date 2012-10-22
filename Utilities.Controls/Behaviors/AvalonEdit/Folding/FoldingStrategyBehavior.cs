@@ -14,6 +14,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Behavior for managing a text editor's folding strategy.

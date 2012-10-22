@@ -29,7 +29,7 @@ using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
 using Utilities.Clipboard;
-using Utilities.Controls.Behaviors.AvalonEdit;
+using Utilities.Controls.Behaviors.AvalonEdit.Folding;
 using Module = Autofac.Module;
 
 namespace PlantUmlEditor.Container

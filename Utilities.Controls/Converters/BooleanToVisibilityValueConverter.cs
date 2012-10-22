@@ -25,6 +25,7 @@ namespace Utilities.Controls.Converters
 	/// <remarks>
 	/// Converts between booleans and Visibility enum
 	/// </remarks>
+	[ValueConversion(typeof(bool), typeof(Visibility))]
 	public class BooleanToVisibilityValueConverter : IValueConverter
 	{
 		///<see cref="IValueConverter.Convert"/>

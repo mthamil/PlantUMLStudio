@@ -23,6 +23,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converter that negates boolean values.
 	/// </summary>
+	[ValueConversion(typeof(bool), typeof(bool))]
 	public class NegatingConverter : IValueConverter
 	{
 		#region IValueConverter Members

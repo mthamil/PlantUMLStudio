@@ -24,6 +24,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converts between strings and DirectoryInfos.
 	/// </summary>
+	[ValueConversion(typeof(DirectoryInfo), typeof(string))]
 	public class DirectoryInfoConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter

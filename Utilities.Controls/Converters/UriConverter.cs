@@ -23,6 +23,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converts between strings and URIs.
 	/// </summary>
+	[ValueConversion(typeof(Uri), typeof(string))]
 	public class UriConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter

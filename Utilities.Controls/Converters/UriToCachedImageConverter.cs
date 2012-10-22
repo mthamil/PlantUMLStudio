@@ -17,6 +17,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Utilities.Controls.Converters
@@ -24,6 +25,7 @@ namespace Utilities.Controls.Converters
 	/// <summary>
 	/// Converts a URI source to a bitmap image.
 	/// </summary>
+	[ValueConversion(typeof(Uri), typeof(ImageSource))]
 	public class UriToCachedImageConverter : IValueConverter
 	{
 		/// <see cref="IValueConverter.Convert"/>

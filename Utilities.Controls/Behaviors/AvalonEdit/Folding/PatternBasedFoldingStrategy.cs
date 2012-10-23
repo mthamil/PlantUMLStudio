@@ -36,9 +36,9 @@ namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 		public PatternBasedFoldingStrategy(IEnumerable<FoldedRegionDefinition> foldRegions)
 		{
 			int counter = 1;
-			tokens = foldRegions.ToDictionary(region => counter++.ToString(), region => region);
+			_tokens = foldRegions.ToDictionary(region => counter++.ToString(), region => region);
 
-			startTokens = new Regex(String.Join("|", tokens.Select(t => String.Format(@"(?<{0}>{1})", t.Key, t.Value.StartPattern))),
+			_startTokens = new Regex(String.Join("|", _tokens.Select(t => String.Format(@"(?<{0}>{1})", t.Key, t.Value.StartPattern))),
 				RegexOptions.ExplicitCapture);
 		}
 
@@ -94,15 +94,15 @@ namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 
 		private Tuple<FoldedRegionDefinition, Match> TryMatchStartToken(string input)
 		{
-			var matches = startTokens.Matches(input);
+			var matches = _startTokens.Matches(input);
 			if (matches.Count > 0 && matches[0].Success)
 			{
-				foreach (string groupName in tokens.Keys)
+				foreach (string groupName in _tokens.Keys)
 				{
 					if (matches[0].Groups[groupName].Success)
 					{
 						FoldedRegionDefinition foldDefinition;
-						tokens.TryGetValue(groupName, out foldDefinition);
+						_tokens.TryGetValue(groupName, out foldDefinition);
 						return Tuple.Create(foldDefinition, matches[0]);
 					}
 				}
@@ -111,12 +111,12 @@ namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
 			return null;
 		}
 
-		private readonly IDictionary<string, FoldedRegionDefinition> tokens;
+		private readonly IDictionary<string, FoldedRegionDefinition> _tokens;
 
 		/// <summary>
 		/// A pattern that can match any of the start tokens.
 		/// </summary>
-		private readonly Regex startTokens;
+		private readonly Regex _startTokens;
 
 		private sealed class PotentialFoldRegion
 		{

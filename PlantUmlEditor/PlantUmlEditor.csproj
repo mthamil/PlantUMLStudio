@@ -235,6 +235,7 @@
     <Resource Include="Resources\Icons\cross-16x16.png" />
     <None Include="DesignTimeData\class.png" />
     <None Include="DesignTimeData\sequence.png" />
+    <Resource Include="Resources\Icons\folder-open-document-16x16.png" />
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

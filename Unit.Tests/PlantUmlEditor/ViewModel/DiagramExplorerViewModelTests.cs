@@ -238,6 +238,24 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(preview, args.RequestedPreview);
 		}
 
+		[Fact]
+		public void Test_OpenDiagram()
+		{
+			// Arrange.
+			string filePath = Path.Combine(diagramLocation.FullName, "TestFile.puml");
+			var diagramUri = new Uri(filePath, UriKind.Absolute);
+
+			diagramIO.Setup(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == filePath)))
+				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+
+			// Act/Assert.
+			var args = AssertThat.RaisesWithEventArgs<IDiagramExplorer, OpenPreviewRequestedEventArgs>(
+				explorer, e => e.OpenPreviewRequested += null,
+				() => explorer.OpenDiagramCommand.Execute(diagramUri));
+
+			Assert.Equal(filePath, args.RequestedPreview.Diagram.File.FullName);
+		}
+
 		[Theory]
 		[PropertyData("CanDeleteDiagramData")]
 		public void Test_CanDeleteDiagram(bool expected, PreviewDiagramViewModel preview)
@@ -341,7 +359,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private readonly DiagramExplorerViewModel explorer;
 
 		private readonly Mock<INotifications> notifications = new Mock<INotifications>();
-		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
+		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService> { DefaultValue = DefaultValue.Empty };
 		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 		private readonly TaskScheduler uiScheduler = new SynchronousTaskScheduler();
 

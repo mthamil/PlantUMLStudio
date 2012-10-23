@@ -71,6 +71,7 @@ namespace PlantUmlEditor.ViewModel
 			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(_ => LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
 			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
+			OpenDiagramCommand = new RelayCommand<Uri>(OpenDiagram);
 			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
 			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
 		}
@@ -290,6 +291,18 @@ namespace PlantUmlEditor.ViewModel
 			{
 				_notifications.Notify(new Notification(e));
 			}
+		}
+
+		/// <summary>
+		/// Command to open a diagram.
+		/// </summary>
+		public ICommand OpenDiagramCommand { get; private set; }
+
+		private async void OpenDiagram(Uri diagramPath)
+		{
+			var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
+			var preview = _previewDiagramFactory(diagram);
+			OnOpenPreviewRequested(preview);
 		}
 
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)

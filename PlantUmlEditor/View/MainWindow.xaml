@@ -160,6 +160,19 @@
                             </MenuItem.Icon>
                         </MenuItem>
 
+                        <MenuItem Header="_Open..." Name="OpenDiagramMenuItem">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <Clickable:BindableClickAction/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <Separator/>
+
                         <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
@@ -174,6 +187,9 @@
                             <MenuItem.Command>
                                 <utilcmd:CloseWindowCommand/>
                             </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource CancelIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
 
@@ -262,6 +278,11 @@
                     </WrapPanel>-->
 
                 </Menu>
+
+                <ctrl:FilePicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
+                                 InitialLocationUri="{Binding Explorer.DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
+                                 Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
+                                 Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(Clickable:BindableClick.IsClicked)}"/>
             </StackPanel>
       
               <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
@@ -389,7 +410,7 @@
                                                       Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.RequestOpenPreviewCommand}"
                                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CurrentPreviewDiagram}">
                                                 <MenuItem.Icon>
-                                                    <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                    <Image Source="{StaticResource OpenInEditorIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                                 </MenuItem.Icon>
                                             </MenuItem>
                                             <MenuItem Header="Delete"

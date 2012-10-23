@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
+using Utilities.Reflection;
 
 namespace Unit.Tests
 {
@@ -41,11 +42,7 @@ namespace Unit.Tests
 			object returnValue = null;
 			var method = methodCall.MethodBase as MethodInfo;
 			if (method != null)
-			{
-				Type returnType = method.ReturnType;
-				if (returnType.IsValueType && returnType != typeof(void)) // can't create an instance of Void
-					returnValue = Activator.CreateInstance(returnType);
-			}
+				returnValue = method.ReturnType.GetDefaultValue();
 
 			return new ReturnMessage(returnValue, new object[0], 0, methodCall.LogicalCallContext, methodCall);
 		}

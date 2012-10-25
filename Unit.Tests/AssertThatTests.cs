@@ -318,17 +318,6 @@ namespace Unit.Tests
 		}
 
 		[Fact]
-		public void Test_Throws_Task_AggregateException()
-		{
-			// Act/Assert.
-			Assert.DoesNotThrow(() =>
-				AssertThat.Throws<AggregateException>(Task.Factory.StartNew(() =>
-				{
-					throw new ArgumentOutOfRangeException();
-				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
-		}
-
-		[Fact]
 		public void Test_DoesNotThrow_Task_Success()
 		{
 			// Act/Assert.

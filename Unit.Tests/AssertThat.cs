@@ -100,22 +100,7 @@ namespace Unit.Tests
 		/// <returns>The exception if it was thrown</returns>
 		public static TException Throws<TException>(Task task) where TException : Exception
 		{
-			var exception = ExceptionRecorder.Record(task.Wait);
-
-			var aggregateException = exception as AggregateException;
-			if (aggregateException != null)
-			{
-				if (typeof(TException) != typeof(AggregateException))
-					exception = aggregateException.InnerExceptions.FirstOrDefault();
-			}
-
-			if (exception == null)
-				throw new ThrowsException(typeof(TException));
-
-			if (typeof(TException) != exception.GetType())
-				throw new ThrowsException(typeof(TException), exception);
-
-			return (TException)exception;
+			return Assert.Throws<TException>(() => task.GetAwaiter().GetResult());
 		}
 
 		/// <summary>

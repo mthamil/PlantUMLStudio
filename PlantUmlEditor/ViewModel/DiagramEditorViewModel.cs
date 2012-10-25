@@ -296,7 +296,7 @@ namespace PlantUmlEditor.ViewModel
 			}
 			catch (Exception e)
 			{
-				_notifications.Notify(new Notification(e));
+				_notifications.Notify(new ExceptionNotification(e));
 			}
 			finally
 			{

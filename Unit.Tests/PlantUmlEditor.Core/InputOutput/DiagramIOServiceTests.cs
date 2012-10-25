@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
+using Utilities;
 using Utilities.Concurrency;
 using Utilities.InputOutput;
 using Xunit;
@@ -92,6 +94,16 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 		}
 
 		[Fact]
+		public void Test_ReadAsync_InvalidDiagram()
+		{
+			// Arrange.
+			var file = new FileInfo(Path.Combine(currentDirectory.FullName, "invalid.puml"));
+
+			// Act/Assert.
+			AssertThat.Throws<InvalidDiagramFileException>(diagramIO.ReadAsync(file));
+		}
+
+		[Fact]
 		public async Task Test_ReadDiagramsAsync()
 		{
 			// Arrange.
@@ -112,10 +124,15 @@ namespace Unit.Tests.PlantUmlEditor.Core.InputOutput
 			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFilePath);
 			Assert.True(!String.IsNullOrWhiteSpace(diagram.Content));
 
-			Assert.Single(progressData);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), progressData.Single().Diagram.Value.File.FullName);
-			Assert.Equal(1, progressData.Single().ProcessedDiagramCount);
-			Assert.Equal(1, progressData.Single().TotalDiagramCount);
+			Assert.Equal(2, progressData.Count);
+
+			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), progressData.First().Diagram.Value.File.FullName);
+			Assert.Equal(1, progressData.First().ProcessedDiagramCount);
+			Assert.Equal(2, progressData.First().TotalDiagramCount);
+
+			Assert.Equal(Option<Diagram>.None(), progressData.Last().Diagram);
+			Assert.Equal(2, progressData.Last().ProcessedDiagramCount);
+			Assert.Equal(2, progressData.Last().TotalDiagramCount);
 		}
 
 		private readonly DiagramIOService diagramIO;

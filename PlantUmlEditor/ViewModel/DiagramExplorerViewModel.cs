@@ -289,7 +289,7 @@ namespace PlantUmlEditor.ViewModel
 			}
 			catch (Exception e)
 			{
-				_notifications.Notify(new Notification(e));
+				_notifications.Notify(new ExceptionNotification(e));
 			}
 		}
 
@@ -300,9 +300,16 @@ namespace PlantUmlEditor.ViewModel
 
 		private async void OpenDiagram(Uri diagramPath)
 		{
-			var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
-			var preview = _previewDiagramFactory(diagram);
-			OnOpenPreviewRequested(preview);
+			try
+			{
+				var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
+				var preview = _previewDiagramFactory(diagram);
+				OnOpenPreviewRequested(preview);
+			}
+			catch (Exception e)
+			{
+				_notifications.Notify(new ExceptionNotification(e));
+			}
 		}
 
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)

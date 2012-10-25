@@ -60,6 +60,7 @@
     <Compile Include="InputOutput\DiagramFileDeletedEventArgs.cs" />
     <Compile Include="InputOutput\DiagramIOService.cs" />
     <Compile Include="InputOutput\IDiagramIOService.cs" />
+    <Compile Include="InputOutput\InvalidDiagramFileException.cs" />
     <Compile Include="InputOutput\ReadDiagramsProgress.cs" />
     <Compile Include="PlantUml.cs" />
     <Compile Include="PlantUmlException.cs" />

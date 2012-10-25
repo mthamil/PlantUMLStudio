@@ -40,6 +40,6 @@ namespace PlantUmlEditor.ViewModel.Notifications
 		/// <summary>
 		/// The current progress message.
 		/// </summary>
-		string Message { get; set; }
+		string Message { get; }
 	}
 }

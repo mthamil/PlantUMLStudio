@@ -21,6 +21,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Utilities;
 using Utilities.InputOutput;
 
 namespace PlantUmlEditor.Core.InputOutput
@@ -67,9 +68,7 @@ namespace PlantUmlEditor.Core.InputOutput
 						break;
 
 					var diagram = ReadImpl(file);
-					
-					if (diagram != null)
-						diagrams.Add(diagram);
+					diagram.Do(diagrams.Add);
 					//Thread.Sleep(500);
 
 					processed++;
@@ -85,13 +84,13 @@ namespace PlantUmlEditor.Core.InputOutput
 		/// <see cref="IDiagramIOService.ReadAsync"/>
 		public Task<Diagram> ReadAsync(FileInfo file)
 		{
-			return Task.Factory.StartNew(() => ReadImpl(file),
+			return Task.Factory.StartNew(() => ReadImpl(file).GetOrElse(() => { throw new InvalidDiagramFileException(file); }),
 				CancellationToken.None,
 				TaskCreationOptions.None,
 				_scheduler);
 		}
 
-		private static Diagram ReadImpl(FileInfo file)
+		private static Option<Diagram> ReadImpl(FileInfo file)
 		{
 			string content;
 			using (var reader = new StreamReader(file.OpenRead()))
@@ -117,7 +116,7 @@ namespace PlantUmlEditor.Core.InputOutput
 				}
 			}
 
-			return null;
+			return Option<Diagram>.None();
 		}
 
 		/// <see cref="IDiagramIOService.SaveAsync"/>

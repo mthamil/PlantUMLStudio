@@ -10,7 +10,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel.Notifications
 		public void Test_Notify()
 		{
 			// Arrange.
-			var notification = new Notification { Message = "Test" };
+			var notification = new Notification("Test");
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(notifications, p => p.LatestNotification, 

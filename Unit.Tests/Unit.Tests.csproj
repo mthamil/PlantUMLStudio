@@ -115,7 +115,10 @@
     <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramManagerViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\Notifications\ExceptionNotificationTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationsHubTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\Notifications\ProgressNotificationTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\PreviewDiagramViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousAttribute.cs" />
@@ -192,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="TestDiagrams\invalid.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="TestDiagrams\class.puml">

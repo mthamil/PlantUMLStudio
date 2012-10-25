@@ -14,7 +14,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-using System;
+
 using Utilities.Mvvm;
 using Utilities.PropertyChanged;
 
@@ -26,18 +26,20 @@ namespace PlantUmlEditor.ViewModel.Notifications
 	public class Notification : ViewModelBase
 	{
 		/// <summary>
-		/// Creates a notification based on an exception.
+		/// Creates a notification with a string message.
 		/// </summary>
-		/// <param name="exception"></param>
-		public Notification(Exception exception)
+		/// <param name="message">The notification message</param>
+		public Notification(string message)
 			: this()
 		{
-			Message = exception.Message;
+			Message = message;
+			Severity = Severity.Informational;
 		}
 
-		public Notification()
+		protected Notification()
 		{
 			_message = Property.New(this, p => p.Message, OnPropertyChanged);
+			_severity = Property.New(this, p => p.Severity, OnPropertyChanged);
 		}
 
 		/// <summary>
@@ -46,9 +48,35 @@ namespace PlantUmlEditor.ViewModel.Notifications
 		public string Message
 		{
 			get { return _message.Value; }
-			set { _message.Value = value; }
+			protected set { _message.Value = value; }
+		}
+
+		/// <summary>
+		/// A notification's severity.
+		/// </summary>
+		public Severity Severity
+		{
+			get { return _severity.Value; }
+			set { _severity.Value = value; }
 		}
 
 		private readonly Property<string> _message;
+		private readonly Property<Severity> _severity;
+	}
+
+	/// <summary>
+	/// Notification message severity levels.
+	/// </summary>
+	public enum Severity
+	{
+		/// <summary>
+		/// An informational message.
+		/// </summary>
+		Informational,
+
+		/// <summary>
+		/// A critical message.
+		/// </summary>
+		Critical
 	}
 }

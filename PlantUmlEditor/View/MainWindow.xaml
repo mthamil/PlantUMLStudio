@@ -593,21 +593,21 @@
                 </StatusBar.ItemsPanel>
 
                 <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding LatestNotification.Message, FallbackValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" Foreground="White" FontFamily="Segoe UI" >
-                        <!--<TextBlock.Style>
+                    <TextBlock Text="{Binding LatestNotification.Message, FallbackValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" FontFamily="Segoe UI" >
+                        <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding LastEvent.Severity}" Value="Informational">
-                                        <Setter Property="Foreground" Value="#FF000000"/>
+                                    <DataTrigger Binding="{Binding LatestNotification.Severity}" Value="Informational">
+                                        <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="FontWeight" Value="Normal"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding LastEvent.Severity}" Value="Critical">
-                                        <Setter Property="Foreground" Value="#FFFF0000"/>
+                                    <DataTrigger Binding="{Binding LatestNotification.Severity}" Value="Critical">
+                                        <Setter Property="Foreground" Value="Crimson"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBlock.Style>-->
+                        </TextBlock.Style>
                     </TextBlock>
                 </StatusBarItem>
 
@@ -620,13 +620,13 @@
                         <ProgressBar.Style>
                             <Style TargetType="{x:Type ProgressBar}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding LatestNotification}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding LatestNotification, FallbackValue={x:Null}}" Value="{x:Null}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding LatestNotification.InProgress}" Value="False">
+                                    <DataTrigger Binding="{Binding LatestNotification.InProgress, FallbackValue=False}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding LatestNotification.InProgress}" Value="True">
+                                    <DataTrigger Binding="{Binding LatestNotification.InProgress, FallbackValue=False}" Value="True">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                 </Style.Triggers>

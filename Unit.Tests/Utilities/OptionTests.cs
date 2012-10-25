@@ -261,7 +261,26 @@ namespace Unit.Tests.Utilities
 
 			// Assert.
 			Assert.False(invoked);
-			Assert.Equal(someInt, result);
+			Assert.Equal(someInt.Value, result.Value);
+		}
+
+		[Fact]
+		public void Test_Some_GetOrElse()
+		{
+			// Arrange.
+			Option<int> someInt = 5;
+			bool invoked = false;
+
+			// Act.
+			var result = someInt.GetOrElse(() =>
+			{
+				invoked = true;
+				return 0;
+			});
+
+			// Assert.
+			Assert.False(invoked);
+			Assert.Equal(5, result);
 		}
 
 		[Fact]
@@ -346,6 +365,25 @@ namespace Unit.Tests.Utilities
 			// Assert.
 			Assert.True(invoked);
 			Assert.Equal(5, result.Value);
+		}
+
+		[Fact]
+		public void Test_None_GetOrElse()
+		{
+			// Arrange.
+			var noneInt = Option<int>.None();
+			bool invoked = false;
+
+			// Act.
+			var result = noneInt.GetOrElse(() =>
+			{
+				invoked = true;
+				return 5;
+			});
+
+			// Assert.
+			Assert.True(invoked);
+			Assert.Equal(5, result);
 		}
 
 		private class ReturnsOption

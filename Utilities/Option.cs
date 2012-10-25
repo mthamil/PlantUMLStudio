@@ -118,6 +118,13 @@ namespace Utilities
 		/// </summary>
 		/// <param name="fallbackAction">The alternative function</param>
 		public abstract Option<T> OrElse(Func<Option<T>> fallbackAction);
+
+		/// <summary>
+		/// Specifies an alternative action that can be used to retrieve a value
+		/// in case this is None.
+		/// </summary>
+		/// <param name="fallbackAction">The alternative function</param>
+		public abstract T GetOrElse(Func<T> fallbackAction);
 	}
 
 	/// <summary>
@@ -185,6 +192,14 @@ namespace Utilities
 		/// Executes an alternative function.
 		/// </summary>
 		public override Option<T> OrElse(Func<Option<T>> fallbackAction)
+		{
+			return fallbackAction();
+		}
+
+		/// <summary>
+		/// Executes an alternative function.
+		/// </summary>
+		public override T GetOrElse(Func<T> fallbackAction)
 		{
 			return fallbackAction();
 		}
@@ -273,6 +288,14 @@ namespace Utilities
 		public override Option<T> OrElse(Func<Option<T>> fallbackAction)
 		{
 			return this;
+		}
+
+		/// <summary>
+		/// Returns this Option's value.
+		/// </summary>
+		public override T GetOrElse(Func<T> fallbackAction)
+		{
+			return Value;
 		}
 
 		/// <summary>

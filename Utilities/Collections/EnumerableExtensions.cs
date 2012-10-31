@@ -56,6 +56,8 @@ namespace Utilities.Collections
 
 		/// <summary>
 		/// Returns an enumerable of items grouped into sliceSize number of items.
+		/// If the number of items remaining is less than the slice size, the last slice
+		/// will be the size of just the remaining items.
 		/// </summary>
 		/// <param name="items">The items to slice</param>
 		/// <param name="sliceSize">The number of items per slice</param>

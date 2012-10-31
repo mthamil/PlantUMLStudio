@@ -113,15 +113,15 @@ namespace Utilities
 		public abstract void Do(Action<T> action);
 
 		/// <summary>
-		/// Specifies an alternative action that can be used to retrieve a value
-		/// in case this is None.
+		/// Returns Option.Some if an Option is Some, otherwise if None,
+		/// the given function is executed to return an alternative. 
 		/// </summary>
 		/// <param name="fallbackAction">The alternative function</param>
 		public abstract Option<T> OrElse(Func<Option<T>> fallbackAction);
 
 		/// <summary>
-		/// Specifies an alternative action that can be used to retrieve a value
-		/// in case this is None.
+		/// Retrieves an Option's value if it is Some.  Otherwise if None, the given function
+		/// is executed to return an alternative value.
 		/// </summary>
 		/// <param name="fallbackAction">The alternative function</param>
 		public abstract T GetOrElse(Func<T> fallbackAction);

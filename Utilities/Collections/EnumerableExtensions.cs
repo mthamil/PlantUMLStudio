@@ -219,6 +219,22 @@ namespace Utilities.Collections
 		}
 
 		/// <summary>
+		/// Lazily pipes the output of an enumerable to an action.
+		/// </summary>
+		/// <typeparam name="T">The type of items</typeparam>
+		/// <param name="items">The items to pipe</param>
+		/// <param name="action">The action to apply</param>
+		/// <returns>The source enumerable</returns>
+		public static IEnumerable<T> Tee<T>(this IEnumerable<T> items, Action<T> action)
+		{
+			foreach (var item in items)
+			{
+				action(item);
+				yield return item;
+			}
+		}
+
+		/// <summary>
 		/// Private class that provides the Slices enumerator.
 		/// </summary>
 		private class SliceEnumerable<T> : IEnumerable<IEnumerable<T>>

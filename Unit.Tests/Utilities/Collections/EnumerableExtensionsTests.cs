@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities.Collections;
@@ -475,6 +476,27 @@ namespace Unit.Tests.Utilities.Collections
 			// Assert.
 			foreach (var result in results)
 				Assert.True(result);
+		}
+
+		[Fact]
+		public void Test_Tee()
+		{
+			// Arrange.
+			var input = new[] { 1, 2, 3 };
+			var output = new List<int>(input.Length);
+
+			// Act.
+			var items = input.Tee(output.Add).Select(x => x.ToString(CultureInfo.InvariantCulture));
+
+			// Assert.
+			Assert.Empty(output);	// Tests laziness.
+
+			// Act.
+			items = items.ToList();
+
+			// Assert.
+			AssertThat.SequenceEqual(input, output);
+			AssertThat.SequenceEqual(new [] { "1", "2", "3" }, items);
 		}
 	}
 }

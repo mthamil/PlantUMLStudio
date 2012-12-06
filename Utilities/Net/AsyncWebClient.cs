@@ -60,7 +60,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadFileCompleted -= completedHandler;
 
-				tcs.SetFromEventArgs(e, _ => null);
+				tcs.TrySetFromEventArgs(e);
 			};
 			_webClient.DownloadFileCompleted += completedHandler;
 
@@ -89,7 +89,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadDataCompleted -= completedHandler;
 
-				tcs.SetFromEventArgs(e, args => args.Result);
+				tcs.TrySetFromEventArgs(e, args => args.Result);
 			};
 			_webClient.DownloadDataCompleted += completedHandler;
 
@@ -118,7 +118,7 @@ namespace Utilities.Net
 				_webClient.DownloadProgressChanged -= progressHandler;
 				_webClient.DownloadStringCompleted -= completedHandler;
 
-				tcs.SetFromEventArgs(e, args => args.Result);
+				tcs.TrySetFromEventArgs(e, args => args.Result);
 			};
 			_webClient.DownloadStringCompleted += completedHandler;
 

@@ -55,25 +55,40 @@ namespace Utilities.Concurrency
 					throw new InvalidOperationException("The task was not completed.");
 			}
 		}
+
+		/// <summary>
+		/// Adapts the Event-based Asynchronous Pattern to the 
+		/// Task-based Asynchronous Pattern for asynchronous operations
+		/// that do not return a result.
+		/// </summary>
+		/// <typeparam name="TAsyncArgs">The type of async event args</typeparam>
+		/// <param name="completionSource">The TaskCompletionSource to populate</param>
+		/// <param name="asyncArgs">The asynchronous event args to use</param>
+		public static void TrySetFromEventArgs<TAsyncArgs>(this TaskCompletionSource<object> completionSource, TAsyncArgs asyncArgs)
+			where TAsyncArgs : AsyncCompletedEventArgs
+		{
+			completionSource.TrySetFromEventArgs(asyncArgs, _ => null);
+		}
 		
 		/// <summary>
 		/// Adapts the Event-based Asynchronous Pattern to the 
-		/// Task-based Asynchronous Pattern.
+		/// Task-based Asynchronous Pattern for asynchronous operations
+		/// that return a result.
 		/// </summary>
 		/// <typeparam name="TResult">The type of the result</typeparam>
 		/// <typeparam name="TAsyncArgs">The type of async event args</typeparam>
 		/// <param name="completionSource">The TaskCompletionSource to populate</param>
 		/// <param name="asyncArgs">The asynchronous event args to use</param>
 		/// <param name="resultSelector">Retrieves the result from the event args</param>
-		public static void SetFromEventArgs<TResult, TAsyncArgs>(this TaskCompletionSource<TResult> completionSource, TAsyncArgs asyncArgs, Func<TAsyncArgs, TResult> resultSelector)
+		public static void TrySetFromEventArgs<TResult, TAsyncArgs>(this TaskCompletionSource<TResult> completionSource, TAsyncArgs asyncArgs, Func<TAsyncArgs, TResult> resultSelector)
 			where TAsyncArgs : AsyncCompletedEventArgs
 		{
 			if (asyncArgs.Cancelled)
-				completionSource.SetCanceled();
+				completionSource.TrySetCanceled();
 			else if (asyncArgs.Error != null)
-				completionSource.SetException(asyncArgs.Error);
+				completionSource.TrySetException(asyncArgs.Error);
 			else
-				completionSource.SetResult(resultSelector(asyncArgs));
+				completionSource.TrySetResult(resultSelector(asyncArgs));
 		}
 	}
 }

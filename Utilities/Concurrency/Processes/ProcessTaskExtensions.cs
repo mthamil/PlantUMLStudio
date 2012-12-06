@@ -28,30 +28,32 @@ namespace Utilities.Concurrency.Processes
 	public static class ProcessTaskExtensions
 	{
 		/// <summary>
-		/// Creates a Task from a ProcessStartInfo that describes a process that takes a stream
+		/// Creates a Task representing an external process that takes a stream
 		/// as input and returns its output.
 		/// </summary>
+		/// <param name="taskFactory">Creates tasks</param>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="input">The process input stream</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>
-		public static Task<Tuple<Stream, Stream>> ToTask(this ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		public static Task<Tuple<Stream, Stream>> FromProcess(this TaskFactory taskFactory, ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return ProcessAdapterFactory().StartNew(processInfo, input, cancellationToken);
+			return ProcessAdapterFactory(taskFactory).StartNew(processInfo, input, cancellationToken);
 		}
 
 		/// <summary>
-		/// Creates a Task from a ProcessStartInfo that describes a process that takes
+		/// Creates a Task representing an external process that takes
 		/// no input and returns no output.
 		/// </summary>
+		/// <param name="taskFactory">Creates tasks</param>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>
-		public static Task ToTask(this ProcessStartInfo processInfo, CancellationToken cancellationToken)
+		public static Task FromProcess(this TaskFactory taskFactory, ProcessStartInfo processInfo, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return ProcessAdapterFactory().StartNew(processInfo, cancellationToken);
+			return ProcessAdapterFactory(taskFactory).StartNew(processInfo, cancellationToken);
 		}
 
-		internal static Func<IProcessTaskAdapter> ProcessAdapterFactory = () => new ProcessTaskAdapter(TaskScheduler.Default);
+		internal static Func<TaskFactory, IProcessTaskAdapter> ProcessAdapterFactory = tf => new ProcessTaskAdapter(tf, TaskScheduler.Default);
 	}
 }

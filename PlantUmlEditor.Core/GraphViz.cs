@@ -59,7 +59,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
 		public async Task<string> GetCurrentVersionAsync()
 		{
-			var result = await new ProcessStartInfo
+			var result = await Task.Factory.FromProcess(new ProcessStartInfo
 			{
 				FileName = GraphVizExecutable.FullName,
 				Arguments = "-V",
@@ -69,7 +69,7 @@ namespace PlantUmlEditor.Core
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
+			}, new MemoryStream()).ConfigureAwait(false);
 
 			// For some reason output is written to standard error.
 			var output = Encoding.Default.GetString(

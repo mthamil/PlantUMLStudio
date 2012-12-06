@@ -28,14 +28,17 @@ namespace PlantUmlEditor.Core.Dependencies.Update
 	public interface IComponentUpdateChecker
 	{
 		/// <summary>
-		/// Determines whether an update is available for the dependency.
+		/// Determines whether an update is available for a dependency.
 		/// </summary>
+		/// <param name="cancellationToken">An optional token that can cancel checking for updates</param>
 		/// <returns>If an update is available, returns the new version</returns>
-		Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken);
+		Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
-		/// Retrieves the dependency's latest version.
+		/// Retrieves a dependency's latest version.
 		/// </summary>
-		Task DownloadLatestAsync(CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+		/// <param name="cancellationToken">An optional token that can cancel download of an update</param>
+		/// <param name="progress">An optional object that can report progress on an update download</param>
+		Task DownloadLatestAsync(CancellationToken cancellationToken = default(CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null);
 	}
 }

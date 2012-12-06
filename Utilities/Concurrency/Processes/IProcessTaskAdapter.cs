@@ -32,7 +32,7 @@ namespace Utilities.Concurrency.Processes
 		/// </summary>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
-		/// <returns>A Task that can be used to wait for the Process to complete</returns>
+		/// <returns>A Task representing the Process</returns>
 		Task StartNew(ProcessStartInfo processInfo, CancellationToken cancellationToken);
 
 		/// <summary>

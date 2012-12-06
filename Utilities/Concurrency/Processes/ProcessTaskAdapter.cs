@@ -26,14 +26,16 @@ namespace Utilities.Concurrency.Processes
 	/// <summary>
 	/// Executes Processes and returns Task representations of them.
 	/// </summary>
-	public class ProcessTaskAdapter : IProcessTaskAdapter
+	internal class ProcessTaskAdapter : IProcessTaskAdapter
 	{
 		/// <summary>
 		/// Initializes an adapter.
 		/// </summary>
+		/// <param name="taskFactory">Creates tasks</param>
 		/// <param name="taskScheduler">Used for any asynchronous operations other than a Process itself</param>
-		public ProcessTaskAdapter(TaskScheduler taskScheduler)
+		public ProcessTaskAdapter(TaskFactory taskFactory, TaskScheduler taskScheduler)
 		{
+			_taskFactory = taskFactory;
 			_taskScheduler = taskScheduler;
 		}
 
@@ -42,7 +44,7 @@ namespace Utilities.Concurrency.Processes
 		/// </summary>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
-		/// <returns>A Task that can be used to wait for the Process to complete</returns>
+		/// <returns>A Task representing the Process</returns>
 		public Task StartNew(ProcessStartInfo processInfo, CancellationToken cancellationToken)
 		{
 			var process = new Process
@@ -139,12 +141,12 @@ namespace Utilities.Concurrency.Processes
 
 				// Launch a task to read output. This technique is used instead 
 				// of BeginOutputReadLine because that method only returns strings.
-				Task.Factory.StartNew(() =>
+				_taskFactory.StartNew(() =>
 					process.StandardOutput.BaseStream.CopyTo(outputStream),
 						cancellationToken, TaskCreationOptions.None, _taskScheduler);
 
 				// Launch another task to write input.
-				Task.Factory.StartNew(() =>
+				_taskFactory.StartNew(() =>
 				{
 					input.CopyTo(process.StandardInput.BaseStream);
 					process.StandardInput.Close();
@@ -186,6 +188,7 @@ namespace Utilities.Concurrency.Processes
 			}
 		}
 
+		private readonly TaskFactory _taskFactory;
 		private readonly TaskScheduler _taskScheduler;
 	}
 }

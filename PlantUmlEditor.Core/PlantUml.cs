@@ -51,7 +51,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
 		public async Task<BitmapSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
 		{
-			var result = await new ProcessStartInfo
+			var result = await Task.Factory.FromProcess(new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" -pipe", PlantUmlJar.FullName, GraphVizExecutable.FullName),
@@ -61,7 +61,7 @@ namespace PlantUmlEditor.Core
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}.ToTask(new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
+			}, new MemoryStream(Encoding.Default.GetBytes(diagramCode)), cancellationToken).ConfigureAwait(false);
 
 			await HandleErrorStream(result.Item2, cancellationToken).ConfigureAwait(false);
 
@@ -76,7 +76,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
 		public Task CompileToFileAsync(FileInfo diagramFile)
 		{
-			return new ProcessStartInfo
+			return Task.Factory.FromProcess(new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
@@ -84,7 +84,7 @@ namespace PlantUmlEditor.Core
 				CreateNoWindow = true,
 				RedirectStandardError = true,
 				UseShellExecute = false
-			}.ToTask(CancellationToken.None);
+			});
 		}
 
 		#region Implementation of IExternalComponent
@@ -95,7 +95,7 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
 		public async Task<string> GetCurrentVersionAsync()
 		{
-			var result = await new ProcessStartInfo
+			var result = await Task.Factory.FromProcess(new ProcessStartInfo
 			{
 				FileName = "java",
 				Arguments = String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
@@ -105,7 +105,7 @@ namespace PlantUmlEditor.Core
 				RedirectStandardError = true,
 				RedirectStandardInput = true,
 				UseShellExecute = false
-			}.ToTask(new MemoryStream(), CancellationToken.None).ConfigureAwait(false);
+			}, new MemoryStream()).ConfigureAwait(false);
 
 			await HandleErrorStream(result.Item2, CancellationToken.None).ConfigureAwait(false);
 

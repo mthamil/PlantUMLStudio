@@ -79,7 +79,7 @@ namespace PlantUmlEditor.ViewModel
 				PercentComplete = 100
 			};
 
-			var updateCheckResult = await _externalComponent.HasUpdateAsync(CancellationToken.None);
+			var updateCheckResult = await _externalComponent.HasUpdateAsync();
 			UpdateProgress.PercentComplete = null;
 
 			HasUpdate = updateCheckResult.HasValue;
@@ -175,7 +175,7 @@ namespace PlantUmlEditor.ViewModel
 				UpdateProgress.PercentComplete = p.ProgressPercentage;
 			});
 
-			await _externalComponent.DownloadLatestAsync(CancellationToken.None, progress);
+			await _externalComponent.DownloadLatestAsync(progress:progress);
 
 			UpdateProgress.PercentComplete = null;
 			UpdateCompleted = true;

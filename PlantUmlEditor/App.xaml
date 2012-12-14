@@ -21,6 +21,8 @@
             </utilconvert:ComposingConverter.Converters>
         </utilconvert:ComposingConverter>
 
+        <utilconvert:BooleanToVisibilityValueConverter x:Key="BoolToVisibilityConverter"/>
+
         <Style x:Key="ButtonFocusVisual">
     		<Setter Property="Control.Template">
     			<Setter.Value>

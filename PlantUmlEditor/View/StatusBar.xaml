@@ -46,7 +46,7 @@
                 
                 <Button x:Name="MoreInfoButton" Content="..." Visibility="{Binding LatestNotification.HasMoreInfo, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
                         ToolTip="View full message." Margin="0,0,0,0" MinHeight="16" Width="20" Padding="0" FocusVisualStyle="{StaticResource ButtonFocusVisual}"
-                        Background="Transparent" Foreground="{Binding ElementName=SummaryText, Path=Foreground}"
+                         Foreground="{Binding ElementName=SummaryText, Path=Foreground}"
                         HorizontalContentAlignment="Center" VerticalContentAlignment="Top" VerticalAlignment="Center">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -64,7 +64,7 @@
                                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True"
-                                                CornerRadius="3">
+                                                CornerRadius="2">
 
                                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                                               Margin="{TemplateBinding Padding}" 
@@ -78,10 +78,12 @@
                                                 <Setter Property="Foreground" Value="#ADADAD"/>
                                             </Trigger>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True">
-                                                <Setter Property="BorderBrush" Value="White"/>
+                                                <Setter Property="BorderBrush" Value="#445F8D"/>
+                                                <Setter Property="Background" Value="#33486A"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="False">
-                                                <Setter Property="BorderBrush" Value="#2C3C65"/>
+                                                <Setter Property="BorderBrush" Value="#233048"/>
+                                                <Setter Property="Background" Value="Transparent"/>
                                             </DataTrigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -94,16 +96,16 @@
                 <ctrl:MVVMMessageBox
                     Message="{Binding LatestNotification.Message}"
                     Trigger="{Binding ElementName=MoreInfoButton, Path=(Clickable:BindableClick.IsClicked)}"
-                    Caption="Message"
+                    Caption="View Notification"
                     Type="OK"/>
             </StackPanel>
         </StatusBarItem>
 
         <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
-            <ProgressBar Foreground="LightGreen" Background="Gray" 
-                            VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="18" Width="165" 
-                            Minimum="0" Maximum="100" IsIndeterminate="{Binding LatestNotification.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
-                            Value="{Binding LatestNotification.PercentComplete, TargetNullValue=-1}">
+            <ProgressBar Foreground="LightGreen" Background="Gray" VerticalAlignment="Stretch" HorizontalAlignment="Right" 
+                         Minimum="0" Maximum="100" Height="18" Width="165" 
+                         IsIndeterminate="{Binding LatestNotification.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                         Value="{Binding LatestNotification.PercentComplete, TargetNullValue=-1}">
 
                 <ProgressBar.Style>
                     <Style TargetType="{x:Type ProgressBar}">

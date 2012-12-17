@@ -430,7 +430,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Thirdparty\plantuml.jar">
+    <Content Include="PlantUML\plantuml.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="ChangeLog.txt" />

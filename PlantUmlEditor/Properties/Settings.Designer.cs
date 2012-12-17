@@ -58,7 +58,7 @@ namespace PlantUmlEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".\\ThirdParty\\plantuml.jar")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\PlantUML\\plantuml.jar")]
         public string PlantUmlLocation {
             get {
                 return ((string)(this["PlantUmlLocation"]));

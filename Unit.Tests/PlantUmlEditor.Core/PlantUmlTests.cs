@@ -16,7 +16,7 @@ namespace Unit.Tests.PlantUmlEditor.Core
 			// Arrange.
 			var plantUml = new PlantUml(new Mock<IClock>().Object)
 			{
-				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\Thirdparty\plantuml.jar"),
+				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\PlantUML\plantuml.jar"),
 				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")
 			};
 

@@ -1,30 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="PlantUmlEditor.Setup" Language="1033" Version="1.0.0.0" Manufacturer="Microsoft" UpgradeCode="cd850a05-23fb-41d4-97da-df0fa83fdc66">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  
+	<Product Id="*" Name="PlantUML Editor" Language="1033" Version="2.0.0.0" Manufacturer="Hamilton" UpgradeCode="51D909D7-1787-445A-9111-39F63411BDBD">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
+		<MediaTemplate EmbedCab="yes"/>
 
-		<Feature Id="ProductFeature" Title="PlantUmlEditor.Setup" Level="1">
-			<ComponentGroupRef Id="ProductComponents" />
+		<Feature Id="ApplicationFeature" Title="PlantUmlEditor.Setup" Level="1">
+			<ComponentGroupRef Id="ApplicationComponents"/>
+      <ComponentGroupRef Id="HighlightingDefinitions"/>
+      <ComponentRef Id="PlantUmlLib"/>
 		</Feature>
 	</Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
+      
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="PlantUmlEditor.Setup" />
-			</Directory>
+        <Directory Id="INSTALLDIR" Name="PlantUML Editor">
+          <Directory Id="PlantUmlDir" Name="PlantUML"/>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramMenuDir" Name="PlantUML Editor"/>
+      </Directory>
+
 		</Directory>
 	</Fragment>
 
 	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
+    
+		<ComponentGroup Id="ApplicationComponents" Directory="INSTALLDIR">
+      
+      <Component Id="ApplicationExecutable" Guid="9D0395E4-F422-4DB1-9275-C50A5B38DD89">
+        <File Id="PlantUmlEditorExe" Name="$(var.PlantUmlEditor.TargetFileName)" Source="$(var.PlantUmlEditor.TargetPath)" KeyPath="yes">
+          <Shortcut Id="StartMenuMainExecutable" Directory="ProgramMenuDir" Name="PlantUML Editor" 
+                    WorkingDirectory='INSTALLDIR' Advertise="yes"/>
+        </File>
+        <RemoveFile Id="DeleteShortCut" Directory="ProgramMenuDir" Name="PlantUML Editor" On="uninstall"/>
+        <RemoveFolder Id="DeleteShortcutDir" Directory="ProgramMenuDir" On="uninstall"/>
+      </Component>
+
+      <Component Id="ApplicationConfig" Guid="1C732BE3-01C3-4120-8AFC-26554435DFAE">
+        <File Id="PlantUmlEditorConfig" Name="$(var.PlantUmlEditor.TargetFileName).config" Source="$(var.PlantUmlEditor.TargetPath).config" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="CoreLib" Guid="9A67589B-282D-4F7F-8A8A-B3039068C396">
+        <File Id="CoreDll" Name="$(var.PlantUmlEditor.Core.TargetFileName)" Source="$(var.PlantUmlEditor.Core.TargetPath)" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="UtilitiesLib" Guid="944C2166-C650-4EE3-9181-C4D8E38889A2">
+        <File Id="UtilitiesDll" Name="$(var.Utilities.TargetFileName)" Source="$(var.Utilities.TargetPath)" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="ControlsUtilitiesLib" Guid="ED98CB99-92A5-4F3A-992C-B408D4BDDBAA">
+        <File Id="ControlsUtilitiesDll" Name="$(var.Utilities.Controls.TargetFileName)" Source="$(var.Utilities.Controls.TargetPath)" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="AvalonEditLib" Guid="1C90DA3F-9452-4DCD-84D7-50756A7C5A36">
+        <File Id="AvalonEditDll" Name="ICSharpCode.AvalonEdit.dll" Source="$(var.PlantUmlEditor.TargetDir)ICSharpCode.AvalonEdit.dll" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="AutofacLib" Guid="D2C221D7-5A6A-402A-B8C3-6ECFD4D1DA4C">
+        <File Id="AutofacDll" Name="Autofac.dll" Source="$(var.PlantUmlEditor.TargetDir)Autofac.dll" KeyPath="yes"/>
+        <File Id="AutofacConfigDll" Name="Autofac.Configuration.dll" Source="$(var.PlantUmlEditor.TargetDir)Autofac.Configuration.dll"/>
+      </Component>
+
+      <Component Id="InteractivityLib" Guid="C38215DF-D656-4E5E-B045-AD4674306309">
+        <File Id="WindowsInteractivityDll" Name="System.Windows.Interactivity.dll" Source="$(var.PlantUmlEditor.TargetDir)System.Windows.Interactivity.dll" KeyPath="yes"/>
+        <File Id="ExpressionInteractionsDll" Name="Microsoft.Expression.Interactions.dll" Source="$(var.PlantUmlEditor.TargetDir)Microsoft.Expression.Interactions.dll"/>
+      </Component>
+
+    </ComponentGroup>
+
+    <ComponentGroup Id="HighlightingDefinitions" Directory="INSTALLDIR">
+      
+      <Component Id="PlantUmlDefinition" Guid="478EC21B-8F42-4977-872B-13B186B6BCB4">
+        <File Id="PlantUmlXshd" Name="PlantUML.xshd" Source="$(var.PlantUmlEditor.TargetDir)PlantUML.xshd" KeyPath="yes"/>
+      </Component>
+      
+    </ComponentGroup>
+
+    <Component Id="PlantUmlLib" Directory="PlantUmlDir" Guid="64DD6AFF-6AAC-4280-8FD3-EF485FE4233D">
+      <File Id="PlantUmlJar" Name="plantuml.jar" Source="$(var.PlantUmlEditor.TargetDir)PlantUML\plantuml.jar" KeyPath="yes"/>
+    </Component>
+    
 	</Fragment>
 </Wix>

@@ -290,7 +290,7 @@ namespace PlantUmlEditor.ViewModel
 			{
 				DiagramImage = await refreshTask;
 			}
-			catch (TaskCanceledException)
+			catch (OperationCanceledException)
 			{
 				// We don't care if refresh is canceled.
 			}

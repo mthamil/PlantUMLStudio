@@ -36,10 +36,17 @@ namespace PlantUmlEditor.Model.Snippets
 		public IEnumerable<CodeSnippet> Snippets { get { return _snippets; } }
 
 		/// <summary>
-		/// Loads snippets.
+		/// Loads snippets from the snippet location.
+		/// If the snippet location is invalid, nothing is done.
 		/// </summary>
 		public void Load()
 		{
+			if (!SnippetLocation.Exists)
+			{
+				_snippets = Enumerable.Empty<CodeSnippet>();
+				return;
+			}
+
 			_snippets = SnippetLocation.GetFiles("*.snip", SearchOption.AllDirectories)
 				.Select(snippetFile => snippetFile.OpenRead())
 				.Select(_snippetParser.Parse);

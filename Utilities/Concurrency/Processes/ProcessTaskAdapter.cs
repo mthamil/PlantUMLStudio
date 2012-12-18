@@ -97,63 +97,47 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns> A Task that, when completed successfully, contains a Process's output and error streams</returns>
-		public Task<Tuple<Stream, Stream>> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		public async Task<Tuple<Stream, Stream>> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
-			var process = new Process
+			using (var process = new Process { EnableRaisingEvents = true, StartInfo = processInfo })
 			{
-				EnableRaisingEvents = true,
-				StartInfo = processInfo
-			};
+				Stream outputStream = new MemoryStream();
+				Stream errorStream = new MemoryStream();
 
-			Stream outputStream = new MemoryStream();
-			Stream errorStream = new MemoryStream();
-
-			DataReceivedEventHandler errorHandler = (o, e) => WriteErrorData(errorStream, e.Data);
-			cancellationToken.Register(() => CancelProcess(process), true);
-
-			var tcs = new TaskCompletionSource<Tuple<Stream, Stream>>();
-			EventHandler exitedHandler = null;
-			exitedHandler = (o, e) =>
-			{
-				process.Exited -= exitedHandler;
-				process.ErrorDataReceived -= errorHandler;
-
-				if (cancellationToken.IsCancellationRequested)
+				cancellationToken.Register(() => CancelProcess(process), true);
+				if (process.Start())
 				{
-					tcs.TrySetCanceled();
-				}
-				else
-				{
+					// Asynchronously read from std error.
+					var readErrorTask = process.StandardError.BaseStream.CopyToAsync(errorStream, BUFFER_SIZE, cancellationToken);
+
+					// Asynchronously read from std output. This technique is used instead 
+					// of BeginOutputReadLine because that method only returns strings.
+					var readOutputTask = process.StandardOutput.BaseStream.CopyToAsync(outputStream, BUFFER_SIZE, cancellationToken);
+
+					// Asynchronously write to std input.
+					var writeInputTask = WriteInput(process, input, cancellationToken);
+
+					await Task.WhenAll(readErrorTask, readOutputTask, writeInputTask).ConfigureAwait(false);
+					process.StandardOutput.Close();
+					process.StandardError.Close();
+
+					await _taskFactory.StartNew(() => process.WaitForExit(), cancellationToken, TaskCreationOptions.None, _taskScheduler).ConfigureAwait(false);
+					cancellationToken.ThrowIfCancellationRequested();
+
+					// Reset streams for reading.
 					outputStream.Position = 0;
 					errorStream.Position = 0;
-					tcs.TrySetResult(Tuple.Create(outputStream, errorStream));
+					return Tuple.Create(outputStream, errorStream);
 				}
 
-				process.Dispose();
-			};
-
-			process.Exited += exitedHandler;
-			process.ErrorDataReceived += errorHandler;
-			if (process.Start())
-			{
-				// Asynchronously start reading std error.
-				process.BeginErrorReadLine();
-
-				// Launch a task to read output. This technique is used instead 
-				// of BeginOutputReadLine because that method only returns strings.
-				_taskFactory.StartNew(() =>
-					process.StandardOutput.BaseStream.CopyTo(outputStream),
-						cancellationToken, TaskCreationOptions.None, _taskScheduler);
-
-				// Launch another task to write input.
-				_taskFactory.StartNew(() =>
-				{
-					input.CopyTo(process.StandardInput.BaseStream);
-					process.StandardInput.Close();
-				}, cancellationToken, TaskCreationOptions.None, _taskScheduler);
+				throw new ProcessErrorException("Process " + processInfo.FileName + " did not start.");
 			}
+		}
 
-			return tcs.Task;
+		private static async Task WriteInput(Process process, Stream input, CancellationToken cancellationToken)
+		{
+			await input.CopyToAsync(process.StandardInput.BaseStream, BUFFER_SIZE, cancellationToken).ConfigureAwait(false);
+			process.StandardInput.Close();
 		}
 
 		private static void WriteErrorData(Stream stream, string errorData)
@@ -190,5 +174,10 @@ namespace Utilities.Concurrency.Processes
 
 		private readonly TaskFactory _taskFactory;
 		private readonly TaskScheduler _taskScheduler;
+
+		/// <summary>
+		/// The default buffer size for Stream copy methods, taken from .NET documentation.
+		/// </summary>
+		private const int BUFFER_SIZE = 4096;
 	}
 }

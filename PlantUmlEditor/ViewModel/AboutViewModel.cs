@@ -21,7 +21,6 @@ using System.Linq;
 using System.Reflection;
 using PlantUmlEditor.Core.Dependencies;
 using Utilities.Mvvm;
-using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -30,10 +29,9 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class AboutViewModel : ViewModelBase
 	{
-		public AboutViewModel(IEnumerable<IExternalComponent> components)
+		public AboutViewModel(IEnumerable<IExternalComponent> externalComponents)
 		{
-			_components = Property.New(this, p => p.Components, OnPropertyChanged);
-			Components = new ObservableCollection<ComponentViewModel>(components.Select(d => new ComponentViewModel(d)));
+			Components = new ObservableCollection<ComponentViewModel>(externalComponents.Select(d => new ComponentViewModel(d)));
 		}
 
 		public void LoadComponents()
@@ -53,12 +51,6 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// All components the application depends on.
 		/// </summary>
-		public ICollection<ComponentViewModel> Components
-		{
-			get { return _components.Value; }
-			private set { _components.Value = value; }
-		}
-
-		private readonly Property<ICollection<ComponentViewModel>> _components;
+		public ICollection<ComponentViewModel> Components { get; private set; }
 	}
 }

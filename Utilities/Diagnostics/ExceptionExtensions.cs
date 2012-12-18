@@ -13,31 +13,33 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-// 
 
 using System;
-using System.Linq;
-using Utilities.Diagnostics;
+using System.Collections.Generic;
 
-namespace PlantUmlEditor.ViewModel.Notifications
+namespace Utilities.Diagnostics
 {
 	/// <summary>
-	/// A notification backed by an exception.
+	/// Provides Exception extension methods.
 	/// </summary>
-	public class ExceptionNotification : Notification
+	public static class ExceptionExtensions
 	{
 		/// <summary>
-		/// Creates a notification based on an exception.
+		/// Starting with the given exception as root, provides an enumerable containing all nested 
+		/// inner exceptions.
 		/// </summary>
-		/// <param name="exception"></param>
-		public ExceptionNotification(Exception exception)
+		/// <param name="exception">The root exception</param>
+		/// <returns>An enumerable containing all exceptions</returns>
+		public static IEnumerable<Exception> GetExceptionChain(this Exception exception)
 		{
-			_exception = exception;
+			yield return exception;
 
-			Message = String.Join(Environment.NewLine, exception.GetExceptionChain().Select(e => e.Message));
-			Severity = Severity.Critical;
+			var nextException = exception.InnerException;
+			while (nextException != null)
+			{
+				yield return nextException;
+				nextException = nextException.InnerException;
+			}
 		}
-
-		private readonly Exception _exception;
 	}
 }

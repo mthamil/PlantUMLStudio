@@ -97,6 +97,7 @@
     <Compile Include="Concurrency\TaskCompletionSourceExtensions.cs" />
     <Compile Include="Concurrency\TaskExtensions.cs" />
     <Compile Include="Concurrency\Tasks.cs" />
+    <Compile Include="Diagnostics\ExceptionExtensions.cs" />
     <Compile Include="DisposableBase.cs" />
     <Compile Include="InputOutput\AsyncStream.cs" />
     <Compile Include="InputOutput\DirectoryMonitor.cs" />

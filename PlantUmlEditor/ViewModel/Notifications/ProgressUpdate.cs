@@ -15,6 +15,9 @@
 //    limitations under the License.
 // 
 using System;
+using System.Linq;
+using System.Text;
+using Utilities.Diagnostics;
 
 namespace PlantUmlEditor.ViewModel.Notifications
 {
@@ -44,7 +47,8 @@ namespace PlantUmlEditor.ViewModel.Notifications
 		/// <param name="exception">The exception that caused termination of progress</param>
 		public static ProgressUpdate Failed(Exception exception)
 		{
-			return new ProgressUpdate { PercentComplete = null, Message = exception.Message, IsFinished = true };
+			string message = String.Join(Environment.NewLine, exception.GetExceptionChain().Select(e => e.Message));
+			return new ProgressUpdate { PercentComplete = null, Message = message, IsFinished = true };
 		}
 
 		/// <summary>

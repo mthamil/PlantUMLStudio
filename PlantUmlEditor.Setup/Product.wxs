@@ -91,6 +91,7 @@
 
     <Component Id="PlantUmlLib" Directory="PlantUmlDir" Guid="64DD6AFF-6AAC-4280-8FD3-EF485FE4233D">
       <File Id="PlantUmlJar" Name="plantuml.jar" Source="$(var.PlantUmlEditor.TargetDir)PlantUML\plantuml.jar" KeyPath="yes"/>
+      <RemoveFile Id="PlantUmlBackups" Name="plantuml.jar_*.bak" On="uninstall"/>
     </Component>
     
 	</Fragment>

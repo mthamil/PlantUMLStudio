@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   
 	<Product Id="*" Name="PlantUML Editor" Language="1033" Version="2.0.0.0" Manufacturer="Hamilton" UpgradeCode="51D909D7-1787-445A-9111-39F63411BDBD">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
 		<MediaTemplate EmbedCab="yes"/>
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    
+    <Condition Message="This application requires .NET Framework v4.5. Please install the .NET Framework then run this installer again.">
+      Installed OR NETFRAMEWORK45
+    </Condition>
 
 		<Feature Id="ApplicationFeature" Title="PlantUmlEditor.Setup" Level="1">
 			<ComponentGroupRef Id="ApplicationComponents"/>

@@ -215,8 +215,11 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		{
 			get
 			{
-				yield return new object[] { false, null };
-				yield return new object[] { true, new PreviewDiagramViewModel(new Diagram()) };
+				return new TheoryDataSet<bool, PreviewDiagramViewModel>
+				{
+					{ false, null },
+					{ true, new PreviewDiagramViewModel(new Diagram()) }
+				};
 			}
 		}
 
@@ -267,6 +270,18 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Equal(expected, actual);
 		}
 
+		public static IEnumerable<object[]> CanDeleteDiagramData
+		{
+			get
+			{
+				return new TheoryDataSet<bool, PreviewDiagramViewModel>
+				{
+					{ false, null },
+					{ true, new PreviewDiagramViewModel(new Diagram()) }
+				};
+			}
+		}
+
 		[Fact]
 		public void Test_DeleteDiagramCommand()
 		{
@@ -284,16 +299,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			Assert.Empty(explorer.PreviewDiagrams);
 			diagramIO.Verify(dio => dio.DeleteAsync(preview.Diagram));
 		}
-
-		public static IEnumerable<object[]> CanDeleteDiagramData
-		{
-			get
-			{
-				yield return new object[] { false, null };
-				yield return new object[] { true, new PreviewDiagramViewModel(new Diagram()) };
-			}
-		}
-
 
 		[Fact]
 		public void Test_DiagramFileDeleted()

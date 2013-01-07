@@ -37,7 +37,9 @@ namespace Unit.Tests.Utilities.Controls.Behaviors.AvalonEdit
 		{
 			get
 			{
-				yield return new object[] { 
+				return new TheoryDataSet<string, IList<NewFolding>>
+				{
+					{ 
 @"note left
 	jufcjsffj
 	note right
@@ -46,122 +48,123 @@ namespace Unit.Tests.Utilities.Controls.Behaviors.AvalonEdit
 				ikjhkjhfj
 			end note
 	end note
-end note", new [] { new NewFolding(0, 109), new NewFolding(23, 99), new NewFolding(46, 88) } };
+end note", new [] { new NewFolding(0, 109), new NewFolding(23, 99), new NewFolding(46, 88) } },
 
-				yield return new object[] { 
+					{ 
 @"activate A
 	jufcjsffj
-deactivate A", new [] { new NewFolding(0, 36) } };
+deactivate A", new [] { new NewFolding(0, 36) } },
 
-				yield return new object[] { 
+					{ 
 @"activate  A
 	jufcjsffj
-deactivate       A", new [] { new NewFolding(0, 43) } };
+deactivate       A", new [] { new NewFolding(0, 43) } },
 
-				yield return new object[] { 
+					{ 
 @"activate A
 	jufcjsffj
-deactivate B", new List<NewFolding>() };
+deactivate B", new List<NewFolding>() },
 
-				yield return new object[] { 
+					{ 
 @"activate A
 	jufcjsffj
-deactivate Adsds", new List<NewFolding>() };
+deactivate Adsds", new List<NewFolding>() },
 
-				yield return new object[] { 
-@"activate A jufcjsffj deactivate B", new List<NewFolding>() };
+					{ 
+@"activate A jufcjsffj deactivate B", new List<NewFolding>() },
 
-				yield return new object[] { 
+					{ 
 @"if ihusjvcs
 	jufcjsffj
-endif", new List<NewFolding>() };
+endif", new List<NewFolding>() },
 
-				yield return new object[] { 
+					{ 
 @"if ihusjvcs then
 	jufcjsffj
-endif asas", new [] { new NewFolding(0, 40) } };	// This tests that we are not TOO strict with folding.
+endif asas", new [] { new NewFolding(0, 40) } },	// This tests that we are not TOO strict with folding.
 
-				yield return new object[] { 
+					{ 
 @"if ihusjvcs then
 	jufcjsffj
-endif", new [] { new NewFolding(0, 35) } };
+endif", new [] { new NewFolding(0, 35) } },
 
-				yield return new object[] { 
+					{ 
 @"--> [jhchjbc] if ihusjvcs then
 	jufcjsffj
-endif", new [] { new NewFolding(13, 49) } };
+endif", new [] { new NewFolding(13, 49) } },
 
-				yield return new object[] { 
+					{ 
 @"partition icugucue {
 	jufcjsffj
-}", new [] { new NewFolding(0, 35) } };
+}", new [] { new NewFolding(0, 35) } },
 
-				yield return new object[] { 
+					{ 
 @"class C {
 	jufcjsffj
-}", new [] { new NewFolding(0, 24) } };
+}", new [] { new NewFolding(0, 24) } },
 
-				yield return new object[] { 
+					{ 
 @"interface I {
 	jufcjsffj
-}", new [] { new NewFolding(0, 28) } };
+}", new [] { new NewFolding(0, 28) } },
 
-				yield return new object[] { 
+					{ 
 @"state S {
 	jufcjsffj
-}", new [] { new NewFolding(0, 24) } };
+}", new [] { new NewFolding(0, 24) } },
 
-				yield return new object[] { 
+					{ 
 @"enum E {
 	jufcjsffj
-}", new [] { new NewFolding(0, 23) } };
+}", new [] { new NewFolding(0, 23) } },
 
-				yield return new object[] { 
+					{ 
 @"abstract class C {
 	
-}", new [] { new NewFolding(0, 24) } };
+}", new [] { new NewFolding(0, 24) } },
 
-				yield return new object[] { 
+					{ 
 @"package P {
 	jufcjsffj
-}", new [] { new NewFolding(0, 26) } };
+}", new [] { new NewFolding(0, 26) } },
 
-				yield return new object[] { 
+					{ 
 @"package P
 	jufcjsffj
-end package", new [] { new NewFolding(0, 34) } };
+end package", new [] { new NewFolding(0, 34) } },
 
-				yield return new object[] { 
+					{ 
 @"namespace Name.space {
 	jufcjsffj
-}", new [] { new NewFolding(0, 37) } };
+}", new [] { new NewFolding(0, 37) } },
 
-				yield return new object[] { 
+					{ 
 @"title
 	jufcjsffj
-end title", new [] { new NewFolding(0, 28) } };
+end title", new [] { new NewFolding(0, 28) } },
 
-				yield return new object[] { 
+					{ 
 @"title
 	jufcjsffj
-end titledfdfdf", new List<NewFolding>() };
+end titledfdfdf", new List<NewFolding>() },
 
-				yield return new object[] { 
+					{ 
 @"box ""Box""
 	jufcjsffj
-end box", new [] { new NewFolding(0, 30) } };
+end box", new [] { new NewFolding(0, 30) } },
 
-				yield return new object[] { 
+					{ 
 @"box ""Box""
 	jufcjsffj
-end boxghghg", new List<NewFolding>() };
+end boxghghg", new List<NewFolding>() },
 
-				yield return new object[] { 
+					{ 
 @"boxsdsds ""A""
 	jufcjsffj
-end box", new List<NewFolding>() };
+end box", new List<NewFolding>() }
 
-            }
+				};
+			}
 		}
 
 		private readonly PatternBasedFoldingStrategy foldingStrategy = new PatternBasedFoldingStrategy(new PlantUmlFoldRegions());

@@ -13,10 +13,13 @@ namespace Unit.Tests.Utilities.Controls.Converters
 		{
 			get
 			{
-				yield return new object[] { new Uri("http://somesite"),		"http://somesite" };
-				yield return new object[] { new Uri("file:///C:/somefile"), "C:\\somefile" };
-				yield return new object[] { null,							"" };
-				yield return new object[] { null,							"http://somesite\\" };
+				return new TheoryDataSet<Uri, string>
+				{
+					{ new Uri("http://somesite"),	  "http://somesite" },
+					{ new Uri("file:///C:/somefile"), "C:\\somefile" },
+					{ null,							  "" },
+					{ null,							  "http://somesite\\" }
+				};
 			}
 		}
 
@@ -35,9 +38,12 @@ namespace Unit.Tests.Utilities.Controls.Converters
 		{
 			get
 			{
-				yield return new object[] { "http://somesite/", new Uri("http://somesite") };
-				yield return new object[] { "C:\\somefile",		new Uri("file:///C:/somefile") };
-				yield return new object[] { "",					null };
+				return new TheoryDataSet<string, Uri>
+				{
+					{ "http://somesite/", new Uri("http://somesite") },
+					{ "C:\\somefile",	  new Uri("file:///C:/somefile") },
+					{ "",				  null }
+				};
 			}
 		}
 

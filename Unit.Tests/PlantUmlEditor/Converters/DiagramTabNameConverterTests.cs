@@ -36,10 +36,13 @@ namespace Unit.Tests.PlantUmlEditor.Converters
 		{
 			get
 			{
-				yield return new object[] { null };
-				yield return new object[] { new object[] { "test", true, 1 } };
-				yield return new object[] { new object[] { 1, true } };
-				yield return new object[] { new object[] { "test", 1 } };
+				return new TheoryDataSet<object[]>
+				{
+					null,
+					new object[] { "test", true, 1 },
+					new object[] { 1, true },
+					new object[] { "test", 1 }
+				};
 			}
 		}
 

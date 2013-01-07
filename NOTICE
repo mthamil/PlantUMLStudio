@@ -39,6 +39,12 @@
             http://code.google.com/p/moq/
             All rights reserved.
 
+        TheoryDataSet.cs is from ASP.Net, provides theory test support, 
+        and is released under the Apache 2.0 license:
+            Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+            http://aspnetwebstack.codeplex.com/
+
+
    The PlantUML Editor software originated at: 
         http://code.google.com/p/plantumleditor/
    

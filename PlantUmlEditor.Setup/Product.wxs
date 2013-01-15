@@ -2,7 +2,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   
-	<Product Id="*" Name="PlantUML Editor" Language="1033" Version="2.0.0.0" Manufacturer="Hamilton" UpgradeCode="51D909D7-1787-445A-9111-39F63411BDBD">
+	<Product Id="*" Name="PlantUML Editor" Language="1033" Version="2.0.0.0" Manufacturer="Matt Hamilton" UpgradeCode="51D909D7-1787-445A-9111-39F63411BDBD">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
@@ -17,6 +17,7 @@
 			<ComponentGroupRef Id="ApplicationComponents"/>
       <ComponentGroupRef Id="HighlightingDefinitions"/>
       <ComponentRef Id="PlantUmlLib"/>
+      <ComponentGroupRef Id="SnippetsGroup"/>
 		</Feature>
 	</Product>
 

@@ -10,6 +10,8 @@
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\WiX Toolset\v4\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\WiX Toolset\v4\Wix.targets</WixTargetsPath>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -19,6 +21,10 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <CompilerAdditionalOptions>"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor.Setup\bin\Release\Snippets.wxs" -dSnippetsSource="C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Release\snippets"</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor.Setup\obj\Release\Snippets.wixobj"</LinkerAdditionalOptions>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
@@ -64,6 +70,9 @@
     </WixExtension>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PreBuildEvent>"%25WIX%25\bin\heat.exe" dir "$(SolutionDir)PlantUmlEditor\$(OutDir)snippets" -gg -g1 -sfrag -dr INSTALLDIR -var var.SnippetsSource -cg SnippetsGroup -out Snippets.wxs</PreBuildEvent>
+  </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
 	Other similar extension points exist, see Wix.targets.

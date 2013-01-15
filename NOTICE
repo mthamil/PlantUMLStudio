@@ -1,4 +1,4 @@
-   PlantUML Editor 2
+   PlantUML Editor
    Copyright 2012 Matthew Hamilton - https://github.com/mthamil/PlantUMLEditor
    Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 
@@ -12,6 +12,10 @@
         Autofac IoC Container
         Copyright (c) 2007-2010 Autofac Contributors
         http://code.google.com/p/autofac/wiki/Contributing
+
+   UAC checking functionality is performed using the UserAccountControl library.
+   It is released uder the Microsoft Public License (Ms-PL):
+        https://bitbucket.org/olivierdagenais/useraccountcontrol
 
    Attached Behavior and Trigger/Action functionality is provided by
    System.Windows.Interactivity from the Microsoft Blend SDK:

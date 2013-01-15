@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Core.Dependencies;
+using PlantUmlEditor.Core.Security;
 using PlantUmlEditor.ViewModel;
 using Utilities;
 using Utilities.Concurrency;
@@ -21,7 +22,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			component.SetupGet(c => c.Name).Returns("Name");
 			
 			// Act.
-			var viewModel = new ComponentViewModel(component.Object);
+			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 
 			// Assert.
 			Assert.Equal("Name", viewModel.Name);
@@ -39,7 +40,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
 				.Returns(Task.FromResult(Option<string>.Some("NewerVersion")));
 
-			var viewModel = new ComponentViewModel(component.Object);
+			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 
 			// Act.
 			await viewModel.LoadAsync();
@@ -61,13 +62,15 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 			component.Setup(c => c.DownloadLatestAsync(It.IsAny<CancellationToken>(), It.IsAny<IProgress<DownloadProgressChangedEventArgs>>()))
 				.Returns(Tasks.FromSuccess());
 
-			var viewModel = new ComponentViewModel(component.Object);
+			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 
 			// Act.
 			viewModel.UpdateCommand.Execute(null);
 
 			// Assert.
 			Assert.True(viewModel.UpdateCompleted);
-		} 
+		}
+
+		private readonly Mock<ISecurityService> securityService = new Mock<ISecurityService>();
 	}
 }

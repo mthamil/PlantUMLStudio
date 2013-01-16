@@ -13,10 +13,6 @@
         Copyright (c) 2007-2010 Autofac Contributors
         http://code.google.com/p/autofac/wiki/Contributing
 
-   UAC checking functionality is performed using the UserAccountControl library.
-   It is released uder the Microsoft Public License (Ms-PL):
-        https://bitbucket.org/olivierdagenais/useraccountcontrol
-
    Attached Behavior and Trigger/Action functionality is provided by
    System.Windows.Interactivity from the Microsoft Blend SDK:
         http://www.microsoft.com/en-us/download/details.aspx?id=10801

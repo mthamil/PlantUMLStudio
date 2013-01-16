@@ -14,7 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using UserAccountControl;
+using System.Security.Principal;
 
 namespace PlantUmlEditor.Core.Security
 {
@@ -23,12 +23,12 @@ namespace PlantUmlEditor.Core.Security
 	/// </summary>
 	public class WindowsSecurityService : ISecurityService
 	{
-		/// <summary>
-		/// Whether the current process has administrative priviledges.
-		/// </summary>
+		/// <see cref="ISecurityService.HasAdminPriviledges"/>
 		public bool HasAdminPriviledges()
 		{
-			return Uac.IsRunAsAdmin();
+			var identity = WindowsIdentity.GetCurrent();
+			var principal = new WindowsPrincipal(identity);
+			return principal.IsInRole(WindowsBuiltInRole.Administrator);
 		}
 	}
 }

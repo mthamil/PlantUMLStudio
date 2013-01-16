@@ -109,14 +109,14 @@
                                         <TextBlock.Style>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="False">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="False">
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                         <Setter Property="Text" Value="No"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="True">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="{x:Null}">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="{x:Null}">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding UpdateCompleted}" Value="True">
@@ -138,13 +138,13 @@
                                         <TextBlock.Style>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="True">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="True">
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="False">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="False">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding HasUpdate}" Value="{x:Null}">
+                                                    <DataTrigger Binding="{Binding HasAvailableUpdate}" Value="{x:Null}">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding UpdateCompleted}" Value="True">
@@ -153,6 +153,14 @@
                                                     <DataTrigger Binding="{Binding UpdateProgress.InProgress}" Value="True">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
+                                                    
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding HasAvailableUpdate}" Value="True"/>
+                                                            <Condition Binding="{Binding HasUpdatePermission}" Value="False"/> 
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="ToolTip" Value="Please run application as administrator to perform update."/>
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>

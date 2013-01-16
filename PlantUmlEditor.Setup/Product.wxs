@@ -80,10 +80,6 @@
         <File Id="ExpressionInteractionsDll" Name="Microsoft.Expression.Interactions.dll" Source="$(var.PlantUmlEditor.TargetDir)Microsoft.Expression.Interactions.dll"/>
       </Component>
 
-      <Component Id="UserAccessControlLib" Guid="8C5C8BC3-ED8D-4FD4-A807-A5976E07DB2E">
-        <File Id="UserAccessControlDll" Name="UserAccountControl.dll" Source="$(var.PlantUmlEditor.TargetDir)UserAccountControl.dll" KeyPath="yes"/>
-      </Component>
-
     </ComponentGroup>
 
     <ComponentGroup Id="HighlightingDefinitions" Directory="INSTALLDIR">

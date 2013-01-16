@@ -33,7 +33,7 @@ namespace PlantUmlEditor.ViewModel
 		public AboutViewModel(IEnumerable<IExternalComponent> externalComponents, Func<IExternalComponent, ComponentViewModel> componentFactory)
 		{
 			_componentFactory = componentFactory;
-			Components = new ObservableCollection<ComponentViewModel>(externalComponents.Select(componentFactory));
+			Components = new ObservableCollection<ComponentViewModel>(externalComponents.Select(_componentFactory));
 		}
 
 		public void LoadComponents()

@@ -43,12 +43,12 @@ namespace PlantUmlEditor.ViewModel
 			_currentVersion = Property.New(this, p => p.CurrentVersion, OnPropertyChanged);
 			_versionProgress = Property.New(this, p => p.VersionProgress, OnPropertyChanged);
 
-			_hasUpdate = Property.New(this, p => p.HasUpdate, OnPropertyChanged);
+			_hasAvailableUpdate = Property.New(this, p => p.HasAvailableUpdate, OnPropertyChanged)
+				.AlsoChanges(p => p.CanUpdate);
 			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
 			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
 
 			UpdateCommand = new BoundRelayCommand<ComponentViewModel>(async _ => await UpdateAsync(), p => p.CanUpdate, this);
-			_canUpdate = Property.New(this, p => p.CanUpdate, OnPropertyChanged);
 			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
 		}
 
@@ -83,11 +83,10 @@ namespace PlantUmlEditor.ViewModel
 			var updateCheckResult = await _externalComponent.HasUpdateAsync();
 			UpdateProgress.PercentComplete = null;
 
-			HasUpdate = updateCheckResult.HasValue;
+			HasAvailableUpdate = updateCheckResult.HasValue;
 			updateCheckResult.Do(latest =>
 			{
 				LatestVersion = latest;
-				CanUpdate = true;
 			});
 		}
 
@@ -119,12 +118,12 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Whether a dependency has an update available.
+		/// Whether a dependency has an available update.
 		/// </summary>
-		public bool? HasUpdate
+		public bool? HasAvailableUpdate
 		{
-			get { return _hasUpdate.Value; }
-			private set { _hasUpdate.Value = value; }
+			get { return _hasAvailableUpdate.Value; }
+			private set { _hasAvailableUpdate.Value = value; }
 		}
 
 		/// <summary>
@@ -146,12 +145,19 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether current permissions allow an update.
+		/// </summary>
+		public bool HasUpdatePermission
+		{
+			get { return _securityService.HasAdminPriviledges(); }
+		}
+
+		/// <summary>
 		/// Whether an update can be performed.
 		/// </summary>
 		public bool CanUpdate
 		{
-			get { return _canUpdate.Value; }
-			private set { _canUpdate.Value = value; }
+			get { return HasAvailableUpdate.HasValue && HasAvailableUpdate.Value && HasUpdatePermission; }
 		}
 
 		/// <summary>
@@ -161,7 +167,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private async Task UpdateAsync()
 		{
-			CanUpdate = false;
 			UpdateProgress = new ProgressNotification
 			{
 				PercentComplete = 0,
@@ -194,10 +199,9 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<string> _name;
 		private readonly Property<string> _currentVersion;
 		private readonly Property<IProgressNotification> _versionProgress;
-		private readonly Property<bool?> _hasUpdate;
+		private readonly Property<bool?> _hasAvailableUpdate;
 		private readonly Property<IProgressNotification> _updateProgress;
 		private readonly Property<string> _latestVersion;
-		private readonly Property<bool> _canUpdate;
 		private readonly Property<bool> _updateCompleted;
 
 		private readonly IExternalComponent _externalComponent;

@@ -33,6 +33,21 @@ namespace Unit.Tests
 		}
 
 		/// <summary>
+		/// Verifies that the provided object did not raise INotifyPropertyChanged.PropertyChanged as a result of executing the given
+		/// test code.
+		/// </summary>
+		/// <typeparam name="TDeclaring">The type of object declaring the property</typeparam>
+		/// <typeparam name="TValue">The value of the property</typeparam>
+		/// <param name="object">The object declaring the property</param>
+		/// <param name="property">The property</param>
+		/// <param name="testCode">The code that should not change the property</param>
+		public static void PropertyDoesNotChange<TDeclaring, TValue>(TDeclaring @object, Expression<Func<TDeclaring, TValue>> property, Assert.PropertyChangedDelegate testCode)
+			where TDeclaring : INotifyPropertyChanged
+		{
+			DoesNotRaise<INotifyPropertyChanged>(@object, p => p.PropertyChanged += null, () => testCode());
+		}
+
+		/// <summary>
 		/// Determines whether two sequences are equal by comparing length and element equality.
 		/// The type of element's default equality comparer is used.
 		/// </summary>

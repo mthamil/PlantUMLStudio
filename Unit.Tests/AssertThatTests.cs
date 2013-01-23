@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Concurrency;
@@ -279,6 +281,50 @@ namespace Unit.Tests
 		}
 
 		[Fact]
+		public void Test_PropertyChanged_EventNotRaised()
+		{
+			// Arrange.
+			var test = new EventTest { IntProperty = 3 };
+
+			// Act/Assert.
+			Assert.Throws<PropertyChangedException>(() =>
+				AssertThat.PropertyChanged(test, t => t.IntProperty, () => test.IntProperty = 3));
+		}
+
+		[Fact]
+		public void Test_PropertyChanged_EventRaised()
+		{
+			// Arrange.
+			var test = new EventTest();
+
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.PropertyChanged(test, t => t.IntProperty, () => test.IntProperty = 3));
+		}
+
+		[Fact]
+		public void Test_PropertyDoesNotChange_EventNotRaised()
+		{
+			// Arrange.
+			var test = new EventTest { IntProperty = 3 };
+
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.PropertyDoesNotChange(test, t => t.IntProperty, () => test.IntProperty = 3));
+		}
+
+		[Fact]
+		public void Test_PropertyDoesNotChange_EventRaised()
+		{
+			// Arrange.
+			var test = new EventTest();
+
+			// Act/Assert.
+			Assert.Throws<RaisesException>(() =>
+				AssertThat.PropertyDoesNotChange(test, t => t.IntProperty, () => test.IntProperty = 3));
+		}
+
+		[Fact]
 		public void Test_Throws_Task_Success()
 		{
 			// Act/Assert.
@@ -349,7 +395,7 @@ namespace Unit.Tests
 			bool EventRaised { get; }
 		}
 
-		private class EventTest : IEventTest
+		private class EventTest : IEventTest, INotifyPropertyChanged
 		{
 			public event EventHandler<TestEventArgs> TestEvent;
 			public void OnTestEvent(int value)
@@ -362,6 +408,30 @@ namespace Unit.Tests
 			}
 
 			public bool EventRaised { get; private set; }
+
+			public int IntProperty 
+			{
+				get { return _intProperty; }
+				set
+				{
+					if (_intProperty != value)
+					{
+						_intProperty = value;
+						OnPropertyChanged();
+					}
+				}
+			}
+
+			private int _intProperty;
+
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+			{
+				PropertyChangedEventHandler handler = PropertyChanged;
+				if (handler != null) 
+					handler(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 
 		public class TestEventArgs : EventArgs

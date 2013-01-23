@@ -167,8 +167,8 @@ namespace Unit.Tests.Utilities.PropertyChanged
 			property.Value = -1;
 
 			// Act/Assert.
-			AssertThat.DoesNotRaise<INotifyPropertyChanged>(this,
-				x => x.PropertyChanged += null,
+			AssertThat.PropertyDoesNotChange(this, 
+				x => x.IntValue, 
 				() => property.Value = -2);
 		}
 

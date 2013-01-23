@@ -143,6 +143,36 @@ namespace Unit.Tests.Utilities.PropertyChanged
 		}
 
 		[Fact]
+		public void Test_EqualWhen_Changes()
+		{
+			// Arrange.
+			Property<int> property = Property.New(this, x => x.IntValue, OnPropertyChanged)
+											 .EqualWhen((older, newer) => older > newer);
+
+			property.Value = -1;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(this,
+				x => x.IntValue,
+				() => property.Value = 4);
+		}
+
+		[Fact]
+		public void Test_EqualWhen_DoesNotChange()
+		{
+			// Arrange.
+			Property<int> property = Property.New(this, x => x.IntValue, OnPropertyChanged)
+											 .EqualWhen((older, newer) => older > newer);
+
+			property.Value = -1;
+
+			// Act/Assert.
+			AssertThat.DoesNotRaise<INotifyPropertyChanged>(this,
+				x => x.PropertyChanged += null,
+				() => property.Value = -2);
+		}
+
+		[Fact]
 		public void Test_PropertyBuilder_PropertyAsDifferentType()
 		{
 			// Arrange.

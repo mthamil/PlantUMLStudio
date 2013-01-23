@@ -81,12 +81,22 @@ namespace Utilities.PropertyChanged
 		}
 
 		/// <summary>
+		/// Specifies a custom comparison to use to determine when a property's value changes.
+		/// </summary>
+		/// <param name="equalityComparison">Custom equality comparison, if Equals is not suitable for comparing objects of type V</param>
+		public PropertyBuilder<T, V> EqualWhen(Func<V, V, bool> equalityComparison)
+		{
+			_customComparison = equalityComparison;
+			return this;
+		}
+
+		/// <summary>
 		/// Finishes building the Property&lt;V&gt;.
 		/// </summary>
 		/// <returns>The newly created Property&lt;V&gt;</returns>
 		public Property<V> Get()
 		{
-			return new Property<V>(_propertyName, _propertyChangedRaiser, _dependentPropertyNames);
+			return new Property<V>(_propertyName, _propertyChangedRaiser, _dependentPropertyNames, _customComparison);
 		}
 
 		/// <summary>
@@ -124,6 +134,7 @@ namespace Utilities.PropertyChanged
 		private readonly string _propertyName;
 		private readonly Action<string> _propertyChangedRaiser;
 		private readonly ICollection<string> _dependentPropertyNames = new List<string>();
+		private Func<V, V, bool> _customComparison;
 	}
 
 	/// <summary>
@@ -146,11 +157,14 @@ namespace Utilities.PropertyChanged
 		/// <param name="propertyName">The name of the property</param>
 		/// <param name="propertyChangedRaiser">Raises a property changed event when a property's value changes</param>
 		/// <param name="dependentPropertyNames">Names of properties that are also changed when the property's value changes</param>
-		public Property(string propertyName, Action<string> propertyChangedRaiser, IEnumerable<string> dependentPropertyNames)
+		/// <param name="equalityComparison">An optional custom equality comparison, if Object.Equals is not suitable for comparing objects of type V</param>
+		public Property(string propertyName, Action<string> propertyChangedRaiser, IEnumerable<string> dependentPropertyNames, Func<V, V, bool> equalityComparison = null)
 		{
 			_propertyChangedRaiser = propertyChangedRaiser;
 			_name = propertyName;
 			_dependentPropertyNames = dependentPropertyNames;
+			if (equalityComparison != null)
+				_equalityComparison = equalityComparison;
 		}
 
 		/// <summary>
@@ -170,7 +184,7 @@ namespace Utilities.PropertyChanged
 		/// <returns>True if the value actually changed, false otherwise</returns>
 		public bool TrySetValue(V newValue)
 		{
-			if (!Equals(_value, newValue))
+			if (!_equalityComparison(_value, newValue))
 			{
 				_value = newValue;
 				_propertyChangedRaiser(_name);
@@ -195,5 +209,6 @@ namespace Utilities.PropertyChanged
 		private V _value;
 		private readonly Action<string> _propertyChangedRaiser;
 		private readonly IEnumerable<string> _dependentPropertyNames;
+		private readonly Func<V, V, bool> _equalityComparison = (x, y) => Object.Equals(x, y);
 	}
 }

@@ -22,7 +22,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		public DiagramEditorViewModelTests()
 		{
 			autoSaveTimer.SetupProperty(t => t.Interval);
-			previewDiagram = new PreviewDiagramViewModel(diagram);
 
 			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
 				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
@@ -417,7 +416,7 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 
 		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(previewDiagram, codeEditor.Object, notifications.Object, renderer.Object,
+			return new DiagramEditorViewModel(diagram, codeEditor.Object, notifications.Object, renderer.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
@@ -425,7 +424,6 @@ namespace Unit.Tests.PlantUmlEditor.ViewModel
 		private DiagramEditorViewModel editor;
 
 		private readonly Diagram diagram = new Diagram();
-		private readonly PreviewDiagramViewModel previewDiagram;
 
 		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
 		private readonly Mock<INotifications> notifications = new Mock<INotifications>();

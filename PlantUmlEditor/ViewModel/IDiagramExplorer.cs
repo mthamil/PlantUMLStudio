@@ -17,6 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using PlantUmlEditor.Core;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -34,6 +36,13 @@ namespace PlantUmlEditor.ViewModel
 		/// The currently available diagrams.
 		/// </summary>
 		ICollection<PreviewDiagramViewModel> PreviewDiagrams { get; }
+
+		/// <summary>
+		/// Asynchronously requests loading of a diagram located at the given URI.
+		/// </summary>
+		/// <param name="diagramPath">The path to the diagram file</param>
+		/// <returns>A Task that can be used to wait on the operation</returns>
+		Task<Diagram> OpenDiagramAsync(Uri diagramPath);
 
 		/// <summary>
 		/// Event raised when a preview diagram should be opened for editing.

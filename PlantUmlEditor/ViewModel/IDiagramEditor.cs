@@ -51,7 +51,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// The rendered diagram image.
 		/// </summary>
-		ImageSource DiagramImage { get; }
+		ImageSource DiagramImage { get; set; }
 
 		/// <summary>
 		/// Whether an editor's content can currently be saved.

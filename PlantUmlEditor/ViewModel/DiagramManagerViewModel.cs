@@ -1,19 +1,19 @@
-//  PlantUML Editor 2
+//  PlantUML Editor
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
+using PlantUmlEditor.Core;
 using Utilities.Collections;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
@@ -29,9 +30,12 @@ using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
 {
+	/// <summary>
+	/// Manages open diagrams and also serves as the main application driver.
+	/// </summary>
 	public class DiagramManagerViewModel : ViewModelBase
 	{
-		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<PreviewDiagramViewModel, IDiagramEditor> editorFactory, ISettings settings)
+		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<Diagram, IDiagramEditor> editorFactory, ISettings settings)
 		{
 			_explorer = explorer;
 			_editorFactory = editorFactory;
@@ -53,6 +57,16 @@ namespace PlantUmlEditor.ViewModel
 				c => c.Any(p => p.CanSave), this);
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
+		}
+
+		/// <summary>
+		/// Initializes the diagram manager.
+		/// </summary>
+		public async Task InitializeAsync()
+		{
+			// Restore previously opened files.
+			if (_settings.RememberOpenFiles)
+				await _settings.OpenFiles.Select(f => _explorer.OpenDiagramAsync(new Uri(f.FullName))).ToList();
 		}
 
 		void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
@@ -87,7 +101,8 @@ namespace PlantUmlEditor.ViewModel
 			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagram.Diagram));
 			if (diagramEditor == null)
 			{
-				diagramEditor = _editorFactory(diagram);
+				diagramEditor = _editorFactory(diagram.Diagram);
+				diagramEditor.DiagramImage = diagram.ImagePreview;
 				diagramEditor.Closing += diagramEditor_Closing;
 				diagramEditor.Closed += diagramEditor_Closed;
 				diagramEditor.Saved += diagramEditor_Saved;
@@ -177,6 +192,9 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		private void Close()
 		{
+			if (_settings.RememberOpenFiles)
+				_settings.OpenFiles = OpenDiagrams.Select(diagram => diagram.Diagram.File).ToList();
+
 			var unsavedOpenDiagrams = OpenDiagrams.Where(od => od.CodeEditor.IsModified).ToList();
 			foreach (var openDiagram in unsavedOpenDiagrams)
 			{
@@ -204,7 +222,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
 
 		private readonly IDiagramExplorer _explorer;
-		private readonly Func<PreviewDiagramViewModel, IDiagramEditor> _editorFactory;
+		private readonly Func<Diagram, IDiagramEditor> _editorFactory;
 		private readonly ISettings _settings;
 	}
 }

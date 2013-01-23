@@ -88,6 +88,7 @@ namespace PlantUmlEditor.Container
 				});;
 
 			builder.RegisterType<DiagramManagerViewModel>()
+				.OnActivated(c => c.Instance.InitializeAsync())
 				.SingleInstance();
 
 			builder.RegisterType<ComponentViewModel>();

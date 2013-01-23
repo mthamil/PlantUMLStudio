@@ -1,19 +1,19 @@
-//  PlantUML Editor 2
+//  PlantUML Editor
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -71,7 +71,11 @@ namespace PlantUmlEditor.ViewModel
 			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(async _ => await LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
 			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
-			OpenDiagramCommand = new RelayCommand<Uri>(OpenDiagram);
+			OpenDiagramCommand = new RelayCommand<Uri>(async uri =>
+			{
+				try { await OpenDiagramAsync(uri); }
+				catch (Exception e) { _notifications.Notify(new ExceptionNotification(e)); }
+			});
 			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
 			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
 		}
@@ -126,9 +130,7 @@ namespace PlantUmlEditor.ViewModel
 			set { _currentPreviewDiagram.Value = value; }
 		}
 
-		/// <summary>
-		/// The currently available diagrams.
-		/// </summary>
+		/// <see cref="IDiagramExplorer.PreviewDiagrams"/>
 		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
 		{
 			get { return _previewDiagrams.Value; }
@@ -144,9 +146,7 @@ namespace PlantUmlEditor.ViewModel
 			OnOpenPreviewRequested(preview);
 		}
 
-		/// <summary>
-		/// Event raised when a preview diagram should be opened for editing.
-		/// </summary>
+		/// <see cref="IDiagramExplorer.OpenPreviewRequested"/>
 		public event EventHandler<OpenPreviewRequestedEventArgs> OpenPreviewRequested;
 
 		private void OnOpenPreviewRequested(PreviewDiagramViewModel preview)
@@ -298,18 +298,13 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand OpenDiagramCommand { get; private set; }
 
-		private async void OpenDiagram(Uri diagramPath)
+		/// <see cref="IDiagramExplorer.OpenDiagramAsync"/>
+		public async Task<Diagram> OpenDiagramAsync(Uri diagramPath)
 		{
-			try
-			{
-				var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
-				var preview = _previewDiagramFactory(diagram);
-				OnOpenPreviewRequested(preview);
-			}
-			catch (Exception e)
-			{
-				_notifications.Notify(new ExceptionNotification(e));
-			}
+			var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
+			var preview = _previewDiagramFactory(diagram);
+			OnOpenPreviewRequested(preview);
+			return diagram;
 		}
 
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)

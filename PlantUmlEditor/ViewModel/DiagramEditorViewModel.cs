@@ -1,25 +1,24 @@
-//  PlantUML Editor 2
+//  PlantUML Editor
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,7 +46,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <summary>
 		/// Initializes a new diagram editor.
 		/// </summary>
-		/// <param name="previewDiagram">A preview of the diagram being edited</param>
+		/// <param name="diagram">The diagram being edited</param>
 		/// <param name="codeEditor">The code editor</param>
 		/// <param name="notifications">Creates objects that report progress</param>
 		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
@@ -55,12 +54,12 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
-		public DiagramEditorViewModel(PreviewDiagramViewModel previewDiagram, ICodeEditor codeEditor, INotifications notifications,
+		public DiagramEditorViewModel(Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
 			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
-			Diagram = previewDiagram.Diagram;
+			Diagram = diagram;
 
 			_notifications = notifications;
 			_diagramRenderer = diagramRenderer;
@@ -74,7 +73,6 @@ namespace PlantUmlEditor.ViewModel
 			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
 
 			_diagramImage = Property.New(this, p => p.DiagramImage, OnPropertyChanged);
-			DiagramImage = previewDiagram.ImagePreview;
 
 			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
 				.AlsoChanges(p => p.CanSave)

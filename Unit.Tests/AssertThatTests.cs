@@ -292,6 +292,17 @@ namespace Unit.Tests
 		}
 
 		[Fact]
+		public void Test_PropertyChanged_EventRaised_WrongProperty()
+		{
+			// Arrange.
+			var test = new EventTest();
+
+			// Act/Assert.
+			Assert.Throws<PropertyChangedException>(() =>
+				AssertThat.PropertyChanged(test, t => t.IntProperty, () => test.StringProperty = "value"));
+		}
+
+		[Fact]
 		public void Test_PropertyChanged_EventRaised()
 		{
 			// Arrange.
@@ -314,13 +325,24 @@ namespace Unit.Tests
 		}
 
 		[Fact]
+		public void Test_PropertyDoesNotChange_EventRaised_WrongProperty()
+		{
+			// Arrange.
+			var test = new EventTest();
+
+			// Act/Assert.
+			Assert.DoesNotThrow(() =>
+				AssertThat.PropertyDoesNotChange(test, t => t.IntProperty, () => test.StringProperty = "value"));
+		}
+
+		[Fact]
 		public void Test_PropertyDoesNotChange_EventRaised()
 		{
 			// Arrange.
 			var test = new EventTest();
 
 			// Act/Assert.
-			Assert.Throws<RaisesException>(() =>
+			Assert.Throws<PropertyDoesNotChangeException>(() =>
 				AssertThat.PropertyDoesNotChange(test, t => t.IntProperty, () => test.IntProperty = 3));
 		}
 
@@ -423,6 +445,21 @@ namespace Unit.Tests
 			}
 
 			private int _intProperty;
+
+			public string StringProperty
+			{
+				get { return _stringProperty; }
+				set
+				{
+					if (_stringProperty != value)
+					{
+						_stringProperty = value;
+						OnPropertyChanged();
+					}
+				}
+			}
+
+			private string _stringProperty;
 
 			public event PropertyChangedEventHandler PropertyChanged;
 

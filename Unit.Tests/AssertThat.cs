@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Utilities.Reflection;
 using Xunit;
@@ -44,7 +45,32 @@ namespace Unit.Tests
 		public static void PropertyDoesNotChange<TDeclaring, TValue>(TDeclaring @object, Expression<Func<TDeclaring, TValue>> property, Assert.PropertyChangedDelegate testCode)
 			where TDeclaring : INotifyPropertyChanged
 		{
-			DoesNotRaise<INotifyPropertyChanged>(@object, p => p.PropertyChanged += null, () => testCode());
+			object sender = null;
+			PropertyChangedEventArgs args = null;
+			PropertyChangedEventHandler handler = (o, e) =>
+			{
+				sender = o;
+				args = e;
+			};
+
+			try
+			{
+				@object.PropertyChanged += handler;
+				testCode();
+			}
+			finally
+			{
+				@object.PropertyChanged -= handler;
+			}
+
+			if (args != null && ReferenceEquals(sender, @object))
+			{
+				string propertyName = Reflect.PropertyOf(typeof(TDeclaring), property).Name;
+				if (args.PropertyName == propertyName)
+				{
+					throw new PropertyDoesNotChangeException(propertyName);
+				}
+			}
 		}
 
 		/// <summary>
@@ -426,5 +452,27 @@ namespace Unit.Tests
 		private readonly bool _actualFullyDrained;
 
 		private const string EMPTY_COLLECTION_MESSAGE = "Empty Sequence";
+	}
+
+	/// <summary>
+	/// Exception thrown when code unexpectedly changes a property.
+	/// </summary>
+	[Serializable]
+	public class PropertyDoesNotChangeException : AssertException
+	{
+		/// <summary>
+		/// Creates a new instance of the <see cref="T:Unit.Tests.PropertyDoesNotChangeException"/> class.
+		/// </summary>
+		/// <param name="propertyName">The name of the property that should not have changed.</param>
+		public PropertyDoesNotChangeException(string propertyName)
+			: base(String.Format("PropertyDoesNotChange assertion failure: PropertyChanged event for property {0} was raised", propertyName))
+		{
+		}
+
+		/// <inheritdoc/>
+		protected PropertyDoesNotChangeException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
 	}
 }

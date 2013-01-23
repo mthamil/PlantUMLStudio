@@ -101,6 +101,7 @@
     <Compile Include="DisposableBase.cs" />
     <Compile Include="InputOutput\AsyncStream.cs" />
     <Compile Include="InputOutput\DirectoryMonitor.cs" />
+    <Compile Include="InputOutput\FileInfoPathEqualityComparer.cs" />
     <Compile Include="InputOutput\FileInfoExtensions.cs" />
     <Compile Include="InputOutput\FileSystemWatcherAdapter.cs" />
     <Compile Include="InputOutput\IDirectoryMonitor.cs" />

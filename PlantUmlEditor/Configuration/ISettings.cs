@@ -15,6 +15,7 @@
 //    limitations under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -44,6 +45,26 @@ namespace PlantUmlEditor.Configuration
 		/// The last directory diagrams were loaded from.
 		/// </summary>
 		DirectoryInfo LastDiagramLocation { get; set; }
+
+		/// <summary>
+		/// Whether to store the files that are open when the application exits and reopen them when it starts again.
+		/// </summary>
+		bool RememberOpenFiles { get; set; }
+
+		/// <summary>
+		/// The files that were open the last time the application exited.
+		/// </summary>
+		IEnumerable<FileInfo> OpenFiles { get; set; }
+
+		/// <summary>
+		/// Whether auto-save is enabled.
+		/// </summary>
+		bool AutoSaveEnabled { get; set; }
+
+		/// <summary>
+		/// The time to wait between auto-saves if enabled.
+		/// </summary>
+		TimeSpan AutoSaveInterval { get; set; }
 
 		/// <summary>
 		/// The URL where PlantUML can be downloaded.

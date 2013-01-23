@@ -121,5 +121,52 @@ namespace PlantUmlEditor.Properties {
                 return ((string)(this["GraphVizLocalVersionPattern"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RememberOpenFiles {
+            get {
+                return ((bool)(this["RememberOpenFiles"]));
+            }
+            set {
+                this["RememberOpenFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection OpenFiles {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["OpenFiles"]));
+            }
+            set {
+                this["OpenFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoSaveEnabled {
+            get {
+                return ((bool)(this["AutoSaveEnabled"]));
+            }
+            set {
+                this["AutoSaveEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:30:00")]
+        public global::System.TimeSpan AutoSaveInterval {
+            get {
+                return ((global::System.TimeSpan)(this["AutoSaveInterval"]));
+            }
+            set {
+                this["AutoSaveInterval"] = value;
+            }
+        }
     }
 }

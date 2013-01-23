@@ -32,5 +32,17 @@
     <Setting Name="GraphVizLocalVersionPattern" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.*version[\s]+(?&lt;version&gt;.+)[\s]+.*</Value>
     </Setting>
+    <Setting Name="RememberOpenFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="OpenFiles" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AutoSaveEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AutoSaveInterval" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:30:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -150,7 +150,7 @@ namespace Unit.Tests
 		/// <param name="task">The task that should not throw an exception</param>
 		public static void DoesNotThrow(Task task)
 		{
-			var exception = ExceptionRecorder.Record(task.Wait);
+			var exception = Record.Exception(() => task.Wait());
 			if (exception != null)
 				throw new DoesNotThrowException(exception);
 		}
@@ -295,31 +295,6 @@ namespace Unit.Tests
 			public EventArgs ArgsReceived { get; private set; }
 
 			public static readonly MethodInfo Handler = Reflect.MethodOf<EventProxy>(ep => ep.OnEvent(null, null));
-		}
-	}
-
-	/// <summary>
-	/// Provides utility methods for capturing exceptions.
-	/// </summary>
-	public static class ExceptionRecorder
-	{
-		/// <summary>
-		/// Records any exception.
-		/// </summary>
-		/// <param name="action">The action that may throw an exception</param>
-		/// <returns>The exception that was thrown or null if none was thrown</returns>
-		public static Exception Record(Action action)
-		{
-			Exception exception = null;
-			try
-			{
-				action();
-			}
-			catch (Exception e)
-			{
-				exception = e;
-			}
-			return exception;
 		}
 	}
 

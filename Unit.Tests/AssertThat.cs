@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -122,13 +123,13 @@ namespace Unit.Tests
 					}
 
 					if (expectedHasNext != actualHasNext)
-						throw new SequenceEqualException<T>(expectedBuffer, !expectedEnumerator.MoveNext(), actualBuffer, !actualEnumerator.MoveNext());
+						throw new SequenceEqualException(expectedBuffer, !expectedEnumerator.MoveNext(), actualBuffer, !actualEnumerator.MoveNext());
 
 					if (!actualHasNext || !expectedHasNext)
 						break;
 
 					if (!actualComparer.Equals(actualElement, expectedElement))
-						throw new SequenceEqualException<T>(expectedBuffer, !expectedEnumerator.MoveNext(), actualBuffer, !actualEnumerator.MoveNext());
+						throw new SequenceEqualException(expectedBuffer, !expectedEnumerator.MoveNext(), actualBuffer, !actualEnumerator.MoveNext());
 				}
 			}
 		}
@@ -363,26 +364,25 @@ namespace Unit.Tests
 	/// <summary>
 	/// Exceptions thrown when a SequenceEqual assertion fails.
 	/// </summary>
-	/// <typeparam name="T">The type of items in the sequences</typeparam>
-	public class SequenceEqualException<T> : AssertException
+	public class SequenceEqualException : AssertException
 	{
 		/// <summary>
-		/// Creates a new instance of the <see cref="SequenceEqualException{T}"/> class.
+		/// Creates a new instance of the <see cref="SequenceEqualException"/> class.
 		/// </summary>
 		/// <param name="expected">The expected sequence</param>
 		/// <param name="expectedFullyDrained">Whether the entirety of the expected sequence was evaluated</param>
 		/// <param name="actual">The actual sequence</param>
 		/// <param name="actualFullyDrained">Whether the entirety of the actual sequence was evaluated</param>
-		public SequenceEqualException(IEnumerable<T> expected, bool expectedFullyDrained, IEnumerable<T> actual, bool actualFullyDrained)
-			: base(typeof(SequenceEqualException<>).Name + " : SequenceEqual Assertion Failure")
+		public SequenceEqualException(IEnumerable expected, bool expectedFullyDrained, IEnumerable actual, bool actualFullyDrained)
+			: base(typeof(SequenceEqualException).Name + " : SequenceEqual Assertion Failure")
 		{
 			_expected = expected;
 			_actual = actual;
 			_expectedFullyDrained = expectedFullyDrained;
 			_actualFullyDrained = actualFullyDrained;
 
-			Actual = String.Join(",", _actual);
-			Expected = String.Join(",", _expected);
+			Actual = String.Join(",", _actual.Cast<object>());
+			Expected = String.Join(",", _expected.Cast<object>());
 		}
 
 		/// <summary>
@@ -421,8 +421,8 @@ namespace Unit.Tests
 			}
 		}
 
-		private readonly IEnumerable<T> _expected;
-		private readonly IEnumerable<T> _actual;
+		private readonly IEnumerable _expected;
+		private readonly IEnumerable _actual;
 		private readonly bool _expectedFullyDrained;
 		private readonly bool _actualFullyDrained;
 

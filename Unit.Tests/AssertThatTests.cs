@@ -24,12 +24,12 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2 };
 
 			// Act/Assert.
-			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,2,3", exception.Expected);
 			Assert.Equal("1,2", exception.Actual);
-			Assert.Equal("SequenceEqualException`1 : SequenceEqual Assertion Failure\r\nExpected: 1,2,3\r\nActual: 1,2", exception.Message);
+			Assert.Equal("SequenceEqualException : SequenceEqual Assertion Failure\r\nExpected: 1,2,3\r\nActual: 1,2", exception.Message);
 		}
 
 		[Fact]
@@ -40,12 +40,12 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,2", exception.Expected);
 			Assert.Equal("1,2,3", exception.Actual);
-			Assert.Equal("SequenceEqualException`1 : SequenceEqual Assertion Failure\r\nExpected: 1,2\r\nActual: 1,2,3", exception.Message);
+			Assert.Equal("SequenceEqualException : SequenceEqual Assertion Failure\r\nExpected: 1,2\r\nActual: 1,2,3", exception.Message);
 		}
 
 		[Fact]
@@ -56,12 +56,12 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1,4", exception.Expected);
 			Assert.Equal("1,2", exception.Actual);
-			Assert.Equal("SequenceEqualException`1 : SequenceEqual Assertion Failure\r\nExpected: 1,4,...\r\nActual: 1,2,...", exception.Message);
+			Assert.Equal("SequenceEqualException : SequenceEqual Assertion Failure\r\nExpected: 1,4,...\r\nActual: 1,2,...", exception.Message);
 		}
 
 		[Fact]
@@ -96,12 +96,12 @@ namespace Unit.Tests
 			var actual = new List<int> { 1, 2, 3 };
 
 			// Act/Assert.
-			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal(string.Empty, exception.Expected);
 			Assert.Equal("1", exception.Actual);
-			Assert.Equal("SequenceEqualException`1 : SequenceEqual Assertion Failure\r\nExpected: Empty Sequence\r\nActual: 1,...", exception.Message);
+			Assert.Equal("SequenceEqualException : SequenceEqual Assertion Failure\r\nExpected: Empty Sequence\r\nActual: 1,...", exception.Message);
 		}
 
 		[Fact]
@@ -112,12 +112,12 @@ namespace Unit.Tests
 			var actual = Enumerable.Empty<int>();
 
 			// Act/Assert.
-			var exception = Assert.Throws<SequenceEqualException<int>>(() =>
+			var exception = Assert.Throws<SequenceEqualException>(() =>
 				AssertThat.SequenceEqual(expected, actual));
 
 			Assert.Equal("1", exception.Expected);
 			Assert.Equal(string.Empty, exception.Actual);
-			Assert.Equal("SequenceEqualException`1 : SequenceEqual Assertion Failure\r\nExpected: 1,...\r\nActual: Empty Sequence", exception.Message);
+			Assert.Equal("SequenceEqualException : SequenceEqual Assertion Failure\r\nExpected: 1,...\r\nActual: Empty Sequence", exception.Message);
 		}
 
 		[Fact]

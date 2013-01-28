@@ -36,9 +36,6 @@ namespace PlantUmlEditor.Configuration
 		{
 			_settings = settings;
 
-			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
-			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
-
 			LastDiagramLocation = String.IsNullOrEmpty(_settings.LastPath)
 				? defaultDiagramLocation
 				: new DirectoryInfo(_settings.LastPath);
@@ -47,6 +44,12 @@ namespace PlantUmlEditor.Configuration
 			OpenFiles = settings.OpenFiles == null ? 
 				Enumerable.Empty<FileInfo>() :
 				settings.OpenFiles.Cast<string>().Select(fileName => new FileInfo(fileName)).ToList();
+
+			AutoSaveEnabled = settings.AutoSaveEnabled;
+			AutoSaveInterval = settings.AutoSaveInterval;
+
+			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
+			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
 
 			GraphVizLocalVersionPattern = new Regex(settings.GraphVizLocalVersionPattern);
 			PlantUmlDownloadLocation = settings.DownloadUrl;
@@ -60,14 +63,51 @@ namespace PlantUmlEditor.Configuration
 		private DotNetSettings()
 		{
 			_lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation, OnPropertyChanged)
-										   .EqualWhen((oldValue, newValue) => oldValue.FullName.Equals(newValue.FullName, StringComparison.OrdinalIgnoreCase));
+										   .EqualWhen((oldValue, newValue) => CheckEquality(oldValue, newValue, 
+											   (x, y) => x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase)));
 
 			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
 			_openFiles = Property.New(this, p => p.OpenFiles, OnPropertyChanged)
+								 .EqualWhen((oldValue, newValue) => CheckEquality(oldValue, newValue, 
+									 (x, y) => x.SequenceEqual(y, FileInfoPathEqualityComparer.Instance)));
 
-								 .EqualWhen((oldValue, newValue) => oldValue.SequenceEqual(newValue, FileInfoPathEqualityComparer.Instance));
 			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
+		}
+
+		/// <see cref="ISettings.LastDiagramLocation"/>
+		public DirectoryInfo LastDiagramLocation
+		{
+			get { return _lastDiagramLocation.Value; }
+			set { _lastDiagramLocation.Value = value; }
+		}
+
+		/// <see cref="ISettings.RememberOpenFiles"/>
+		public bool RememberOpenFiles
+		{
+			get { return _rememberOpenFiles.Value; }
+			set { _rememberOpenFiles.Value = value; }
+		}
+
+		/// <see cref="ISettings.OpenFiles"/>
+		public IEnumerable<FileInfo> OpenFiles
+		{ 
+			get { return _openFiles.Value; }
+			set { _openFiles.Value = value; }
+		}
+
+		/// <see cref="ISettings.AutoSaveEnabled"/>
+		public bool AutoSaveEnabled
+		{ 
+			get { return _autoSaveEnabled.Value; }
+			set { _autoSaveEnabled.Value = value; }
+		}
+
+		/// <see cref="ISettings.AutoSaveInterval"/>
+		public TimeSpan AutoSaveInterval
+		{ 
+			get { return _autoSaveInterval.Value; }
+			set { _autoSaveInterval.Value = value; }
 		}
 
 		/// <see cref="ISettings.GraphVizExecutable"/>
@@ -78,21 +118,6 @@ namespace PlantUmlEditor.Configuration
 
 		/// <see cref="ISettings.PlantUmlJar"/>
 		public FileInfo PlantUmlJar { get; set; }
-
-		/// <see cref="ISettings.LastDiagramLocation"/>
-		public DirectoryInfo LastDiagramLocation { get; set; }
-
-		/// <see cref="ISettings.RememberOpenFiles"/>
-		public bool RememberOpenFiles { get; set; }
-
-		/// <see cref="ISettings.OpenFiles"/>
-		public IEnumerable<FileInfo> OpenFiles { get; set; }
-
-		/// <see cref="ISettings.AutoSaveEnabled"/>
-		public bool AutoSaveEnabled { get; set; }
-
-		/// <see cref="ISettings.AutoSaveInterval"/>
-		public TimeSpan AutoSaveInterval { get; set; }
 
 		/// <see cref="ISettings.PlantUmlDownloadLocation"/>
 		public Uri PlantUmlDownloadLocation { get; private set; }
@@ -125,6 +150,22 @@ namespace PlantUmlEditor.Configuration
 			_settings.OpenFiles = openFiles;
 
 			_settings.Save();
+		}
+
+		/// <summary>
+		/// Performs an equality check between two referene objects. This method handles reference
+		/// equality and null checks and then defers to the given custom comparison.
+		/// </summary>
+		private static bool CheckEquality<T>(T x, T y, Func<T, T, bool> comparison)
+			where T : class
+		{
+			if (ReferenceEquals(x, y))
+				return true;
+
+			if (x == null || y == null)
+				return false;
+
+			return comparison(x, y);
 		}
 
 		private readonly Property<DirectoryInfo> _lastDiagramLocation;

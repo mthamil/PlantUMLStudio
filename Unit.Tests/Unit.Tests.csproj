@@ -106,6 +106,7 @@
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor.Core\InputOutput\DiagramIOServiceTests.cs" />
     <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
+    <Compile Include="PlantUmlEditor\Configuration\DotNetSettingsTests.cs" />
     <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />
     <Compile Include="PlantUmlEditor\Model\Snippets\SnippetParserTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />

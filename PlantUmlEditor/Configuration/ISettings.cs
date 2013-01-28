@@ -27,21 +27,6 @@ namespace PlantUmlEditor.Configuration
 	public interface ISettings
 	{
 		/// <summary>
-		/// The GraphViz executable.
-		/// </summary>
-		FileInfo GraphVizExecutable { get; set; }
-
-		/// <summary>
-		/// The pattern used to find the current GraphViz version from GraphViz itself.
-		/// </summary>
-		Regex GraphVizLocalVersionPattern { get; }
-
-		/// <summary>
-		/// The PlantUML jar.
-		/// </summary>
-		FileInfo PlantUmlJar { get; set; }
-
-		/// <summary>
 		/// The last directory diagrams were loaded from.
 		/// </summary>
 		DirectoryInfo LastDiagramLocation { get; set; }
@@ -65,6 +50,21 @@ namespace PlantUmlEditor.Configuration
 		/// The time to wait between auto-saves if enabled.
 		/// </summary>
 		TimeSpan AutoSaveInterval { get; set; }
+
+		/// <summary>
+		/// The GraphViz executable.
+		/// </summary>
+		FileInfo GraphVizExecutable { get; set; }
+
+		/// <summary>
+		/// The pattern used to find the current GraphViz version from GraphViz itself.
+		/// </summary>
+		Regex GraphVizLocalVersionPattern { get; }
+
+		/// <summary>
+		/// The PlantUML jar.
+		/// </summary>
+		FileInfo PlantUmlJar { get; set; }
 
 		/// <summary>
 		/// The URL where PlantUML can be downloaded.

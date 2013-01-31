@@ -28,4 +28,8 @@
 
     <BitmapImage x:Key="CancelIcon_Small" UriSource="../Icons/cross-16x16.png"/>
 
+    <BitmapImage x:Key="OptionsIcon_Small" UriSource="../Icons/gear-16x16.png"/>
+
+    <BitmapImage x:Key="AboutIcon_Small" UriSource="../Icons/information-16x16.png"/>
+    
 </ResourceDictionary>

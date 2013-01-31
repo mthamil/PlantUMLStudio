@@ -227,6 +227,9 @@
                                 <utilcmd:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
                                                            Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
                             </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource OptionsIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
 
@@ -236,6 +239,9 @@
                                 <utilcmd:OpenDialogCommand Type="{x:Type vw:About}" 
                                                            Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
                             </MenuItem.Command>
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource AboutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
                 </Menu>

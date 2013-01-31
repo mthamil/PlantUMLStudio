@@ -39,15 +39,6 @@
   
     <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
         <DockPanel>
-            <Border DockPanel.Dock="Top" Background="#2B3C59">
-                <DockPanel Margin="0,1,0,1" VerticalAlignment="Center" HorizontalAlignment="Right">
-                    <CheckBox x:Name="AutoSaveCheckbox" Content="AutoSave" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding AutoSave, Mode=TwoWay}" Margin="0,0,10,0" Foreground="White"/>
-                    <TextBox Text="{Binding AutoSaveInterval, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SecondsConverter}}" 
-                             Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right" MinWidth="25"
-                             ToolTip="AutoSave Interval"/>
-                    <TextBlock Text=" Secs" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Right" Foreground="White"/>
-                </DockPanel>
-            </Border>
 
             <Grid Height="Auto">
                 <Grid.RowDefinitions>

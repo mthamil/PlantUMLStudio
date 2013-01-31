@@ -48,6 +48,9 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<ClipboardWrapper>().As<IClipboard>()
 				.SingleInstance();
 
+			builder.RegisterType<SettingsPropagator>()
+			       .SingleInstance();
+
 			builder.RegisterType<PreviewDiagramViewModel>()
 				.OnActivating(c => c.Instance.ImagePreview =
 					c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
@@ -75,8 +78,11 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })
-				.WithProperty(p => p.AutoSaveInterval, TimeSpan.FromSeconds(30))
-				.WithProperty(p => p.AutoSave, true);
+				.OnActivating(c =>
+				{
+					c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;
+					c.Instance.AutoSaveInterval = c.Context.Resolve<ISettings>().AutoSaveInterval;
+				});
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 				.WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
@@ -87,7 +93,7 @@ namespace PlantUmlEditor.Container
 					c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
 				});;
 
-			builder.RegisterType<DiagramManagerViewModel>()
+			builder.RegisterType<DiagramManagerViewModel>().As<DiagramManagerViewModel, IDiagramManager>()
 				.OnActivated(c => c.Instance.InitializeAsync())
 				.SingleInstance();
 
@@ -95,6 +101,8 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<AboutViewModel>()
 				.OnActivating(c => c.Instance.LoadComponents());
+
+			builder.RegisterType<SettingsViewModel>();
 		}
 	}
 }

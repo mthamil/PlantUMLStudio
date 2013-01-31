@@ -1,5 +1,5 @@
 //  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ namespace PlantUmlEditor.ViewModel
 	/// <summary>
 	/// Manages open diagrams and also serves as the main application driver.
 	/// </summary>
-	public class DiagramManagerViewModel : ViewModelBase
+	public class DiagramManagerViewModel : ViewModelBase, IDiagramManager
 	{
 		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<Diagram, IDiagramEditor> editorFactory, ISettings settings)
 		{
@@ -52,7 +52,7 @@ namespace PlantUmlEditor.ViewModel
 			OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
 			CloseCommand = new RelayCommand(Close);
 			SaveAllCommand = new AggregateBoundRelayCommand<DiagramManagerViewModel, IDiagramEditor, IEnumerable<IDiagramEditor>>(
-				_ => SaveAll(),
+				_ => SaveAllAsync(),
 				p => p.OpenDiagrams,
 				c => c.Any(p => p.CanSave), this);
 
@@ -74,18 +74,14 @@ namespace PlantUmlEditor.ViewModel
 			OpenDiagramForEdit(e.RequestedPreview);
 		}
 
-		/// <summary>
-		/// The diagram currently open for editing.
-		/// </summary>
+		/// <see cref="IDiagramManager.OpenDiagram"/>
 		public IDiagramEditor OpenDiagram
 		{
 			get { return _openDiagram.Value; }
 			set { _openDiagram.Value = value; }
 		}
 
-		/// <summary>
-		/// The currently open diagrams.
-		/// </summary>
+		/// <see cref="IDiagramManager.OpenDiagrams"/>
 		public ICollection<IDiagramEditor> OpenDiagrams
 		{
 			get { return _openDiagrams.Value; }
@@ -96,8 +92,12 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand OpenDiagramCommand { get; private set; }
 
-		private void OpenDiagramForEdit(PreviewDiagramViewModel diagram)
+		/// <see cref="IDiagramManager.OpenDiagramForEdit"/>
+		public void OpenDiagramForEdit(PreviewDiagramViewModel diagram)
 		{
+			if (diagram == null)
+				throw new ArgumentNullException("diagram");
+
 			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagram.Diagram));
 			if (diagramEditor == null)
 			{
@@ -117,7 +117,8 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand SaveAllCommand { get; private set; }
 
-		private async void SaveAll()
+		/// <see cref="IDiagramManager.SaveAllAsync"/>
+		public async Task SaveAllAsync()
 		{
 			await OpenDiagrams.Where(d => d.CanSave).Select(d => d.SaveAsync());
 		}
@@ -187,10 +188,8 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand CloseCommand { get; private set; }
 
-		/// <summary>
-		/// Closes a diagram manager.
-		/// </summary>
-		private void Close()
+		/// <see cref="IDiagramManager.Close"/>
+		public void Close()
 		{
 			if (_settings.RememberOpenFiles)
 				_settings.OpenFiles = OpenDiagrams.Select(diagram => diagram.Diagram.File).ToList();

@@ -16,6 +16,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -24,7 +25,7 @@ namespace PlantUmlEditor.Configuration
 	/// <summary>
 	/// Interface for application settings.
 	/// </summary>
-	public interface ISettings
+	public interface ISettings : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// The last directory diagrams were loaded from.

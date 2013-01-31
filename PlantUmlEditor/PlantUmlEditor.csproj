@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="Configuration\DotNetSettings.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Configuration\SettingsPropagator.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />
     <Compile Include="ViewModel\DiagramExplorerViewModel.cs" />
+    <Compile Include="ViewModel\IDiagramManager.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\Notifications\ExceptionNotification.cs" />
     <Compile Include="ViewModel\Notifications\INotifications.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="ViewModel\Notifications\ProgressUpdate.cs" />
     <Compile Include="ViewModel\OpenPreviewRequestedEventArgs.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SnippetsMenu.cs" />
     <Compile Include="ViewModel\SnippetViewModel.cs" />
     <Compile Include="View\About.xaml.cs">
@@ -164,6 +167,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StatusBar.xaml.cs">
       <DependentUpon>StatusBar.xaml</DependentUpon>
@@ -183,6 +189,10 @@
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StatusBar.xaml">
       <SubType>Designer</SubType>

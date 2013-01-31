@@ -220,6 +220,15 @@
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
+                    
+                    <MenuItem Header="_Tools">
+                        <MenuItem Header="Options">
+                            <MenuItem.Command>
+                                <utilcmd:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
+                                                           Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
+                            </MenuItem.Command>
+                        </MenuItem>
+                    </MenuItem>
 
                     <MenuItem Header="_Help">
                         <MenuItem Header="About">

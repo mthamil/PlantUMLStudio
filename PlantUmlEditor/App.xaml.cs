@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Autofac;
+using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Container;
 using PlantUmlEditor.Properties;
 using Utilities.Controls;
@@ -63,6 +64,8 @@ namespace PlantUmlEditor
 			containerBuilder.RegisterModule<CoreModule>();
 			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
+
+			_container.Resolve<SettingsPropagator>();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

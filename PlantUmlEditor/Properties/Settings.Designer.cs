@@ -159,7 +159,7 @@ namespace PlantUmlEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:30:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
         public global::System.TimeSpan AutoSaveInterval {
             get {
                 return ((global::System.TimeSpan)(this["AutoSaveInterval"]));

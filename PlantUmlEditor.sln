@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantUmlEditor.Core", "Plan
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PlantUmlEditor.Setup", "PlantUmlEditor.Setup\PlantUmlEditor.Setup.wixproj", "{8B0F862D-A3AF-4FA1-B745-11323E7A58E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{06FB4163-C837-4E71-9901-0C8233BC3E58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +102,16 @@ Global
 		{8B0F862D-A3AF-4FA1-B745-11323E7A58E8}.Release|Mixed Platforms.Build.0 = Release|x86
 		{8B0F862D-A3AF-4FA1-B745-11323E7A58E8}.Release|x86.ActiveCfg = Release|x86
 		{8B0F862D-A3AF-4FA1-B745-11323E7A58E8}.Release|x86.Build.0 = Release|x86
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

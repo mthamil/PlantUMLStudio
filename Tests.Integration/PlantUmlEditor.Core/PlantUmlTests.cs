@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -6,7 +6,7 @@ using PlantUmlEditor.Core;
 using Utilities.Chronology;
 using Xunit;
 
-namespace Tests.Unit.PlantUmlEditor.Core
+namespace Tests.Integration.PlantUmlEditor.Core
 {
 	public class PlantUmlTests
 	{

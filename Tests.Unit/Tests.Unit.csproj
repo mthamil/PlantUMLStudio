@@ -105,7 +105,6 @@
     <Compile Include="CultureAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor.Core\InputOutput\DiagramIOServiceTests.cs" />
-    <Compile Include="PlantUmlEditor.Core\PlantUmlTests.cs" />
     <Compile Include="PlantUmlEditor\Configuration\DotNetSettingsTests.cs" />
     <Compile Include="PlantUmlEditor\Configuration\SettingsPropagatorTests.cs" />
     <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />

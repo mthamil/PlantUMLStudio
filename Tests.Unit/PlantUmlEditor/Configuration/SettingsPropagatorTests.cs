@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Moq;
 using PlantUmlEditor.Configuration;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.ViewModel;
 using Xunit;
 
@@ -13,7 +15,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 	{
 		public SettingsPropagatorTests()
 		{
-			propagator = new SettingsPropagator(settings.Object, new Lazy<IDiagramManager>(() => diagramManager.Object));
+			propagator = new SettingsPropagator(settings.Object, diagramManager.Object);
 		}
 
 		[Fact]
@@ -66,9 +68,25 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				Assert.Equal(TimeSpan.FromSeconds(30), editor.Object.AutoSaveInterval);
 		}
 
+		[Fact]
+		public void Test_ClosedDiagram_AddedToRecentFiles()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
+
+			settings.SetupGet(s => s.RecentFiles)
+				.Returns(new List<FileInfo>());
+
+			// Act.
+			diagramManager.Raise(dm => dm.DiagramClosed += null, new DiagramClosedEventArgs(diagram));
+
+			// Assert.
+			Assert.Single(settings.Object.RecentFiles, diagram.File);
+		}
+
 		private readonly SettingsPropagator propagator;
 
-		private readonly Mock<ISettings> settings = new Mock<ISettings>();
+		private readonly Mock<ISettings> settings = new Mock<ISettings> { DefaultValue = DefaultValue.Empty };
 		private readonly Mock<IDiagramManager> diagramManager = new Mock<IDiagramManager> { DefaultValue = DefaultValue.Empty };
 	}
 }

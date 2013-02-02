@@ -6,16 +6,18 @@ using Utilities.Reflection;
 namespace PlantUmlEditor.Configuration
 {
 	/// <summary>
-	/// Responsible for updating objects in response to settings changes.
+	/// Responsible for updating objects in response to settings changes or
+	/// capturing events that should change settings.
 	/// </summary>
 	public class SettingsPropagator
 	{
-		public SettingsPropagator(ISettings settings, Lazy<IDiagramManager> diagramManager)
+		public SettingsPropagator(ISettings settings, IDiagramManager diagramManager)
 		{
 			_settings = settings;
 			_diagramManager = diagramManager;
 
 			_settings.PropertyChanged += settings_PropertyChanged;
+			_diagramManager.DiagramClosed += diagramManager_DiagramClosed;
 		}
 
 		private void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -28,18 +30,23 @@ namespace PlantUmlEditor.Configuration
 
 		private void AutoSaveEnabledChanged()
 		{
-			foreach (var editor in _diagramManager.Value.OpenDiagrams)
+			foreach (var editor in _diagramManager.OpenDiagrams)
 				editor.AutoSave = _settings.AutoSaveEnabled;
 		}
 
 		private void AutoSaveIntervalChanged()
 		{
-			foreach (var editor in _diagramManager.Value.OpenDiagrams)
+			foreach (var editor in _diagramManager.OpenDiagrams)
 				editor.AutoSaveInterval = _settings.AutoSaveInterval;
 		}
 
+		private void diagramManager_DiagramClosed(object sender, DiagramClosedEventArgs e)
+		{
+			_settings.RecentFiles.Add(e.Diagram.File);
+		}
+
 		private readonly ISettings _settings;
-		private readonly Lazy<IDiagramManager> _diagramManager;
+		private readonly IDiagramManager _diagramManager;
 
 		private static readonly string autoSaveEnabledName = Reflect.PropertyOf<ISettings>(s => s.AutoSaveEnabled).Name;
 		private static readonly string autoSaveIntervalName = Reflect.PropertyOf<ISettings>(s => s.AutoSaveInterval).Name;

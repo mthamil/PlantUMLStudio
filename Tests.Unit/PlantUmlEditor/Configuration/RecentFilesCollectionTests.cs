@@ -31,6 +31,21 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		}
 
 		[Fact]
+		public void Test_Add_MovesAlreadyExistingFileToTop()
+		{
+			// Arrange.
+			recentFiles.MaximumCount = 10;
+			recentFiles.Add(new FileInfo(@"C:\file1"));
+			recentFiles.Add(new FileInfo(@"C:\file2"));
+
+			// Act.
+			recentFiles.Add(new FileInfo(@"C:\file1"));
+
+			// Assert.
+			AssertThat.SequenceEqual(new[] { @"C:\file1", @"C:\file2" }, recentFiles.Select(f => f.FullName));
+		}
+
+		[Fact]
 		public void Test_RecentFilesTrimmed_WhenMaximumCountChanged()
 		{
 			// Arrange.

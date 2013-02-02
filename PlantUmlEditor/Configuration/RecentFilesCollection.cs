@@ -73,6 +73,10 @@ namespace PlantUmlEditor.Configuration
 		/// <param name="item">The file to add</param>
 		public void Add(FileInfo item)
 		{
+			var existingFile = _recentFiles.SingleOrDefault(f => FileInfoPathEqualityComparer.Instance.Equals(f, item));
+			if (existingFile != null)
+				_recentFiles.Remove(existingFile);
+
 			_recentFiles.Insert(0, item);
 			if (_recentFiles.Count > MaximumCount)
 				_recentFiles.RemoveAt(_recentFiles.Count - 1);

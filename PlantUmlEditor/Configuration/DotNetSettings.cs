@@ -205,7 +205,7 @@ namespace PlantUmlEditor.Configuration
 		void recentFiles_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			// Relay the property change.
-			if (e.PropertyName == maximumRecentFilesCountPropertyName)
+			if (e.PropertyName == maxRecentFilesCountName)
 				OnPropertyChanged(p => p.MaximumRecentFiles);
 		}
 
@@ -218,6 +218,6 @@ namespace PlantUmlEditor.Configuration
 
 		private readonly Settings _settings;
 
-		private static readonly string maximumRecentFilesCountPropertyName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
+		private static readonly string maxRecentFilesCountName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
 	}
 }

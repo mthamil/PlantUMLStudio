@@ -69,7 +69,7 @@ namespace PlantUmlEditor.ViewModel
 				await _settings.OpenFiles.Select(f => _explorer.OpenDiagramAsync(new Uri(f.FullName))).ToList();
 		}
 
-		void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
+		private void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
 		{
 			OpenDiagramForEdit(e.RequestedPreview);
 		}
@@ -110,6 +110,16 @@ namespace PlantUmlEditor.ViewModel
 			}
 
 			OpenDiagram = diagramEditor;
+		}
+
+		/// <see cref="IDiagramManager.DiagramClosed"/>
+		public event EventHandler<DiagramClosedEventArgs> DiagramClosed;
+
+		private void OnDiagramClosed(Diagram diagram)
+		{
+			var localEvent = DiagramClosed;
+			if (localEvent != null)
+				localEvent(this, new DiagramClosedEventArgs(diagram));
 		}
 
 		/// <summary>
@@ -162,11 +172,15 @@ namespace PlantUmlEditor.ViewModel
 
 		private void RemoveEditor(IDiagramEditor editor)
 		{
+			var diagram = editor.Diagram;
+
 			editor.Closing -= diagramEditor_Closing;
 			editor.Closed -= diagramEditor_Closed;
 			editor.Saved -= diagramEditor_Saved;
 			OpenDiagrams.Remove(editor);
 			editor.Dispose();
+
+			OnDiagramClosed(diagram);
 		}
 
 		/// <summary>

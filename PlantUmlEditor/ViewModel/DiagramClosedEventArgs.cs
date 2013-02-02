@@ -15,45 +15,27 @@
 //  limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using PlantUmlEditor.Core;
 
 namespace PlantUmlEditor.ViewModel
 {
 	/// <summary>
-	/// Manages diagrams open for editing.
+	/// Event args for when an open diagram is closed.
 	/// </summary>
-	public interface IDiagramManager
+	public class DiagramClosedEventArgs : EventArgs
 	{
 		/// <summary>
-		/// The open diagram currently selected for editing.
+		/// Initializes new event args.
 		/// </summary>
-		IDiagramEditor OpenDiagram { get; set; }
+		/// <param name="diagram">The open diagram that was closed</param>
+		public DiagramClosedEventArgs(Diagram diagram)
+		{
+			Diagram = diagram;
+		}
 
 		/// <summary>
-		/// The currently open diagrams.
+		/// The diagram that was closed.
 		/// </summary>
-		ICollection<IDiagramEditor> OpenDiagrams { get; }
-
-		/// <summary>
-		/// Opens a diagram for editing.
-		/// </summary>
-		/// <param name="diagram">The diagram to open</param>
-		void OpenDiagramForEdit(PreviewDiagramViewModel diagram);
-
-		/// <summary>
-		/// Event raised when an open diagram has closed.
-		/// </summary>
-		event EventHandler<DiagramClosedEventArgs> DiagramClosed;
-
-		/// <summary>
-		/// Asynchronously saves all open diagrams.
-		/// </summary>
-		Task SaveAllAsync();
-
-		/// <summary>
-		/// Closes a diagram manager.
-		/// </summary>
-		void Close();
+		public Diagram Diagram { get; private set; }
 	}
 }

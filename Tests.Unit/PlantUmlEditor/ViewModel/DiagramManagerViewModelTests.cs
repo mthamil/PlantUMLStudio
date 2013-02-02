@@ -74,6 +74,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramManager = CreateManager(d => editor.Object);
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
+			DiagramClosedEventArgs closedArgs = null;
+			diagramManager.DiagramClosed += (o, e) => closedArgs = e;
+
 			// Act.
 			editor.Raise(e => e.Closed += null, EventArgs.Empty);
 
@@ -81,6 +84,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Empty(diagramManager.OpenDiagrams);
 			editor.Verify(e => e.SaveAsync(), Times.Never());
 			editor.Verify(e => e.Dispose());
+			Assert.NotNull(closedArgs);
+			Assert.Equal(diagram, closedArgs.Diagram);
 		}
 
 		[Fact]
@@ -105,6 +110,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Equal(editor.Object, diagramManager.ClosingDiagram);
 
+			// Arrange.
+			DiagramClosedEventArgs closedArgs = null;
+			diagramManager.DiagramClosed += (o, e) => closedArgs = e;
+
 			// Act.
 			editor.Raise(e => e.Closed += null, EventArgs.Empty);
 
@@ -112,6 +121,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Empty(diagramManager.OpenDiagrams);
 			editor.Verify(e => e.SaveAsync(), Times.Exactly(1));
 			editor.Verify(e => e.Dispose());
+			Assert.NotNull(closedArgs);
+			Assert.Equal(diagram, closedArgs.Diagram);
 		}
 
 		[Fact]

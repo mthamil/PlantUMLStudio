@@ -43,6 +43,16 @@ namespace PlantUmlEditor.Configuration
 		IEnumerable<FileInfo> OpenFiles { get; set; }
 
 		/// <summary>
+		/// Recently opened files.
+		/// </summary>
+		ICollection<FileInfo> RecentFiles { get; }
+
+		/// <summary>
+		/// The maximum number of recent files to keep.
+		/// </summary>
+		int MaximumRecentFiles { get; set; }
+
+		/// <summary>
 		/// Whether auto-save is enabled.
 		/// </summary>
 		bool AutoSaveEnabled { get; set; }

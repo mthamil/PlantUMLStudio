@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="Configuration\DotNetSettings.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\CustomRegistrationExtensions.cs" />

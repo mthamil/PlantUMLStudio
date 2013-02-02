@@ -168,5 +168,28 @@ namespace PlantUmlEditor.Properties {
                 this["AutoSaveInterval"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection RecentFiles {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["RecentFiles"]));
+            }
+            set {
+                this["RecentFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaximumRecentFiles {
+            get {
+                return ((int)(this["MaximumRecentFiles"]));
+            }
+            set {
+                this["MaximumRecentFiles"] = value;
+            }
+        }
     }
 }

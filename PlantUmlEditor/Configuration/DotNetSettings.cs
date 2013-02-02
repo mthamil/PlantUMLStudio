@@ -17,19 +17,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PlantUmlEditor.Properties;
 using Utilities.InputOutput;
 using Utilities.PropertyChanged;
+using Utilities.Reflection;
 
 namespace PlantUmlEditor.Configuration
 {
 	/// <summary>
 	/// An adapter around the generated .NET Settings class.
 	/// </summary>
-	public class DotNetSettings : PropertyChangedNotifier, ISettings
+	public class DotNetSettings : PropertyChangedNotifier<ISettings>, ISettings
 	{
 		internal DotNetSettings(Settings settings, DirectoryInfo defaultDiagramLocation)
 			: this()
@@ -44,6 +46,14 @@ namespace PlantUmlEditor.Configuration
 			OpenFiles = settings.OpenFiles == null ? 
 				Enumerable.Empty<FileInfo>() :
 				settings.OpenFiles.Cast<string>().Select(fileName => new FileInfo(fileName)).ToList();
+
+			_recentFiles.MaximumCount = settings.MaximumRecentFiles;
+			if (settings.RecentFiles != null)
+			{
+				var recentFiles = settings.RecentFiles.Cast<string>().Reverse().Select(fileName => new FileInfo(fileName));
+				foreach (var recentFile in recentFiles)
+					_recentFiles.Add(recentFile);
+			}
 
 			AutoSaveEnabled = settings.AutoSaveEnabled;
 			AutoSaveInterval = settings.AutoSaveInterval;
@@ -71,6 +81,9 @@ namespace PlantUmlEditor.Configuration
 								 .EqualWhen((oldValue, newValue) => CheckEquality(oldValue, newValue, 
 									 (x, y) => x.SequenceEqual(y, FileInfoPathEqualityComparer.Instance)));
 
+			_recentFiles = new RecentFilesCollection();
+			_recentFiles.PropertyChanged += recentFiles_PropertyChanged;
+
 			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 		}
@@ -94,6 +107,19 @@ namespace PlantUmlEditor.Configuration
 		{ 
 			get { return _openFiles.Value; }
 			set { _openFiles.Value = value; }
+		}
+
+		/// <see cref="ISettings.RecentFiles"/>
+		public ICollection<FileInfo> RecentFiles 
+		{
+			get { return _recentFiles; }
+		}
+
+		/// <see cref="ISettings.MaximumRecentFiles"/>
+		public int MaximumRecentFiles
+		{
+			get { return _recentFiles.MaximumCount; }
+			set { _recentFiles.MaximumCount = value; }
 		}
 
 		/// <see cref="ISettings.AutoSaveEnabled"/>
@@ -143,11 +169,19 @@ namespace PlantUmlEditor.Configuration
 			_settings.LastPath = LastDiagramLocation.FullName;
 			_settings.GraphVizLocation = GraphVizExecutable.FullName;
 			_settings.PlantUmlLocation = PlantUmlJar.FullName;
-			_settings.RememberOpenFiles = RememberOpenFiles;
 
+			_settings.RememberOpenFiles = RememberOpenFiles;
 			var openFiles = new StringCollection();
 			openFiles.AddRange(OpenFiles.Select(file => file.FullName).ToArray());
 			_settings.OpenFiles = openFiles;
+
+			_settings.MaximumRecentFiles = MaximumRecentFiles;
+			var recentFiles = new StringCollection();
+			recentFiles.AddRange(RecentFiles.Select(file => file.FullName).ToArray());
+			_settings.RecentFiles = recentFiles;
+
+			_settings.AutoSaveEnabled = AutoSaveEnabled;
+			_settings.AutoSaveInterval = AutoSaveInterval;
 
 			_settings.Save();
 		}
@@ -168,12 +202,22 @@ namespace PlantUmlEditor.Configuration
 			return comparison(x, y);
 		}
 
+		void recentFiles_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			// Relay the property change.
+			if (e.PropertyName == maximumRecentFilesCountPropertyName)
+				OnPropertyChanged(p => p.MaximumRecentFiles);
+		}
+
 		private readonly Property<DirectoryInfo> _lastDiagramLocation;
 		private readonly Property<bool> _rememberOpenFiles;
 		private readonly Property<IEnumerable<FileInfo>> _openFiles;
+		private readonly RecentFilesCollection _recentFiles;
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
 
 		private readonly Settings _settings;
+
+		private static readonly string maximumRecentFilesCountPropertyName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
 	}
 }

@@ -44,5 +44,11 @@
     <Setting Name="AutoSaveInterval" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:30</Value>
     </Setting>
+    <Setting Name="RecentFiles" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MaximumRecentFiles" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

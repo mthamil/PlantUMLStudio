@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		{
 			// Arrange.
 			settings.RememberOpenFiles = true;
+			settings.MaximumRecentFiles = 15;
 			settings.AutoSaveEnabled = true;
 			settings.AutoSaveInterval = TimeSpan.FromSeconds(15);
 
@@ -37,8 +39,37 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(settings.PlantUmlFileExtension, appSettings.DiagramFileExtension);
 
 			Assert.Equal(settings.RememberOpenFiles, appSettings.RememberOpenFiles);
+			Assert.Equal(settings.MaximumRecentFiles, appSettings.MaximumRecentFiles);
 			Assert.Equal(settings.AutoSaveEnabled, appSettings.AutoSaveEnabled);
 			Assert.Equal(settings.AutoSaveInterval, appSettings.AutoSaveInterval);
+		}
+
+		[Fact]
+		public void Test_Save()
+		{
+			// Arrange.
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"))
+			{
+				RememberOpenFiles = true,
+				OpenFiles = new List<FileInfo> { new FileInfo(@"C:\openFile1"), new FileInfo(@"C:\openFile2") },
+				MaximumRecentFiles = 20,
+				AutoSaveEnabled = true,
+				AutoSaveInterval = TimeSpan.FromSeconds(15)
+			};
+
+			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
+			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile2"));
+
+			// Act.
+			appSettings.Save();
+
+			// Assert.
+			Assert.Equal(true, settings.RememberOpenFiles);
+			AssertThat.SequenceEqual(settings.OpenFiles.Cast<string>(), new[] { @"C:\openFile1", @"C:\openFile2" });
+			Assert.Equal(20, settings.MaximumRecentFiles);
+			AssertThat.SequenceEqual(settings.RecentFiles.Cast<string>(), new[] { @"C:\recentFile2", @"C:\recentFile1" });
+			Assert.Equal(true, settings.AutoSaveEnabled);
+			Assert.Equal(TimeSpan.FromSeconds(15), settings.AutoSaveInterval);
 		}
 
 		[Theory]
@@ -108,6 +139,54 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		}
 
 		[Fact]
+		public void Test_RecentFiles_Initialization_WhenNull()
+		{
+			// Arrange.
+			settings.RecentFiles = null;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act.
+			var actual = appSettings.RecentFiles;
+
+			// Assert.
+			Assert.Empty(actual);
+		}
+
+		[Fact]
+		public void Test_RecentFiles_Initialization_WhenEmpty()
+		{
+			// Arrange.
+			settings.RecentFiles = new StringCollection();
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act.
+			var actual = appSettings.RecentFiles;
+
+			// Assert.
+			Assert.Empty(actual);
+		}
+
+		[Fact]
+		public void Test_RecentFiles_Initialization_WhenPopulated()
+		{
+			// Arrange.
+			settings.RecentFiles = new StringCollection();
+			settings.RecentFiles.AddRange(new[] { @"C:\file1", @"C:\file2" });
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act.
+			var actual = appSettings.RecentFiles;
+
+			// Assert.
+			Assert.NotEmpty(actual);
+			Assert.Equal(2, actual.Count());
+			AssertThat.SequenceEqual(actual.Select(f => f.FullName), new[] { @"C:\file1", @"C:\file2" });
+		}
+
+		[Fact]
 		public void Test_LastDiagramLocation_Changes()
 		{
 			// Arrange.
@@ -153,6 +232,22 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				() => appSettings.OpenFiles = new [] { new FileInfo(@"C:\file1"), new FileInfo(@"C:\file2") });
 
 			AssertThat.SequenceEqual(new[] { @"C:\file1", @"C:\file2" }, appSettings.OpenFiles.Select(f => f.FullName));
+		}
+
+		[Fact]
+		public void Test_MaximumRecentFiles_Changes()
+		{
+			// Arrange.
+			settings.MaximumRecentFiles = 5;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.MaximumRecentFiles,
+				() => appSettings.MaximumRecentFiles = 15);
+
+			Assert.Equal(15, appSettings.MaximumRecentFiles);
 		}
 
 		[Fact]

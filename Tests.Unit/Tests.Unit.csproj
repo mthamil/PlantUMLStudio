@@ -142,6 +142,7 @@
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureTests.cs" />
     <Compile Include="Utilities.Controls\Selectors\TypeMapDataTemplateSelectorTests.cs" />
+    <Compile Include="Utilities\Collections\CollectionMirrorTests.cs" />
     <Compile Include="Utilities\Collections\EnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\Collections\ReverseComparerTests.cs" />
     <Compile Include="Utilities\Concurrency\ReaderWriterLockSlimExtensionTests.cs" />

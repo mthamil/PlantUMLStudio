@@ -84,6 +84,7 @@
     <Compile Include="Chronology\SystemTimer.cs" />
     <Compile Include="Clipboard\ClipboardWrapper.cs" />
     <Compile Include="Clipboard\IClipboard.cs" />
+    <Compile Include="Collections\CollectionMirror.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\ReverseComparer.cs" />
     <Compile Include="Concurrency\ProgressExtensions.cs" />

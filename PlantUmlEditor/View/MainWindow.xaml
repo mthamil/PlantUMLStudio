@@ -189,7 +189,7 @@
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding}" />
+                                        <TextBlock Text="{Binding FullName}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </MenuItem.ItemTemplate>

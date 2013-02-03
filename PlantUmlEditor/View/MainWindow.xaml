@@ -182,6 +182,27 @@
                                 <Image Source="{StaticResource SaveAllIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
+                        
+                        <Separator/>
+
+                        <MenuItem Header="Recent Files" ItemsSource="{Binding Source={xtn:ViewModelLocator {x:Type vm:RecentFilesMenuViewModel}}, Path=ViewModel.Files}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Explorer.OpenDiagramCommand}"/>
+                                    <Setter Property="CommandParameter" Value="{Binding FullName, Converter={StaticResource UriConverter}}"/>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+
+                        <Separator/>
+                        
                         <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
                                 <utilcmd:CloseWindowCommand/>

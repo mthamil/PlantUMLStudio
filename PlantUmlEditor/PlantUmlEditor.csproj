@@ -153,6 +153,7 @@
     <Compile Include="ViewModel\Notifications\ProgressUpdate.cs" />
     <Compile Include="ViewModel\OpenPreviewRequestedEventArgs.cs" />
     <Compile Include="ViewModel\PreviewDiagramViewModel.cs" />
+    <Compile Include="ViewModel\RecentFilesMenuViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SnippetsMenu.cs" />
     <Compile Include="ViewModel\SnippetViewModel.cs" />

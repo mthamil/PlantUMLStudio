@@ -15,6 +15,8 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
@@ -91,7 +93,7 @@ namespace PlantUmlEditor.Container
 				{
 					c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
 					c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
-				});;
+				});
 
 			builder.RegisterType<DiagramManagerViewModel>().As<DiagramManagerViewModel, IDiagramManager>()
 				.OnActivated(c => c.Instance.InitializeAsync())
@@ -103,6 +105,9 @@ namespace PlantUmlEditor.Container
 				.OnActivating(c => c.Instance.LoadComponents());
 
 			builder.RegisterType<SettingsViewModel>();
+
+			builder.RegisterType<RecentFilesMenuViewModel>()
+				.WithParameter((p, c) => p.ParameterType == typeof(ICollection<FileInfo>), (p, c) => c.Resolve<ISettings>().RecentFiles);
 		}
 	}
 }

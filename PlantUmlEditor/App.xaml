@@ -133,12 +133,28 @@
     		</Setter>
     	</Style>
 
+        <!-- This image style makes an iconn appear disabled. -->
         <Style TargetType="{x:Type Image}" x:Key="DisableableIcon">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.3"/>
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <!-- This style globally replaces the menu separator style to remove some of the extra padding above and below. -->
+        <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}"
+               TargetType="{x:Type Separator}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Grid SnapsToDevicePixels="true" Margin="0,2,0,2">
+                            <Rectangle Height="1" Margin="30,0,1,1" Fill="#E0E0E0"/>
+                            <Rectangle Height="1" Margin="30,1,1,0" Fill="White"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
     </Application.Resources>

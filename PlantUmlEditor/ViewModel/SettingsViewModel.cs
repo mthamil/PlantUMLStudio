@@ -35,6 +35,7 @@ namespace PlantUmlEditor.ViewModel
 			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
 			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
+			_maximumRecentFiles = Property.New(this, p => p.MaximumRecentFiles, OnPropertyChanged);
 
 			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
 
@@ -43,6 +44,7 @@ namespace PlantUmlEditor.ViewModel
 			RememberOpenFiles = _settings.RememberOpenFiles;
 			AutoSaveEnabled = _settings.AutoSaveEnabled;
 			AutoSaveInterval = _settings.AutoSaveInterval;
+			MaximumRecentFiles = _settings.MaximumRecentFiles;
 		}
 
 		/// <summary>
@@ -73,6 +75,15 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The maximum number of recent files to keep.
+		/// </summary>
+		public int MaximumRecentFiles
+		{
+			get { return _maximumRecentFiles.Value; }
+			set { _maximumRecentFiles.Value = value; }
+		}
+
+		/// <summary>
 		/// Commands that executes a Save operation.
 		/// </summary>
 		public ICommand SaveCommand { get; private set; }
@@ -95,6 +106,7 @@ namespace PlantUmlEditor.ViewModel
 			_settings.RememberOpenFiles = RememberOpenFiles;
 			_settings.AutoSaveEnabled = AutoSaveEnabled;
 			_settings.AutoSaveInterval = AutoSaveInterval;
+			_settings.MaximumRecentFiles = MaximumRecentFiles;
 
 			_settings.Save();
 
@@ -116,6 +128,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _rememberOpenFiles;
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
+		private readonly Property<int> _maximumRecentFiles; 
 
 		private readonly Property<bool?> _saveCompleted;
 

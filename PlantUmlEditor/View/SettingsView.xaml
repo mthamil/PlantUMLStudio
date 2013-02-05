@@ -10,7 +10,7 @@
         xmlns:Behaviors="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls"
         mc:Ignorable="d"
         Title="Options"
-        Height="134" Width="314"
+        Height="167" Width="314"
         Background="#F0F0F0"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False" ResizeMode="NoResize"
@@ -31,9 +31,10 @@
 
     <Grid VerticalAlignment="Stretch" Margin="5,5,5,5" Background="#F0F0F0">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".33*"/>
-            <RowDefinition Height=".33*"/>
-            <RowDefinition Height=".33*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".25*"/>
         </Grid.RowDefinitions>
         
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,5,0">
@@ -53,8 +54,18 @@
         <CheckBox Grid.Row="1" Content="Remember open files" VerticalAlignment="Center" Margin="0,0,0,0"
                   ToolTip="Reopen the diagram files that were open the last time the application closed at start-up."
                   IsChecked="{Binding RememberOpenFiles, Mode=TwoWay}"/>
-        
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,5,0">
+            <TextBlock Text="Remember up to " VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Right"/>
+
+            <TextBox Margin="0,0,0,0" HorizontalAlignment="Right"  MinWidth="25" VerticalAlignment="Center" HorizontalContentAlignment="Right" 
+                     ToolTip="The maximum number of entries to keep in the recent files list." 
+                     Text="{Binding MaximumRecentFiles, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="most recent files" VerticalAlignment="Center" Margin="3,0,0,0" HorizontalAlignment="Right"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
             <Button Content="OK" IsDefault="True" Style="{StaticResource ButtonStyle}"
                     Command="{Binding SaveCommand}"/>
             <Button Content="Cancel" IsCancel="True" Style="{StaticResource ButtonStyle}" Margin="10,0,0,0"/>

@@ -21,6 +21,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			settings.Object.RememberOpenFiles = true;
 			settings.Object.AutoSaveEnabled = true;
 			settings.Object.AutoSaveInterval = TimeSpan.FromSeconds(10);
+			settings.Object.MaximumRecentFiles = 20;
 
 			// Act.
 			var settingsViewModel = new SettingsViewModel(settings.Object);
@@ -29,6 +30,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settingsViewModel.RememberOpenFiles);
 			Assert.True(settingsViewModel.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(10), settingsViewModel.AutoSaveInterval);
+			Assert.Equal(20, settingsViewModel.MaximumRecentFiles);
 		}
 
 		[Fact]
@@ -74,6 +76,20 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
+		public void Test_MaximumRecentFiles_Changes()
+		{
+			// Arrange.
+			viewModel.MaximumRecentFiles = 0;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.MaximumRecentFiles,
+				() => viewModel.MaximumRecentFiles = 6);
+
+			Assert.Equal(6, viewModel.MaximumRecentFiles);
+		}
+
+		[Fact]
 		public void Test_CanSave_DefaultIsTrue()
 		{
 			// Arrange.
@@ -111,6 +127,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			viewModel.RememberOpenFiles = true;
 			viewModel.AutoSaveEnabled = true;
 			viewModel.AutoSaveInterval = TimeSpan.FromSeconds(45);
+			viewModel.MaximumRecentFiles = 12;
 
 			// Act.
 			viewModel.SaveCommand.Execute(null);
@@ -120,6 +137,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settings.Object.RememberOpenFiles);
 			Assert.True(settings.Object.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(45), settings.Object.AutoSaveInterval);
+			Assert.Equal(12, settings.Object.MaximumRecentFiles);
 		}
 
 		[Fact]

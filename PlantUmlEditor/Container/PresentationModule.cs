@@ -51,7 +51,8 @@ namespace PlantUmlEditor.Container
 				.SingleInstance();
 
 			builder.RegisterType<SettingsPropagator>()
-			       .SingleInstance();
+				.AutoActivate()
+			    .SingleInstance();
 
 			builder.RegisterType<PreviewDiagramViewModel>()
 				.OnActivating(c => c.Instance.ImagePreview =

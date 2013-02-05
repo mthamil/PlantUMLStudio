@@ -64,8 +64,6 @@ namespace PlantUmlEditor
 			containerBuilder.RegisterModule<CoreModule>();
 			containerBuilder.RegisterModule<PresentationModule>();
 			_container = containerBuilder.Build();
-
-			_container.Resolve<SettingsPropagator>();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

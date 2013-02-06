@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor 2
+﻿//  PlantUML Editor
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
@@ -13,7 +13,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-// 
+
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -30,13 +30,13 @@ namespace Utilities.Controls
 	public class FilePicker : Control
 	{
 		/// <summary>
-        /// Initializes the control.
-        /// </summary>
+		/// Initializes the control.
+		/// </summary>
 		public FilePicker()
-        {
-            // The control doesn't have any specific rendering of its own.
-            Visibility = Visibility.Hidden;
-        }
+		{
+			// The control doesn't have any specific rendering of its own.
+			Visibility = Visibility.Hidden;
+		}
 
 		/// <summary>
 		/// Property to trigger the prompt for a file.
@@ -50,9 +50,9 @@ namespace Utilities.Controls
 		/// <summary>
 		/// DependencyProperty for "Trigger". This also overrides the PropertyChangedCallback to trigger the message box display.
 		/// </summary>
-		public static readonly DependencyProperty TriggerProperty = 
-			DependencyProperty.Register("Trigger", 
-			typeof(bool), 
+		public static readonly DependencyProperty TriggerProperty =
+			DependencyProperty.Register("Trigger",
+			typeof(bool),
 			typeof(FilePicker),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTriggerChanged)));
 
@@ -63,7 +63,7 @@ namespace Utilities.Controls
 		private static void OnTriggerChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
 			var filePicker = (FilePicker)dependencyObject;
-			if (!filePicker.Trigger) 
+			if (!filePicker.Trigger)
 				return;
 
 			switch (filePicker.Mode)

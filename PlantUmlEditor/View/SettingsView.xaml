@@ -10,7 +10,7 @@
         xmlns:Behaviors="clr-namespace:Utilities.Controls.Behaviors;assembly=Utilities.Controls"
         mc:Ignorable="d"
         Title="Options"
-        Height="167" Width="314"
+        Height="175" Width="366"
         Background="#F0F0F0"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False" ResizeMode="NoResize"
@@ -31,13 +31,13 @@
 
     <Grid VerticalAlignment="Stretch" Margin="5,5,5,5" Background="#F0F0F0">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".25*"/>
-            <RowDefinition Height=".25*"/>
-            <RowDefinition Height=".25*"/>
-            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".24*"/>
+            <RowDefinition Height=".24*"/>
+            <RowDefinition Height=".24*"/>
+            <RowDefinition Height=".28*"/>
         </Grid.RowDefinitions>
         
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,5,0">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
             <CheckBox Content="AutoSave" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"
                       ToolTip="Automatically save changes to open diagrams."
                       IsChecked="{Binding AutoSaveEnabled, Mode=TwoWay}"/>
@@ -55,17 +55,27 @@
                   ToolTip="Reopen the diagram files that were open the last time the application closed at start-up."
                   IsChecked="{Binding RememberOpenFiles, Mode=TwoWay}"/>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,5,0">
-            <TextBlock Text="Remember up to " VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Right"/>
+        <Grid Grid.Row="2" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".63*"/>
+                <ColumnDefinition Width=".37*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock Text="Remember up to " VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Right"/>
 
-            <TextBox Margin="0,0,0,0" HorizontalAlignment="Right"  MinWidth="25" VerticalAlignment="Center" HorizontalContentAlignment="Right" 
-                     ToolTip="The maximum number of entries to keep in the recent files list." 
-                     Text="{Binding MaximumRecentFiles, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="0,0,0,0" HorizontalAlignment="Right"  MinWidth="25" VerticalAlignment="Center" HorizontalContentAlignment="Right" 
+                         ToolTip="The maximum number of entries to keep in the recent files list." 
+                         Text="{Binding MaximumRecentFiles, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock Text="most recent files" VerticalAlignment="Center" Margin="3,0,0,0" HorizontalAlignment="Right"/>
-        </StackPanel>
+                <TextBlock Text="most recent files" VerticalAlignment="Center" Margin="3,0,0,0" HorizontalAlignment="Right"/>
+            </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Grid.Column="1" Content="Clear Recent Files" Command="{Binding ClearRecentFilesCommand}" 
+                    Margin="15,0,0,0" Height="25" Width="110" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,0,0">
             <Button Content="OK" IsDefault="True" Style="{StaticResource ButtonStyle}"
                     Command="{Binding SaveCommand}"/>
             <Button Content="Cancel" IsCancel="True" Style="{StaticResource ButtonStyle}" Margin="10,0,0,0"/>

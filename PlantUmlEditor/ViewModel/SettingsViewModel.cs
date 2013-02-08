@@ -15,6 +15,7 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Specialized;
 using System.Windows.Input;
 using PlantUmlEditor.Configuration;
 using Utilities.Mvvm;
@@ -37,14 +38,21 @@ namespace PlantUmlEditor.ViewModel
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 			_maximumRecentFiles = Property.New(this, p => p.MaximumRecentFiles, OnPropertyChanged);
 
+			_canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles, OnPropertyChanged);
 			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
 
+			ClearRecentFilesCommand = new BoundRelayCommand<SettingsViewModel>(_ => ClearRecentFiles(), p => p.CanClearRecentFiles, this);
 			SaveCommand = new BoundRelayCommand<SettingsViewModel>(_ => Save(), p => p.CanSave, this);
 
 			RememberOpenFiles = _settings.RememberOpenFiles;
 			AutoSaveEnabled = _settings.AutoSaveEnabled;
 			AutoSaveInterval = _settings.AutoSaveInterval;
 			MaximumRecentFiles = _settings.MaximumRecentFiles;
+			CanClearRecentFiles = _settings.RecentFiles.Count > 0;
+
+			var recentFilesChanged = _settings.RecentFiles as INotifyCollectionChanged;
+			if (recentFilesChanged != null)
+				recentFilesChanged.CollectionChanged += recentFilesChanged_CollectionChanged;
 		}
 
 		/// <summary>
@@ -84,7 +92,35 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Commands that executes a Save operation.
+		/// Command that clears the recent files list.
+		/// </summary>
+		public ICommand ClearRecentFilesCommand { get; private set; }
+
+		/// <summary>
+		/// Whether recent files can be cleared.
+		/// </summary>
+		public bool CanClearRecentFiles
+		{
+			get { return _canClearRecentFiles.Value; }
+			private set { _canClearRecentFiles.Value = value; }
+		}
+
+		void recentFilesChanged_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			CanClearRecentFiles = _settings.RecentFiles.Count > 0;
+		}
+
+		/// <summary>
+		/// Clears the recent files list.
+		/// </summary>
+		public void ClearRecentFiles()
+		{
+			_shouldClearRecentFiles = true;
+			CanClearRecentFiles = false;
+		}
+
+		/// <summary>
+		/// Command that executes a Save operation.
 		/// </summary>
 		public ICommand SaveCommand { get; private set; }
 
@@ -108,7 +144,14 @@ namespace PlantUmlEditor.ViewModel
 			_settings.AutoSaveInterval = AutoSaveInterval;
 			_settings.MaximumRecentFiles = MaximumRecentFiles;
 
+			if (_shouldClearRecentFiles)
+				_settings.RecentFiles.Clear();
+
 			_settings.Save();
+
+			var recentFilesChanged = _settings.RecentFiles as INotifyCollectionChanged;
+			if (recentFilesChanged != null)
+				recentFilesChanged.CollectionChanged -= recentFilesChanged_CollectionChanged;
 
 			_isSaving = false;
 			SaveCompleted = true;
@@ -124,12 +167,14 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		private bool _isSaving;
+		private bool _shouldClearRecentFiles;
 
 		private readonly Property<bool> _rememberOpenFiles;
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
-		private readonly Property<int> _maximumRecentFiles; 
+		private readonly Property<int> _maximumRecentFiles;
 
+		private readonly Property<bool> _canClearRecentFiles; 
 		private readonly Property<bool?> _saveCompleted;
 
 		private readonly ISettings _settings;

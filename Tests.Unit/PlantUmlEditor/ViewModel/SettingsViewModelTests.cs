@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.ViewModel;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlEditor.ViewModel
 {
@@ -11,6 +15,13 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		public SettingsViewModelTests()
 		{
 			settings.SetupAllProperties();
+
+			recentFiles.As<INotifyCollectionChanged>();
+			recentFiles.SetupGet(rf => rf.Count)
+					   .Returns(1);
+			settings.SetupGet(s => s.RecentFiles)
+					.Returns(recentFiles.Object);
+
 			viewModel = new SettingsViewModel(settings.Object);
 		}
 
@@ -89,6 +100,58 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Equal(6, viewModel.MaximumRecentFiles);
 		}
 
+		[Theory]
+		[InlineData(true, 1)]
+		[InlineData(true, 2)]
+		[InlineData(false, 0)]
+		public void Test_CanClearRecentFiles_Initialization(bool expected, int initialCount)
+		{
+			// Arrange.
+			recentFiles.SetupGet(rf => rf.Count).Returns(initialCount);
+
+			// Act.
+			var settingsViewModel = new SettingsViewModel(settings.Object);
+
+			// Assert.
+			Assert.Equal(expected, settingsViewModel.CanClearRecentFiles);
+		}
+
+		[Theory]
+		[InlineData(true,  1, false)]
+		[InlineData(true,  2, false)]
+		[InlineData(false, 0, false)]
+		[InlineData(false, 1, true)]
+		public void Test_CanClearRecentFiles_UpdatedWhenCollectionChanges(bool expected, int count, bool alreadyCleared)
+		{
+			// Arrange.
+			recentFiles.SetupGet(rf => rf.Count)
+				.Returns(count);
+
+			recentFiles.As<INotifyCollectionChanged>()
+				.Raise(rf => rf.CollectionChanged += null, 
+					new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+			if (alreadyCleared)
+				viewModel.ClearRecentFiles();
+
+			// Act.
+			bool actual = viewModel.CanClearRecentFiles;
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void Test_ClearRecentFilesCommand_OnlyQueuesUpClearAction()
+		{
+			// Act.
+			viewModel.ClearRecentFilesCommand.Execute(null);
+
+			// Assert.
+			recentFiles.Verify(rf => rf.Clear(), Times.Never());
+			Assert.False(viewModel.CanClearRecentFiles);
+		}
+
 		[Fact]
 		public void Test_CanSave_DefaultIsTrue()
 		{
@@ -124,10 +187,14 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		public void Test_SaveCommand()
 		{
 			// Arrange.
+			settings.SetupGet(s => s.RecentFiles)
+					.Returns(new List<FileInfo> { new FileInfo("file1"), new FileInfo("file2") });
+
 			viewModel.RememberOpenFiles = true;
 			viewModel.AutoSaveEnabled = true;
 			viewModel.AutoSaveInterval = TimeSpan.FromSeconds(45);
 			viewModel.MaximumRecentFiles = 12;
+			viewModel.ClearRecentFiles();
 
 			// Act.
 			viewModel.SaveCommand.Execute(null);
@@ -138,6 +205,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settings.Object.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(45), settings.Object.AutoSaveInterval);
 			Assert.Equal(12, settings.Object.MaximumRecentFiles);
+			Assert.Empty(settings.Object.RecentFiles);
 		}
 
 		[Fact]
@@ -154,8 +222,27 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(afterSave.Value);
 		}
 
+		[Fact]
+		public void Test_Save_UnsubscribesFromCollectionChanges()
+		{
+			// Arrange.
+			recentFiles.SetupGet(rf => rf.Count)
+				.Returns(0);
+
+			// Act.
+			viewModel.Save();
+
+			// Assert.
+			AssertThat.PropertyDoesNotChange(viewModel, 
+				p => p.CanClearRecentFiles, 
+				() => recentFiles.As<INotifyCollectionChanged>()
+						.Raise(rf => rf.CollectionChanged += null, 
+							new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+		}
+
 		private readonly SettingsViewModel viewModel;
 
 		private readonly Mock<ISettings> settings = new Mock<ISettings> { DefaultValue = DefaultValue.Empty };
+		private readonly Mock<ICollection<FileInfo>> recentFiles = new Mock<ICollection<FileInfo>>(); 
 	}
 }

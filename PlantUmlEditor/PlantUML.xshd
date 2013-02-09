@@ -7,9 +7,6 @@
 
 	<!-- This is the main ruleset. -->
 	<RuleSet>
-		<Span color="Comment" begin="'" />
-		<Span color="Comment" multiline="true"
-			 begin="/'" end="'/" />
 
     <!-- Actions/Misc -->
     <Keywords color="Keyword">
@@ -111,6 +108,10 @@
     <Rule fontWeight="bold" foreground="DarkCyan">
       (-+(\+|\*|o))|((\+|\*|o)-+)
     </Rule>
+
+    <Span color="Comment" begin="'" />
+    <Span color="Comment" multiline="true"
+          begin="/'" end="'/" />
 
   </RuleSet>
 </SyntaxDefinition>

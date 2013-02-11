@@ -18,6 +18,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using System.Windows;
 
 namespace Utilities.Controls.Localization
 {
@@ -60,12 +61,11 @@ namespace Utilities.Controls.Localization
                 {
                     _uiCulture = value;
                     Thread.CurrentThread.CurrentUICulture = value;
-                    if (SynchronizeThreadCulture)
+                    if (KeepThreadCurrentCultureInSync)
                     {
                         UpdateThreadCulture(value);
                     }
-                    UICultureExtension.UpdateAllTargets();
-                    LocalizeExtension.UpdateAllTargets();
+
                     OnUICultureChanged();
                 }
             }
@@ -75,11 +75,10 @@ namespace Utilities.Controls.Localization
 		/// Raised when the <see cref="UICulture"/> is changed.
 		/// </summary>
 		/// <remarks>
-		/// Since this event is static if the client object does not detach from the event a reference
-		/// will be maintained to the client object preventing it from being garbage collected - thus
-		/// causing a potential memory leak. 
+		/// It is advisable to use a <see cref="WeakEventManager"/> to subscribe to this event since a <see cref="CultureManager"/>
+		/// will often far outlive its multitude of listeners.
 		/// </remarks>
-		public event EventHandler UICultureChanged;
+		public event EventHandler<EventArgs> UICultureChanged;
 
 		private void OnUICultureChanged()
 		{
@@ -92,12 +91,12 @@ namespace Utilities.Controls.Localization
         /// If set to true then the <see cref="Thread.CurrentCulture"/> property is changed
         /// to match the current <see cref="UICulture"/>.
         /// </summary>
-        public bool SynchronizeThreadCulture
+        public bool KeepThreadCurrentCultureInSync
         {
-            get { return _synchronizeThreadCulture; }
+            get { return _keepThreadCurrentCultureInSync; }
             set
             {
-                _synchronizeThreadCulture = value;
+                _keepThreadCurrentCultureInSync = value;
                 if (value)
                 {
                     UpdateThreadCulture(UICulture);
@@ -126,7 +125,7 @@ namespace Utilities.Controls.Localization
         /// Should the <see cref="Thread.CurrentCulture"/> be changed when the
         /// <see cref="UICulture"/> changes.
         /// </summary>
-        private bool _synchronizeThreadCulture = true;
+        private bool _keepThreadCurrentCultureInSync = true;
 
 		private static readonly CultureManager _defaultInstance = new CultureManager();
     }

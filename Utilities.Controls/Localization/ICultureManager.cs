@@ -17,6 +17,7 @@
 
 using System;
 using System.Globalization;
+using System.Windows;
 
 namespace Utilities.Controls.Localization
 {
@@ -36,6 +37,10 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// Raised when <see cref="ICultureManager.UICulture"/> is changed.
 		/// </summary>
-		event EventHandler UICultureChanged;
+		/// <remarks>
+		/// It is advisable to use a <see cref="WeakEventManager"/> to subscribe to this event since an <see cref="ICultureManager"/>
+		/// will often far outlive its multitude of listeners.
+		/// </remarks>
+		event EventHandler<EventArgs> UICultureChanged;
 	}
 }

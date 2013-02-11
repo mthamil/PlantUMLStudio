@@ -15,6 +15,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
+using System.Windows;
 using System.Windows.Markup;
 
 namespace Utilities.Controls.Localization
@@ -48,7 +50,14 @@ namespace Utilities.Controls.Localization
 			: base(markupExtensionManager)
 	    {
 		    _cultureManager = cultureManager;
+
+			WeakEventManager<ICultureManager, EventArgs>.AddHandler(_cultureManager, "UICultureChanged", cultureManager_UICultureChanged);
 	    }
+
+		private void cultureManager_UICultureChanged(object sender, EventArgs eventArgs)
+		{
+			UpdateTargets();
+		}
 
 	    /// <summary>
         /// Return the <see cref="XmlLanguage"/> to use for the associated Markup element.
@@ -60,22 +69,6 @@ namespace Utilities.Controls.Localization
         protected override object GetValue()
         {
 			return XmlLanguage.GetLanguage(_cultureManager.UICulture.IetfLanguageTag);
-        }
-
-        /// <summary>
-        /// The MarkupManager for this extension.
-        /// </summary>
-        public static MarkupExtensionManager MarkupManager
-        {
-            get { return _markupManager; }
-        }
-
-        /// <summary>
-        /// Use the Markup Manager to update all targets
-        /// </summary>
-        public static void UpdateAllTargets()
-        {
-            _markupManager.UpdateAllTargets();
         }
 
 		private readonly ICultureManager _cultureManager;

@@ -150,7 +150,7 @@ namespace Utilities.Controls.Localization
                     return true;
                 
                 // Otherwise, just check whether the referenced target(s) are alive.
-	           return _targetObjects.Any(reference => reference.IsAlive);
+				return _targetObjects.Any(reference => reference.IsAlive);
             } 
         }
 
@@ -161,7 +161,7 @@ namespace Utilities.Controls.Localization
         {
             get
             {
-	            return _targetObjects
+				return _targetObjects
 		            .Select(reference => reference.Target)
 		            .OfType<DependencyObject>()
 		            .Any(element => element != null && DesignerProperties.GetIsInDesignMode(element));
@@ -175,7 +175,7 @@ namespace Utilities.Controls.Localization
         /// For normal elements their will be a single target. For templates
         /// their may be zero or more targets
         /// </remarks>
-        protected List<WeakReference> TargetObjects
+        protected IEnumerable<WeakReference> TargetObjects
         {
             get { return _targetObjects; }
         }
@@ -223,6 +223,6 @@ namespace Utilities.Controls.Localization
         /// List of weak reference to the target DependencyObjects to allow them to 
         /// be garbage collected
         /// </summary>
-        private readonly List<WeakReference> _targetObjects = new List<WeakReference>();
+        private readonly ICollection<WeakReference> _targetObjects = new List<WeakReference>();
     }
 }

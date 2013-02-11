@@ -84,7 +84,14 @@ namespace Utilities.Controls.Localization
 		{
 			_cultureManager = cultureManager;
 			_key = key;
+
+			WeakEventManager<ICultureManager, EventArgs>.AddHandler(_cultureManager, "UICultureChanged", cultureManager_UICultureChanged);
 		}
+
+	    private void cultureManager_UICultureChanged(object sender, EventArgs eventArgs)
+	    {
+		    UpdateTargets();
+	    }
 
 	    /// <summary>
         /// The fully qualified name of the embedded resx (without .resources) to get
@@ -435,27 +442,26 @@ namespace Utilities.Controls.Localization
             get { return _markupManager; }
         }
 
-        /// <summary>
-        /// Use the Markup Manager to update all targets
-        /// </summary>
-        public static void UpdateAllTargets()
-        {
-            _markupManager.UpdateAllTargets();
-        }
+		/// <summary>
+		/// Get the DefaultResxName attached property for the given target
+		/// </summary>
+		/// <param name="target">The Target object</param>
+		/// <returns>The name of the Resx</returns>
+		[AttachedPropertyBrowsableForChildren(IncludeDescendants = true)]
+		public static string GetDefaultResxName(DependencyObject target)
+		{
+			return (string)target.GetValue(DefaultResxNameProperty);
+		}
 
-        /// <summary>
-		/// Update the <see cref="LocalizeExtension"/> target with the given key
-        /// </summary>
-        public static void UpdateTarget(string key)
-        {
-            foreach (LocalizeExtension ext in _markupManager.ActiveExtensions)
-            {
-                if (ext.Key == key)
-                {
-                    ext.UpdateTargets();
-                }
-            }
-        }
+		/// <summary>
+		/// Set the DefaultResxName attached property for the given target
+		/// </summary>
+		/// <param name="target">The Target object</param>
+		/// <param name="value">The name of the Resx</param>
+		public static void SetDefaultResxName(DependencyObject target, string value)
+		{
+			target.SetValue(DefaultResxNameProperty, value);
+		}
 
         /// <summary>
         /// The ResxName attached property.
@@ -470,26 +476,28 @@ namespace Utilities.Controls.Localization
                 FrameworkPropertyMetadataOptions.Inherits,
                 OnDefaultResxNamePropertyChanged));
 
-        /// <summary>
-        /// Get the DefaultResxName attached property for the given target
-        /// </summary>
-        /// <param name="target">The Target object</param>
-        /// <returns>The name of the Resx</returns>
-        [AttachedPropertyBrowsableForChildren(IncludeDescendants = true)]
-        public static string GetDefaultResxName(DependencyObject target)
-        {
-            return (string)target.GetValue(DefaultResxNameProperty);
-        }
-
-        /// <summary>
-        /// Set the DefaultResxName attached property for the given target
-        /// </summary>
-        /// <param name="target">The Target object</param>
-        /// <param name="value">The name of the Resx</param>
-        public static void SetDefaultResxName(DependencyObject target, string value)
-        {
-            target.SetValue(DefaultResxNameProperty, value);
-        }
+		/// <summary>
+		/// Handles a change to the attached DefaultResxName property.
+		/// </summary>
+		/// <param name="element">the dependency object (a WPF element)</param>
+		/// <param name="args">the dependency property changed event arguments</param>
+		/// <remarks>In design mode update the extension with the correct ResxName</remarks>
+		private static void OnDefaultResxNamePropertyChanged(DependencyObject element, DependencyPropertyChangedEventArgs args)
+		{
+			if (DesignerProperties.GetIsInDesignMode(element))
+			{
+				foreach (LocalizeExtension ext in MarkupManager.ActiveExtensions)
+				{
+					if (ext.IsTarget(element))
+					{
+						// Force the resource manager to be reloaded when the attached resx name changes.
+						ext._resourceManager = null;
+						ext._defaultResxName = args.NewValue as string;
+						ext.UpdateTarget(element);
+					}
+				}
+			}
+		}
 
         #region Local Methods
 
@@ -888,29 +896,6 @@ namespace Utilities.Controls.Localization
 			return _defaultValue;
         }
 
-        /// <summary>
-        /// Handles a change to the attached DefaultResxName property.
-        /// </summary>
-        /// <param name="element">the dependency object (a WPF element)</param>
-        /// <param name="args">the dependency property changed event arguments</param>
-        /// <remarks>In design mode update the extension with the correct ResxName</remarks>
-        private static void OnDefaultResxNamePropertyChanged(DependencyObject element, DependencyPropertyChangedEventArgs args)
-        {
-            if (DesignerProperties.GetIsInDesignMode(element))
-            {
-                foreach (LocalizeExtension ext in MarkupManager.ActiveExtensions)
-                {
-                    if (ext.IsTarget(element))
-                    {
-                        // Force the resource manager to be reloaded when the attached resx name changes.
-                        ext._resourceManager = null;
-                        ext._defaultResxName = args.NewValue as string;
-                        ext.UpdateTarget(element);
-                    }
-                }
-            }
-        }
-
         #endregion
 
 		/// <summary>
@@ -922,8 +907,6 @@ namespace Utilities.Controls.Localization
 		/// The default resx name (based on the attached property).
 		/// </summary>
 		private string _defaultResxName;
-
-	    private readonly ICultureManager _cultureManager;
 
 	    /// <summary>
 		/// The key used to retrieve the resource.
@@ -942,6 +925,8 @@ namespace Utilities.Controls.Localization
 		/// </summary>
 		private ResourceManager _resourceManager;
 
+		private readonly ICultureManager _cultureManager;
+
 		/// <summary>
 		/// The binding (if any) used to store the binding properties for the extension  .
 		/// </summary>
@@ -955,7 +940,7 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// Cached resource managers.
 		/// </summary>
-		private static readonly Dictionary<string, WeakReference<ResourceManager>> _resourceManagers = new Dictionary<string, WeakReference<ResourceManager>>();
+		private static readonly IDictionary<string, WeakReference<ResourceManager>> _resourceManagers = new Dictionary<string, WeakReference<ResourceManager>>();
 
 		/// <summary>
 		/// The manager for <see cref="LocalizeExtension"/>s.

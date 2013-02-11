@@ -99,7 +99,7 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// List of active extensions.
 		/// </summary>
-		private IList<ManagedMarkupExtension> _extensions = new List<ManagedMarkupExtension>();
+		private ICollection<ManagedMarkupExtension> _extensions = new List<ManagedMarkupExtension>();
 
 		/// <summary>
 		/// The number of extensions added since the last cleanup.

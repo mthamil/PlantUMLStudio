@@ -19,7 +19,6 @@ using System.Windows.Markup;
 
 namespace Utilities.Controls.Localization
 {
-
     /// <summary>
     /// Markup Extension used to dynamically set the Language property of an Markup element to the
     /// the current <see cref="CultureManager.UICulture"/> property value.
@@ -52,7 +51,7 @@ namespace Utilities.Controls.Localization
 	    }
 
 	    /// <summary>
-        /// Return the <see cref="XmlLanguage"/> to use for the associated Markup element 
+        /// Return the <see cref="XmlLanguage"/> to use for the associated Markup element.
         /// </summary>
         /// <returns>
         /// The <see cref="XmlLanguage"/> corresponding to the current 

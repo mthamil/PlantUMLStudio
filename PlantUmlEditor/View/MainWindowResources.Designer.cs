@@ -59,5 +59,231 @@ namespace PlantUmlEditor.View {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string AboutContextMenuItem {
+            get {
+                return ResourceManager.GetString("AboutContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string CancelDiagramRefreshButton {
+            get {
+                return ResourceManager.GetString("CancelDiagramRefreshButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string CopyContextMenuItem {
+            get {
+                return ResourceManager.GetString("CopyContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location:.
+        /// </summary>
+        internal static string CurrentDiagramLocationLabel {
+            get {
+                return ResourceManager.GetString("CurrentDiagramLocationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cut.
+        /// </summary>
+        internal static string CutContextMenuItem {
+            get {
+                return ResourceManager.GetString("CutContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string DeletePreviewContextMenuItem {
+            get {
+                return ResourceManager.GetString("DeletePreviewContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Edit.
+        /// </summary>
+        internal static string EditContextMenuHeader {
+            get {
+                return ResourceManager.GetString("EditContextMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E_xit.
+        /// </summary>
+        internal static string ExitContextMenuItem {
+            get {
+                return ResourceManager.GetString("ExitContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _File.
+        /// </summary>
+        internal static string FileContextMenuHeader {
+            get {
+                return ResourceManager.GetString("FileContextMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Help.
+        /// </summary>
+        internal static string HelpContextMenuHeader {
+            get {
+                return ResourceManager.GetString("HelpContextMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _New....
+        /// </summary>
+        internal static string NewContextMenuItem {
+            get {
+                return ResourceManager.GetString("NewContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Open....
+        /// </summary>
+        internal static string OpenContextMenuItem {
+            get {
+                return ResourceManager.GetString("OpenContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        internal static string OpenPreviewContextMenuItem {
+            get {
+                return ResourceManager.GetString("OpenPreviewContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        internal static string OptionsContextMenuItem {
+            get {
+                return ResourceManager.GetString("OptionsContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        internal static string PasteContextMenuItem {
+            get {
+                return ResourceManager.GetString("PasteContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent Files.
+        /// </summary>
+        internal static string RecentFilesContextMenuItem {
+            get {
+                return ResourceManager.GetString("RecentFilesContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redo.
+        /// </summary>
+        internal static string RedoContextMenuItem {
+            get {
+                return ResourceManager.GetString("RedoContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Diagram List.
+        /// </summary>
+        internal static string RefreshDiagramsButton {
+            get {
+                return ResourceManager.GetString("RefreshDiagramsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save_All.
+        /// </summary>
+        internal static string SaveAllContextMenuItem {
+            get {
+                return ResourceManager.GetString("SaveAllContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Save.
+        /// </summary>
+        internal static string SaveContextMenuItem {
+            get {
+                return ResourceManager.GetString("SaveContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PlantUML Editor.
+        /// </summary>
+        internal static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Tools.
+        /// </summary>
+        internal static string ToolsContextMenuHeader {
+            get {
+                return ResourceManager.GetString("ToolsContextMenuHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undo.
+        /// </summary>
+        internal static string UndoContextMenuItem {
+            get {
+                return ResourceManager.GetString("UndoContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a path in the location text box to load the diagrams from that directory.
+        ///Or, just click on File -&gt; New to start working on a new diagram..
+        /// </summary>
+        internal static string WelcomeMessage {
+            get {
+                return ResourceManager.GetString("WelcomeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to PlantUML Editor.
+        /// </summary>
+        internal static string WelcomeMessageTitle {
+            get {
+                return ResourceManager.GetString("WelcomeMessageTitle", resourceCulture);
+            }
+        }
     }
 }

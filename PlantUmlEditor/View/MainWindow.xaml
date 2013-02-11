@@ -19,7 +19,7 @@
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     xmlns:Clickable="clr-namespace:Utilities.Controls.Behaviors.Clickable;assembly=Utilities.Controls"
     LocalizeExtension.DefaultResxName="PlantUmlEditor.View.MainWindowResources" Language="{UICulture}"
-    Title="PlantUml Editor" 
+    Title="{Localize Title}" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"
@@ -148,8 +148,8 @@
                         </LinearGradientBrush>
                     </Menu.Background>
                     
-                    <MenuItem Header="_File">
-                        <MenuItem Header="_New..." Name="NewDiagramMenuItem">
+                    <MenuItem Header="{Localize FileContextMenuHeader}">
+                        <MenuItem Header="{Localize NewContextMenuItem}" Name="NewDiagramMenuItem">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <Clickable:BindableClickAction/>
@@ -160,7 +160,7 @@
                             </MenuItem.Icon>
                         </MenuItem>
 
-                        <MenuItem Header="_Open..." Name="OpenDiagramMenuItem">
+                        <MenuItem Header="{Localize OpenContextMenuItem}" Name="OpenDiagramMenuItem">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <Clickable:BindableClickAction/>
@@ -173,12 +173,12 @@
 
                         <Separator/>
 
-                        <MenuItem Header="_Save" Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}">
+                        <MenuItem Header="{Localize SaveContextMenuItem}" Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Save_All" Command="{Binding SaveAllCommand}">
+                        <MenuItem Header="{Localize SaveAllContextMenuItem}" Command="{Binding SaveAllCommand}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource SaveAllIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
@@ -186,7 +186,7 @@
                         
                         <Separator/>
 
-                        <MenuItem Header="Recent Files" ItemsSource="{Binding Source={xtn:ViewModelLocator {x:Type vm:RecentFilesMenuViewModel}}, Path=ViewModel.Files}">
+                        <MenuItem Header="{Localize RecentFilesContextMenuItem}" ItemsSource="{Binding Source={xtn:ViewModelLocator {x:Type vm:RecentFilesMenuViewModel}}, Path=ViewModel.Files}">
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -203,8 +203,8 @@
                         </MenuItem>
 
                         <Separator/>
-                        
-                        <MenuItem Header="E_xit" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+
+                        <MenuItem Header="{Localize ExitContextMenuItem}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                             <MenuItem.Command>
                                 <utilcmd:CloseWindowCommand/>
                             </MenuItem.Command>
@@ -214,37 +214,37 @@
                         </MenuItem>
                     </MenuItem>
 
-                    <MenuItem Header="_Edit">
-                        <MenuItem Header="Undo" Command="{Binding OpenDiagram.CodeEditor.UndoCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem Header="{Localize EditContextMenuHeader}">
+                        <MenuItem Header="{Localize UndoContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.UndoCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource UndoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Redo" Command="{Binding OpenDiagram.CodeEditor.RedoCommand, FallbackValue={StaticResource NullCommand}}">
+                        <MenuItem Header="{Localize RedoContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.RedoCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource RedoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Header="Cut" Command="{Binding OpenDiagram.CodeEditor.CutCommand, FallbackValue={StaticResource NullCommand}}">
+                        <MenuItem Header="{Localize CutContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.CutCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Copy" Command="{Binding OpenDiagram.CodeEditor.CopyCommand, FallbackValue={StaticResource NullCommand}}">
+                        <MenuItem Header="{Localize CopyContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.CopyCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Paste" Command="{Binding OpenDiagram.CodeEditor.PasteCommand, FallbackValue={StaticResource NullCommand}}">
+                        <MenuItem Header="{Localize PasteContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.PasteCommand, FallbackValue={StaticResource NullCommand}}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource PasteIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
-                    
-                    <MenuItem Header="_Tools">
-                        <MenuItem Header="Options">
+
+                    <MenuItem Header="{Localize ToolsContextMenuHeader}">
+                        <MenuItem Header="{Localize OptionsContextMenuItem}">
                             <MenuItem.Command>
                                 <utilcmd:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
                                                            Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
@@ -255,8 +255,8 @@
                         </MenuItem>
                     </MenuItem>
 
-                    <MenuItem Header="_Help">
-                        <MenuItem Header="About">
+                    <MenuItem Header="{Localize HelpContextMenuHeader}">
+                        <MenuItem Header="{Localize AboutContextMenuItem}">
                             <MenuItem.Command>
                                 <utilcmd:OpenDialogCommand Type="{x:Type vw:AboutView}" 
                                                            Owner="{Binding Source={x:Static PlantUmlEditor:App.Current}, Path=MainWindow}"/>
@@ -360,7 +360,7 @@
             
                             <!-- This is the location box -->
                             <StackPanel Grid.Row="0" Margin="5,5,5,5">
-                                <TextBlock Text="Location:" Foreground="White" FontFamily="Segoe UI" FontSize="14"/>
+                                <TextBlock Text="{Localize CurrentDiagramLocationLabel}" Foreground="White" FontFamily="Segoe UI" FontSize="14"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -442,14 +442,14 @@
 
                                     <ListBox.ContextMenu>
                                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                            <MenuItem Header="Open"
+                                            <MenuItem Header="{Localize OpenPreviewContextMenuItem, ResxName=PlantUmlEditor.View.MainWindowResources}"
                                                       Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.RequestOpenPreviewCommand}"
                                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CurrentPreviewDiagram}">
                                                 <MenuItem.Icon>
                                                     <Image Source="{StaticResource OpenInEditorIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem Header="Delete"
+                                            <MenuItem Header="{Localize DeletePreviewContextMenuItem, ResxName=PlantUmlEditor.View.MainWindowResources}"
                                                       Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.DeleteDiagramCommand}"
                                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=DataContext.CurrentPreviewDiagram}">
                                                 <MenuItem.Icon>
@@ -483,7 +483,7 @@
                                                         <Setter.Value>
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None"/>
-                                                                <TextBlock Text="Refresh Diagram List" Margin="5,0,0,0"/>
+                                                                    <TextBlock Text="{Localize RefreshDiagramsButton, ResxName=PlantUmlEditor.View.MainWindowResources}" Margin="5,0,0,0"/>
                                                             </StackPanel>
                                                         </Setter.Value>
                                                     </Setter>
@@ -495,7 +495,7 @@
                                                         <Setter.Value>
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Image Source="{StaticResource CancelIcon_Small}" Stretch="None"/>
-                                                                <TextBlock Text="Cancel" Margin="5,0,0,0"/>
+                                                                <TextBlock Text="{Localize CancelDiagramRefreshButton, ResxName=PlantUmlEditor.View.MainWindowResources}" Margin="5,0,0,0"/>
                                                             </StackPanel>
                                                         </Setter.Value>
                                                     </Setter>
@@ -598,13 +598,11 @@
                                     StrokeThickness="1" />
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" FontFamily="Segoe UI" FontStretch="Condensed" FontSize="30" Margin="0,11,0,10">
-                                <Run Text="Welcome to PlantUML Editor"/>
+                                <Run Text="{Localize WelcomeMessageTitle}"/>
                             </TextBlock>
                             <Separator HorizontalAlignment="Stretch" Height="1" />
-                            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" FontFamily="Segoe UI" FontSize="20" VerticalAlignment="Center">
-                                Enter a path in the location text box to load the diagrams from that directory.                
-                                Or, just click on File -> New to start working on a new diagram.                
-                            </TextBlock>
+                            <TextBlock Text="{Localize WelcomeMessage}" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" 
+                                       FontFamily="Segoe UI" FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Grid>                    
                 </Border>

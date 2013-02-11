@@ -170,8 +170,18 @@
     <Compile Include="View\DiagramEditorView.xaml.cs">
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\DiagramEditorViewResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiagramEditorViewResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindowResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainWindowResources.resx</DependentUpon>
     </Compile>
     <Compile Include="View\MarkupExtensions\ViewModelLocator.cs" />
     <Compile Include="App.xaml.cs">
@@ -232,6 +242,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AboutViewResources.Designer.cs</LastGenOutput>
       <DependentUpon>AboutView.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\DiagramEditorViewResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagramEditorViewResources.Designer.cs</LastGenOutput>
+      <DependentUpon>DiagramEditorView.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainWindowResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainWindowResources.Designer.cs</LastGenOutput>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SettingsViewResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

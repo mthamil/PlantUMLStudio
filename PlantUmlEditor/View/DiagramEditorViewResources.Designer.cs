@@ -59,5 +59,68 @@ namespace PlantUmlEditor.View {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse to Image.
+        /// </summary>
+        internal static string BrowseToImageContextMenuItem {
+            get {
+                return ResourceManager.GetString("BrowseToImageContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string CopyEditorContextMenuItem {
+            get {
+                return ResourceManager.GetString("CopyEditorContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Image.
+        /// </summary>
+        internal static string CopyImageContextMenuItem {
+            get {
+                return ResourceManager.GetString("CopyImageContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Image Path.
+        /// </summary>
+        internal static string CopyImagePathContextMenuItem {
+            get {
+                return ResourceManager.GetString("CopyImagePathContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cut.
+        /// </summary>
+        internal static string CutEditorContextMenuItem {
+            get {
+                return ResourceManager.GetString("CutEditorContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        internal static string PasteEditorContextMenuItem {
+            get {
+                return ResourceManager.GetString("PasteEditorContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Snippets.
+        /// </summary>
+        internal static string SnippetsEditorContextMenuItem {
+            get {
+                return ResourceManager.GetString("SnippetsEditorContextMenuItem", resourceCulture);
+            }
+        }
     }
 }

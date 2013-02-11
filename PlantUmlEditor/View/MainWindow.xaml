@@ -18,6 +18,7 @@
     xmlns:PlantUmlEditor="clr-namespace:PlantUmlEditor"
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     xmlns:Clickable="clr-namespace:Utilities.Controls.Behaviors.Clickable;assembly=Utilities.Controls"
+    LocalizeExtension.DefaultResxName="PlantUmlEditor.View.MainWindowResources" Language="{UICulture}"
     Title="PlantUml Editor" 
     Width="1300" Height="768"
     WindowStartupLocation="CenterScreen"

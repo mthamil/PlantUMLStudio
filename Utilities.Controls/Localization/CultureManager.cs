@@ -26,7 +26,7 @@ namespace Utilities.Controls.Localization
     /// dynamically.  
     /// </summary>
     /// <remarks>
-    /// XAML elements that use the <see cref="ResxExtension"/> are automatically
+    /// XAML elements that use the <see cref="LocalizeExtension"/> are automatically
     /// updated when the <see cref="CultureManager.UICulture"/> property is changed.
     /// </remarks>
     public class CultureManager
@@ -41,7 +41,7 @@ namespace Utilities.Controls.Localization
 
         /// <summary>
         /// Sets the UICulture for a <see cref="CultureManager"/> and raises the <see cref="UICultureChanged"/>
-        /// event causing any XAML elements using the <see cref="ResxExtension"/> to automatically
+        /// event causing any XAML elements using the <see cref="LocalizeExtension"/> to automatically
         /// update.
         /// </summary>
         public CultureInfo UICulture
@@ -65,7 +65,7 @@ namespace Utilities.Controls.Localization
                         SetThreadCulture(value);
                     }
                     UICultureExtension.UpdateAllTargets();
-                    ResxExtension.UpdateAllTargets();
+                    LocalizeExtension.UpdateAllTargets();
                     OnUICultureChanged();
                 }
             }

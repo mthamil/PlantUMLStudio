@@ -37,7 +37,7 @@ using System.Collections.ObjectModel;
 namespace Utilities.Controls.Localization
 {
     /// <summary>
-    /// Defines the handling method for the <see cref="ResxExtension.GetResource"/> event
+    /// Defines the handling method for the <see cref="LocalizeExtension.GetResource"/> event
     /// </summary>
     /// <param name="resourceFileName">The name of the resource file</param>
     /// <param name="key">The resource key within the file</param>
@@ -51,7 +51,7 @@ namespace Utilities.Controls.Localization
     /// </summary>
     [MarkupExtensionReturnType(typeof(object))]
     [ContentProperty("Children")]
-    public class ResxExtension : ManagedMarkupExtension
+    public class LocalizeExtension : ManagedMarkupExtension
     {
         /// <summary>
         /// This global event allows a designer or preview application (such as Globalizer.NET) to
@@ -62,20 +62,20 @@ namespace Utilities.Controls.Localization
 	    /// <summary>
         /// Initializes a new instance of the markup extension.
         /// </summary>
-        public ResxExtension()
+        public LocalizeExtension()
             : this(_markupManager, CultureManager.Default, null) { }
 
         /// <summary>
 		/// Initializes a new instance of the markup extension.
         /// </summary>
         /// <param name="key">The key used to get the value from the resources</param>
-        public ResxExtension(string key)
+        public LocalizeExtension(string key)
             : this(_markupManager, CultureManager.Default, key) { }
 
 		/// <summary>
 		/// Initializes a new instance of the markup extension.
 		/// </summary>
-	    internal ResxExtension(MarkupExtensionManager markupExtensionManager, CultureManager cultureManager, string key)
+	    internal LocalizeExtension(MarkupExtensionManager markupExtensionManager, CultureManager cultureManager, string key)
 			: base(markupExtensionManager)
 		{
 			_cultureManager = cultureManager;
@@ -148,7 +148,7 @@ namespace Utilities.Controls.Localization
         /// elements similar to a <see cref="MultiBinding"/>.
         /// </remarks>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public Collection<ResxExtension> Children
+        public Collection<LocalizeExtension> Children
         {
             get { return _children; }
         }
@@ -398,7 +398,7 @@ namespace Utilities.Controls.Localization
                 throw new ArgumentException("You must set the resource Key or Binding properties");
 
             // If the extension is used in a template or as a child of another
-            // resx extension (for multi-binding) then return this.
+            // extension (for multi-binding) then return this.
             if (TargetProperty == null || IsMultiBindingChild)
             {
                 return this;
@@ -440,11 +440,11 @@ namespace Utilities.Controls.Localization
         }
 
         /// <summary>
-        /// Update the ResxExtension target with the given key
+		/// Update the <see cref="LocalizeExtension"/> target with the given key
         /// </summary>
         public static void UpdateTarget(string key)
         {
-            foreach (ResxExtension ext in _markupManager.ActiveExtensions)
+            foreach (LocalizeExtension ext in _markupManager.ActiveExtensions)
             {
                 if (ext.Key == key)
                 {
@@ -460,7 +460,7 @@ namespace Utilities.Controls.Localization
             DependencyProperty.RegisterAttached(
             "DefaultResxName",
             typeof(string),
-            typeof(ResxExtension),
+            typeof(LocalizeExtension),
             new FrameworkPropertyMetadata(null,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.Inherits,
@@ -490,9 +490,9 @@ namespace Utilities.Controls.Localization
         #region Local Methods
 
         /// <summary>
-        /// Create a binding for this Resx Extension
+		/// Creates a binding for this <see cref="LocalizeExtension"/>.
         /// </summary>
-        /// <returns>A binding for this Resx Extension</returns>
+		/// <returns>A binding for this <see cref="LocalizeExtension"/></returns>
         private Binding CreateBinding()
         {
 	        if (!IsBindingExpression)
@@ -543,7 +543,7 @@ namespace Utilities.Controls.Localization
         }
 
 	    /// <summary>
-        /// Creates a new MultiBinding that binds to the child Resx Extensions.
+		/// Creates a new MultiBinding that binds to the child <see cref="LocalizeExtension"/>s.
         /// </summary>
         private MultiBinding CreateMultiBinding()
         {
@@ -575,7 +575,7 @@ namespace Utilities.Controls.Localization
         }
 
         /// <summary>
-        /// Whether this ResxExtension is being used as a multi-binding parent.
+		/// Whether this <see cref="LocalizeExtension"/> is being used as a multi-binding parent.
         /// </summary>
         private bool IsMultiBindingParent
         {
@@ -583,13 +583,13 @@ namespace Utilities.Controls.Localization
         }
 
         /// <summary>
-        /// Whether this ResxExtension is being used inside another Resx Extension for multi-binding.
+		/// Whether this <see cref="LocalizeExtension"/> is being used inside another <see cref="LocalizeExtension"/> for multi-binding.
         /// </summary>
         private bool IsMultiBindingChild
         {
             get 
             { 
-                return (TargetPropertyType == typeof(Collection<ResxExtension>)); 
+                return (TargetPropertyType == typeof(Collection<LocalizeExtension>)); 
             }
         }
 
@@ -895,7 +895,7 @@ namespace Utilities.Controls.Localization
         {
             if (DesignerProperties.GetIsInDesignMode(element))
             {
-                foreach (ResxExtension ext in MarkupManager.ActiveExtensions)
+                foreach (LocalizeExtension ext in MarkupManager.ActiveExtensions)
                 {
                     if (ext.IsTarget(element))
                     {
@@ -934,7 +934,7 @@ namespace Utilities.Controls.Localization
 
 		/// <summary>
 		/// The resource manager to use for this extension.  Holding a strong reference to the
-		/// Resource Manager keeps it in the cache while ever there are ResxExtensions that
+		/// Resource Manager keeps it in the cache while ever there are LocalizeExtensions that
 		/// are using it.
 		/// </summary>
 		private ResourceManager _resourceManager;
@@ -945,9 +945,9 @@ namespace Utilities.Controls.Localization
 		private readonly Lazy<Binding> _binding = new Lazy<Binding>(() => new Binding());
 
 		/// <summary>
-		/// The child ResxExtensions (if any) when using MultiBinding expressions.
+		/// The child <see cref="LocalizeExtension"/>s (if any) when using MultiBinding expressions.
 		/// </summary>
-		private readonly Collection<ResxExtension> _children = new Collection<ResxExtension>();
+		private readonly Collection<LocalizeExtension> _children = new Collection<LocalizeExtension>();
 
 		/// <summary>
 		/// Cached resource managers.
@@ -955,7 +955,7 @@ namespace Utilities.Controls.Localization
 		private static readonly Dictionary<string, WeakReference> _resourceManagers = new Dictionary<string, WeakReference>();
 
 		/// <summary>
-		/// The manager for resx extensions.
+		/// The manager for <see cref="LocalizeExtension"/>s.
 		/// </summary>
 		internal static readonly MarkupExtensionManager _markupManager = new MarkupExtensionManager(40);
     }

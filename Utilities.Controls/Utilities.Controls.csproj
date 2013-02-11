@@ -114,7 +114,7 @@
     <Compile Include="Localization\CultureManager.cs" />
     <Compile Include="Localization\ManagedMarkupExtension.cs" />
     <Compile Include="Localization\MarkupExtensionManager.cs" />
-    <Compile Include="Localization\ResxExtension.cs" />
+    <Compile Include="Localization\LocalizeExtension.cs" />
     <Compile Include="Localization\UICultureExtension.cs" />
     <Compile Include="Markup\ActivatorExtension.cs" />
     <Compile Include="Markup\CommandExtension.cs" />

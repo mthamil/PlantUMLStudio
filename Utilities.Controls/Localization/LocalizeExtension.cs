@@ -1,19 +1,19 @@
-﻿ // PlantUML Editor
- // Copyright 2013 Matthew Hamilton - matthamilton@live.com
- // Copyright 2008 Grant Frisken, Infralution (original author)
- // Originally licensed under the CodeProject Open License.
- //
- // Licensed under the Apache License, Version 2.0 (the "License");
- // you may not use this file except in compliance with the License.
- // You may obtain a copy of the License at
- //
-//     http://www.apache.org/licenses/LICENSE-2.0
- //
- // Unless required by applicable law or agreed to in writing, software
- // distributed under the License is distributed on an "AS IS" BASIS,
- // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- // See the License for the specific language governing permissions and
- // limitations under the License.
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2008 Grant Frisken, Infralution (original author)
+//  Originally licensed under the CodeProject Open License.
+//	 
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//	 
+//      http://www.apache.org/licenses/LICENSE-2.0
+//	 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +79,7 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// Initializes a new instance of the markup extension.
 		/// </summary>
-	    internal LocalizeExtension(MarkupExtensionManager markupExtensionManager, CultureManager cultureManager, string key)
+	    internal LocalizeExtension(MarkupExtensionManager markupExtensionManager, ICultureManager cultureManager, string key)
 			: base(markupExtensionManager)
 		{
 			_cultureManager = cultureManager;
@@ -751,20 +751,19 @@ namespace Utilities.Controls.Localization
         /// <remarks>Caches resource managers to improve performance</remarks>
         private ResourceManager GetResourceManager(string resxName)
         {
-            WeakReference reference;
-            ResourceManager result = null;
             if (resxName == null) 
 				return null;
+
+			WeakReference<ResourceManager> reference;
+			ResourceManager result = null;
             if (_resourceManagers.TryGetValue(resxName, out reference))
             {
-                result = reference.Target as ResourceManager;
-
-                // If the resource manager has been garbage collected then remove the cache
-                // entry (it will be readded).
-                if (result == null)
-                {
-                    _resourceManagers.Remove(resxName);
-                }
+	            if (!reference.TryGetTarget(out result))
+	            {
+					// If the resource manager has been garbage collected then remove the cache
+					// entry (it will be readded).
+					_resourceManagers.Remove(resxName);
+	            }
             }
 
             if (result == null)
@@ -773,8 +772,8 @@ namespace Utilities.Controls.Localization
                 if (assembly != null)
                 {
                     result = new ResourceManager(resxName, assembly);
+					_resourceManagers.Add(resxName, new WeakReference<ResourceManager>(result));
                 }
-                _resourceManagers.Add(resxName, new WeakReference(result));
             }
             return result;
         }
@@ -924,7 +923,7 @@ namespace Utilities.Controls.Localization
 		/// </summary>
 		private string _defaultResxName;
 
-	    private readonly CultureManager _cultureManager;
+	    private readonly ICultureManager _cultureManager;
 
 	    /// <summary>
 		/// The key used to retrieve the resource.
@@ -956,7 +955,7 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// Cached resource managers.
 		/// </summary>
-		private static readonly Dictionary<string, WeakReference> _resourceManagers = new Dictionary<string, WeakReference>();
+		private static readonly Dictionary<string, WeakReference<ResourceManager>> _resourceManagers = new Dictionary<string, WeakReference<ResourceManager>>();
 
 		/// <summary>
 		/// The manager for <see cref="LocalizeExtension"/>s.

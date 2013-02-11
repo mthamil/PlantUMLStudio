@@ -1,19 +1,19 @@
-﻿// PlantUML Editor
-// Copyright 2013 Matthew Hamilton - matthamilton@live.com
-// Copyright 2008 Grant Frisken, Infralution (original author)
-// Originally licensed under the CodeProject Open License.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2008 Grant Frisken, Infralution (original author)
+//  Originally licensed under the CodeProject Open License.
+//  
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0
+//  
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 using System.Windows.Markup;
 
@@ -33,7 +33,7 @@ namespace Utilities.Controls.Localization
     {
         /// <summary>
         /// Initializes an instance of the extension to set the language property for an
-        /// element to the current <see cref="CultureManager.UICulture"/> property value.
+        /// element to the current <see cref="ICultureManager.UICulture"/> property value.
         /// </summary>
         public UICultureExtension()
             : this(_markupManager, CultureManager.Default)
@@ -42,9 +42,9 @@ namespace Utilities.Controls.Localization
 
 		/// <summary>
 		/// Initializes an instance of the extension to set the language property for an
-		/// element to the current <see cref="CultureManager.UICulture"/> property value.
+		/// element to the current <see cref="ICultureManager.UICulture"/> property value.
 		/// </summary>
-		internal UICultureExtension(MarkupExtensionManager markupExtensionManager, CultureManager cultureManager)
+		internal UICultureExtension(MarkupExtensionManager markupExtensionManager, ICultureManager cultureManager)
 			: base(markupExtensionManager)
 	    {
 		    _cultureManager = cultureManager;
@@ -55,7 +55,7 @@ namespace Utilities.Controls.Localization
         /// </summary>
         /// <returns>
         /// The <see cref="XmlLanguage"/> corresponding to the current 
-        /// <see cref="CultureManager.UICulture"/> property value
+        /// <see cref="ICultureManager.UICulture"/> property value
         /// </returns>
         protected override object GetValue()
         {
@@ -78,7 +78,7 @@ namespace Utilities.Controls.Localization
             _markupManager.UpdateAllTargets();
         }
 
-		private readonly CultureManager _cultureManager;
+		private readonly ICultureManager _cultureManager;
 
 		/// <summary>
 		/// A shared extension manager instance.

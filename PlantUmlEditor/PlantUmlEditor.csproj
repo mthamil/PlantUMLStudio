@@ -159,8 +159,13 @@
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SnippetsMenu.cs" />
     <Compile Include="ViewModel\SnippetViewModel.cs" />
-    <Compile Include="View\About.xaml.cs">
-      <DependentUpon>About.xaml</DependentUpon>
+    <Compile Include="View\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AboutViewResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AboutViewResources.resx</DependentUpon>
     </Compile>
     <Compile Include="View\DiagramEditorView.xaml.cs">
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>
@@ -173,6 +178,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\SettingsViewResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SettingsViewResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -183,7 +193,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\About.xaml">
+    <Page Include="View\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -218,6 +228,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="View\AboutViewResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AboutViewResources.Designer.cs</LastGenOutput>
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SettingsViewResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SettingsViewResources.Designer.cs</LastGenOutput>
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </EmbeddedResource>
     <Resource Include="Resources\Icons\arrow-circle-225-left-16x16.png" />
     <Resource Include="Resources\Icons\arrow-circle-315-16x16.png" />
     <EmbeddedResource Include="Properties\Resources.resx">

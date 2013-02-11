@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor 2
+﻿//  PlantUML Editor
 //  Copyright 2012 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
@@ -13,28 +13,17 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PlantUmlEditor.View
 {
 	/// <summary>
-	/// Interaction logic for About.xaml
+	/// Interaction logic for AboutView.xaml
 	/// </summary>
-	public partial class About : Window
+	public partial class AboutView : Window
 	{
-		public About()
+		public AboutView()
 		{
 			InitializeComponent();
 		}

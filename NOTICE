@@ -17,6 +17,11 @@
    System.Windows.Interactivity from the Microsoft Blend SDK:
         http://www.microsoft.com/en-us/download/details.aspx?id=10801
 
+   WPF resource localization based on the code provided at
+   http://www.codeproject.com/Articles/35159/WPF-Localization-Using-RESX-Files,
+   and is originally licensed under the CodeProject Open License:
+        Copyright 2008 Grant Frisken, Infralution
+
    The PlantUML software itself is licensed under the GPL:
         PlantUML : a free UML diagram generator
         Copyright 2009-2012, Arnaud Roques

@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.4.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -110,6 +111,11 @@
     <Compile Include="Converters\UriConverter.cs" />
     <Compile Include="Converters\UriToCachedImageConverter.cs" />
     <Compile Include="FilePicker.cs" />
+    <Compile Include="Localization\CultureManager.cs" />
+    <Compile Include="Localization\ManagedMarkupExtension.cs" />
+    <Compile Include="Localization\MarkupExtensionManager.cs" />
+    <Compile Include="Localization\ResxExtension.cs" />
+    <Compile Include="Localization\UICultureExtension.cs" />
     <Compile Include="Markup\ActivatorExtension.cs" />
     <Compile Include="Markup\CommandExtension.cs" />
     <Compile Include="MultiKey\MultiKeyBinding.cs" />

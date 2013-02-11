@@ -38,11 +38,9 @@
         </Grid.RowDefinitions>
         
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
-            <CheckBox Content="AutoSave" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"
+            <CheckBox Content="AutoSave every" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"
                       ToolTip="Automatically save changes to open diagrams."
                       IsChecked="{Binding AutoSaveEnabled, Mode=TwoWay}"/>
-            
-            <TextBlock Text="every" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Right"/>
             
             <TextBox Margin="0,0,0,0" HorizontalAlignment="Right"  MinWidth="25" VerticalAlignment="Center" HorizontalContentAlignment="Right" 
                      ToolTip="The amount of time between automatic saves of a diagram, in seconds." 

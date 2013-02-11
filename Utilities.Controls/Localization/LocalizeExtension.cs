@@ -34,6 +34,10 @@ using System.Runtime.InteropServices;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "Utilities.Controls.Localization")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2007/xaml/presentation", "Utilities.Controls.Localization")]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2008/xaml/presentation", "Utilities.Controls.Localization")]
+
 namespace Utilities.Controls.Localization
 {
     /// <summary>
@@ -394,7 +398,7 @@ namespace Utilities.Controls.Localization
             // Register the target and property so we can update them.
             RegisterTarget(serviceProvider);
 
-            if (string.IsNullOrEmpty(Key) && !IsBindingExpression)
+            if (String.IsNullOrEmpty(Key) && !IsBindingExpression)
                 throw new ArgumentException("You must set the resource Key or Binding properties");
 
             // If the extension is used in a template or as a child of another

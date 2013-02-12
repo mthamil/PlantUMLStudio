@@ -67,14 +67,14 @@ namespace Utilities.Controls.Localization
         /// Initializes a new instance of the markup extension.
         /// </summary>
         public LocalizeExtension()
-            : this(_markupManager, CultureManager.Default, null) { }
+			: this(null) { }
 
         /// <summary>
 		/// Initializes a new instance of the markup extension.
         /// </summary>
         /// <param name="key">The key used to get the value from the resources</param>
         public LocalizeExtension(string key)
-            : this(_markupManager, CultureManager.Default, key) { }
+			: this(MarkupExtensionManager.For<LocalizeExtension>(CleanupInterval), CultureManager.Default, key) { }
 
 		/// <summary>
 		/// Initializes a new instance of the markup extension.
@@ -434,16 +434,8 @@ namespace Utilities.Controls.Localization
 	        return GetValue();
         }
 
-        /// <summary>
-        /// Return the MarkupManager for this extension
-        /// </summary>
-        public static MarkupExtensionManager MarkupManager
-        {
-            get { return _markupManager; }
-        }
-
 		/// <summary>
-		/// Get the DefaultResxName attached property for the given target
+		/// Gets the DefaultResxName attached property for the given target.
 		/// </summary>
 		/// <param name="target">The Target object</param>
 		/// <returns>The name of the Resx</returns>
@@ -454,7 +446,7 @@ namespace Utilities.Controls.Localization
 		}
 
 		/// <summary>
-		/// Set the DefaultResxName attached property for the given target
+		/// Sets the DefaultResxName attached property for the given target.
 		/// </summary>
 		/// <param name="target">The Target object</param>
 		/// <param name="value">The name of the Resx</param>
@@ -479,22 +471,22 @@ namespace Utilities.Controls.Localization
 		/// <summary>
 		/// Handles a change to the attached DefaultResxName property.
 		/// </summary>
-		/// <param name="element">the dependency object (a WPF element)</param>
-		/// <param name="args">the dependency property changed event arguments</param>
-		/// <remarks>In design mode update the extension with the correct ResxName</remarks>
+		/// <param name="element">The dependency object (a WPF element)</param>
+		/// <param name="args">The dependency property changed event arguments</param>
+		/// <remarks>In design mode, updates the extension with the correct ResxName</remarks>
 		private static void OnDefaultResxNamePropertyChanged(DependencyObject element, DependencyPropertyChangedEventArgs args)
 		{
 			if (DesignerProperties.GetIsInDesignMode(element))
 			{
-				foreach (LocalizeExtension ext in MarkupManager.ActiveExtensions)
+				var applicableExtensions = MarkupExtensionManager.For<LocalizeExtension>(CleanupInterval).ActiveExtensions
+																 .OfType<LocalizeExtension>()
+															     .Where(extension => extension.IsTarget(element));
+				foreach (var extension in applicableExtensions)
 				{
-					if (ext.IsTarget(element))
-					{
-						// Force the resource manager to be reloaded when the attached resx name changes.
-						ext._resourceManager = null;
-						ext._defaultResxName = args.NewValue as string;
-						ext.UpdateTarget(element);
-					}
+					// Force the resource manager to be reloaded when the attached resx name changes.
+					extension._resourceManager = null;
+					extension._defaultResxName = args.NewValue as string;
+					extension.UpdateTarget(element);
 				}
 			}
 		}
@@ -937,14 +929,11 @@ namespace Utilities.Controls.Localization
 		/// </summary>
 		private readonly Collection<LocalizeExtension> _children = new Collection<LocalizeExtension>();
 
+	    private const int CleanupInterval = 40;
+
 		/// <summary>
 		/// Cached resource managers.
 		/// </summary>
 		private static readonly IDictionary<string, WeakReference<ResourceManager>> _resourceManagers = new Dictionary<string, WeakReference<ResourceManager>>();
-
-		/// <summary>
-		/// The manager for <see cref="LocalizeExtension"/>s.
-		/// </summary>
-		internal static readonly MarkupExtensionManager _markupManager = new MarkupExtensionManager(40);
     }
 }

@@ -207,8 +207,8 @@ namespace Utilities.Controls.Localization
 	            return null;
             }
         }
- 
-        /// <summary>
+
+	    /// <summary>
         /// Returns the value associated with the key from the resource manager.
         /// </summary>
         /// <returns>The value from the resources if possible otherwise the default value</returns>

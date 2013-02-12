@@ -38,9 +38,7 @@ namespace Utilities.Controls.Localization
         /// element to the current <see cref="ICultureManager.UICulture"/> property value.
         /// </summary>
         public UICultureExtension()
-            : this(_markupManager, CultureManager.Default)
-        {
-        }
+			: this(MarkupExtensionManager.For<UICultureExtension>(2), CultureManager.Default)  { }
 
 		/// <summary>
 		/// Initializes an instance of the extension to set the language property for an
@@ -72,10 +70,5 @@ namespace Utilities.Controls.Localization
         }
 
 		private readonly ICultureManager _cultureManager;
-
-		/// <summary>
-		/// A shared extension manager instance.
-		/// </summary>
-		private static readonly MarkupExtensionManager _markupManager = new MarkupExtensionManager(2);
     }
 }

@@ -15,6 +15,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,6 +99,17 @@ namespace Utilities.Controls.Localization
         }
 
 		/// <summary>
+		/// Factory method that retrieves a markup extension manager (which may be cached/shared) for a given markup extension type.
+		/// </summary>
+		/// <typeparam name="TExtension">The type of markup extension</typeparam>
+		/// <param name="cleanupInterval">The interval at which to cleanup and remove extensions.</param>
+		public static MarkupExtensionManager For<TExtension>(int cleanupInterval) where TExtension : ManagedMarkupExtension
+		{
+			return managers.GetOrAdd(typeof(TExtension), _ => 
+				new MarkupExtensionManager(cleanupInterval));
+		}
+
+		/// <summary>
 		/// List of active extensions.
 		/// </summary>
 		private ICollection<ManagedMarkupExtension> _extensions = new List<ManagedMarkupExtension>();
@@ -110,5 +123,10 @@ namespace Utilities.Controls.Localization
 		/// The interval at which to cleanup and remove extensions.
 		/// </summary>
 		private readonly int _cleanupInterval = 40;
+
+		/// <summary>
+		/// Cached/shared markup extension managers.
+		/// </summary>
+		private static readonly ConcurrentDictionary<Type, MarkupExtensionManager> managers = new ConcurrentDictionary<Type, MarkupExtensionManager>();
     }
 }

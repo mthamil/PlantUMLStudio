@@ -105,8 +105,8 @@ namespace Utilities.Controls.Localization
 		/// <param name="cleanupInterval">The interval at which to cleanup and remove extensions.</param>
 		public static MarkupExtensionManager For<TExtension>(int cleanupInterval) where TExtension : ManagedMarkupExtension
 		{
-			return managers.GetOrAdd(typeof(TExtension), _ => 
-				new MarkupExtensionManager(cleanupInterval));
+			return managers.GetOrAdd(typeof(TExtension), extensionType => 
+				managerFactory(extensionType, cleanupInterval));
 		}
 
 		/// <summary>
@@ -128,5 +128,10 @@ namespace Utilities.Controls.Localization
 		/// Cached/shared markup extension managers.
 		/// </summary>
 		private static readonly ConcurrentDictionary<Type, MarkupExtensionManager> managers = new ConcurrentDictionary<Type, MarkupExtensionManager>();
+
+		/// <summary>
+		/// Function used to create new <see cref="MarkupExtensionManager"/>s.
+		/// </summary>
+		internal static Func<Type, int, MarkupExtensionManager> managerFactory = (extensionType, cleanupInterval) => new MarkupExtensionManager(cleanupInterval); 
     }
 }

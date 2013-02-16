@@ -73,6 +73,7 @@
     <Compile Include="Behaviors\AvalonEdit\Folding\FoldingStrategyBehavior.cs" />
     <Compile Include="Behaviors\AvalonEdit\Folding\PatternBasedFoldingStrategy.cs" />
     <Compile Include="Behaviors\AvalonEdit\Folding\PlantUmlFoldRegions.cs" />
+    <Compile Include="Behaviors\AvalonEdit\AddLineTransformers.cs" />
     <Compile Include="Behaviors\AvalonEdit\SelectionManagement.cs" />
     <Compile Include="Behaviors\AvalonEdit\ContentIndexBehavior.cs" />
     <Compile Include="Behaviors\Clickable\BindableClick.cs" />

@@ -23,16 +23,18 @@ namespace PlantUmlEditor.View
 		{
 			var lineOffset = line.Offset;
 			var lineText = CurrentContext.GetText(line.Offset, line.Length).Text;
-			var matches = hexColorPattern.Matches(lineText).Cast<Match>().Where(m => m.Success);
-			foreach (var match in matches)
+			var matchGroups = hexColorPattern.Matches(lineText)
+			                                 .Cast<Match>()
+			                                 .Where(m => m.Success)
+			                                 .Select(match => match.Groups["color"]);
+
+			foreach (var hexCodeGroup in matchGroups)
 			{
-				var hexCodeGroup = match.Groups["color"];
-				var hexCode = hexCodeGroup.Value.TrimStart('#');
 				var start = lineOffset + hexCodeGroup.Index;
 				var end = lineOffset + hexCodeGroup.Index + hexCodeGroup.Length;
 				ChangeLinePart(start, end, lineElement =>
 				{
-					var color = ParseColorFromHexString(hexCode);
+					var color = ParseColorFromHexString(hexCodeGroup.Value);
 					lineElement.TextRunProperties.SetForegroundBrush(new SolidColorBrush(color));
 
 					var existingTypeface = lineElement.TextRunProperties.Typeface;
@@ -45,8 +47,10 @@ namespace PlantUmlEditor.View
 			}
 		}
 
-		private static Color ParseColorFromHexString(string hexCode)
+		private static Color ParseColorFromHexString(string hexCodeString)
 		{
+			var hexCode = hexCodeString.TrimStart('#');
+
 			var rgb = new byte[3];
 			for (int i = 0; i < hexCode.Length; i += 2)
 				rgb[i/2] = Byte.Parse(hexCode.Substring(i, 2), NumberStyles.HexNumber);

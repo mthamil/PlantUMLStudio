@@ -123,6 +123,7 @@
     <Compile Include="PlantUmlEditor\ViewModel\Notifications\ProgressNotificationTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\PreviewDiagramViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\SettingsViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\View\HexColorCodeTextHighlighterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousAttribute.cs" />
     <Compile Include="TheoryDataSet.cs" />

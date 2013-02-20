@@ -81,26 +81,27 @@ namespace PlantUmlEditor
 		private static bool CheckGraphViz()
 		{
 			string graphVizPath = Settings.Default.GraphVizLocation;
-			if (string.IsNullOrEmpty(graphVizPath))
+			if (String.IsNullOrEmpty(graphVizPath))
 				graphVizPath = Environment.GetEnvironmentVariable("GRAPHVIZ_DOT");
 
-			if (string.IsNullOrEmpty(graphVizPath) || !File.Exists(graphVizPath))
+			if (String.IsNullOrEmpty(graphVizPath) || !File.Exists(graphVizPath))
 			{
 				// See if graphviz is there in environment PATH
 				string envPath = Environment.GetEnvironmentVariable("PATH");
-				var dialog = new OpenFileDialog
+				using (var dialog = new OpenFileDialog
 				{
 					FileName = "dot.exe",
 					DefaultExt = ".exe",
 					Filter = "dot.exe|dot.exe",
 					InitialDirectory = envPath.Split(';').FirstOrDefault(p => p.ToLower().Contains("graphviz"))
-				};
-
-				if (dialog.ShowDialog() == DialogResult.OK)
+				})
 				{
-					Settings.Default.GraphVizLocation = dialog.FileName;
-					Settings.Default.Save();
-					return true;
+					if (dialog.ShowDialog() == DialogResult.OK)
+					{
+						Settings.Default.GraphVizLocation = dialog.FileName;
+						Settings.Default.Save();
+						return true;
+					}
 				}
 
 				return false;

@@ -1,19 +1,19 @@
-//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -26,16 +26,29 @@ using Utilities.Reflection;
 
 namespace Utilities.Mvvm.Commands
 {
+	/// <summary>
+	/// A command whose ability to execute depends on the value of a property from each of a collection of multiple
+	/// objects. 
+	/// </summary>
+	/// <typeparam name="TCollectionSource">The type of object that owns the collection of objects, typically the class that instantiates the command</typeparam>
+	/// <typeparam name="TPropertySource">The type of object within the collection that provides the property a command is dependent on</typeparam>
+	/// <typeparam name="TCollection">The type of collection containing the objects a command is dependent on</typeparam>
 	public abstract class ChildPropertyBoundCommandBase<TCollectionSource, TPropertySource, TCollection> : ICommand
 		where TPropertySource : INotifyPropertyChanged
 		where TCollection : IEnumerable<TPropertySource>
 	{
-		protected ChildPropertyBoundCommandBase(Action<object> execute,
-		                                  Expression<Func<TCollectionSource, TCollection>> collectionExpression,
-		                                  Expression<Func<TPropertySource, bool>> childPropertyExpression, TCollectionSource parent)
+		/// <summary>
+		/// Initializes a new command.
+		/// </summary>
+		/// <param name="parent">An object that provides the collection of objects the command depends on</param>
+		/// <param name="collectionExpression">The property on the parent object that provides the collection</param>
+		/// <param name="childPropertyExpression">The child object property that that determines whether the command can execute</param>
+		/// <param name="execute">The operation to execute</param>
+		protected ChildPropertyBoundCommandBase(TCollectionSource parent, Expression<Func<TCollectionSource, TCollection>> collectionExpression, 
+			Expression<Func<TPropertySource, bool>> childPropertyExpression, Action<object> execute)
 		{
-			if (execute == null)
-				throw new ArgumentNullException("execute");
+			if (parent == null)
+				throw new ArgumentNullException("parent");
 
 			if (collectionExpression == null)
 				throw new ArgumentNullException("collectionExpression");
@@ -43,8 +56,8 @@ namespace Utilities.Mvvm.Commands
 			if (childPropertyExpression == null)
 				throw new ArgumentNullException("childPropertyExpression");
 
-			if (parent == null)
-				throw new ArgumentNullException("parent");
+			if (execute == null)
+				throw new ArgumentNullException("execute");
 
 			_execute = execute;
 
@@ -52,7 +65,11 @@ namespace Utilities.Mvvm.Commands
 			_collectionGetter = () => collectionFunc(parent);
 
 			var collection = GetCollection();
-			WeakEventManager<INotifyCollectionChanged, NotifyCollectionChangedEventArgs>.AddHandler((INotifyCollectionChanged)collection, "CollectionChanged", collection_CollectionChanged);
+
+			var notifyingCollection = collection as INotifyCollectionChanged;
+			if (notifyingCollection != null)
+				WeakEventManager<INotifyCollectionChanged, NotifyCollectionChangedEventArgs>.AddHandler(notifyingCollection, "CollectionChanged", collection_CollectionChanged);
+
 			foreach (var existingChild in collection)
 				WeakEventManager<INotifyPropertyChanged, PropertyChangedEventArgs>.AddHandler(existingChild, "PropertyChanged", item_PropertyChanged);
 

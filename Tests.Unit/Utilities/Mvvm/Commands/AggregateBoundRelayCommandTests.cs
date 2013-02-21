@@ -25,8 +25,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = new AggregateBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, c => c.Any(p => p.BoolValue), parent);
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -50,8 +49,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = new AggregateBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, c => c.All(p => p.BoolValue), parent);
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.All(p => p.BoolValue), _ => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -68,8 +66,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = new AggregateBoundRelayCommand<TestParent,TestItem,  ObservableCollection<TestItem>>(_ => { }, 
-				p => p.Items, c => c.Any(p => p.BoolValue), parent);
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -91,8 +88,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = new AggregateBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, c => c.Any(p => p.BoolValue), parent);
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -108,16 +104,28 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 		}
 
 		[Fact]
+		public void Test_CanExecuteChanged_ItemAdded()
+		{
+			// Arrange.
+			var parent = new TestParent();
+			var child = new TestItem();
+			
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+
+			// Act/Assert.
+			parent.Items.Add(child);
+			AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => child.BoolValue = true);
+		}
+
+		[Fact]
 		public void Test_CanExecuteChanged_ItemRemoved()
 		{
 			// Arrange.
 			var parent = new TestParent();
 			var child = new TestItem();
-
-			var command = new AggregateBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, c => c.Any(p => p.BoolValue), parent);
-
 			parent.Items.Add(child);
+
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
 
 			// Act/Assert.
 			parent.Items.Remove(child);
@@ -131,9 +139,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 
 			bool executed = false;
-			var command = new AggregateBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(
-				_ => executed = true,
-				p => p.Items, c => c.Any(p => p.BoolValue), parent);
+			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => executed = true);
 
 			// Act.
 			command.Execute(null);

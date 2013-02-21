@@ -1,19 +1,19 @@
-//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,18 +32,18 @@ namespace Utilities.Mvvm.Commands
 		where TCollection : IEnumerable<TPropertySource>
 	{
 		/// <summary>
-		/// Creates a new command.
+		/// Creates a command whose ability to execute depends on the properties of multiple objects.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
+		/// <param name="parent">The object that declares the collection property whose items trigger a change in whether the command can execute</param>
 		/// <param name="collectionExpression">The collection whose items trigger a change in whether the command can execute</param>
 		/// <param name="propertyAggregationExpression">
-		/// A predicate that aggregates the values of a property from each child item.
-		/// This predicate MUST make use of a boolean property of the child type.
+		///     A predicate that aggregates the values of a property from each child item.
+		///     This predicate MUST make use of a boolean property of the child type.
 		/// </param>
-		/// <param name="parent">The object that declares the collection property whose items trigger a change in whether the command can execute</param>
-		public AggregateBoundRelayCommand(Action<object> execute, Expression<Func<TCollectionSource, TCollection>> collectionExpression,
-										  Expression<Func<TCollection, bool>> propertyAggregationExpression, TCollectionSource parent)
-			: base(execute, collectionExpression, GetChildProperty(propertyAggregationExpression), parent)
+		/// <param name="execute">The execution logic.</param>
+		public AggregateBoundRelayCommand(TCollectionSource parent, Expression<Func<TCollectionSource, TCollection>> collectionExpression, 
+										  Expression<Func<TCollection, bool>> propertyAggregationExpression, Action<object> execute)
+			: base(parent, collectionExpression, GetChildProperty(propertyAggregationExpression), execute)
 		{
 			if (propertyAggregationExpression == null) 
 				throw new ArgumentNullException("propertyAggregationExpression");

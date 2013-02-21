@@ -113,6 +113,8 @@
     <Compile Include="Mvvm\Commands\CancelTaskCommand.cs" />
     <Compile Include="Mvvm\Commands\ChildPropertyBoundCommandBase.cs" />
     <Compile Include="Mvvm\Commands\CommandBase.cs" />
+    <Compile Include="Mvvm\Commands\AsyncRelayCommand.cs" />
+    <Compile Include="Mvvm\Commands\Command.cs" />
     <Compile Include="Mvvm\Commands\DependentBoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\NamedRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\RelayCommand.cs" />

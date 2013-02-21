@@ -1,25 +1,23 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using System.Windows.Input;
-using Utilities.Reflection;
 
 namespace Utilities.Mvvm.Commands
 {
@@ -28,32 +26,34 @@ namespace Utilities.Mvvm.Commands
 	/// objects by invoking delegates. CanExecute and CanExecuteChanged are bound to 
 	/// a property of another object.
 	/// </summary>
-	public class BoundRelayCommand<TSource> : ICommand where TSource : INotifyPropertyChanged
+	public class BoundRelayCommand : ICommand
 	{
 		/// <summary>
 		/// Creates a new command.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
-		/// <param name="canExecuteProperty">An expression referencing a boolean property that determines the command's execution status</param>
 		/// <param name="propertyDeclarer">The object that declares the property that triggers a change in command execution status</param>
-		public BoundRelayCommand(Action<object> execute, Expression<Func<TSource, bool>> canExecuteProperty, TSource propertyDeclarer)
+		/// <param name="propertyName">The name of the bound property</param>
+		/// <param name="execute">The operation to execute</param>
+		/// <param name="canExecute">Function that determines whether a command can be executed</param>
+		public BoundRelayCommand(INotifyPropertyChanged propertyDeclarer, string propertyName, Action<object> execute, Func<bool> canExecute)
 		{
-			if (execute == null)
-				throw new ArgumentNullException("execute");
-
-			if (canExecuteProperty == null)
-				throw new ArgumentNullException("canExecuteProperty");
-
 			if (propertyDeclarer == null)
 				throw new ArgumentNullException("propertyDeclarer");
 
-			_execute = execute;
+			if (propertyName == null)
+				throw new ArgumentNullException("propertyName");
 
-			var property = Reflect.PropertyOf(typeof(TSource), canExecuteProperty);
-			_propertyName = property.Name;
+			if (execute == null)
+				throw new ArgumentNullException("execute");
+
+			if (canExecute == null)
+				throw new ArgumentNullException("canExecute");
+
+			_execute = execute;
+			_canExecute = canExecute;
+			_propertyName = propertyName;
+
 			propertyDeclarer.PropertyChanged += propertyDeclarer_PropertyChanged;
-			Func<TSource, bool> func = canExecuteProperty.Compile();
-			_canExecute = () => func(propertyDeclarer);
 		}
 
 		#region ICommand Members

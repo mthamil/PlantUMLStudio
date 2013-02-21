@@ -51,10 +51,7 @@ namespace PlantUmlEditor.ViewModel
 			SaveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
 			OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
 			CloseCommand = new RelayCommand(Close);
-			SaveAllCommand = new AggregateBoundRelayCommand<DiagramManagerViewModel, IDiagramEditor, IEnumerable<IDiagramEditor>>(
-				_ => SaveAllAsync(),
-				p => p.OpenDiagrams,
-				c => c.Any(p => p.CanSave), this);
+			SaveAllCommand = Command.BoundAggregate(this, p => p.OpenDiagrams, c => c.Any(p => p.CanSave), async _ => await SaveAllAsync());
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}
@@ -147,12 +144,12 @@ namespace PlantUmlEditor.ViewModel
 			ClosingDiagram = (IDiagramEditor)sender;
 		}
 
-		void diagramEditor_Closed(object sender, EventArgs e)
+		async void diagramEditor_Closed(object sender, EventArgs e)
 		{
 			var diagramEditor = (IDiagramEditor)sender;
 			if (_editorsNeedingSaving.Contains(diagramEditor))
 			{
-				SaveClosingEditor(diagramEditor);
+				await SaveClosingEditorAsync(diagramEditor);
 			}
 			else
 			{
@@ -160,7 +157,7 @@ namespace PlantUmlEditor.ViewModel
 			}
 		}
 
-		private async void SaveClosingEditor(IDiagramEditor diagramEditor)
+		private async Task SaveClosingEditorAsync(IDiagramEditor diagramEditor)
 		{
 			var saveTask = diagramEditor.SaveAsync();
 			_editorSaveTasks.Add(saveTask);

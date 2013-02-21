@@ -16,23 +16,24 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Utilities.Mvvm.Commands
 {
 	/// <summary>
 	/// A command whose sole purpose is to relay its functionality to other
-	/// objects by invoking delegates. The default return value for the CanExecute
+	/// objects by invoking asynchronous functions. The default return value for the CanExecute
 	/// method is 'true'.  This command does not take any parameters.
 	/// </summary>
-	public class RelayCommand : CommandBase
+	public class AsyncRelayCommand : CommandBase
 	{
 		/// <summary>
-		/// Initializes a new command.
+		/// Initializes a new asynchronous command.
 		/// </summary>
-		/// <param name="execute">The operation to execute</param>
+		/// <param name="execute">The asynchronous operation to execute</param>
 		/// <param name="canExecute">Function that determines whether a command can be executed</param>
-		public RelayCommand(Action execute, Func<bool> canExecute = null)
+		public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute = null)
 		{
 			if (execute == null)
 				throw new ArgumentNullException("execute");
@@ -54,31 +55,31 @@ namespace Utilities.Mvvm.Commands
 		}
 
 		/// <see cref="ICommand.Execute"/>
-		public override void Execute(object parameter)
+		public async override void Execute(object parameter)
 		{
-			_execute();
+			await _execute();
 		}
 
 		#endregion
 
-		readonly Action _execute;
+		readonly Func<Task> _execute;
 		readonly Func<bool> _canExecute;
 	}
 
 	/// <summary>
 	/// A command whose sole purpose is to relay its functionality to other
-	/// objects by invoking delegates.  In order for CanExecute to return
+	/// objects by invoking asynchronous functions.  In order for CanExecute to return
 	/// true, the command parameter must of type T.
 	/// </summary>
 	/// <typeparam name="T">The type of parameter to be passed to the command</typeparam>
-	public class RelayCommand<T> : CommandBase
+	public class AsyncRelayCommand<T> : CommandBase
 	{
 		/// <summary>
-		/// Initializes a new command.
+		/// Initializes a new asynchronous command.
 		/// </summary>
-		/// <param name="execute">The operation to execute</param>
+		/// <param name="execute">The asynchronous operation to execute</param>
 		/// <param name="canExecute">Function that determines whether a command can be executed</param>
-		public RelayCommand(Action<T> execute, Predicate<T> canExecute = null)
+		public AsyncRelayCommand(Func<T, Task> execute, Predicate<T> canExecute = null)
 		{
 			if (execute == null)
 				throw new ArgumentNullException("execute");
@@ -103,14 +104,14 @@ namespace Utilities.Mvvm.Commands
 		}
 
 		/// <see cref="ICommand.Execute"/>
-		public override void Execute(object parameter)
+		public async override void Execute(object parameter)
 		{
-			_execute((T)parameter);
+			await _execute((T)parameter);
 		}
 
 		#endregion
 
-		readonly Action<T> _execute;
+		readonly Func<T, Task> _execute;
 		readonly Predicate<T> _canExecute;
 	}
 }

@@ -158,6 +158,7 @@
     <Compile Include="Utilities\Mvvm\Commands\BoundRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\AggregateBoundRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\CancelTaskCommandTests.cs" />
+    <Compile Include="Utilities\Mvvm\Commands\AsyncRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\DependentBoundRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\RelayCommandTests.cs" />
     <Compile Include="Utilities\OptionTests.cs" />

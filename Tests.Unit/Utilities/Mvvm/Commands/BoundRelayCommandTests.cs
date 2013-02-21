@@ -15,7 +15,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var propertyOwner = new TestClass();
 
 			bool executed = false;
-			var command = new BoundRelayCommand<TestClass>(_ => executed = true, p => p.BoolValue, propertyOwner);
+			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => executed = true);
 
 			// Act.
 			command.Execute(null);
@@ -31,7 +31,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			{
 				// Arrange.
 				var propertyOwner = new TestClass();
-				var command = new BoundRelayCommand<TestClass>(_ => { }, p => p.BoolValue, propertyOwner);
+				var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
 				propertyOwner.BoolValue = value;
 
 				// Act.
@@ -47,7 +47,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 		{
 			// Arrange.
 			var propertyOwner = new TestClass();
-			var command = new BoundRelayCommand<TestClass>(_ => { }, p => p.BoolValue, propertyOwner);
+			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
 
 			// Act/Assert.
 			AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue = true);
@@ -58,7 +58,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 		{
 			// Arrange.
 			var propertyOwner = new TestClass();
-			var command = new BoundRelayCommand<TestClass>(_ => { }, p => p.BoolValue, propertyOwner);
+			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
 
 			// Act/Assert.
 			AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue2 = true);

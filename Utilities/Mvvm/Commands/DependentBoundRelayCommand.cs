@@ -41,7 +41,7 @@ namespace Utilities.Mvvm.Commands
 		public DependentBoundRelayCommand(Action<object> execute, Expression<Func<TCollectionSource, TCollection>> collectionExpression,
 		                                  Expression<Func<TCollectionSource, bool>> parentPropertyExpression, Expression<Func<TPropertySource, bool>> childPropertyExpression, 
 										  TCollectionSource parent)
-			: base(execute, collectionExpression, childPropertyExpression, parent)
+			: base(parent, collectionExpression, childPropertyExpression, execute)
 		{
 			var parentPropertyGetter = parentPropertyExpression.Compile();
 			CanExecutePredicate = () => parentPropertyGetter(parent);

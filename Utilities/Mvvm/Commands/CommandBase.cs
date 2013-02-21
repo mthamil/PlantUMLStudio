@@ -39,5 +39,13 @@ namespace Utilities.Mvvm.Commands
 			add { CommandManager.RequerySuggested += value; }
 			remove { CommandManager.RequerySuggested -= value; }
 		}
+
+		/// <summary>
+		/// Raises the CanExecuteChanged event.
+		/// </summary>
+		protected virtual void OnCanExecuteChanged()
+		{
+			CommandManager.InvalidateRequerySuggested();
+		}
 	}
 }

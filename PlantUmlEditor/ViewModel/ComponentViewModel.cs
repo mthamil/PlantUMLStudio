@@ -1,5 +1,5 @@
 //  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,7 +48,7 @@ namespace PlantUmlEditor.ViewModel
 			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
 			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
 
-			UpdateCommand = new BoundRelayCommand<ComponentViewModel>(async _ => await UpdateAsync(), p => p.CanUpdate, this);
+			UpdateCommand = Command.Bound(this, p => p.CanUpdate, async () => await UpdateAsync());
 			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
 		}
 

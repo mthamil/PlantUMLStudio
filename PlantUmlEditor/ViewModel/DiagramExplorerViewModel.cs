@@ -1,5 +1,5 @@
 //  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,15 +68,15 @@ namespace PlantUmlEditor.ViewModel
 
 			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
 
-			LoadDiagramsCommand = new BoundRelayCommand<DiagramExplorerViewModel>(async _ => await LoadDiagramsAsync(), p => p.IsDiagramLocationValid, this);
-			AddNewDiagramCommand = new RelayCommand<Uri>(AddNewDiagram);
+			LoadDiagramsCommand = Command.Bound(this, p => p.IsDiagramLocationValid, async () => await LoadDiagramsAsync());
+			AddNewDiagramCommand = new AsyncRelayCommand<Uri>(AddNewDiagramAsync);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 			OpenDiagramCommand = new RelayCommand<Uri>(async uri =>
 			{
 				try { await OpenDiagramAsync(uri); }
 				catch (Exception e) { _notifications.Notify(new ExceptionNotification(e)); }
 			});
-			DeleteDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(DeleteDiagram, p => p != null);
+			DeleteDiagramCommand = new AsyncRelayCommand<PreviewDiagramViewModel>(DeleteDiagramAsync, preview => preview != null);
 			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
 		}
 
@@ -171,7 +171,7 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand AddNewDiagramCommand { get; private set; }
 
-		private async void AddNewDiagram(Uri newDiagramUri)
+		private async Task AddNewDiagramAsync(Uri newDiagramUri)
 		{
 			string newFilePath = newDiagramUri.LocalPath;
 
@@ -247,7 +247,7 @@ namespace PlantUmlEditor.ViewModel
 				// Report progress to UI by passing up progress data.
 				progress.Wrap(readProgress, p => new ProgressUpdate
 				{
-					PercentComplete = (int?)(p.ProcessedDiagramCount/(double)p.TotalDiagramCount*100),
+					PercentComplete = (int?)(p.ProcessedDiagramCount / (double)p.TotalDiagramCount * 100),
 					Message = String.Format(Resources.Progress_LoadingFile, p.ProcessedDiagramCount, p.TotalDiagramCount)
 				});
 
@@ -260,9 +260,11 @@ namespace PlantUmlEditor.ViewModel
 				{
 					progress.Report(ProgressUpdate.Failed(e));
 				}
-
-				CancelLoadDiagramsCommand = null;
-				IsLoadingDiagrams = false;
+				finally
+				{
+					CancelLoadDiagramsCommand = null;
+					IsLoadingDiagrams = false;
+				}
 			}
 		}
 
@@ -280,7 +282,7 @@ namespace PlantUmlEditor.ViewModel
 		/// </summary>
 		public ICommand DeleteDiagramCommand { get; private set; }
 
-		private async void DeleteDiagram(PreviewDiagramViewModel preview)
+		private async Task DeleteDiagramAsync(PreviewDiagramViewModel preview)
 		{
 			try
 			{

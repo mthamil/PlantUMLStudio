@@ -1,5 +1,5 @@
 //  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,9 +83,9 @@ namespace PlantUmlEditor.ViewModel
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
-			_saveCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => SaveAsync(), p => p.CanSave, this);
-			_refreshCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Refresh(), p => p.CanRefresh, this);
-			_closeCommand = new BoundRelayCommand<DiagramEditorViewModel>(_ => Close(), p => p.CanClose, this);
+			_saveCommand = Command.Bound(this, p => p.CanSave, async () => await SaveAsync());
+			_refreshCommand = Command.Bound(this, p => p.CanRefresh, async () => await RefreshAsync());
+			_closeCommand = Command.Bound(this, p => p.CanClose, Close);
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.
@@ -251,11 +251,13 @@ namespace PlantUmlEditor.ViewModel
 				localEvent(this, EventArgs.Empty);
 		}
 
-		void autoSaveTimerElapsed(object sender, EventArgs e)
+		async void autoSaveTimerElapsed(object sender, EventArgs e)
 		{
 			// We must begin the Save operation on the UI thread in order to update the UI 
 			// with pre-save state.
-			Task.Factory.StartNew(() => SaveAsync(), CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
+			await Task.Factory.StartNew(async () => 
+				await SaveAsync(), 
+				CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap();
 		}
 
 		/// <summary>
@@ -274,7 +276,7 @@ namespace PlantUmlEditor.ViewModel
 			get { return _refreshCommand; }
 		}
 
-		private async void Refresh()
+		private async Task RefreshAsync()
 		{
 			if (_saveExecuting)
 				return;
@@ -302,10 +304,12 @@ namespace PlantUmlEditor.ViewModel
 			}	
 		}
 
-		void refreshTimer_Elapsed(object sender, EventArgs e)
+		async void refreshTimer_Elapsed(object sender, EventArgs e)
 		{
-			Task.Factory.StartNew(Refresh, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 			_refreshTimer.TryStop();
+			await Task.Factory.StartNew(async () => 
+				await RefreshAsync(), 
+				CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap();
 		}
 
 		/// <summary>

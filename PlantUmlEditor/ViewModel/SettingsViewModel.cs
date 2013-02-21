@@ -41,8 +41,8 @@ namespace PlantUmlEditor.ViewModel
 			_canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles, OnPropertyChanged);
 			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
 
-			ClearRecentFilesCommand = new BoundRelayCommand<SettingsViewModel>(_ => ClearRecentFiles(), p => p.CanClearRecentFiles, this);
-			SaveCommand = new BoundRelayCommand<SettingsViewModel>(_ => Save(), p => p.CanSave, this);
+			ClearRecentFilesCommand = Command.Bound(this, p => p.CanClearRecentFiles, ClearRecentFiles);
+			SaveCommand = Command.Bound(this, p => p.CanSave, Save);
 
 			RememberOpenFiles = _settings.RememberOpenFiles;
 			AutoSaveEnabled = _settings.AutoSaveEnabled;

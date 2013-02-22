@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -25,8 +24,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = new DependentBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, p => p.DependentBoolValue, p => p.BoolValue, parent);
+			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -43,8 +41,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = new DependentBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, p => p.DependentBoolValue, p => p.BoolValue, parent);
+			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -53,8 +50,8 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			foreach (var child in parent.Items)
 			{
 				var localChild = child;
-				AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
-				AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
+				AssertThat.Raises(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
+				AssertThat.DoesNotRaise(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
 			}
 		}
 
@@ -66,8 +63,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = new DependentBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, p => p.DependentBoolValue, p => p.BoolValue, parent);
+			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -78,7 +74,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			foreach (var child in new [] { child1, child2 })
 			{
 				var localChild = child;
-				AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
+				AssertThat.DoesNotRaise(command, c => c.CanExecuteChanged += null, () => localChild.BoolValue = true);
 			}
 		}
 
@@ -89,14 +85,13 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 			var child = new TestItem();
 
-			var command = new DependentBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(_ => { },
-				p => p.Items, p => p.DependentBoolValue, p => p.BoolValue, parent);
+			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
 
 			parent.Items.Add(child);
 
 			// Act/Assert.
 			parent.Items.Remove(child);
-			AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => child.BoolValue = true);
+			AssertThat.DoesNotRaise(command, c => c.CanExecuteChanged += null, () => child.BoolValue = true);
 		}
 
 		[Fact]
@@ -106,9 +101,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 
 			bool executed = false;
-			var command = new DependentBoundRelayCommand<TestParent, TestItem, ObservableCollection<TestItem>>(
-				_ => executed = true,
-				p => p.Items, p => p.DependentBoolValue, p => p.BoolValue, parent);
+			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => executed = true);
 
 			// Act.
 			command.Execute(null);

@@ -109,6 +109,13 @@
     <Compile Include="InputOutput\IFileSystemWatcher.cs" />
     <Compile Include="InputOutput\StreamExtensions.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
+    <Compile Include="Mvvm\Commands\Builder\ChildBoundCommandBuilder.cs" />
+    <Compile Include="Mvvm\Commands\Builder\ChildBoundCommandCompleter.cs" />
+    <Compile Include="Mvvm\Commands\Builder\CommandBuilder.cs" />
+    <Compile Include="Mvvm\Commands\Builder\DependentChildPropertyCommandBuilder.cs" />
+    <Compile Include="Mvvm\Commands\Builder\ICommandBuilder.cs" />
+    <Compile Include="Mvvm\Commands\Builder\ICommandCompleter.cs" />
+    <Compile Include="Mvvm\Commands\Builder\SimpleBoundCommandBuilder.cs" />
     <Compile Include="Mvvm\Commands\CancelTaskCommand.cs" />
     <Compile Include="Mvvm\Commands\ChildPropertyBoundCommand.cs" />
     <Compile Include="Mvvm\Commands\CommandBase.cs" />

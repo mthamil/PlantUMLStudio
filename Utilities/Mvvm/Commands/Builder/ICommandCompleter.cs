@@ -15,28 +15,28 @@
 //  limitations under the License.
 
 using System;
-using System.ComponentModel;
-using Utilities.Mvvm.Commands.Builder;
+using System.Windows.Input;
 
-namespace Utilities.Mvvm.Commands
+namespace Utilities.Mvvm.Commands.Builder
 {
 	/// <summary>
-	/// Contains factory methods for commands.
+	/// Interface for a builder object that finishes constructing a command by specifying the
+	/// actual operation that the command will execute.
 	/// </summary>
-	public static class Command
+	public interface ICommandCompleter
 	{
 		/// <summary>
-		/// Begins creating a command for a given object.
+		/// Sets the operation that a command will execute.
 		/// </summary>
-		/// <typeparam name="TSource">The type of object that owns the command</typeparam>
-		/// <param name="source">The object that owns the command</param>
-		/// <returns>A new command builder</returns>
-		public static ICommandBuilder<TSource> For<TSource>(TSource source) where TSource : INotifyPropertyChanged
-		{
-			if (source == null)
-				throw new ArgumentNullException("source");
+		/// <param name="operation">The parameterless operation to be executed</param>
+		/// <returns>A new command</returns>
+		ICommand Executes(Action operation);
 
-			return new CommandBuilder<TSource>(source);
-		}
+		/// <summary>
+		/// Sets the operation that a command will execute.
+		/// </summary>
+		/// <param name="operation">The operation to be executed</param>
+		/// <returns>A new command</returns>
+		ICommand Executes(Action<object> operation);
 	}
 }

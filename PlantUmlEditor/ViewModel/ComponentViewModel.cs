@@ -48,7 +48,7 @@ namespace PlantUmlEditor.ViewModel
 			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
 			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
 
-			UpdateCommand = Command.Bound(this, p => p.CanUpdate, async () => await UpdateAsync());
+			UpdateCommand = Command.For(this).DependsOn(p => p.CanUpdate).Executes(async () => await UpdateAsync());
 			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
 		}
 

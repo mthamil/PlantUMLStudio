@@ -24,7 +24,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
+			var command = Command.For(parent)
+			                     .DependsOnCollection(p => p.Items)
+			                     .Where(p => p.DependentBoolValue)
+			                     .DependsOn(c => c.BoolValue)
+			                     .Executes(() => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -41,7 +45,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .Where(p => p.DependentBoolValue)
+								 .DependsOn(c => c.BoolValue)
+								 .Executes(() => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -63,7 +71,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .Where(p => p.DependentBoolValue)
+								 .DependsOn(c => c.BoolValue)
+								 .Executes(() => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -85,7 +97,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 			var child = new TestItem();
 
-			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => { });
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .Where(p => p.DependentBoolValue)
+								 .DependsOn(c => c.BoolValue)
+								 .Executes(() => { });
 
 			parent.Items.Add(child);
 
@@ -101,7 +117,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 
 			bool executed = false;
-			var command = Command.BoundDependent(parent, p => p.Items, p => p.DependentBoolValue, c => c.BoolValue, _ => executed = true);
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .Where(p => p.DependentBoolValue)
+								 .DependsOn(c => c.BoolValue)
+								 .Executes(() => executed = true);
 
 			// Act.
 			command.Execute(null);

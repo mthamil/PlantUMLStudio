@@ -39,18 +39,18 @@ namespace Utilities.Mvvm.Commands
 		/// Initializes a new command whose ability to execute depends on the properties of multiple objects.
 		/// </summary>
 		/// <param name="parent">An object that provides the collection of objects the command depends on</param>
-		/// <param name="collectionExpression">The property on the parent object that provides the collection</param>
+		/// <param name="collectionGetter">A function that provides the collection</param>
 		/// <param name="childPropertyExpression">The child object property that that determines whether the command can execute</param>
 		/// <param name="canExecute">Function used to determine whether the command can execute</param>
 		/// <param name="execute">The operation to execute</param>
-		public ChildPropertyBoundCommand(TCollectionSource parent, Expression<Func<TCollectionSource, IEnumerable<TPropertySource>>> collectionExpression, 
+		public ChildPropertyBoundCommand(TCollectionSource parent, Func<IEnumerable<TPropertySource>> collectionGetter, 
 			Expression<Func<TPropertySource, bool>> childPropertyExpression, Func<bool> canExecute, Action<object> execute)
 		{
 			if (parent == null)
 				throw new ArgumentNullException("parent");
 
-			if (collectionExpression == null)
-				throw new ArgumentNullException("collectionExpression");
+			if (collectionGetter == null)
+				throw new ArgumentNullException("collectionGetter");
 
 			if (childPropertyExpression == null)
 				throw new ArgumentNullException("childPropertyExpression");
@@ -61,8 +61,7 @@ namespace Utilities.Mvvm.Commands
 			_execute = execute;
 			_canExecute = canExecute;
 
-			var collectionFunc = collectionExpression.Compile();
-			_collectionGetter = () => collectionFunc(parent);
+			_collectionGetter = collectionGetter;
 
 			var collection = Collection;
 

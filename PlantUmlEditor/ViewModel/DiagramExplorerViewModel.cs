@@ -68,7 +68,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
 
-			LoadDiagramsCommand = Command.Bound(this, p => p.IsDiagramLocationValid, async () => await LoadDiagramsAsync());
+			LoadDiagramsCommand = Command.For(this).DependsOn(p => p.IsDiagramLocationValid).Executes(async () => await LoadDiagramsAsync());
 			AddNewDiagramCommand = new AsyncRelayCommand<Uri>(AddNewDiagramAsync);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
 			OpenDiagramCommand = new RelayCommand<Uri>(async uri =>

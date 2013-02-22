@@ -51,7 +51,10 @@ namespace PlantUmlEditor.ViewModel
 			SaveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
 			OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
 			CloseCommand = new RelayCommand(Close);
-			SaveAllCommand = Command.BoundAggregate(this, p => p.OpenDiagrams, c => c.Any(p => p.CanSave), async _ => await SaveAllAsync());
+			SaveAllCommand = Command.For(this)
+			                        .DependsOnCollection(p => p.OpenDiagrams)
+			                        .When(c => c.Any(p => p.CanSave))
+			                        .Executes(async _ => await SaveAllAsync());
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}

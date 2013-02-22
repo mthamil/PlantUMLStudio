@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Utilities.Mvvm;
+﻿using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -15,7 +14,9 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var propertyOwner = new TestClass();
 
 			bool executed = false;
-			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => executed = true);
+			var command = Command.For(propertyOwner)
+			                     .DependsOn(p => p.BoolValue)
+			                     .Executes(() => executed = true);
 
 			// Act.
 			command.Execute(null);
@@ -31,7 +32,9 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			{
 				// Arrange.
 				var propertyOwner = new TestClass();
-				var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
+				var command = Command.For(propertyOwner)
+				                     .DependsOn(p => p.BoolValue)
+				                     .Executes(() => { });
 				propertyOwner.BoolValue = value;
 
 				// Act.
@@ -47,10 +50,12 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 		{
 			// Arrange.
 			var propertyOwner = new TestClass();
-			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
+			var command = Command.For(propertyOwner)
+			                     .DependsOn(p => p.BoolValue)
+			                     .Executes(() => { });
 
 			// Act/Assert.
-			AssertThat.Raises<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue = true);
+			AssertThat.Raises(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue = true);
 		}
 
 		[Fact]
@@ -58,10 +63,12 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 		{
 			// Arrange.
 			var propertyOwner = new TestClass();
-			var command = Command.Bound(propertyOwner, p => p.BoolValue, () => { });
+			var command = Command.For(propertyOwner)
+			                     .DependsOn(p => p.BoolValue)
+			                     .Executes(() => { });
 
 			// Act/Assert.
-			AssertThat.DoesNotRaise<ICommand>(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue2 = true);
+			AssertThat.DoesNotRaise(command, c => c.CanExecuteChanged += null, () => propertyOwner.BoolValue2 = true);
 		}
 
 		private class TestClass : ViewModelBase

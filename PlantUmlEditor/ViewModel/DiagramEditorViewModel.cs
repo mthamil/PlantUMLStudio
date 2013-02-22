@@ -75,17 +75,17 @@ namespace PlantUmlEditor.ViewModel
 			_diagramImage = Property.New(this, p => p.DiagramImage, OnPropertyChanged);
 
 			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
-				.AlsoChanges(p => p.CanSave)
-				.AlsoChanges(p => p.CanRefresh)
-				.AlsoChanges(p => p.CanClose);
+			                  .AlsoChanges(p => p.CanSave)
+			                  .AlsoChanges(p => p.CanRefresh)
+			                  .AlsoChanges(p => p.CanClose);
 			IsIdle = true;
 
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
-			_saveCommand = Command.Bound(this, p => p.CanSave, async () => await SaveAsync());
-			_refreshCommand = Command.Bound(this, p => p.CanRefresh, async () => await RefreshAsync());
-			_closeCommand = Command.Bound(this, p => p.CanClose, Close);
+			_saveCommand = Command.For(this).DependsOn(p => p.CanSave).Executes(async () => await SaveAsync());
+			_refreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Executes(async () => await RefreshAsync());
+			_closeCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.

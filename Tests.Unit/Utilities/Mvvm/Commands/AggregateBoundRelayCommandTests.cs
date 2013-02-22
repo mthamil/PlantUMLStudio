@@ -25,7 +25,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+			var command = Command.For(parent)
+			                     .DependsOnCollection(p => p.Items)
+			                     .When(c => c.Any(p => p.BoolValue))
+			                     .Executes(() => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -49,7 +52,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 				parent.Items.Add(child);
 			}
 
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.All(p => p.BoolValue), _ => { });
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .When(c => c.All(p => p.BoolValue))
+								 .Executes(() => { });
 
 			// Act.
 			bool actual = command.CanExecute(null);
@@ -66,7 +72,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+			var command = Command.For(parent)
+			                     .DependsOnCollection(p => p.Items)
+			                     .When(c => c.Any(p => p.BoolValue))
+			                     .Executes(() => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -88,7 +97,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child1 = new TestItem();
 			var child2 = new TestItem();
 
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+			var command = Command.For(parent)
+			                     .DependsOnCollection(p => p.Items)
+			                     .When(c => c.Any(p => p.BoolValue))
+			                     .Executes(() => { });
 
 			parent.Items.Add(child1);
 			parent.Items.Add(child2);
@@ -109,8 +121,11 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			// Arrange.
 			var parent = new TestParent();
 			var child = new TestItem();
-			
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .When(c => c.Any(p => p.BoolValue))
+								 .Executes(() => { });
 
 			// Act/Assert.
 			parent.Items.Add(child);
@@ -125,7 +140,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var child = new TestItem();
 			parent.Items.Add(child);
 
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => { });
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .When(c => c.Any(p => p.BoolValue))
+								 .Executes(() => { });
 
 			// Act/Assert.
 			parent.Items.Remove(child);
@@ -139,8 +157,10 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			var parent = new TestParent();
 
 			bool executed = false;
-			var command = Command.BoundAggregate(parent, p => p.Items, c => c.Any(p => p.BoolValue), _ => executed = true);
-
+			var command = Command.For(parent)
+								 .DependsOnCollection(p => p.Items)
+								 .When(c => c.Any(p => p.BoolValue))
+								 .Executes(() => executed = true);
 			// Act.
 			command.Execute(null);
 

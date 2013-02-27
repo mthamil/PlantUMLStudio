@@ -26,7 +26,7 @@ namespace Utilities.Mvvm.Commands.Builder
 	/// Interface for an object that aids in creating complex <see cref="ICommand"/>s.
 	/// </summary>
 	/// <typeparam name="TSource">The type of object for which a command is being built</typeparam>
-	public interface ICommandBuilder<TSource> where TSource :INotifyPropertyChanged
+	public interface ICommandBuilder<TSource> where TSource : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Indicates that a command is bound to the given boolean property's value to determine

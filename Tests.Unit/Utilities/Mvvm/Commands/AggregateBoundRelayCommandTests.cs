@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
+using System.Threading;
+using System.Threading.Tasks;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -166,6 +168,32 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 
 			// Assert.
 			Assert.True(executed);
+		}
+
+		[Fact]
+		public void Test_Execute_Asynchronously()
+		{
+			// Arrange.
+			using (var resetEvent = new ManualResetEventSlim())
+			{
+				var parent = new TestParent();
+
+				var command = Command.For(parent)
+				                     .DependsOnCollection(p => p.Items)
+				                     .When(c => c.Any(p => p.BoolValue))
+									 .Asynchronously()
+									 .Executes(async () =>
+									 {
+										 await Task.Delay(TimeSpan.FromMilliseconds(100));
+										 resetEvent.Set();
+									 });
+				// Act.
+				command.Execute(null);
+
+				// Assert.
+				resetEvent.Wait();
+				Assert.True(resetEvent.IsSet);
+			}
 		}
 
 		private class TestParent : PropertyChangedNotifier

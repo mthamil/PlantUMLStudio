@@ -83,8 +83,8 @@ namespace PlantUmlEditor.ViewModel
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
-			_saveCommand = Command.For(this).DependsOn(p => p.CanSave).Executes(async () => await SaveAsync());
-			_refreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Executes(async () => await RefreshAsync());
+			_saveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
+			_refreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
 			_closeCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
 
 			// The document has been opened first time. So, any changes

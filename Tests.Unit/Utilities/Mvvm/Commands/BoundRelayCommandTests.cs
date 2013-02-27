@@ -1,4 +1,7 @@
-﻿using Utilities.Mvvm;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
 using Xunit;
@@ -23,6 +26,32 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 
 			// Assert.
 			Assert.True(executed);
+		}
+
+		[Fact]
+		public void Test_Execute_Asynchronously()
+		{
+			// Arrange.
+			using (var resetEvent = new ManualResetEventSlim())
+			{
+				var propertyOwner = new TestClass();
+
+				var command = Command.For(propertyOwner)
+				                     .DependsOn(p => p.BoolValue)
+				                     .Asynchronously()
+				                     .Executes(async () =>
+				                     {
+					                     await Task.Delay(TimeSpan.FromMilliseconds(100));
+					                     resetEvent.Set();
+				                     });
+
+				// Act.
+				command.Execute(null);
+
+				// Assert.
+				resetEvent.Wait();
+				Assert.True(resetEvent.IsSet);
+			}
 		}
 
 		[Fact]

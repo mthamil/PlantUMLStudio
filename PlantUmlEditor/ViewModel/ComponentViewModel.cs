@@ -23,6 +23,7 @@ using PlantUmlEditor.Core.Security;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
+using Utilities.Mvvm.Commands.Builder;
 using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.ViewModel
@@ -44,11 +45,11 @@ namespace PlantUmlEditor.ViewModel
 			_versionProgress = Property.New(this, p => p.VersionProgress, OnPropertyChanged);
 
 			_hasAvailableUpdate = Property.New(this, p => p.HasAvailableUpdate, OnPropertyChanged)
-				.AlsoChanges(p => p.CanUpdate);
+			                              .AlsoChanges(p => p.CanUpdate);
 			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
 			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
 
-			UpdateCommand = Command.For(this).DependsOn(p => p.CanUpdate).Executes(async () => await UpdateAsync());
+			UpdateCommand = Command.For(this).DependsOn(p => p.CanUpdate).Asynchronously().Executes(UpdateAsync);
 			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
 		}
 

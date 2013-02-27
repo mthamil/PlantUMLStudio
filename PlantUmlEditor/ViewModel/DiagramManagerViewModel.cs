@@ -54,7 +54,8 @@ namespace PlantUmlEditor.ViewModel
 			SaveAllCommand = Command.For(this)
 			                        .DependsOnCollection(p => p.OpenDiagrams)
 			                        .When(c => c.Any(p => p.CanSave))
-			                        .Executes(async _ => await SaveAllAsync());
+									.Asynchronously()
+			                        .Executes(SaveAllAsync);
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}

@@ -17,6 +17,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Windows.Input;
 using Utilities.Reflection;
 
@@ -37,7 +38,12 @@ namespace Utilities.Mvvm.Commands.Builder
 		public SimpleBoundCommandBuilder(TSource source, Expression<Func<TSource, bool>> predicateProperty)
 		{
 			_source = source;
-			_predicateProperty = predicateProperty;
+			_property = new Lazy<PropertyInfo>(() => Reflect.PropertyOf(typeof(TSource), predicateProperty));
+			_canExecutePredicate = new Lazy<Func<bool>>(() =>
+			{
+				Func<TSource, bool> func = predicateProperty.Compile();
+				return () => func(_source);
+			});
 		}
 
 		/// <summary>
@@ -60,14 +66,11 @@ namespace Utilities.Mvvm.Commands.Builder
 			if (operation == null)
 				throw new ArgumentNullException("operation");
 
-			var property = Reflect.PropertyOf(typeof(TSource), _predicateProperty);
-			Func<TSource, bool> func = _predicateProperty.Compile();
-			Func<bool> canExecute = () => func(_source);
-
-			return new BoundRelayCommand(_source, property.Name, operation, canExecute);
+			return new BoundRelayCommand(_source, _property.Value.Name, _canExecutePredicate.Value, operation);
 		}
 
 		private readonly TSource _source;
-		private readonly Expression<Func<TSource, bool>> _predicateProperty;
+		private readonly Lazy<PropertyInfo> _property;
+		private readonly Lazy<Func<bool>> _canExecutePredicate;
 	}
 }

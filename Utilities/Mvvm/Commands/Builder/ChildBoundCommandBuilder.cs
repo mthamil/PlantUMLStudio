@@ -64,7 +64,7 @@ namespace Utilities.Mvvm.Commands.Builder
 		}
 
 		/// <summary>
-		/// Specifies that a parent property on a command determines whether it can execute.
+		/// Specifies that a parent property of the object that owns a command determines whether it can execute.
 		/// </summary>
 		/// <param name="parentProperty">The property that determines whether a command can execute</param>
 		/// <returns>A builder that enables setting the child property the parent property's value depends on</returns>

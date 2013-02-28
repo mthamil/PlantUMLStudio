@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -130,6 +131,23 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			Assert.True(executed);
 		}
 
+		[Fact]
+		public void Test_ParentProperty_MustBeGetOnly()
+		{
+			// Arrange.
+			var parent = new TestParent();
+
+			var builder = Command.For(parent)
+			                     .DependsOnCollection(p => p.Items);
+
+			// Act/Assert.
+			Assert.Throws<ArgumentException>(() =>
+				builder
+					.Where(p => p.IndependentBoolValue)
+					.DependsOn(c => c.BoolValue)
+					.Executes(() => { }));
+		}
+
 		private class TestParent : PropertyChangedNotifier
 		{
 			public TestParent()
@@ -142,6 +160,8 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			{
 				get { return _items.Value; }
 			}
+
+			public bool IndependentBoolValue { get; set; }
 
 			public bool DependentBoolValue
 			{

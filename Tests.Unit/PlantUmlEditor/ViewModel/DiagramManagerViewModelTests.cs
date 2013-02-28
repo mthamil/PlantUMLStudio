@@ -318,7 +318,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			unmodifiedEditor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
 			diagramManager.OpenDiagrams.Add(unmodifiedEditor.Object);
 			
-			// Act/Assert.
+			// Act.
 			diagramManager.SaveAllCommand.Execute(null);
 
 			// Assert.

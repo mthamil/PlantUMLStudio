@@ -73,7 +73,7 @@ namespace Utilities.PropertyChanged
 		public PropertyBuilder<T, V> AlsoChanges<VOther>(Expression<Func<T, VOther>> otherPropertyAccessor)
 		{
 			var dependentProperty = Reflect.PropertyOf(typeof(T), UnwrapPropertyExpression(otherPropertyAccessor));
-			if (dependentProperty.GetSetMethod(true) != null)
+			if (dependentProperty.SetMethod != null)
 				throw new ArgumentException("Properties with setters cannot be dependent!");
 
 			_dependentPropertyNames.Add(dependentProperty.Name);

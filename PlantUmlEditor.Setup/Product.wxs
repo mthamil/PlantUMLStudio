@@ -16,6 +16,7 @@
 		<Feature Id="ApplicationFeature" Title="PlantUmlEditor.Setup" Level="1">
 			<ComponentGroupRef Id="ApplicationComponents"/>
       <ComponentGroupRef Id="HighlightingDefinitions"/>
+      <ComponentGroupRef Id="CopyrightFiles"/>
       <ComponentRef Id="PlantUmlLib"/>
       <ComponentGroupRef Id="SnippetsGroup"/>
 		</Feature>
@@ -89,11 +90,23 @@
       </Component>
       
     </ComponentGroup>
+    
+    <ComponentGroup Id="CopyrightFiles" Directory="INSTALLDIR">
+      
+      <Component Id="License" Guid="A2014049-0A93-40DA-8611-DB5F5DA1B99A">
+        <File Id="LicenseFile" Name="LICENSE" Source="$(var.SolutionDir)LICENSE" KeyPath="yes"/>
+      </Component>
+
+      <Component Id="Notice" Guid="F60F5D23-E5EE-4C8F-9566-3737544B3247">
+        <File Id="NoticeFile" Name="NOTICE" Source="$(var.SolutionDir)NOTICE" KeyPath="yes"/>
+      </Component>
+    
+    </ComponentGroup>
 
     <Component Id="PlantUmlLib" Directory="PlantUmlDir" Guid="64DD6AFF-6AAC-4280-8FD3-EF485FE4233D">
-      <File Id="PlantUmlJar" Name="plantuml.jar" Source="$(var.PlantUmlEditor.TargetDir)PlantUML\plantuml.jar" KeyPath="yes"/>
+      <File Id="PlantUmlJar" Name="plantuml.jar" Source="$(var.SolutionDir)plantuml.jar" KeyPath="yes"/>
       <RemoveFile Id="PlantUmlBackups" Name="plantuml.jar_*.bak" On="uninstall"/>
     </Component>
-    
+
 	</Fragment>
 </Wix>

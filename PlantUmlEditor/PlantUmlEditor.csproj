@@ -303,6 +303,10 @@
     <Resource Include="Resources\Icons\folder-open-document-16x16.png" />
     <Resource Include="Resources\Icons\gear-16x16.png" />
     <Resource Include="Resources\Icons\information-16x16.png" />
+    <Content Include="..\plantuml.jar">
+      <Link>PlantUML\plantuml.jar</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="samples\sample use case.puml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -488,9 +492,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PlantUML\plantuml.jar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="ChangeLog.txt" />
     <Content Include="samples\img\activity_img20.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -303,9 +303,7 @@ namespace PlantUmlEditor.ViewModel
 		async void refreshTimer_Elapsed(object sender, EventArgs e)
 		{
 			_refreshTimer.TryStop();
-			await Task.Factory.StartNew(async () => 
-				await RefreshAsync(), 
-				CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap();
+			await RefreshAsync();
 		}
 
 		/// <summary>

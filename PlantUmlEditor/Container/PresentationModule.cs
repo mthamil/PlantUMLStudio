@@ -84,7 +84,7 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) =>
 			       {
-				       var t = c.Resolve<ITimer>();
+					   var t = c.Resolve<DispatcherTimerAdapter>();
 				       t.Interval = TimeSpan.FromSeconds(2);
 				       return t;
 			       })

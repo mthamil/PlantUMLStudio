@@ -22,25 +22,12 @@ namespace Utilities.Chronology
 	/// <summary>
 	/// Class that wraps a timer based on <see cref="DispatcherTimer"/>.
 	/// </summary>
-	public class DispatcherTimerAdapter : ITimer
+	public class DispatcherTimerAdapter : TimerBase
 	{
-		/// <see cref="ITimer.Interval"/>
-		public TimeSpan Interval { get; set; }
-
-		/// <see cref="ITimer.Start"/>
-		public void Start(object state = null)
-		{
-			lock (_syncObject)
-			{
-				if (!TryStart(state))
-					throw new InvalidOperationException("Timer is already started.");
-			}
-		}
-
 		/// <see cref="ITimer.TryStart"/>
-		public bool TryStart(object state = null)
+		public override bool TryStart(object state = null)
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				if (_timer.IsEnabled)
 					return false;
@@ -62,20 +49,10 @@ namespace Utilities.Chronology
 			}
 		}
 
-		/// <see cref="ITimer.Stop"/>
-		public void Stop()
-		{
-			lock (_syncObject)
-			{
-				if (!TryStop())
-					throw new InvalidOperationException("Timer is already stopped.");
-			}
-		}
-
 		/// <see cref="ITimer.TryStop"/>
-		public bool TryStop()
+		public override bool TryStop()
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				if (!_timer.IsEnabled)
 					return false;
@@ -87,41 +64,21 @@ namespace Utilities.Chronology
 			}
 		}
 
-		/// <see cref="ITimer.Restart"/>
-		public void Restart(object state = null)
-		{
-			lock (_syncObject)
-			{
-				TryStop();
-				Start(state);
-			}
-		}
-
 		/// <see cref="ITimer.Started"/>
-		public bool Started
+		public override bool Started
 		{
 			get
 			{
-				lock (_syncObject)
+				lock (SyncObject)
 				{
 					return _timer.IsEnabled;
 				}
 			}
 		}
 
-		/// <see cref="ITimer.Elapsed"/>
-		public event EventHandler<TimerElapsedEventArgs> Elapsed;
-
-		private void OnElapsed()
-		{
-			var localEvent = Elapsed;
-			if (localEvent != null)
-				localEvent(this, new TimerElapsedEventArgs(DateTime.Now, _state));
-		}
-
 		private void timer_Tick(object sender, EventArgs e)
 		{
-			OnElapsed();
+			OnElapsed(DateTime.Now, _state);
 		}
 
 		private object _state;
@@ -130,10 +87,5 @@ namespace Utilities.Chronology
 		/// The underlying timer for which this object acts as a wrapper.
 		/// </summary>
 		private readonly DispatcherTimer _timer = new DispatcherTimer();
-
-		/// <summary>
-		/// Object used for locking.
-		/// </summary>
-		private readonly object _syncObject = new object();
 	}
 }

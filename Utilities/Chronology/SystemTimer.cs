@@ -1,19 +1,19 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Timers;
 
@@ -22,27 +22,14 @@ namespace Utilities.Chronology
 	/// <summary>
 	/// Wraps a timer based on the windows threading timer.
 	/// </summary>
-	public class SystemTimer : ITimer, IDisposable
+	public class SystemTimer : TimerBase, IDisposable
 	{
 		#region ITimer Members
 
-		/// <see cref="ITimer.Interval"/>
-		public TimeSpan Interval { get; set; }
-
-		/// <see cref="ITimer.Start"/>
-		public void Start(object state = null)
-		{
-			lock (_syncObject)
-			{
-				if (!TryStart(state))
-					throw new InvalidOperationException("Timer is already started.");
-			}
-		}
-
 		/// <see cref="ITimer.TryStart"/>
-		public bool TryStart(object state = null)
+		public override bool TryStart(object state = null)
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				if (_running)
 					return false;
@@ -75,20 +62,10 @@ namespace Utilities.Chronology
 			}
 		}
 
-		/// <see cref="ITimer.Stop"/>	
-		public void Stop()
-		{
-			lock (_syncObject)
-			{
-				if (!TryStop())
-					throw new InvalidOperationException("Timer is already stopped.");
-			}
-		}
-
 		/// <see cref="ITimer.TryStop"/>
-		public bool TryStop()
+		public override bool TryStop()
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				if (!_running)
 					return false;
@@ -103,43 +80,23 @@ namespace Utilities.Chronology
 			}
 		}
 
-		/// <see cref="ITimer.Restart"/>
-		public void Restart(object state = null)
-		{
-			lock (_syncObject)
-			{
-				TryStop();
-				Start(state);
-			}
-		}
-
 		/// <see cref="ITimer.Started"/>
-		public bool Started
+		public override bool Started
 		{
 			get 
 			{
-				lock (_syncObject)
+				lock (SyncObject)
 				{
 					return _running;
 				}
 			}
 		}
 
-		/// <see cref="ITimer.Elapsed"/>
-		public event EventHandler<TimerElapsedEventArgs> Elapsed;
-
-		private void OnElapsed(ElapsedEventArgs e)
-		{
-			var localEvent = Elapsed;
-			if (localEvent != null)
-				localEvent(this, new TimerElapsedEventArgs(e.SignalTime, _state));
-		}
-
 		#endregion
 
 		private void timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				// if we have a large interval we need to count down
 				if (_largeIntervalRemaining != -1)
@@ -161,7 +118,7 @@ namespace Utilities.Chronology
 				}
 			}
 
-			OnElapsed(e);
+			OnElapsed(e.SignalTime, _state);
 		}
 
 		#region IDisposable Members
@@ -188,7 +145,7 @@ namespace Utilities.Chronology
 		/// </param>
 		protected virtual void Dispose(bool disposing)
 		{
-			lock (_syncObject)
+			lock (SyncObject)
 			{
 				if (_disposed == false)
 				{
@@ -228,10 +185,5 @@ namespace Utilities.Chronology
 		/// The underlying timer for which this object acts as a wrapper.
 		/// </summary>
 		private readonly Timer _timer = new Timer();
-
-		/// <summary>
-		/// Object used for locking.
-		/// </summary>
-		private readonly object _syncObject = new object();
 	}
 }

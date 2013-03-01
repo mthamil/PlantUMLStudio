@@ -83,6 +83,7 @@
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemClock.cs" />
     <Compile Include="Chronology\SystemTimer.cs" />
+    <Compile Include="Chronology\TimerBase.cs" />
     <Compile Include="Clipboard\ClipboardWrapper.cs" />
     <Compile Include="Clipboard\IClipboard.cs" />
     <Compile Include="Collections\CollectionMirror.cs" />

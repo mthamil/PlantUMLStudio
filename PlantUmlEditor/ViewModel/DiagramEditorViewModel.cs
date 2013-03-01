@@ -253,11 +253,7 @@ namespace PlantUmlEditor.ViewModel
 
 		async void autoSaveTimerElapsed(object sender, EventArgs e)
 		{
-			// We must begin the Save operation on the UI thread in order to update the UI 
-			// with pre-save state.
-			await Task.Factory.StartNew(async () => 
-				await SaveAsync(), 
-				CancellationToken.None, TaskCreationOptions.None, _uiScheduler).Unwrap();
+			await SaveAsync();
 		}
 
 		/// <summary>

@@ -44,28 +44,30 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
+			builder.RegisterType<DispatcherTimerAdapter>();
+
 			builder.RegisterType<NotificationsHub>().As<NotificationsHub, INotifications>()
-				.SingleInstance();
+			       .SingleInstance();
 
 			builder.RegisterType<ClipboardWrapper>().As<IClipboard>()
-				.SingleInstance();
+			       .SingleInstance();
 
 			builder.RegisterType<SettingsPropagator>()
-				.AutoActivate()
-			    .SingleInstance();
+			       .AutoActivate()
+			       .SingleInstance();
 
 			builder.RegisterType<PreviewDiagramViewModel>()
-				.OnActivating(c => c.Instance.ImagePreview =
-					c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
+			       .OnActivating(c => c.Instance.ImagePreview =
+			                          c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
 
 			builder.Register(c => new SnippetsMenu(c.Resolve<SnippetProvider>().Snippets))
-				.SingleInstance();
+			       .SingleInstance();
 
 			builder.RegisterType<PlantUmlFoldRegions>();
 
 			builder.Register(c => new PatternBasedFoldingStrategy(c.Resolve<PlantUmlFoldRegions>()))
-				.Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
-				.SingleInstance();
+			       .Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
+			       .SingleInstance();
 
 			builder.Register(c =>
 			{
@@ -74,41 +76,47 @@ namespace PlantUmlEditor.Container
 			}).SingleInstance();
 
 			builder.Register(c => new CodeEditorViewModel(
-				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"), 
+				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"),
 				c.Resolve<IHighlightingDefinition>(),
 				c.Resolve<SnippetsMenu>(),
 				c.Resolve<IClipboard>())).As<ICodeEditor>();
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
-				.WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => new SystemTimer { Interval = TimeSpan.FromSeconds(2) })
-				.OnActivating(c =>
-				{
-					c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;
-					c.Instance.AutoSaveInterval = c.Context.Resolve<ISettings>().AutoSaveInterval;
-				});
+			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) =>
+			       {
+				       var t = c.Resolve<ITimer>();
+				       t.Interval = TimeSpan.FromSeconds(2);
+				       return t;
+			       })
+			       .WithParameter((p, c) => p.Name == "autoSaveTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>())
+			       .OnActivating(c =>
+			       {
+				       c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;
+				       c.Instance.AutoSaveInterval = c.Context.Resolve<ISettings>().AutoSaveInterval;
+			       });
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
-				.WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
-				.WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
-				.OnActivating(c =>
-				{
-					c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
-					c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
-				});
+			       .WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
+			       .WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
+			       .OnActivating(c =>
+			       {
+				       c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
+				       c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
+			       });
 
 			builder.RegisterType<DiagramManagerViewModel>().As<DiagramManagerViewModel, IDiagramManager>()
-				.OnActivated(c => c.Instance.InitializeAsync())
-				.SingleInstance();
+			       .OnActivated(c => c.Instance.InitializeAsync())
+			       .SingleInstance();
 
 			builder.RegisterType<ComponentViewModel>();
 
 			builder.RegisterType<AboutViewModel>()
-				.OnActivating(c => c.Instance.LoadComponents());
+			       .OnActivating(c => c.Instance.LoadComponents());
 
 			builder.RegisterType<SettingsViewModel>();
 
 			builder.RegisterType<RecentFilesMenuViewModel>()
-				.WithParameter((p, c) => p.ParameterType == typeof(ICollection<FileInfo>), (p, c) => c.Resolve<ISettings>().RecentFiles);
+			       .WithParameter((p, c) => p.ParameterType == typeof(ICollection<FileInfo>), (p, c) => c.Resolve<ISettings>().RecentFiles);
 		}
 	}
 }

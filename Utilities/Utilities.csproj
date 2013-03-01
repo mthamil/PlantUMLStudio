@@ -78,6 +78,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Chronology\DispatcherTimerAdapter.cs" />
     <Compile Include="Chronology\IClock.cs" />
     <Compile Include="Chronology\ITimer.cs" />
     <Compile Include="Chronology\SystemClock.cs" />

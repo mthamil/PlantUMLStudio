@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Tests.Integration.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GraphVizLocation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe</Value>
+    </Setting>
+    <Setting Name="PlantUmlLocation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">..\..\..\plantuml.jar</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

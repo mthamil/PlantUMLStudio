@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Core;
+using Tests.Integration.Properties;
 using Utilities.Chronology;
 using Xunit;
 
@@ -16,8 +17,8 @@ namespace Tests.Integration.PlantUmlEditor.Core
 			// Arrange.
 			var plantUml = new PlantUml(new Mock<IClock>().Object)
 			{
-				PlantUmlJar = new FileInfo(@"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlEditor\PlantUmlEditor\bin\Debug\PlantUML\plantuml.jar"),
-				GraphVizExecutable = new FileInfo(@"C:\Program Files (x86)\Graphviz2.26.3\bin\dot.exe")
+				PlantUmlJar = new FileInfo(Settings.Default.PlantUmlLocation),
+				GraphVizExecutable = new FileInfo(Settings.Default.GraphVizLocation)
 			};
 
 			// Act.

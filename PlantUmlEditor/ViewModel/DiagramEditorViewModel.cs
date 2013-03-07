@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;

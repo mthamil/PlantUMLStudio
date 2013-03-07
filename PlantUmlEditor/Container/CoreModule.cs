@@ -21,6 +21,7 @@ using Autofac;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Dependencies;
+using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Core.Security;
 using PlantUmlEditor.Model;
@@ -58,7 +59,7 @@ namespace PlantUmlEditor.Container
 			       .WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(2))
 			       .OnActivating(c => c.Instance.Filter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
 
-			builder.RegisterType<DiagramBitmapRenderer>().As<IDiagramRenderer>();
+			builder.RegisterType<BitmapRenderer>().As<IDiagramRenderer>();
 
 			builder.RegisterType<GraphViz>().As<IExternalComponent>()
 			       .OnActivating(c =>

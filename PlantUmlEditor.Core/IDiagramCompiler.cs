@@ -17,7 +17,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace PlantUmlEditor.Core
 {
@@ -33,7 +33,7 @@ namespace PlantUmlEditor.Core
 		/// <param name="diagramCode">The diagram code to compile</param>
 		/// <param name="cancellationToken">An optional cancellation token</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task<BitmapSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ImageSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.

@@ -3,9 +3,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
@@ -343,7 +345,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var result = new BitmapImage();
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult<BitmapSource>(result));
+				.Returns(Task.FromResult<ImageSource>(result));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);
@@ -363,7 +365,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromException<BitmapSource>(new InvalidOperationException()));
+				.Returns(Tasks.FromException<ImageSource>(new InvalidOperationException()));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);
@@ -383,7 +385,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromCanceled<BitmapSource>());
+				.Returns(Tasks.FromCanceled<ImageSource>());
 
 			// Act.
 			editor.RefreshCommand.Execute(null);

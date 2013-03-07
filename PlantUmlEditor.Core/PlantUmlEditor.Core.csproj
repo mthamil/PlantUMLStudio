@@ -56,6 +56,8 @@
     <Compile Include="Diagram.cs" />
     <Compile Include="GraphViz.cs" />
     <Compile Include="IDiagramCompiler.cs" />
+    <Compile Include="Imaging\BitmapRenderer.cs" />
+    <Compile Include="Imaging\IDiagramRenderer.cs" />
     <Compile Include="InputOutput\DiagramFileAddedEventArgs.cs" />
     <Compile Include="InputOutput\DiagramFileDeletedEventArgs.cs" />
     <Compile Include="InputOutput\DiagramIOService.cs" />

@@ -23,9 +23,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 using PlantUmlEditor.Core.Dependencies;
 using PlantUmlEditor.Core.Dependencies.Update;
+using PlantUmlEditor.Core.Imaging;
 using Utilities;
 using Utilities.Chronology;
 using Utilities.Concurrency.Processes;
@@ -43,13 +44,15 @@ namespace PlantUmlEditor.Core
 		/// Initializes the PlantUML wrapper.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
-		public PlantUml(IClock clock) 
+		/// <param name="renderer">Responsible for converting data to an image</param>
+		public PlantUml(IClock clock, IDiagramRenderer renderer) 
 			: base(clock)
 		{
+			_renderer = renderer;
 		}
 
 		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
-		public async Task<BitmapSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
+		public async Task<ImageSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
 		{
 			var result = await Task.Factory.FromProcess(
 				executable: "java",
@@ -60,12 +63,7 @@ namespace PlantUmlEditor.Core
 
 			await HandleErrorStream(result.Item2, cancellationToken).ConfigureAwait(false);
 
-			var bitmap = new BitmapImage();
-			bitmap.BeginInit();
-			bitmap.StreamSource = result.Item1;
-			bitmap.EndInit();
-			bitmap.Freeze();
-			return (BitmapSource)bitmap;
+			return _renderer.Render(result.Item1);
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
@@ -166,5 +164,7 @@ namespace PlantUmlEditor.Core
 		/// Pattern used to extract the current version.
 		/// </summary>
 		public Regex LocalVersionMatchingPattern { get; set; }
+
+		private readonly IDiagramRenderer _renderer;
 	}
 }

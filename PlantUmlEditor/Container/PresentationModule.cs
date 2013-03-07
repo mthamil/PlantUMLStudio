@@ -25,7 +25,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
-using PlantUmlEditor.Model;
+using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;

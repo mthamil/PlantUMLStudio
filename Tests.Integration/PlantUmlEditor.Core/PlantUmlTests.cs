@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Imaging;
 using Tests.Integration.Properties;
 using Utilities.Chronology;
 using Xunit;
@@ -15,7 +16,7 @@ namespace Tests.Integration.PlantUmlEditor.Core
 		public async Task Test_CompileDiagramFileAsync()
 		{
 			// Arrange.
-			var plantUml = new PlantUml(new Mock<IClock>().Object)
+			var plantUml = new PlantUml(new Mock<IClock>().Object, new BitmapRenderer())
 			{
 				PlantUmlJar = new FileInfo(Settings.Default.PlantUmlLocation),
 				GraphVizExecutable = new FileInfo(Settings.Default.GraphVizLocation)

@@ -16,6 +16,7 @@
 // 
 using System;
 using System.IO;
+using PlantUmlEditor.Core.Imaging;
 using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.Core
@@ -31,6 +32,8 @@ namespace PlantUmlEditor.Core
 		public Diagram()
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
+			_imageFilePath = Property.New(this, p => p.ImageFilePath, OnPropertyChanged);
+
 			_content.Value = string.Empty;
 		}
 
@@ -50,7 +53,15 @@ namespace PlantUmlEditor.Core
 		/// <summary>
 		/// The file path of the diagram's compiled image output.
 		/// </summary>
-        public string ImageFilePath { get; set; }
+        public string ImageFilePath 
+		{
+			get { return _imageFilePath.Value; }
+			set 
+			{
+				if (_imageFilePath.TrySetValue(value))
+					ImageFormat = DetermineFormat(ImageFilePath);
+			}
+		}
 
 		/// <summary>
 		/// Just the diagram image's file name.
@@ -58,6 +69,20 @@ namespace PlantUmlEditor.Core
 		public string ImageFileName
 		{
 			get { return Path.GetFileName(ImageFilePath); }
+		}
+
+		/// <summary>
+		/// The format of the diagram's image output.
+		/// </summary>
+		public ImageFormat ImageFormat { get; private set; }
+
+		private ImageFormat DetermineFormat(string imagePath)
+		{
+			// This is currently a simple hack supporting only one format.
+			if (Path.GetExtension(imagePath) == ".png")
+				return ImageFormat.Bitmap;
+
+			return ImageFormat.Bitmap;	// Assume bitmap as the default.
 		}
 
 		/// <summary>
@@ -92,5 +117,6 @@ namespace PlantUmlEditor.Core
         }
 
 		private readonly Property<string> _content;
+		private readonly Property<string> _imageFilePath;
     }
 }

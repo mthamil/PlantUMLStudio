@@ -59,7 +59,8 @@ namespace PlantUmlEditor.Container
 			       .WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(2))
 			       .OnActivating(c => c.Instance.Filter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
 
-			builder.RegisterType<BitmapRenderer>().As<IDiagramRenderer>();
+			builder.RegisterType<BitmapRenderer>().As<IDiagramRenderer>()
+			       .Keyed<IDiagramRenderer>(ImageFormat.Bitmap);
 
 			builder.RegisterType<GraphViz>().As<IExternalComponent>()
 			       .OnActivating(c =>

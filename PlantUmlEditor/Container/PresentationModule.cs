@@ -57,8 +57,13 @@ namespace PlantUmlEditor.Container
 			       .SingleInstance();
 
 			builder.RegisterType<PreviewDiagramViewModel>()
-			       .OnActivating(c => c.Instance.ImagePreview =
-			                          c.Context.Resolve<IDiagramRenderer>().Render(c.Parameters.TypedAs<Diagram>()));	// Perform an initial render of the diagram.
+			       .OnActivating(c =>
+			       {
+					   // Perform an initial render of the diagram.
+				       var diagram = c.Parameters.TypedAs<Diagram>();
+				       c.Instance.ImagePreview =
+						   c.Context.ResolveKeyed<IDiagramRenderer>(diagram.ImageFormat).Render(diagram);
+			       });	
 
 			builder.Register(c => new SnippetsMenu(c.Resolve<SnippetProvider>().Snippets))
 			       .SingleInstance();

@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Autofac.Features.Indexed;
 using PlantUmlEditor.Core.Dependencies;
 using PlantUmlEditor.Core.Dependencies.Update;
 using PlantUmlEditor.Core.Imaging;
@@ -44,15 +45,15 @@ namespace PlantUmlEditor.Core
 		/// Initializes the PlantUML wrapper.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
-		/// <param name="renderer">Responsible for converting data to an image</param>
-		public PlantUml(IClock clock, IDiagramRenderer renderer) 
+		/// <param name="renderers">Responsible for converting data to an image</param>
+		public PlantUml(IClock clock, IIndex<ImageFormat, IDiagramRenderer> renderers) 
 			: base(clock)
 		{
-			_renderer = renderer;
+			_renderers = renderers;
 		}
 
 		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
-		public async Task<ImageSource> CompileToImageAsync(string diagramCode, CancellationToken cancellationToken)
+		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken)
 		{
 			var result = await Task.Factory.FromProcess(
 				executable: "java",
@@ -63,7 +64,7 @@ namespace PlantUmlEditor.Core
 
 			await HandleErrorStream(result.Item2, cancellationToken).ConfigureAwait(false);
 
-			return _renderer.Render(result.Item1);
+			return _renderers[imageFormat].Render(result.Item1);
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
@@ -165,6 +166,6 @@ namespace PlantUmlEditor.Core
 		/// </summary>
 		public Regex LocalVersionMatchingPattern { get; set; }
 
-		private readonly IDiagramRenderer _renderer;
+		private readonly IIndex<ImageFormat, IDiagramRenderer> _renderers;
 	}
 }

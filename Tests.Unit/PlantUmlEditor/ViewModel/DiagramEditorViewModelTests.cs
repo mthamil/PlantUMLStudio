@@ -5,11 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Autofac.Features.Indexed;
 using Moq;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
-using PlantUmlEditor.Model;
 using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
@@ -26,7 +26,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			autoSaveTimer.SetupProperty(t => t.Interval);
 
 			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
-				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			             .Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+
+			renderers.Setup(r => r[ImageFormat.Bitmap])
+			         .Returns(renderer.Object);
 		}
 
 		[Fact]
@@ -258,10 +261,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromSuccess());
+			         .Returns(Tasks.FromSuccess());
 
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
-				.Returns(Tasks.FromSuccess());
+			        .Returns(Tasks.FromSuccess());
 
 			// Act.
 			editor.SaveCommand.Execute(null);
@@ -288,10 +291,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromSuccess());
+			         .Returns(Tasks.FromSuccess());
 
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
-				.Returns(Tasks.FromSuccess());
+			        .Returns(Tasks.FromSuccess());
 
 			editor.SaveCommand.Execute(null);
 
@@ -321,7 +324,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromException(new InvalidOperationException()));
+			         .Returns(Tasks.FromException(new InvalidOperationException()));
 
 			// Act.
 			editor.SaveCommand.Execute(null);
@@ -344,8 +347,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 			var result = new BitmapImage();
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult<ImageSource>(result));
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			        .Returns(Task.FromResult<ImageSource>(result));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);
@@ -364,8 +367,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromException<ImageSource>(new InvalidOperationException()));
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			        .Returns(Tasks.FromException<ImageSource>(new InvalidOperationException()));
 
 			// Act.
 			editor.RefreshCommand.Execute(null);
@@ -384,8 +387,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-				.Returns(Tasks.FromCanceled<ImageSource>());
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			        .Returns(Tasks.FromCanceled<ImageSource>());
 
 			// Act.
 			editor.RefreshCommand.Execute(null);
@@ -418,7 +421,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(diagram, codeEditor.Object, notifications.Object, renderer.Object,
+			return new DiagramEditorViewModel(diagram, codeEditor.Object, notifications.Object, renderers.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 
@@ -429,6 +432,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
 		private readonly Mock<INotifications> notifications = new Mock<INotifications>();
+		private readonly Mock<IIndex<ImageFormat, IDiagramRenderer>> renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
 		private readonly Mock<IDiagramRenderer> renderer = new Mock<IDiagramRenderer>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();

@@ -23,10 +23,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using Autofac.Features.Indexed;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
-using PlantUmlEditor.Model;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities;
@@ -50,20 +50,20 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="diagram">The diagram being edited</param>
 		/// <param name="codeEditor">The code editor</param>
 		/// <param name="notifications">Creates objects that report progress</param>
-		/// <param name="diagramRenderer">Converts existing diagram output files to images</param>
+		/// <param name="diagramRenderers">Responsible for converting diagram data to images</param>
 		/// <param name="diagramIO">Saves diagrams</param>
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
 		public DiagramEditorViewModel(Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
-			IDiagramRenderer diagramRenderer, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
+			IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
 			Diagram = diagram;
 
 			_notifications = notifications;
-			_diagramRenderer = diagramRenderer;
+			_diagramRenderers = diagramRenderers;
 			_diagramIO = diagramIO;
 			_compiler = compiler;
 			_autoSaveTimer = autoSaveTimer;
@@ -227,7 +227,7 @@ namespace PlantUmlEditor.ViewModel
 				}
 				else if (!t.IsCanceled)
 				{
-					DiagramImage = _diagramRenderer.Render(Diagram);
+					DiagramImage = _diagramRenderers[Diagram.ImageFormat].Render(Diagram);
 					CodeEditor.IsModified = false;
 					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramSaved));
 					OnSaved();
@@ -280,7 +280,7 @@ namespace PlantUmlEditor.ViewModel
 
 			var tcs = new CancellationTokenSource();
 
-			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, tcs.Token);
+			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, Diagram.ImageFormat, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
 
 			try
@@ -430,7 +430,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<ImageSource> _diagramImage;
 
 		private readonly INotifications _notifications;
-		private readonly IDiagramRenderer _diagramRenderer;
+		private readonly IIndex<ImageFormat, IDiagramRenderer> _diagramRenderers;
 		private readonly IDiagramIOService _diagramIO;
 		private readonly IDiagramCompiler _compiler;
 		private readonly ITimer _autoSaveTimer;

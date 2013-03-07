@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac.Features.Indexed;
 using Moq;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
@@ -16,14 +17,17 @@ namespace Tests.Integration.PlantUmlEditor.Core
 		public async Task Test_CompileDiagramFileAsync()
 		{
 			// Arrange.
-			var plantUml = new PlantUml(new Mock<IClock>().Object, new BitmapRenderer())
+			var renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
+			renderers.Setup(r => r[ImageFormat.Bitmap]).Returns(new BitmapRenderer());
+
+			var plantUml = new PlantUml(new Mock<IClock>().Object, renderers.Object)
 			{
 				PlantUmlJar = new FileInfo(Settings.Default.PlantUmlLocation),
 				GraphVizExecutable = new FileInfo(Settings.Default.GraphVizLocation)
 			};
 
 			// Act.
-			var image = await plantUml.CompileToImageAsync(code, CancellationToken.None);
+			var image = await plantUml.CompileToImageAsync(code, ImageFormat.Bitmap, CancellationToken.None);
 
 			// Assert.
 			Assert.NotNull(image);

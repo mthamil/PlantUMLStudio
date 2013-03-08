@@ -402,16 +402,13 @@ namespace PlantUmlEditor.ViewModel
 		{
 			CleanUpTimers();
 			var disposableSaveTimer = _autoSaveTimer as IDisposable;
-			if (disposableSaveTimer != null)
-				disposableSaveTimer.Dispose();
+			disposableSaveTimer.DisposeSafely();
 
 			var disposableRefreshTimer = _refreshTimer as IDisposable;
-			if (disposableRefreshTimer != null)
-				disposableRefreshTimer.Dispose();
+			disposableRefreshTimer.DisposeSafely();
 
 			var disposableCodeEditor = CodeEditor as IDisposable;
-			if (disposableCodeEditor != null)
-				disposableCodeEditor.Dispose();
+			disposableCodeEditor.DisposeSafely();
 		}
 
 		private bool _firstSaveAfterOpen;

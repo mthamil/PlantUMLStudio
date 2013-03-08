@@ -102,6 +102,7 @@
     <Compile Include="Concurrency\Tasks.cs" />
     <Compile Include="Diagnostics\ExceptionExtensions.cs" />
     <Compile Include="DisposableBase.cs" />
+    <Compile Include="DisposableExtensions.cs" />
     <Compile Include="InputOutput\AsyncStream.cs" />
     <Compile Include="InputOutput\DirectoryMonitor.cs" />
     <Compile Include="InputOutput\FileInfoPathEqualityComparer.cs" />

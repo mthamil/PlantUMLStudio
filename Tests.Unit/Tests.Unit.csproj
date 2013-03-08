@@ -159,6 +159,7 @@
     <Compile Include="Utilities\Concurrency\TasksTests.cs" />
     <Compile Include="Utilities\Diagnostics\ExceptionExtensionsTests.cs" />
     <Compile Include="Utilities\DisposableBaseTests.cs" />
+    <Compile Include="Utilities\DisposableExtensionsTests.cs" />
     <Compile Include="Utilities\InputOutput\AsyncStreamTests.cs" />
     <Compile Include="Utilities\InputOutput\DirectoryMonitorTests.cs" />
     <Compile Include="Utilities\InputOutput\FileInfoPathEqualityComparerTests.cs" />

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata>
+    <id>SharpVectors</id>
+    <version>1.0</version>
+    <title>SharpVectors</title>
+    <authors>Paul Selormey</authors>
+    <owners>Paul Selormey</owners>
+    <licenseUrl>http://sharpvectors.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sharpvectors.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Scalable Vector Graphics (SVG) is an XML-based file format for describing an image.
+        SharpVectors provides a library for parsing, converting and viewing SVG files in 
+        WPF applications.</description>
+    <releaseNotes />
+    <copyright>2013</copyright>
+    <language>en-US</language>
+    <tags>wpf xaml svg</tags>
+    <references>
+      <group targetFramework=".NETFramework2.0">
+        <reference file="SharpVectors.Converters.dll" />
+        <reference file="SharpVectors.Core.dll" />
+        <reference file="SharpVectors.Css.dll" />
+        <reference file="SharpVectors.Dom.dll" />
+        <reference file="SharpVectors.Model.dll" />
+        <reference file="SharpVectors.Rendering.Gdi.dll" />
+        <reference file="SharpVectors.Rendering.Wpf.dll" />
+        <reference file="SharpVectors.Runtime.dll" />
+      </group>
+    </references>
+  </metadata>
+</package>

@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,7 +22,7 @@ using System.Windows.Media.Imaging;
 namespace PlantUmlEditor.Core.Imaging
 {
 	/// <summary>
-	/// Renders diagram images to bitmaps.
+	/// Renders bitmap diagram images.
 	/// </summary>
 	public class BitmapRenderer : IDiagramRenderer
 	{
@@ -31,33 +30,27 @@ namespace PlantUmlEditor.Core.Imaging
 		public ImageSource Render(Diagram diagram)
 		{
 			Uri imageUri;
-			if (!String.IsNullOrEmpty(diagram.ImageFilePath) && Uri.TryCreate(diagram.ImageFilePath, UriKind.RelativeOrAbsolute, out imageUri))
+			if (String.IsNullOrEmpty(diagram.ImageFilePath) || !File.Exists(diagram.ImageFilePath) ||
+			    !Uri.TryCreate(diagram.ImageFilePath, UriKind.RelativeOrAbsolute, out imageUri))
 			{
-				var bitmap = new BitmapImage();
-				bitmap.BeginInit();
-				bitmap.UriSource = imageUri;
-
-				// OMAR: Trick #6
-				// Unless we use this option, the image file is locked and cannot be modified.
-				// Looks like WPF holds read lock on the images. Very bad.
-				bitmap.CacheOption = BitmapCacheOption.OnLoad;
-
-				// Unless we use this option, an image cannot be refreshed. It loads from 
-				// cache. Looks like WPF caches every image it loads in memory. Very bad.
-				bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-
-				try
-				{
-					bitmap.EndInit();
-					return bitmap;
-				}
-				catch (Exception e)
-				{
-					Debug.WriteLine(e.Message);
-				}
+				return null;
 			}
 
-			return null;
+			var bitmap = new BitmapImage();
+			bitmap.BeginInit();
+			bitmap.UriSource = imageUri;
+
+			// OMAR: Trick #6
+			// Unless we use this option, the image file is locked and cannot be modified.
+			// Looks like WPF holds read lock on the images. Very bad.
+			bitmap.CacheOption = BitmapCacheOption.OnLoad;
+
+			// Unless we use this option, an image cannot be refreshed. It loads from 
+			// cache. Looks like WPF caches every image it loads in memory. Very bad.
+			bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+
+			bitmap.EndInit();
+			return bitmap;
 		}
 
 		/// <see cref="IDiagramRenderer.Render(Stream)"/>

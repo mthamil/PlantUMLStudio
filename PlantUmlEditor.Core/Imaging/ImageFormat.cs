@@ -22,13 +22,13 @@ namespace PlantUmlEditor.Core.Imaging
 	public enum ImageFormat
 	{
 		/// <summary>
-		/// Specifies a bitmap image (includes PNG, JPG, etc.).
+		/// Specifies a Portable Network Graphics image.
 		/// </summary>
-		Bitmap,
+		PNG,
 
 		/// <summary>
-		/// Specifies an SVG image.
+		/// Specifies a Scalable Vector Graphics image.
 		/// </summary>
-		Svg
+		SVG
 	}
 }

@@ -18,7 +18,7 @@ namespace Tests.Integration.PlantUmlEditor.Core
 		{
 			// Arrange.
 			var renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
-			renderers.Setup(r => r[ImageFormat.Bitmap]).Returns(new BitmapRenderer());
+			renderers.Setup(r => r[ImageFormat.PNG]).Returns(new BitmapRenderer());
 
 			var plantUml = new PlantUml(new Mock<IClock>().Object, renderers.Object)
 			{
@@ -27,7 +27,7 @@ namespace Tests.Integration.PlantUmlEditor.Core
 			};
 
 			// Act.
-			var image = await plantUml.CompileToImageAsync(code, ImageFormat.Bitmap, CancellationToken.None);
+			var image = await plantUml.CompileToImageAsync(code, ImageFormat.PNG, CancellationToken.None);
 
 			// Assert.
 			Assert.NotNull(image);

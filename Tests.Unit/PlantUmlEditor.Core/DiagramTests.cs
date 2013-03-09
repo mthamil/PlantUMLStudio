@@ -7,7 +7,7 @@ namespace Tests.Unit.PlantUmlEditor.Core
 	public class DiagramTests
 	{
 		[Fact]
-		public void Test_ImageFormat()
+		public void Test_PNG_ImageFormat_Detection()
 		{
 			// Arrange.
 			var diagram = new Diagram();
@@ -16,7 +16,20 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			diagram.ImageFilePath = "image.png";
 
 			// Assert.
-			Assert.Equal(ImageFormat.Bitmap, diagram.ImageFormat);
+			Assert.Equal(ImageFormat.PNG, diagram.ImageFormat);
+		}
+
+		[Fact]
+		public void Test_SVG_ImageFormat_Detection()
+		{
+			// Arrange.
+			var diagram = new Diagram();
+
+			// Act.
+			diagram.ImageFilePath = "image.svg";
+
+			// Assert.
+			Assert.Equal(ImageFormat.SVG, diagram.ImageFormat);
 		}
 
 		[Fact]
@@ -29,7 +42,7 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			diagram.ImageFilePath = "image";
 
 			// Assert.
-			Assert.Equal(ImageFormat.Bitmap, diagram.ImageFormat);
+			Assert.Equal(ImageFormat.PNG, diagram.ImageFormat);
 		}
 
 		[Fact]

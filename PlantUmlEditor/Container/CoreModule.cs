@@ -60,7 +60,10 @@ namespace PlantUmlEditor.Container
 			       .OnActivating(c => c.Instance.Filter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
 
 			builder.RegisterType<BitmapRenderer>().As<IDiagramRenderer>()
-			       .Keyed<IDiagramRenderer>(ImageFormat.Bitmap);
+			       .Keyed<IDiagramRenderer>(ImageFormat.PNG);
+
+			builder.RegisterType<SvgRenderer>().As<IDiagramRenderer>()
+				   .Keyed<IDiagramRenderer>(ImageFormat.SVG);
 
 			builder.RegisterType<GraphViz>().As<IExternalComponent>()
 			       .OnActivating(c =>

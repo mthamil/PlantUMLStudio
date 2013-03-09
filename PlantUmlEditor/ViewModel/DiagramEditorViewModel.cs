@@ -19,6 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -72,6 +73,9 @@ namespace PlantUmlEditor.ViewModel
 			CodeEditor = codeEditor;
 			CodeEditor.Content = Diagram.Content;
 			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
+
+			_imageFormat = Property.New(this, p => p.ImageFormat, OnPropertyChanged);
+			ImageFormat = Diagram.ImageFormat;
 
 			_diagramImage = Property.New(this, p => p.DiagramImage, OnPropertyChanged);
 
@@ -165,6 +169,22 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// The desired diagram image format.
+		/// </summary>
+		public ImageFormat ImageFormat
+		{
+			get { return _imageFormat.Value; }
+			set 
+			{
+				if (_imageFormat.TrySetValue(value))
+				{
+					CancelRefreshes();
+					RefreshAsync();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Whether an editor's content can currently be saved.
 		/// </summary>
 		public bool CanSave
@@ -190,8 +210,7 @@ namespace PlantUmlEditor.ViewModel
 
 			_saveExecuting = true;
 			IsIdle = false;
-			foreach (var cts in _refreshCancellations)
-				cts.Value.Cancel();
+			CancelRefreshes();
 
 			// PlantUML seems to have a problem detecting encoding if the
 			// first line is not an empty line.
@@ -217,7 +236,7 @@ namespace PlantUmlEditor.ViewModel
 			});
 
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
-				.Then(() => _compiler.CompileToFileAsync(Diagram.File));
+				.Then(() => _compiler.CompileToFileAsync(Diagram.File, ImageFormat));
 
 			saveTask.ContinueWith(t =>
 			{
@@ -227,7 +246,8 @@ namespace PlantUmlEditor.ViewModel
 				}
 				else if (!t.IsCanceled)
 				{
-					DiagramImage = _diagramRenderers[Diagram.ImageFormat].Render(Diagram);
+					DiagramImage = _diagramRenderers[ImageFormat].Render(Diagram);
+					Diagram.ImageFormat = ImageFormat;
 					CodeEditor.IsModified = false;
 					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramSaved));
 					OnSaved();
@@ -273,14 +293,15 @@ namespace PlantUmlEditor.ViewModel
 			get { return _refreshCommand; }
 		}
 
-		private async Task RefreshAsync()
+		/// <see cref="IDiagramEditor.RefreshAsync"/>
+		public async Task RefreshAsync()
 		{
 			if (_saveExecuting)
 				return;
 
 			var tcs = new CancellationTokenSource();
 
-			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, Diagram.ImageFormat, tcs.Token);
+			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, ImageFormat, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
 
 			try
@@ -291,7 +312,11 @@ namespace PlantUmlEditor.ViewModel
 			{
 				// We don't care if refresh is canceled.
 			}
-			catch (Exception e)
+			catch (IOException e)
+			{
+				_notifications.Notify(new ExceptionNotification(e));
+			}
+			catch (PlantUmlException e)
 			{
 				_notifications.Notify(new ExceptionNotification(e));
 			}
@@ -305,6 +330,15 @@ namespace PlantUmlEditor.ViewModel
 		{
 			_refreshTimer.TryStop();
 			await RefreshAsync();
+		}
+
+		/// <summary>
+		/// Cancels all currently executing refresh tasks.
+		/// </summary>
+		private void CancelRefreshes()
+		{
+			foreach (var cts in _refreshCancellations)
+				cts.Value.Cancel();
 		}
 
 		/// <summary>
@@ -425,6 +459,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _isIdle;
 		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
+		private readonly Property<ImageFormat> _imageFormat;
 
 		private readonly INotifications _notifications;
 		private readonly IIndex<ImageFormat, IDiagramRenderer> _diagramRenderers;

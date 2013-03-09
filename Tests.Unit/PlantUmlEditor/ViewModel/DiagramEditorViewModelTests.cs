@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
@@ -13,6 +14,7 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
+using Utilities.Collections;
 using Utilities.Concurrency;
 using Xunit;
 using Xunit.Extensions;
@@ -28,8 +30,29 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
 			             .Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
-			renderers.Setup(r => r[ImageFormat.Bitmap])
+			renderers.Setup(r => r[It.IsAny<ImageFormat>()])
 			         .Returns(renderer.Object);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_Initialization()
+		{
+			// Arrange.
+			var populatedDiagram = new Diagram
+			{
+				Content = "Test content",
+				ImageFilePath = "image.svg"
+			};
+
+			codeEditor.SetupProperty(c => c.Content);
+
+			// Act.
+			editor = CreateEditor(populatedDiagram);
+
+			// Assert.
+			Assert.Equal("Test content", editor.CodeEditor.Content);
+			Assert.Equal(ImageFormat.SVG, editor.ImageFormat);
 		}
 
 		[Fact]
@@ -257,14 +280,17 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
+			diagram.ImageFilePath = "image.png";
 			codeEditor.Object.Content = "Blah blah blah";
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 			         .Returns(Tasks.FromSuccess());
 
-			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
 			        .Returns(Tasks.FromSuccess());
+
+			editor.ImageFormat = ImageFormat.SVG;
 
 			// Act.
 			editor.SaveCommand.Execute(null);
@@ -272,6 +298,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.False(codeEditor.Object.IsModified);
 			Assert.Equal(codeEditor.Object.Content, diagram.Content);
+			Assert.Equal(ImageFormat.SVG, diagram.ImageFormat);	// Make sure image format was updated.
 			autoSaveTimer.Verify(t => t.TryStop());
 			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
 		}
@@ -293,7 +320,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 			         .Returns(Tasks.FromSuccess());
 
-			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
 			        .Returns(Tasks.FromSuccess());
 
 			editor.SaveCommand.Execute(null);
@@ -399,6 +426,65 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
+		public void Test_ImageFormat_Change_TriggersRefresh()
+		{
+			// Arrange.
+			diagram.File = new FileInfo("TestFile.puml");
+			diagram.ImageFilePath = "image.png";
+
+			editor = CreateEditor();
+
+			// Act.
+			editor.ImageFormat = ImageFormat.SVG;
+
+			// Assert.
+			compiler.Verify(c => c.CompileToImageAsync(It.IsAny<string>(), ImageFormat.SVG, It.IsAny<CancellationToken>()));
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_ImageFormat_Change_CancelsOtherRefreshTasks()
+		{
+			// Arrange.
+			diagram.File = new FileInfo("TestFile.puml");
+			diagram.ImageFilePath = "image.png";
+
+			bool killSwitch = false;
+			var tasks = new List<Task>(2);
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			        .Returns((string content, ImageFormat format, CancellationToken token) =>
+			        {
+						var task = Task.Run(() => 
+						{ 
+							while (!killSwitch) 
+							{ 
+								token.ThrowIfCancellationRequested();
+								Thread.Sleep(100); 
+							}
+							return (ImageSource)null;
+						}, token);
+						tasks.Add(task);
+				        return task;
+			        });
+
+			editor = CreateEditor();
+			editor.RefreshAsync();
+
+			// Act.
+			editor.ImageFormat = ImageFormat.SVG;
+
+			// Assert.
+			Assert.Equal(2, tasks.Count);
+			AssertThat.Throws<OperationCanceledException>(tasks[0]);
+			Assert.Equal(TaskStatus.Canceled, tasks[0].Status);
+
+			killSwitch = true;
+			AssertThat.DoesNotThrow(tasks[1]);
+			Assert.Equal(TaskStatus.RanToCompletion, tasks[1].Status);
+		}
+
+		[Fact]
+		[Synchronous]
 		public void Test_Dispose()
 		{
 			// Arrange.
@@ -419,9 +505,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			disposableCodeEditor.Verify(ce => ce.Dispose());
 		}
 
-		private DiagramEditorViewModel CreateEditor()
+		private DiagramEditorViewModel CreateEditor(Diagram suppliedDiagram = null)
 		{
-			return new DiagramEditorViewModel(diagram, codeEditor.Object, notifications.Object, renderers.Object,
+			return new DiagramEditorViewModel(suppliedDiagram ?? diagram, codeEditor.Object, notifications.Object, renderers.Object,
 											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
 		}
 

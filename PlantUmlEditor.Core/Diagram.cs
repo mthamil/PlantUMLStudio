@@ -74,15 +74,19 @@ namespace PlantUmlEditor.Core
 		/// <summary>
 		/// The format of the diagram's image output.
 		/// </summary>
-		public ImageFormat ImageFormat { get; private set; }
+		public ImageFormat ImageFormat { get; set; }
 
 		private ImageFormat DetermineFormat(string imagePath)
 		{
-			// This is currently a simple hack supporting only one format.
-			if (Path.GetExtension(imagePath) == ".png")
-				return ImageFormat.Bitmap;
-
-			return ImageFormat.Bitmap;	// Assume bitmap as the default.
+			switch (Path.GetExtension(imagePath))
+			{
+				case ".png":
+					return ImageFormat.PNG;
+				case ".svg":
+					return ImageFormat.SVG;
+				default:
+					return ImageFormat.PNG;
+			}
 		}
 
 		/// <summary>

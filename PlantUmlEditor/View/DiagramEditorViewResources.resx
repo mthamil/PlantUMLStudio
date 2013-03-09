@@ -132,6 +132,9 @@
   <data name="CutEditorContextMenuItem" xml:space="preserve">
     <value>Cut</value>
   </data>
+  <data name="ImageFormatComboBoxToolTip" xml:space="preserve">
+    <value>Select the diagram image output format.</value>
+  </data>
   <data name="PasteEditorContextMenuItem" xml:space="preserve">
     <value>Paste</value>
   </data>

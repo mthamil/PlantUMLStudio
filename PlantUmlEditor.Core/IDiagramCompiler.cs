@@ -32,16 +32,17 @@ namespace PlantUmlEditor.Core
 		/// No external files are created.
 		/// </summary>
 		/// <param name="diagramCode">The diagram code to compile</param>
-		/// <param name="imageFormat">The desired image format. The default is a bitmap.</param>
+		/// <param name="imageFormat">The desired image format</param>
 		/// <param name="cancellationToken">An optional cancellation token</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat = ImageFormat.Bitmap, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.
 		/// </summary>
 		/// <param name="diagramFile">The diagram file to compile</param>
+		/// <param name="imageFormat">The desired image format</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task CompileToFileAsync(FileInfo diagramFile);
+		Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat);
 	}
 }

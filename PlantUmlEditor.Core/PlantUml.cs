@@ -57,7 +57,10 @@ namespace PlantUmlEditor.Core
 		{
 			var result = await Task.Factory.FromProcess(
 				executable: "java",
-				arguments: String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" -pipe", PlantUmlJar.FullName, GraphVizExecutable.FullName), 
+				arguments: String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" -pipe", 
+								PlantUmlJar.FullName, 
+								imageFormat == ImageFormat.SVG ? "-tsvg" : string.Empty, 
+								GraphVizExecutable.FullName), 
 				input: new MemoryStream(Encoding.Default.GetBytes(diagramCode)), 
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
@@ -68,12 +71,16 @@ namespace PlantUmlEditor.Core
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
-		public Task CompileToFileAsync(FileInfo diagramFile)
+		public Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat)
 		{
 			return Task.Factory.FromProcess(new ProcessStartInfo
 			{
 				FileName = "java",
-				Arguments = String.Format(@"-jar ""{0}"" -quiet -graphvizdot ""{1}"" ""{2}""", PlantUmlJar.FullName, GraphVizExecutable.FullName, diagramFile.FullName),
+				Arguments = String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" ""{3}""", 
+								PlantUmlJar.FullName,
+								imageFormat == ImageFormat.SVG ? "-tsvg" : string.Empty, 
+								GraphVizExecutable.FullName, 
+								diagramFile.FullName),
 				WindowStyle = ProcessWindowStyle.Hidden,
 				CreateNoWindow = true,
 				RedirectStandardError = true,

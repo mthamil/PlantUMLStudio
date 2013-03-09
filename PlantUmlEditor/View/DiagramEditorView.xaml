@@ -14,6 +14,8 @@
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
     xmlns:folding="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit.Folding;assembly=Utilities.Controls"
     xmlns:vw="clr-namespace:PlantUmlEditor.View"
+    xmlns:Imaging="clr-namespace:PlantUmlEditor.Core.Imaging;assembly=PlantUmlEditor.Core"
+    xmlns:Markup="clr-namespace:Utilities.Controls.Markup;assembly=Utilities.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}"
@@ -188,7 +190,10 @@
 
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
-                            <Slider x:Name="ZoomSlider" Minimum="0.1" Maximum="2.0" Value="1.0" Width="50" SmallChange="0.1" LargeChange="0.2"
+                            <ComboBox ItemsSource="{Markup:EnumValues {x:Type Imaging:ImageFormat}}" SelectedItem="{Binding ImageFormat}" 
+                                      HorizontalContentAlignment="Stretch" ToolTip="{Localize ImageFormatComboBoxToolTip}"/>
+                            
+                            <Slider x:Name="ZoomSlider" Margin="10,0,0,0" Minimum="0.1" Maximum="2.0" Value="1.0" Width="50" SmallChange="0.1" LargeChange="0.2"
                                     Visibility="{Binding DiagramImage, Converter={StaticResource NullToVisibilityConverter}}"/>
                         </StackPanel>
                     </Expander.Header>

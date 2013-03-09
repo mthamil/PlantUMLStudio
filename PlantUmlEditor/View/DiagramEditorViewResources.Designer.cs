@@ -106,6 +106,15 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the diagram image output format..
+        /// </summary>
+        internal static string ImageFormatComboBoxToolTip {
+            get {
+                return ResourceManager.GetString("ImageFormatComboBoxToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste.
         /// </summary>
         internal static string PasteEditorContextMenuItem {

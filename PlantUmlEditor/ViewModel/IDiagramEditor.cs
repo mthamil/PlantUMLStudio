@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Imaging;
 
 namespace PlantUmlEditor.ViewModel
 {
@@ -54,6 +55,11 @@ namespace PlantUmlEditor.ViewModel
 		ImageSource DiagramImage { get; set; }
 
 		/// <summary>
+		/// The desired diagram image format.
+		/// </summary>
+		ImageFormat ImageFormat { get; set; }
+
+		/// <summary>
 		/// Whether an editor's content can currently be saved.
 		/// </summary>
 		bool CanSave { get; }
@@ -68,6 +74,12 @@ namespace PlantUmlEditor.ViewModel
 		/// Event raised when a diagram editor saves.
 		/// </summary>
 		event EventHandler Saved;
+
+		/// <summary>
+		/// Forces a re-render of a diagram's image.
+		/// </summary>
+		/// <returns>A task representing the refresh operation</returns>
+		Task RefreshAsync();
 
 		/// <summary>
 		/// Closes a diagram editor.

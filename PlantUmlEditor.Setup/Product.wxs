@@ -81,6 +81,16 @@
         <File Id="ExpressionInteractionsDll" Name="Microsoft.Expression.Interactions.dll" Source="$(var.PlantUmlEditor.TargetDir)Microsoft.Expression.Interactions.dll"/>
       </Component>
 
+      <Component Id="SharpVectorsLib" Guid="7FA1CEC8-D9CD-4472-8826-1A0C9213C6F6">
+        <File Id="SharpVectorsCoreDll" Name="SharpVectors.Core.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Core.dll" KeyPath="yes"/>
+        <File Id="SharpVectorsModelDll" Name="SharpVectors.Model.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Model.dll"/>
+        <File Id="SharpVectorsDomDll" Name="SharpVectors.Dom.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Dom.dll"/>
+        <File Id="SharpVectorsCssDll" Name="SharpVectors.Css.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Css.dll"/>
+        <File Id="SharpVectorsWpfDll" Name="SharpVectors.Rendering.Wpf.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Rendering.Wpf.dll"/>
+        <File Id="SharpVectorsRuntimeDll" Name="SharpVectors.Runtime.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Runtime.dll"/>
+        <File Id="SharpVectorsConvertersDll" Name="SharpVectors.Converters.dll" Source="$(var.PlantUmlEditor.TargetDir)SharpVectors.Converters.dll"/>
+      </Component>
+
     </ComponentGroup>
 
     <ComponentGroup Id="HighlightingDefinitions" Directory="INSTALLDIR">

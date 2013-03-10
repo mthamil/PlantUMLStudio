@@ -15,7 +15,9 @@
 //    limitations under the License.
 // 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using PlantUmlEditor.Core.Imaging;
 using Utilities.InputOutput;
 using Utilities.PropertyChanged;
@@ -34,7 +36,7 @@ namespace PlantUmlEditor.Core
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 			_imageFile = Property.New(this, p => p.ImageFile, OnPropertyChanged)
-			                     .EqualWhen(FileInfoPathEqualityComparer.Instance.Equals);
+			                     .EqualWhen(fileComparer.Equals);
 
 			_content.Value = string.Empty;
 		}
@@ -63,6 +65,30 @@ namespace PlantUmlEditor.Core
 				if (_imageFile.TrySetValue(value))
 					ImageFormat = DetermineFormat(ImageFile.FullName);
 			}
+		}
+
+		/// <summary>
+		/// Attempts to analyze a diagram's content and extract the image file path again.
+		/// If there is no image file path, no change is made.
+		/// </summary>
+		/// <returns>True if image file was path was found</returns>
+		public bool TryRefreshImageFile()
+		{
+			var match = diagramImagePathPattern.Match(Content);
+			if (match.Success && match.Groups.Count > 1)
+			{
+				string imageFileName = match.Groups[1].Value;
+				var imageFilePath = Path.IsPathRooted(imageFileName)
+										? Path.GetFullPath(imageFileName)
+										: Path.GetFullPath(Path.Combine(File.DirectoryName, imageFileName));
+
+
+				ImageFile = new FileInfo(imageFilePath);
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -113,7 +139,7 @@ namespace PlantUmlEditor.Core
 			if (other == null)
 				return false;
 
-            return other.File.FullName == File.FullName;
+			return fileComparer.Equals(other.File, File);
         }
 
 		/// <see cref="object.GetHashCode"/>
@@ -124,5 +150,13 @@ namespace PlantUmlEditor.Core
 
 		private readonly Property<string> _content;
 		private readonly Property<FileInfo> _imageFile;
+
+		private static readonly Regex diagramImagePathPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)",
+			RegexOptions.IgnoreCase |
+			RegexOptions.Multiline |
+			RegexOptions.IgnorePatternWhitespace |
+			RegexOptions.Compiled);
+
+		private static IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
     }
 }

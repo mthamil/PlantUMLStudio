@@ -28,6 +28,7 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Concurrency;
+using Utilities.InputOutput;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
 using Utilities.PropertyChanged;
@@ -192,7 +193,7 @@ namespace PlantUmlEditor.ViewModel
 				await _diagramIO.SaveAsync(newDiagram, false);
 				var refreshedDiagram = await _diagramIO.ReadAsync(newDiagram.File);
 
-				var preview = PreviewDiagrams.SingleOrDefault(p => p.Diagram.File.FullName == refreshedDiagram.File.FullName);
+				var preview = PreviewDiagrams.SingleOrDefault(p => fileComparer.Equals(p.Diagram.File, refreshedDiagram.File));
 				if (preview == null)
 				{
 					preview = _previewDiagramFactory(refreshedDiagram);
@@ -303,8 +304,20 @@ namespace PlantUmlEditor.ViewModel
 		/// <see cref="IDiagramExplorer.OpenDiagramAsync"/>
 		public async Task<Diagram> OpenDiagramAsync(Uri diagramPath)
 		{
-			var diagram = await _diagramIO.ReadAsync(new FileInfo(diagramPath.LocalPath));
-			var preview = _previewDiagramFactory(diagram);
+			var fileToOpen = new FileInfo(diagramPath.LocalPath);
+
+			Diagram diagram;
+			var preview = PreviewDiagrams.SingleOrDefault(p => fileComparer.Equals(p.Diagram.File, fileToOpen));
+			if (preview == null)
+			{
+				diagram = await _diagramIO.ReadAsync(fileToOpen);
+				preview = _previewDiagramFactory(diagram);
+			}
+			else
+			{
+				diagram = preview.Diagram;
+			}
+
 			OnOpenPreviewRequested(preview);
 			return diagram;
 		}
@@ -313,7 +326,7 @@ namespace PlantUmlEditor.ViewModel
 		{
 			Task.Factory.StartNew(() =>
 			{
-				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => pd.Diagram.File.FullName == e.DeletedDiagramFile.FullName);
+				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => fileComparer.Equals(pd.Diagram.File, e.DeletedDiagramFile));
 				if (existingPreview != null)
 				{
 					OnDiagramDeleted(existingPreview.Diagram);
@@ -328,7 +341,7 @@ namespace PlantUmlEditor.ViewModel
 			Task.Factory.StartNew(async () =>
 			{
 				// Make sure a preview doesn't already exist for the file and make sure the current directory still matches.
-				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => pd.Diagram.File.FullName == e.NewDiagramFile.FullName);
+				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => fileComparer.Equals(pd.Diagram.File, e.NewDiagramFile));
 				if (existingPreview == null && e.NewDiagramFile.Directory.FullName.Trim('\\') == DiagramLocation.FullName.Trim('\\'))
 				{
 					var newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
@@ -356,5 +369,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Func<Diagram, PreviewDiagramViewModel> _previewDiagramFactory;
 		private readonly ISettings _settings;
 		private readonly TaskScheduler _uiScheduler;
+
+		private static readonly IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
 	}
 }

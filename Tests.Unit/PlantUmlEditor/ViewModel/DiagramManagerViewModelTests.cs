@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
+using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.ViewModel;
 using Utilities.Concurrency;
 using Xunit;
@@ -242,6 +243,43 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 			// Assert.
 			Assert.Null(diagramPreview.ImagePreview);
+		}
+
+		[Fact]
+		[Synchronous]
+		public void Test_OpenDiagramEditor_Saved_UpdatesPreviewDiagram()
+		{
+			// Arrange.
+			var image = new BitmapImage();
+
+			var preview = new PreviewDiagramViewModel(new Diagram 
+			{ 
+				Content = "blah",
+				File = new FileInfo("diagram.puml"),
+				ImageFile = new FileInfo("image.png")
+			});
+
+			var editor = new Mock<IDiagramEditor>();
+			editor.SetupGet(e => e.Diagram).Returns(new Diagram
+			{
+				Content = "blah-blah",
+				File = new FileInfo("diagram.puml"),
+				ImageFile = new FileInfo("image2.svg")
+			});
+			editor.SetupGet(e => e.DiagramImage).Returns(image);
+
+			var diagramManager = CreateManager(d => editor.Object);
+			diagramManager.Explorer.PreviewDiagrams.Add(preview);
+			diagramManager.OpenDiagramCommand.Execute(preview);
+
+			// Act.
+			editor.Raise(e => e.Saved += null, EventArgs.Empty);
+
+			// Assert.
+			Assert.Equal(image, preview.ImagePreview);
+			Assert.Equal("blah-blah", preview.Diagram.Content);
+			Assert.Equal(ImageFormat.SVG, preview.Diagram.ImageFormat);
+			Assert.Equal("image2.svg", preview.Diagram.ImageFile.Name);
 		}
 
 		[Fact]

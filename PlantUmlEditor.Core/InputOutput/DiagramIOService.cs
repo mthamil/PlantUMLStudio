@@ -102,17 +102,13 @@ namespace PlantUmlEditor.Core.InputOutput
 				Match match = diagramStartPattern.Match(content);
 				if (match.Success && match.Groups.Count > 1)
 				{
-					string imageFileName = match.Groups[1].Value;
-					var imageFilePath = Path.IsPathRooted(imageFileName)
-											? Path.GetFullPath(imageFileName)
-											: Path.GetFullPath(Path.Combine(file.DirectoryName, imageFileName));
-
-					return new Diagram
+					var diagram = new Diagram
 					{
 						Content = content,
-						File = file,
-						ImageFile = new FileInfo(imageFilePath)
+						File = file
 					};
+					if (diagram.TryRefreshImageFile())
+						return diagram;
 				}
 			}
 

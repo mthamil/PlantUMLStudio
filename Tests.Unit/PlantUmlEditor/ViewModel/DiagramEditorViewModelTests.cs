@@ -14,7 +14,6 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Chronology;
-using Utilities.Collections;
 using Utilities.Concurrency;
 using Xunit;
 using Xunit.Extensions;
@@ -305,7 +304,34 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_SaveCommand_SavedAgain()
+		public void Test_SaveCommand_SaveUnuccessful()
+		{
+			// Arrange.
+			editor = CreateEditor();
+			notifications.Setup(p => p.StartProgress(It.IsAny<bool>())).Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			codeEditor.SetupProperty(ce => ce.IsModified);
+			codeEditor.SetupProperty(ce => ce.Content);
+
+			diagram.File = new FileInfo("TestFile.puml");
+			codeEditor.Object.Content = "Blah blah blah";
+			codeEditor.Object.IsModified = true;
+
+			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
+					 .Returns(Tasks.FromException(new InvalidOperationException()));
+
+			// Act.
+			editor.SaveCommand.Execute(null);
+
+			// Assert.
+			Assert.True(editor.IsIdle);
+			Assert.True(codeEditor.Object.IsModified);
+			autoSaveTimer.Verify(t => t.TryStop());
+			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
+		}
+
+		[Fact]
+		[Synchronous]
+		public async Task Test_Save_Then_SavedAgain()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -323,10 +349,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
 			        .Returns(Tasks.FromSuccess());
 
-			editor.SaveCommand.Execute(null);
+			await editor.SaveAsync();
 
 			// Act.
-			editor.SaveCommand.Execute(null);
+			await editor.SaveAsync();
 
 			// Assert.
 			Assert.True(editor.IsIdle);
@@ -338,7 +364,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_SaveCommand_SaveUnuccessful()
+		public async Task Test_Save_Updates_ImageFile()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -347,20 +373,24 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
-			codeEditor.Object.Content = "Blah blah blah";
+			diagram.ImageFile = new FileInfo("image.png");
+			codeEditor.Object.Content = @"
+				@startuml image2.svg
+
+				title Class Diagram";
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-			         .Returns(Tasks.FromException(new InvalidOperationException()));
+					 .Returns(Tasks.FromSuccess());
+
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
+					.Returns(Tasks.FromSuccess());
 
 			// Act.
-			editor.SaveCommand.Execute(null);
+			await editor.SaveAsync();
 
 			// Assert.
-			Assert.True(editor.IsIdle);
-			Assert.True(codeEditor.Object.IsModified);
-			autoSaveTimer.Verify(t => t.TryStop());
-			diagramIO.Verify(dio => dio.SaveAsync(diagram, true));
+			Assert.Equal("image2.svg", diagram.ImageFile.Name);
 		}
 
 		[Fact]
@@ -386,7 +416,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_RefreshCommand_Unsuccessful()
+		public async Task Test_Refresh_Unsuccessful()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -395,10 +425,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
-			        .Returns(Tasks.FromException<ImageSource>(new InvalidOperationException()));
+					.Returns(Tasks.FromException<ImageSource>(new PlantUmlException()));
 
 			// Act.
-			editor.RefreshCommand.Execute(null);
+			await editor.RefreshAsync();
 
 			// Assert.
 			Assert.Null(editor.DiagramImage);
@@ -406,7 +436,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_RefreshCommand_Canceled()
+		public async Task Test_Refresh_Canceled()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -418,7 +448,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			        .Returns(Tasks.FromCanceled<ImageSource>());
 
 			// Act.
-			editor.RefreshCommand.Execute(null);
+			await editor.RefreshAsync();
 
 			// Assert.
 			Assert.Null(editor.DiagramImage);

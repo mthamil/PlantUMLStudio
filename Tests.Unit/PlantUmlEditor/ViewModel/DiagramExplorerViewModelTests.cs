@@ -21,12 +21,12 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		public DiagramExplorerViewModelTests()
 		{
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromSuccess());
+			         .Returns(Tasks.FromSuccess());
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
 
 			notifications.Setup(p => p.StartProgress(It.IsAny<bool>()))
-				.Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
+			             .Returns(() => new Mock<IProgress<ProgressUpdate>>().Object);
 
 			explorer = new DiagramExplorerViewModel(notifications.Object, diagramIO.Object,
 				d => d == null ? null : new PreviewDiagramViewModel(d), settings.Object, uiScheduler)
@@ -257,6 +257,34 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 				() => explorer.OpenDiagramCommand.Execute(diagramUri));
 
 			Assert.Equal(filePath, args.RequestedPreview.Diagram.File.FullName);
+		}
+
+		[Fact]
+		public async Task Test_OpenDiagram_When_PreviewAlreadyExists()
+		{
+			// Arrange.
+			string filePath = Path.Combine(diagramLocation.FullName, "TestFile.puml");
+
+			var existingDiagram = new Diagram { File = new FileInfo(filePath) };
+			var existingPreview = new PreviewDiagramViewModel(existingDiagram);
+			explorer.PreviewDiagrams.Add(existingPreview);
+
+			var diagramUri = new Uri(filePath, UriKind.Absolute);
+
+			diagramIO.Setup(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == filePath)))
+				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+
+			OpenPreviewRequestedEventArgs openArgs = null;
+			explorer.OpenPreviewRequested += (o, e) => openArgs = e;
+
+			// Act.
+			var openedDiagram = await explorer.OpenDiagramAsync(diagramUri);
+
+			// Assert.
+			Assert.Same(existingDiagram, openedDiagram);
+			Assert.Same(existingPreview.Diagram, explorer.PreviewDiagrams.Single().Diagram);
+			Assert.NotNull(openArgs);
+			Assert.Same(existingPreview, openArgs.RequestedPreview);
 		}
 
 		[Theory]

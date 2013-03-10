@@ -218,6 +218,7 @@ namespace PlantUmlEditor.ViewModel
 				CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
 
 			Diagram.Content = CodeEditor.Content;
+			Diagram.TryRefreshImageFile();
 
 			// Create a backup if this is the first time the diagram being modified
 			// after opening.

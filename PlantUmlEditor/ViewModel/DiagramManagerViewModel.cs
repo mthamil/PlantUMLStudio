@@ -139,7 +139,14 @@ namespace PlantUmlEditor.ViewModel
 			var diagramEditor = (IDiagramEditor)sender;
 			var preview = Explorer.PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
 			if (preview != null)
+			{
 				preview.ImagePreview = diagramEditor.DiagramImage;
+				if (!ReferenceEquals(preview.Diagram, diagramEditor.Diagram))
+				{
+					preview.Diagram.Content = diagramEditor.Diagram.Content;
+					preview.Diagram.ImageFile = diagramEditor.Diagram.ImageFile;
+				}
+			}
 		}
 
 		void diagramEditor_Closing(object sender, CancelEventArgs e)

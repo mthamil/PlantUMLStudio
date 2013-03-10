@@ -68,5 +68,48 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			// Act/Assert.
 			AssertThat.PropertyChanged(diagram, p => p.ImageFile, () => diagram.ImageFile = new FileInfo("image.png"));
 		}
+
+		[Fact]
+		public void Test_TryRefreshImageFile()
+		{
+			// Arrange.
+			var diagram = new Diagram
+			{
+				File = new FileInfo("diagram.puml"),
+				ImageFile = new FileInfo("image.png")
+			};
+
+			diagram.Content = @"
+				@startuml image2.svg
+
+				title Class Diagram";
+
+			// Act.
+			bool succeeded = diagram.TryRefreshImageFile();
+
+			// Assert.
+			Assert.True(succeeded);
+			Assert.Equal("image2.svg", diagram.ImageFile.Name);
+		}
+
+		[Fact]
+		public void Test_TryRefreshImageFile_Failed()
+		{
+			// Arrange.
+			var diagram = new Diagram
+			{
+				File = new FileInfo("diagram.puml"),
+				ImageFile = new FileInfo("image.png")
+			};
+
+			diagram.Content = "title Class Diagram";
+
+			// Act.
+			bool succeeded = diagram.TryRefreshImageFile();
+
+			// Assert.
+			Assert.False(succeeded);
+			Assert.Equal("image.png", diagram.ImageFile.Name);
+		}
 	}
 }

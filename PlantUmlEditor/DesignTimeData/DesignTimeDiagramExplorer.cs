@@ -40,7 +40,7 @@ namespace PlantUmlEditor.DesignTimeData
 						{
 							Content = File.ReadAllText(diagramFile.FullName),
 							File = diagramFile,
-							ImageFilePath = imagePath
+							ImageFile = new FileInfo(imagePath)
 						})
 					{
 						ImagePreview = BitmapFrame.Create(new Uri(imagePath))

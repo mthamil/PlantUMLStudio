@@ -1,4 +1,5 @@
-﻿using PlantUmlEditor.Core;
+﻿using System.IO;
+using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			var diagram = new Diagram();
 
 			// Act.
-			diagram.ImageFilePath = "image.png";
+			diagram.ImageFile = new FileInfo("image.png");
 
 			// Assert.
 			Assert.Equal(ImageFormat.PNG, diagram.ImageFormat);
@@ -26,7 +27,7 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			var diagram = new Diagram();
 
 			// Act.
-			diagram.ImageFilePath = "image.svg";
+			diagram.ImageFile = new FileInfo("image.svg");
 
 			// Assert.
 			Assert.Equal(ImageFormat.SVG, diagram.ImageFormat);
@@ -39,7 +40,7 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			var diagram = new Diagram();
 
 			// Act.
-			diagram.ImageFilePath = "image";
+			diagram.ImageFile = new FileInfo("image");
 
 			// Assert.
 			Assert.Equal(ImageFormat.PNG, diagram.ImageFormat);
@@ -56,13 +57,16 @@ namespace Tests.Unit.PlantUmlEditor.Core
 		}
 
 		[Fact]
-		public void Test_ImageFilePath_RaisesPropertyChange()
+		public void Test_ImageFile_RaisesPropertyChange()
 		{
 			// Arrange.
-			var diagram = new Diagram();
+			var diagram = new Diagram
+			{
+				ImageFile = new FileInfo("image.svg")
+			};
 
 			// Act/Assert.
-			AssertThat.PropertyChanged(diagram, p => p.ImageFilePath, () => diagram.ImageFilePath = "image.png");
+			AssertThat.PropertyChanged(diagram, p => p.ImageFile, () => diagram.ImageFile = new FileInfo("image.png"));
 		}
 	}
 }

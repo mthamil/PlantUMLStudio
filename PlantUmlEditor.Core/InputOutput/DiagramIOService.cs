@@ -111,7 +111,7 @@ namespace PlantUmlEditor.Core.InputOutput
 					{
 						Content = content,
 						File = file,
-						ImageFilePath = imageFilePath
+						ImageFile = new FileInfo(imageFilePath)
 					};
 				}
 			}
@@ -142,8 +142,8 @@ namespace PlantUmlEditor.Core.InputOutput
 			return Task.Factory.StartNew(() =>
 			{
 				diagram.File.Delete();
-				if (File.Exists(diagram.ImageFilePath))
-					File.Delete(diagram.ImageFilePath);
+				if (diagram.ImageFile.Exists)
+					diagram.ImageFile.Delete();
 			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
 		}
 

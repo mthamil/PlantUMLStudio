@@ -30,8 +30,8 @@ namespace PlantUmlEditor.Core.Imaging
 		public ImageSource Render(Diagram diagram)
 		{
 			Uri imageUri;
-			if (String.IsNullOrEmpty(diagram.ImageFilePath) || !File.Exists(diagram.ImageFilePath) ||
-			    !Uri.TryCreate(diagram.ImageFilePath, UriKind.RelativeOrAbsolute, out imageUri))
+			if (diagram.ImageFile == null || !diagram.ImageFile.Exists ||
+			    !Uri.TryCreate(diagram.ImageFile.FullName, UriKind.RelativeOrAbsolute, out imageUri))
 			{
 				return null;
 			}

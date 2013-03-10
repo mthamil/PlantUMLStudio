@@ -89,7 +89,7 @@ namespace Tests.Unit.PlantUmlEditor.Core.InputOutput
 
 			// Assert.
 			Assert.Equal(file.FullName, diagram.File.FullName);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFilePath);
+			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFile.FullName);
 			Assert.True(!String.IsNullOrWhiteSpace(diagram.Content));
 		}
 
@@ -121,7 +121,7 @@ namespace Tests.Unit.PlantUmlEditor.Core.InputOutput
 
 			var diagram = diagrams.Single();
 			Assert.Equal(Path.Combine(currentDirectory.FullName, "class.puml"), diagram.File.FullName);
-			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFilePath);
+			Assert.Equal(Path.Combine(currentDirectory.FullName, @"img\classes04.png"), diagram.ImageFile.FullName);
 			Assert.True(!String.IsNullOrWhiteSpace(diagram.Content));
 
 			Assert.Equal(2, progressData.Count);

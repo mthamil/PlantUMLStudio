@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using PlantUmlEditor.Core.Imaging;
+using Utilities.InputOutput;
 using Utilities.PropertyChanged;
 
 namespace PlantUmlEditor.Core
@@ -32,7 +33,8 @@ namespace PlantUmlEditor.Core
 		public Diagram()
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
-			_imageFilePath = Property.New(this, p => p.ImageFilePath, OnPropertyChanged);
+			_imageFile = Property.New(this, p => p.ImageFile, OnPropertyChanged)
+			                     .EqualWhen(FileInfoPathEqualityComparer.Instance.Equals);
 
 			_content.Value = string.Empty;
 		}
@@ -51,15 +53,15 @@ namespace PlantUmlEditor.Core
 		}
 
 		/// <summary>
-		/// The file path of the diagram's compiled image output.
+		/// The file where a diagram's compiled image output is stored.
 		/// </summary>
-        public string ImageFilePath 
+        public FileInfo ImageFile 
 		{
-			get { return _imageFilePath.Value; }
+			get { return _imageFile.Value; }
 			set 
 			{
-				if (_imageFilePath.TrySetValue(value))
-					ImageFormat = DetermineFormat(ImageFilePath);
+				if (_imageFile.TrySetValue(value))
+					ImageFormat = DetermineFormat(ImageFile.FullName);
 			}
 		}
 
@@ -68,7 +70,7 @@ namespace PlantUmlEditor.Core
 		/// </summary>
 		public string ImageFileName
 		{
-			get { return Path.GetFileName(ImageFilePath); }
+			get { return ImageFile.Name; }
 		}
 
 		/// <summary>
@@ -121,6 +123,6 @@ namespace PlantUmlEditor.Core
         }
 
 		private readonly Property<string> _content;
-		private readonly Property<string> _imageFilePath;
+		private readonly Property<FileInfo> _imageFile;
     }
 }

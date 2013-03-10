@@ -30,12 +30,12 @@ namespace PlantUmlEditor.Core.Imaging
 		/// <see cref="IDiagramRenderer.Render(Diagram)"/>
 		public ImageSource Render(Diagram diagram)
 		{
-			if (String.IsNullOrEmpty(diagram.ImageFilePath) || !File.Exists(diagram.ImageFilePath))
+			if (diagram.ImageFile == null || !diagram.ImageFile.Exists)
 				return null;
 
 			using (var converter = new FileSvgReader(settings))
 			{
-				var drawingGroup = converter.Read(diagram.ImageFilePath);
+				var drawingGroup = converter.Read(diagram.ImageFile.FullName);
 				return CreateFrozenDrawing(drawingGroup);
 			}
 		}

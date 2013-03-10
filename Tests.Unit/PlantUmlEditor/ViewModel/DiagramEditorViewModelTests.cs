@@ -42,7 +42,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var populatedDiagram = new Diagram
 			{
 				Content = "Test content",
-				ImageFilePath = "image.svg"
+				ImageFile = new FileInfo("image.svg")
 			};
 
 			codeEditor.SetupProperty(c => c.Content);
@@ -280,7 +280,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			codeEditor.SetupProperty(ce => ce.Content);
 
 			diagram.File = new FileInfo("TestFile.puml");
-			diagram.ImageFilePath = "image.png";
+			diagram.ImageFile = new FileInfo("image.png");
 			codeEditor.Object.Content = "Blah blah blah";
 			codeEditor.Object.IsModified = true;
 
@@ -430,7 +430,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagram.File = new FileInfo("TestFile.puml");
-			diagram.ImageFilePath = "image.png";
+			diagram.ImageFile = new FileInfo("image.png");
 
 			editor = CreateEditor();
 
@@ -447,7 +447,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagram.File = new FileInfo("TestFile.puml");
-			diagram.ImageFilePath = "image.png";
+			diagram.ImageFile = new FileInfo("image.png");
 
 			bool killSwitch = false;
 			var tasks = new List<Task>(2);

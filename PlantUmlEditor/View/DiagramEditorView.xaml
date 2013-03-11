@@ -69,6 +69,7 @@
                         <avalon:AddLineTransformers>
                             <vw:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>
+                        <avalon:HighlightCurrentLine/>
                     </i:Interaction.Behaviors>
                     
                     <avalonEdit:TextEditor.InputBindings>

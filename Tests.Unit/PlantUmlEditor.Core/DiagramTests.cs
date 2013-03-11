@@ -2,6 +2,7 @@
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlEditor.Core
 {
@@ -69,31 +70,14 @@ namespace Tests.Unit.PlantUmlEditor.Core
 			AssertThat.PropertyChanged(diagram, p => p.ImageFile, () => diagram.ImageFile = new FileInfo("image.png"));
 		}
 
-		[Fact]
-		public void Test_TryRefreshImageFile()
-		{
-			// Arrange.
-			var diagram = new Diagram
-			{
-				File = new FileInfo("diagram.puml"),
-				ImageFile = new FileInfo("image.png")
-			};
-
-			diagram.Content = @"
+		[Theory]
+		[InlineData(true, "image2.svg", @"
 				@startuml image2.svg
 
-				title Class Diagram";
-
-			// Act.
-			bool succeeded = diagram.TryRefreshImageFile();
-
-			// Assert.
-			Assert.True(succeeded);
-			Assert.Equal("image2.svg", diagram.ImageFile.Name);
-		}
-
-		[Fact]
-		public void Test_TryRefreshImageFile_Failed()
+				title Class Diagram")]
+		[InlineData(false, "image.png", "title Class Diagram")]
+		[InlineData(false, "image.png", "")]
+		public void Test_TryDeduceImageFile(bool expected, string expectedImageFileName, string content)
 		{
 			// Arrange.
 			var diagram = new Diagram
@@ -102,14 +86,14 @@ namespace Tests.Unit.PlantUmlEditor.Core
 				ImageFile = new FileInfo("image.png")
 			};
 
-			diagram.Content = "title Class Diagram";
+			diagram.Content = content;
 
 			// Act.
-			bool succeeded = diagram.TryRefreshImageFile();
+			bool actual = diagram.TryDeduceImageFile();
 
 			// Assert.
-			Assert.False(succeeded);
-			Assert.Equal("image.png", diagram.ImageFile.Name);
+			Assert.Equal(expected, actual);
+			Assert.Equal(expectedImageFileName, diagram.ImageFile.Name);
 		}
 	}
 }

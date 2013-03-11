@@ -47,14 +47,6 @@ namespace PlantUmlEditor.Core
         public FileInfo File { get; set; }
 
 		/// <summary>
-		/// Just the diagram's file name.
-		/// </summary>
-		public string DiagramFileName
-		{
-			get { return File.Name; }
-		}
-
-		/// <summary>
 		/// The file where a diagram's compiled image output is stored.
 		/// </summary>
         public FileInfo ImageFile 
@@ -68,12 +60,16 @@ namespace PlantUmlEditor.Core
 		}
 
 		/// <summary>
-		/// Attempts to analyze a diagram's content and extract the image file path again.
-		/// If there is no image file path, no change is made.
+		/// Attempts to analyze a diagram's content and determine its image file path.
+		/// If successful, <see cref="ImageFile"/> will be updated, otherwise, if
+		/// no image file path can be found, no change will be made.
 		/// </summary>
 		/// <returns>True if image file was path was found</returns>
-		public bool TryRefreshImageFile()
+		public bool TryDeduceImageFile()
 		{
+			if (String.IsNullOrEmpty(Content))
+				return false;
+
 			var match = diagramImagePathPattern.Match(Content);
 			if (match.Success && match.Groups.Count > 1)
 			{
@@ -89,14 +85,6 @@ namespace PlantUmlEditor.Core
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Just the diagram image's file name.
-		/// </summary>
-		public string ImageFileName
-		{
-			get { return ImageFile.Name; }
 		}
 
 		/// <summary>

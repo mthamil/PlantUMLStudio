@@ -107,7 +107,7 @@ namespace PlantUmlEditor.Core.InputOutput
 						Content = content,
 						File = file
 					};
-					if (diagram.TryRefreshImageFile())
+					if (diagram.TryDeduceImageFile())
 						return diagram;
 				}
 			}

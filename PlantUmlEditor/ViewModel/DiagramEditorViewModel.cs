@@ -218,7 +218,7 @@ namespace PlantUmlEditor.ViewModel
 				CodeEditor.Content = Environment.NewLine + CodeEditor.Content;
 
 			Diagram.Content = CodeEditor.Content;
-			Diagram.TryRefreshImageFile();
+			Diagram.TryDeduceImageFile();
 
 			// Create a backup if this is the first time the diagram being modified
 			// after opening.
@@ -233,7 +233,7 @@ namespace PlantUmlEditor.ViewModel
 			progress.Report(new ProgressUpdate 
 			{ 
 				PercentComplete = 100, 
-				Message = String.Format(CultureInfo.CurrentCulture, Resources.Progress_SavingDiagram, Diagram.DiagramFileName) 
+				Message = String.Format(CultureInfo.CurrentCulture, Resources.Progress_SavingDiagram, Diagram.File.Name) 
 			});
 
 			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)

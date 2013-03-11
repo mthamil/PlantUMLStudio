@@ -343,7 +343,7 @@
                                 <CollectionViewSource x:Key="PreviewView" Source="{Binding PreviewDiagrams}"
                                                       d:DesignSource="{Binding Source={StaticResource DesignTimeExplorer}, Path=PreviewDiagrams}">
                                     <CollectionViewSource.SortDescriptions>
-                                        <ComponentModel:SortDescription PropertyName="Diagram.DiagramFileName"/>
+                                        <ComponentModel:SortDescription PropertyName="Diagram.File.Name"/>
                                     </CollectionViewSource.SortDescriptions>
                                 </CollectionViewSource>
                             </Grid.Resources>
@@ -422,7 +422,7 @@
                                                                Source="{Binding ImagePreview}" 
                                                                Margin="3, 5, 10, 0" VerticalAlignment="Top"/>
                                                         <StackPanel>
-                                                            <TextBlock Text="{Binding Diagram.DiagramFileName}"/>
+                                                            <TextBlock Text="{Binding Diagram.File.Name}"/>
                                                             <TextBlock 
                                                                 FontFamily="Consolas"
                                                                 Foreground="Black" 
@@ -516,7 +516,7 @@
 
                 <ctrl:MVVMMessageBox DataContext="{Binding ClosingDiagram}"
                     AffirmativeAction="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=DataContext.SaveClosingDiagramCommand}"
-                    Message="{Binding Diagram.DiagramFileName, StringFormat='{}{0} has unsaved changes. Do you want to save them?'}"
+                    Message="{Binding Diagram.File.Name, StringFormat='{}{0} has unsaved changes. Do you want to save them?'}"
                     Trigger="{Binding CodeEditor.IsModified}"
                     Caption="Save Changes?"
                     Type="YesNo"/>
@@ -546,7 +546,7 @@
                                                     <TextBlock VerticalAlignment="Center" Margin="12,2,12,2">
                                                         <TextBlock.Text>
                                                             <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
-                                                                <Binding Path="Diagram.DiagramFileName"/>
+                                                                <Binding Path="Diagram.File.Name"/>
                                                                 <Binding Path="CodeEditor.IsModified"/>
                                                             </MultiBinding>
                                                         </TextBlock.Text>

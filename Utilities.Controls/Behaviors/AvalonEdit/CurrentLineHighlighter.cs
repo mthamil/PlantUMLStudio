@@ -54,7 +54,7 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				drawingContext.DrawRectangle(
 					new SolidColorBrush(Color.FromArgb(255, 0xFF, 0xFF, 0xE0)), 
 					new Pen(new SolidColorBrush(Color.FromArgb(255, 0xF2, 0xEA, 0xEA)), 1), 
-					new Rect(rect.Location, new Size(textView.ActualWidth - 5, rect.Height)));
+					new Rect(rect.Location, new Size(textView.ActualWidth - 2, rect.Height)));
 			}
 		}
 

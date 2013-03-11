@@ -81,10 +81,11 @@ namespace PlantUmlEditor.Container
 			}).SingleInstance();
 
 			builder.Register(c => new CodeEditorViewModel(
-				c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"),
-				c.Resolve<IHighlightingDefinition>(),
-				c.Resolve<SnippetsMenu>(),
-				c.Resolve<IClipboard>())).As<ICodeEditor>();
+				                      c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"),
+				                      c.Resolve<IHighlightingDefinition>(),
+				                      c.Resolve<SnippetsMenu>(),
+				                      c.Resolve<IClipboard>())).As<ICodeEditor>()
+			       .OnActivating(c => c.Instance.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine);
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) =>

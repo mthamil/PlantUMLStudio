@@ -20,6 +20,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			settings.MaximumRecentFiles = 15;
 			settings.AutoSaveEnabled = true;
 			settings.AutoSaveInterval = TimeSpan.FromSeconds(15);
+			settings.HighlightCurrentLine = true;
 
 			// Act.
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
@@ -42,6 +43,8 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(settings.MaximumRecentFiles, appSettings.MaximumRecentFiles);
 			Assert.Equal(settings.AutoSaveEnabled, appSettings.AutoSaveEnabled);
 			Assert.Equal(settings.AutoSaveInterval, appSettings.AutoSaveInterval);
+
+			Assert.Equal(settings.HighlightCurrentLine, appSettings.HighlightCurrentLine);
 		}
 
 		[Fact]
@@ -54,7 +57,8 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				OpenFiles = new List<FileInfo> { new FileInfo(@"C:\openFile1"), new FileInfo(@"C:\openFile2") },
 				MaximumRecentFiles = 20,
 				AutoSaveEnabled = true,
-				AutoSaveInterval = TimeSpan.FromSeconds(15)
+				AutoSaveInterval = TimeSpan.FromSeconds(15),
+				HighlightCurrentLine = false
 			};
 
 			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
@@ -70,6 +74,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			AssertThat.SequenceEqual(settings.RecentFiles.Cast<string>(), new[] { @"C:\recentFile2", @"C:\recentFile1" });
 			Assert.Equal(true, settings.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(15), settings.AutoSaveInterval);
+			Assert.Equal(false, settings.HighlightCurrentLine);
 		}
 
 		[Theory]
@@ -282,9 +287,25 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(TimeSpan.FromSeconds(30), appSettings.AutoSaveInterval);
 		}
 
+		[Fact]
+		public void Test_HighlightCurrentLine_Changes()
+		{
+			// Arrange.
+			settings.HighlightCurrentLine = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.HighlightCurrentLine,
+				() => appSettings.HighlightCurrentLine = true);
+
+			Assert.True(appSettings.HighlightCurrentLine);
+		}
+
 		private readonly Settings settings = new Settings
-			{
-				GraphVizLocation = @"C:\dot.exe"	// doesn't have a default value
-			};
+		{
+			GraphVizLocation = @"C:\dot.exe" // doesn't have a default value
+		};
 	}
 }

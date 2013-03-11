@@ -63,6 +63,11 @@ namespace PlantUmlEditor.Configuration
 		TimeSpan AutoSaveInterval { get; set; }
 
 		/// <summary>
+		/// Whether to highlight the line where the cursor currently is.
+		/// </summary>
+		bool HighlightCurrentLine { get; set; }
+
+		/// <summary>
 		/// The GraphViz executable.
 		/// </summary>
 		FileInfo GraphVizExecutable { get; set; }

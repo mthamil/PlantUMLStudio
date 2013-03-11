@@ -1,19 +1,19 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -55,6 +55,8 @@ namespace PlantUmlEditor.ViewModel
 			_document = Property.New(this, p => p.Document, OnPropertyChanged);
 
 			_scrollOffset = Property.New(this, p => p.ScrollOffset, OnPropertyChanged);
+
+			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
 
@@ -160,6 +162,12 @@ namespace PlantUmlEditor.ViewModel
 			set { _scrollOffset.Value = value; }
 		}
 
+		/// <see cref="ICodeEditor.HighlightCurrentLine"/>
+		public bool HighlightCurrentLine
+		{
+			get { return _highlightCurrentLine.Value; }
+			set { _highlightCurrentLine.Value = value; }
+		}
 
 		/// <summary>
 		/// Whether content has been modified since the last save.
@@ -251,6 +259,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<int> _selectionLength; 
 		private readonly Property<TextDocument> _document;
 		private readonly Property<Vector> _scrollOffset;
+		private readonly Property<bool> _highlightCurrentLine;
 		private readonly Property<bool> _isModified;
 
 		private readonly IClipboard _clipboard;

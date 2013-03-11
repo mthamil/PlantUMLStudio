@@ -41,6 +41,8 @@ namespace PlantUmlEditor.Configuration
 				AutoSaveEnabledChanged();
 			else if (e.PropertyName == autoSaveIntervalName)
 				AutoSaveIntervalChanged();
+			else if (e.PropertyName == highlightCurrentLineName)
+				HighlightCurrentLineChanged();
 		}
 
 		private void AutoSaveEnabledChanged()
@@ -55,6 +57,12 @@ namespace PlantUmlEditor.Configuration
 				editor.AutoSaveInterval = _settings.AutoSaveInterval;
 		}
 
+		private void HighlightCurrentLineChanged()
+		{
+			foreach (var editor in _diagramManager.OpenDiagrams)
+				editor.CodeEditor.HighlightCurrentLine = _settings.HighlightCurrentLine;
+		}
+
 		private void diagramManager_DiagramClosed(object sender, DiagramClosedEventArgs e)
 		{
 			_settings.RecentFiles.Add(e.Diagram.File);
@@ -65,5 +73,6 @@ namespace PlantUmlEditor.Configuration
 
 		private static readonly string autoSaveEnabledName = Reflect.PropertyOf<ISettings>(s => s.AutoSaveEnabled).Name;
 		private static readonly string autoSaveIntervalName = Reflect.PropertyOf<ISettings>(s => s.AutoSaveInterval).Name;
+		private static readonly string highlightCurrentLineName = Reflect.PropertyOf<ISettings>(s => s.HighlightCurrentLine).Name;
 	}
 }

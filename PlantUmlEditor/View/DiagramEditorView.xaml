@@ -69,7 +69,7 @@
                         <avalon:AddLineTransformers>
                             <vw:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>
-                        <avalon:HighlightCurrentLine/>
+                        <avalon:HighlightCurrentLine IsEnabled="{Binding CodeEditor.HighlightCurrentLine}" />
                     </i:Interaction.Behaviors>
                     
                     <avalonEdit:TextEditor.InputBindings>

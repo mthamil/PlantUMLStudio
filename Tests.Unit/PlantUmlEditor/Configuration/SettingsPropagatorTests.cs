@@ -31,7 +31,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			}
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
-				.Returns(editors.Select(e => e.Object).ToList());
+			              .Returns(editors.Select(e => e.Object).ToList());
 
 			settings.SetupProperty(s => s.AutoSaveEnabled, true);
 
@@ -56,7 +56,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			}
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
-				.Returns(editors.Select(e => e.Object).ToList());
+			              .Returns(editors.Select(e => e.Object).ToList());
 
 			settings.SetupProperty(s => s.AutoSaveInterval, TimeSpan.FromSeconds(30));
 
@@ -69,13 +69,40 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		}
 
 		[Fact]
+		public void Test_HighlightCurrentLine_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = new List<Mock<IDiagramEditor>>();
+			for (int i = 0; i < 2; i++)
+			{
+				var editor = new Mock<IDiagramEditor> { DefaultValue = DefaultValue.Empty };
+				var codeEditor = new Mock<ICodeEditor> { DefaultValue = DefaultValue.Empty };
+				editor.SetupGet(e => e.CodeEditor).Returns(codeEditor.Object);
+				codeEditor.SetupProperty(e => e.HighlightCurrentLine, false);
+				editors.Add(editor);
+			}
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+			              .Returns(editors.Select(e => e.Object).ToList());
+
+			settings.SetupProperty(s => s.HighlightCurrentLine, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("HighlightCurrentLine"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.Object.CodeEditor.HighlightCurrentLine);
+		}
+
+		[Fact]
 		public void Test_ClosedDiagram_AddedToRecentFiles()
 		{
 			// Arrange.
 			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
 
 			settings.SetupGet(s => s.RecentFiles)
-				.Returns(new List<FileInfo>());
+			        .Returns(new List<FileInfo>());
 
 			// Act.
 			diagramManager.Raise(dm => dm.DiagramClosed += null, new DiagramClosedEventArgs(diagram));

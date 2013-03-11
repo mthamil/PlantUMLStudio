@@ -138,14 +138,19 @@ namespace PlantUmlEditor.ViewModel
 		{
 			var diagramEditor = (IDiagramEditor)sender;
 			var preview = Explorer.PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
-			if (preview != null)
+			if (preview == null)
+				return;
+
+			preview.ImagePreview = diagramEditor.DiagramImage;	// Update preview with new image.
+
+			// If for some reason the matching preview's Diagram is a different instance than the 
+			// editor's Diagram (which may occur if the preview list was refreshed or the diagram was
+			// restored through the 'restore open diagrams' feature), update the preview's Diagram's
+			// data.
+			if (!ReferenceEquals(preview.Diagram, diagramEditor.Diagram))
 			{
-				preview.ImagePreview = diagramEditor.DiagramImage;
-				if (!ReferenceEquals(preview.Diagram, diagramEditor.Diagram))
-				{
-					preview.Diagram.Content = diagramEditor.Diagram.Content;
-					preview.Diagram.ImageFile = diagramEditor.Diagram.ImageFile;
-				}
+				preview.Diagram.Content = diagramEditor.Diagram.Content;
+				preview.Diagram.ImageFile = diagramEditor.Diagram.ImageFile;
 			}
 		}
 

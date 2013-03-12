@@ -235,6 +235,22 @@ namespace Utilities.Collections
 		}
 
 		/// <summary>
+		/// Iterates over an enumerable and adds each item to an existing collection.
+		/// </summary>
+		/// <remarks>
+		/// This method may serve as an alternative to <see cref="Enumerable.ToList{TSource}"/> when
+		/// an existing collection must be used instead of creating a new list.
+		/// </remarks>
+		/// <typeparam name="T">The type of items</typeparam>
+		/// <param name="source">The items to iterate over</param>
+		/// <param name="destination">An existing collection to add items to</param>
+		public static void AddTo<T>(this IEnumerable<T> source, ICollection<T> destination)
+		{
+			foreach (var item in source)
+				destination.Add(item);
+		}
+
+		/// <summary>
 		/// Private class that provides the Slices enumerator.
 		/// </summary>
 		private class SliceEnumerable<T> : IEnumerable<IEnumerable<T>>

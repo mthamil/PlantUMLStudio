@@ -498,5 +498,19 @@ namespace Tests.Unit.Utilities.Collections
 			AssertThat.SequenceEqual(input, output);
 			AssertThat.SequenceEqual(new [] { "1", "2", "3" }, items);
 		}
+
+		[Fact]
+		public void Test_AddTo()
+		{
+			// Arrange.
+			var input = new[] { 4, 5, 6 };
+			var sink = new List<int> { 1, 2, 3 };
+
+			// Act.
+			input.AddTo(sink);
+
+			// Assert.
+			AssertThat.SequenceEqual(new [] { 1, 2, 3, 4, 5, 6 }, sink);
+		}
 	}
 }

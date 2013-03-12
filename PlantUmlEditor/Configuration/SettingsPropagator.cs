@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using PlantUmlEditor.ViewModel;
+using Utilities.Collections;
 using Utilities.Reflection;
 
 namespace PlantUmlEditor.Configuration
@@ -39,12 +40,11 @@ namespace PlantUmlEditor.Configuration
 
 		private void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			Action<IDiagramEditor, ISettings> editorUpdate;
-			if (editorUpdates.TryGetValue(e.PropertyName, out editorUpdate))
+			editorUpdates.TryGetValue(e.PropertyName).Do(update =>
 			{
 				foreach (var editor in _diagramManager.OpenDiagrams)
-					editorUpdate(editor, _settings);
-			}
+					update(editor, _settings);
+			});
 		}
 
 		private void diagramManager_DiagramClosed(object sender, DiagramClosedEventArgs e)

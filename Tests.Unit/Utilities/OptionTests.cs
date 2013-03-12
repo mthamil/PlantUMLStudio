@@ -232,14 +232,14 @@ namespace Tests.Unit.Utilities
 		}
 
 		[Fact]
-		public void Test_Some_Do()
+		public void Test_Some_Apply()
 		{
 			// Arrange.
 			Option<int> someInt = 5;
 			int sum = 2;
 
 			// Act.
-			someInt.Do(x => sum += x);
+			someInt.Apply(x => sum += x);
 
 			// Assert.
 			Assert.Equal(7, sum);
@@ -335,14 +335,14 @@ namespace Tests.Unit.Utilities
 		}
 
 		[Fact]
-		public void Test_None_Do()
+		public void Test_None_Apply()
 		{
 			// Arrange.
 			var noneInt = Option<int>.None();
 			int sum = 2;
 
 			// Act.
-			noneInt.Do(x => sum += x);
+			noneInt.Apply(x => sum += x);
 
 			// Assert.
 			Assert.Equal(2, sum);

@@ -243,7 +243,7 @@ namespace PlantUmlEditor.ViewModel
 
 				// Capture diagrams as they are read for a more responsive UI.
 				var readProgress = new Progress<ReadDiagramsProgress>(p =>
-					p.Diagram.Do(d => PreviewDiagrams.Add(_previewDiagramFactory(d))));
+					p.Diagram.Apply(d => PreviewDiagrams.Add(_previewDiagramFactory(d))));
 
 				// Report progress to UI by passing up progress data.
 				progress.Wrap(readProgress, p => new ProgressUpdate

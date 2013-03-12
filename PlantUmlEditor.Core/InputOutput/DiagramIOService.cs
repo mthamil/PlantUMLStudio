@@ -68,7 +68,7 @@ namespace PlantUmlEditor.Core.InputOutput
 						break;
 
 					var diagram = ReadImpl(file);
-					diagram.Do(diagrams.Add);
+					diagram.Apply(diagrams.Add);
 					//Thread.Sleep(500);
 
 					processed++;

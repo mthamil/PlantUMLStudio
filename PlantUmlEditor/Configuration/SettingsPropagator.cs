@@ -40,7 +40,7 @@ namespace PlantUmlEditor.Configuration
 
 		private void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			editorUpdates.TryGetValue(e.PropertyName).Do(update =>
+			editorUpdates.TryGetValue(e.PropertyName).Apply(update =>
 			{
 				foreach (var editor in _diagramManager.OpenDiagrams)
 					update(editor, _settings);

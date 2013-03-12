@@ -110,7 +110,7 @@ namespace Utilities
 		/// otherwise no action is performed.
 		/// </summary>
 		/// <param name="action">The action to perform</param>
-		public abstract void Do(Action<T> action);
+		public abstract void Apply(Action<T> action);
 
 		/// <summary>
 		/// Returns Option.Some if an Option is Some, otherwise if None,
@@ -183,7 +183,7 @@ namespace Utilities
 		/// <summary>
 		/// Does nothing.
 		/// </summary>
-		public override void Do(Action<T> action)
+		public override void Apply(Action<T> action)
 		{
 			// Do nothing.
 		}
@@ -277,7 +277,7 @@ namespace Utilities
 		/// <summary>
 		/// Performs an action on the Option's value.
 		/// </summary>
-		public override void Do(Action<T> action)
+		public override void Apply(Action<T> action)
 		{
 			action(Value);
 		}

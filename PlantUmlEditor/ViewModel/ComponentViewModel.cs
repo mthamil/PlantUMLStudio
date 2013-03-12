@@ -85,7 +85,7 @@ namespace PlantUmlEditor.ViewModel
 			UpdateProgress.PercentComplete = null;
 
 			HasAvailableUpdate = updateCheckResult.HasValue;
-			updateCheckResult.Do(latest =>
+			updateCheckResult.Apply(latest =>
 			{
 				LatestVersion = latest;
 			});

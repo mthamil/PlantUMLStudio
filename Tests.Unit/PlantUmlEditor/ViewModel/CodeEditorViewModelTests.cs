@@ -140,7 +140,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		public void Test_PasetCommand_TextSelected()
+		public void Test_PasteCommand_TextSelected()
 		{
 			// Arrange.
 			codeEditor.Content = "content";
@@ -157,7 +157,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		public void Test_PasetCommand_NoTextSelected()
+		public void Test_PasteCommand_NoTextSelected()
 		{
 			// Arrange.
 			codeEditor.Content = "content";

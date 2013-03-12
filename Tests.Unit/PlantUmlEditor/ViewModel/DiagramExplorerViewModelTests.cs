@@ -48,12 +48,12 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			};
 
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
-				.Returns(() => Task.FromResult<IEnumerable<Diagram>>(diagrams))
-				.Callback((DirectoryInfo dir, CancellationToken ct, IProgress<ReadDiagramsProgress> prog) =>
-				{
-					foreach (var diagram in diagrams)
-						prog.Report(new ReadDiagramsProgress(1, 1, diagram));
-				});
+			         .Returns(() => Task.FromResult<IEnumerable<Diagram>>(diagrams))
+			         .Callback((DirectoryInfo dir, CancellationToken ct, IProgress<ReadDiagramsProgress> prog) =>
+			         {
+				         foreach (var diagram in diagrams)
+					         prog.Report(new ReadDiagramsProgress(1, 1, diagram));
+			         });
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
@@ -75,7 +75,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
-				.Returns(Tasks.FromException<IEnumerable<Diagram>>(new AggregateException()));
+			         .Returns(Tasks.FromException<IEnumerable<Diagram>>(new AggregateException()));
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
@@ -93,7 +93,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<CancellationToken>(), It.IsAny<IProgress<ReadDiagramsProgress>>()))
-				.Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
+			         .Returns(Task.FromResult(Enumerable.Empty<Diagram>()));
 
 			// Act.
 			bool isValid = explorer.IsDiagramLocationValid;
@@ -138,7 +138,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			explorer.OpenPreviewRequested += (o, e) => newDiagramArgs = e;
 
 			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
-				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+			         .Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
 
 			// Act.
 			explorer.AddNewDiagramCommand.Execute(new Uri(newDiagramFilePath));
@@ -152,7 +152,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Equal(explorer.PreviewDiagrams.Single(), explorer.CurrentPreviewDiagram);
 
 			diagramIO.Verify(dio => dio.SaveAsync(
-				It.Is<Diagram>(d => d.File.FullName == newDiagramFilePath), 
+				It.Is<Diagram>(d => d.File.FullName == newDiagramFilePath),
 				false));
 		}
 
@@ -181,7 +181,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			string newDiagramFilePath = Path.Combine(diagramLocation.FullName, "new-diagram.puml");
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-				.Returns(Tasks.FromException(new InvalidOperationException()));
+			         .Returns(Tasks.FromException(new InvalidOperationException()));
 
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
@@ -249,7 +249,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramUri = new Uri(filePath, UriKind.Absolute);
 
 			diagramIO.Setup(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == filePath)))
-				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+			         .Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
 
 			// Act/Assert.
 			var args = AssertThat.RaisesWithEventArgs<IDiagramExplorer, OpenPreviewRequestedEventArgs>(
@@ -272,7 +272,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramUri = new Uri(filePath, UriKind.Absolute);
 
 			diagramIO.Setup(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == filePath)))
-				.Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+			         .Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
 
 			OpenPreviewRequestedEventArgs openArgs = null;
 			explorer.OpenPreviewRequested += (o, e) => openArgs = e;
@@ -315,7 +315,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.DeleteAsync(It.IsAny<Diagram>()))
-				.Returns(Tasks.FromSuccess());
+			         .Returns(Tasks.FromSuccess());
 
 			var preview = new PreviewDiagramViewModel(new Diagram { File = new FileInfo("TestFile") });
 			explorer.PreviewDiagrams.Add(preview);
@@ -357,11 +357,11 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			explorer.DiagramLocation = newFile.Directory;
 
 			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
-				.Returns(Task.FromResult(new Diagram
-				{
-					File = newFile,
-					Content = "New Diagram"
-				}));
+			         .Returns(Task.FromResult(new Diagram
+			         {
+				         File = newFile,
+				         Content = "New Diagram"
+			         }));
 
 			// Act.
 			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(newFile));
@@ -380,7 +380,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			explorer.DiagramLocation = newFile.Directory;
 
 			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
-				.Returns(Task.FromResult<Diagram>(null));
+			         .Returns(Task.FromResult<Diagram>(null));
 
 			// Act.
 			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(newFile));

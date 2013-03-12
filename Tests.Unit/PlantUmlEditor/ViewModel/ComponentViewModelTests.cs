@@ -36,10 +36,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
 			component.Setup(c => c.GetCurrentVersionAsync())
-				.Returns(Task.FromResult("Version"));
+			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult(Option<string>.Some("NewerVersion")));
+			         .Returns(Task.FromResult(Option<string>.Some("NewerVersion")));
 
 			securityService.Setup(ss => ss.HasAdminPriviledges()).Returns(true);
 
@@ -63,7 +63,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
 			component.Setup(c => c.DownloadLatestAsync(It.IsAny<CancellationToken>(), It.IsAny<IProgress<DownloadProgressChangedEventArgs>>()))
-				.Returns(Tasks.FromSuccess());
+			         .Returns(Tasks.FromSuccess());
 
 			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 
@@ -85,10 +85,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
 			component.Setup(c => c.GetCurrentVersionAsync())
-				.Returns(Task.FromResult("Version"));
+			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
-				.Returns(Task.FromResult(Option<string>.From(latestVersion)));
+			         .Returns(Task.FromResult(Option<string>.From(latestVersion)));
 
 			securityService.Setup(ss => ss.HasAdminPriviledges()).Returns(hasPermission);
 

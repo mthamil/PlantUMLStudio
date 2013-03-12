@@ -55,7 +55,7 @@
                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                        FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
                                        FocusManager.IsFocusScope="True"
-                                       ShowLineNumbers="True"
+                                       ShowLineNumbers="{Binding CodeEditor.ShowLineNumbers}"
                                        IsEnabled="{Binding IsIdle}"
                                        Document="{Binding CodeEditor.Document}"
                                        SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}">

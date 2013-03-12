@@ -68,6 +68,11 @@ namespace PlantUmlEditor.Configuration
 		bool HighlightCurrentLine { get; set; }
 
 		/// <summary>
+		/// Whether to show line numbers in the editor.
+		/// </summary>
+		bool ShowLineNumbers { get; set; }
+
+		/// <summary>
 		/// The GraphViz executable.
 		/// </summary>
 		FileInfo GraphVizExecutable { get; set; }

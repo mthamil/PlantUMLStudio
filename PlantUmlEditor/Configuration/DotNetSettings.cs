@@ -59,6 +59,7 @@ namespace PlantUmlEditor.Configuration
 			AutoSaveInterval = settings.AutoSaveInterval;
 
 			HighlightCurrentLine = settings.HighlightCurrentLine;
+			ShowLineNumbers = settings.ShowLineNumbers;
 
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
 			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
@@ -90,6 +91,7 @@ namespace PlantUmlEditor.Configuration
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
 			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
+			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
 		}
 
 		/// <see cref="ISettings.LastDiagramLocation"/>
@@ -147,6 +149,13 @@ namespace PlantUmlEditor.Configuration
 			set { _highlightCurrentLine.Value = value; }
 		}
 
+		/// <see cref="ISettings.ShowLineNumbers"/>
+		public bool ShowLineNumbers
+		{
+			get { return _showLineNumbers.Value; }
+			set { _showLineNumbers.Value = value; }
+		}
+
 		/// <see cref="ISettings.GraphVizExecutable"/>
 		public FileInfo GraphVizExecutable { get; set; }
 
@@ -195,6 +204,7 @@ namespace PlantUmlEditor.Configuration
 			_settings.AutoSaveInterval = AutoSaveInterval;
 
 			_settings.HighlightCurrentLine = HighlightCurrentLine;
+			_settings.ShowLineNumbers = ShowLineNumbers;
 
 			_settings.Save();
 		}
@@ -229,6 +239,7 @@ namespace PlantUmlEditor.Configuration
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
 		private readonly Property<bool> _highlightCurrentLine;
+		private readonly Property<bool> _showLineNumbers;
 
 		private readonly Settings _settings;
 

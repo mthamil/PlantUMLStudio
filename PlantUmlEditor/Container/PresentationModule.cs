@@ -85,7 +85,11 @@ namespace PlantUmlEditor.Container
 				                      c.Resolve<IHighlightingDefinition>(),
 				                      c.Resolve<SnippetsMenu>(),
 				                      c.Resolve<IClipboard>())).As<ICodeEditor>()
-			       .OnActivating(c => c.Instance.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine);
+			       .OnActivating(c =>
+			       {
+				       c.Instance.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;
+					   c.Instance.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
+			       });
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) =>

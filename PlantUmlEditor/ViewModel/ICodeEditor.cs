@@ -39,6 +39,11 @@ namespace PlantUmlEditor.ViewModel
 		bool HighlightCurrentLine { get; set; }
 
 		/// <summary>
+		/// Whether to display line numbers.
+		/// </summary>
+		bool ShowLineNumbers { get; set; }
+
+		/// <summary>
 		/// Whether content has been modified since the last save.
 		/// </summary>
 		bool IsModified { get; set; }

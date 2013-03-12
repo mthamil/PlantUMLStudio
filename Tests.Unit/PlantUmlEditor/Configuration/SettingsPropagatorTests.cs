@@ -15,23 +15,19 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 	{
 		public SettingsPropagatorTests()
 		{
-			propagator = new SettingsPropagator(settings.Object, diagramManager.Object);
+			propagator = new SettingsPropagator(settings.Object, diagramManager.Object);		
 		}
 
 		[Fact]
 		public void Test_AutoSaveEnabled_Changes_UpdateDiagramEditors()
 		{
 			// Arrange.
-			var editors = new List<Mock<IDiagramEditor>>();
-			for (int i = 0; i < 2; i++)
-			{
-				var editor = new Mock<IDiagramEditor> { DefaultValue = DefaultValue.Empty };
-				editor.SetupProperty(e => e.AutoSave, false);
-				editors.Add(editor);
-			}
+			var editors = Mocks.Of<IDiagramEditor>()
+			                   .Where(e => e.AutoSave == false)
+			                   .Take(2).ToList();
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
-			              .Returns(editors.Select(e => e.Object).ToList());
+			              .Returns(editors);
 
 			settings.SetupProperty(s => s.AutoSaveEnabled, true);
 
@@ -40,23 +36,19 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			// Assert.
 			foreach (var editor in editors)
-				Assert.True(editor.Object.AutoSave);
+				Assert.True(editor.AutoSave);
 		}
 
 		[Fact]
 		public void Test_AutoSaveInterval_Changes_UpdateDiagramEditors()
 		{
 			// Arrange.
-			var editors = new List<Mock<IDiagramEditor>>();
-			for (int i = 0; i < 2; i++)
-			{
-				var editor = new Mock<IDiagramEditor> { DefaultValue = DefaultValue.Empty };
-				editor.SetupProperty(e => e.AutoSaveInterval, TimeSpan.FromSeconds(15));
-				editors.Add(editor);
-			}
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.AutoSaveInterval == TimeSpan.FromSeconds(15))
+							   .Take(2).ToList();
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
-			              .Returns(editors.Select(e => e.Object).ToList());
+			              .Returns(editors);
 
 			settings.SetupProperty(s => s.AutoSaveInterval, TimeSpan.FromSeconds(30));
 
@@ -65,25 +57,19 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			// Assert.
 			foreach (var editor in editors)
-				Assert.Equal(TimeSpan.FromSeconds(30), editor.Object.AutoSaveInterval);
+				Assert.Equal(TimeSpan.FromSeconds(30), editor.AutoSaveInterval);
 		}
 
 		[Fact]
 		public void Test_HighlightCurrentLine_Changes_UpdateDiagramEditors()
 		{
 			// Arrange.
-			var editors = new List<Mock<IDiagramEditor>>();
-			for (int i = 0; i < 2; i++)
-			{
-				var editor = new Mock<IDiagramEditor> { DefaultValue = DefaultValue.Empty };
-				var codeEditor = new Mock<ICodeEditor> { DefaultValue = DefaultValue.Empty };
-				editor.SetupGet(e => e.CodeEditor).Returns(codeEditor.Object);
-				codeEditor.SetupProperty(e => e.HighlightCurrentLine, false);
-				editors.Add(editor);
-			}
+			var editors = Mocks.Of<IDiagramEditor>()
+			                   .Where(e => e.CodeEditor.HighlightCurrentLine == false)
+			                   .Take(2).ToList();
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
-			              .Returns(editors.Select(e => e.Object).ToList());
+			              .Returns(editors);
 
 			settings.SetupProperty(s => s.HighlightCurrentLine, true);
 
@@ -92,7 +78,28 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			// Assert.
 			foreach (var editor in editors)
-				Assert.True(editor.Object.CodeEditor.HighlightCurrentLine);
+				Assert.True(editor.CodeEditor.HighlightCurrentLine);
+		}
+
+		[Fact]
+		public void Test_ShowLineNumbers_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.CodeEditor.ShowLineNumbers == false)
+							   .Take(2).ToList();
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+						  .Returns(editors);
+
+			settings.SetupProperty(s => s.ShowLineNumbers, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("ShowLineNumbers"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.CodeEditor.ShowLineNumbers);
 		}
 
 		[Fact]

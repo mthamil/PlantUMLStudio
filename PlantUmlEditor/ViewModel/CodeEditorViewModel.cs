@@ -57,6 +57,7 @@ namespace PlantUmlEditor.ViewModel
 			_scrollOffset = Property.New(this, p => p.ScrollOffset, OnPropertyChanged);
 
 			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
+			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
 
@@ -169,6 +170,13 @@ namespace PlantUmlEditor.ViewModel
 			set { _highlightCurrentLine.Value = value; }
 		}
 
+		/// <see cref="ICodeEditor.ShowLineNumbers"/>
+		public bool ShowLineNumbers
+		{
+			get { return _showLineNumbers.Value; }
+			set { _showLineNumbers.Value = value; }
+		}
+
 		/// <summary>
 		/// Whether content has been modified since the last save.
 		/// </summary>
@@ -260,6 +268,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<TextDocument> _document;
 		private readonly Property<Vector> _scrollOffset;
 		private readonly Property<bool> _highlightCurrentLine;
+		private readonly Property<bool> _showLineNumbers;
 		private readonly Property<bool> _isModified;
 
 		private readonly IClipboard _clipboard;

@@ -21,6 +21,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			settings.AutoSaveEnabled = true;
 			settings.AutoSaveInterval = TimeSpan.FromSeconds(15);
 			settings.HighlightCurrentLine = true;
+			settings.ShowLineNumbers = true;
 
 			// Act.
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
@@ -45,6 +46,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(settings.AutoSaveInterval, appSettings.AutoSaveInterval);
 
 			Assert.Equal(settings.HighlightCurrentLine, appSettings.HighlightCurrentLine);
+			Assert.Equal(settings.ShowLineNumbers, appSettings.ShowLineNumbers);
 		}
 
 		[Fact]
@@ -58,7 +60,8 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				MaximumRecentFiles = 20,
 				AutoSaveEnabled = true,
 				AutoSaveInterval = TimeSpan.FromSeconds(15),
-				HighlightCurrentLine = false
+				HighlightCurrentLine = false,
+				ShowLineNumbers = false
 			};
 
 			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
@@ -75,6 +78,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(true, settings.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(15), settings.AutoSaveInterval);
 			Assert.Equal(false, settings.HighlightCurrentLine);
+			Assert.Equal(false, settings.ShowLineNumbers);
 		}
 
 		[Theory]
@@ -301,6 +305,22 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				() => appSettings.HighlightCurrentLine = true);
 
 			Assert.True(appSettings.HighlightCurrentLine);
+		}
+
+		[Fact]
+		public void Test_ShowLineNumbers_Changes()
+		{
+			// Arrange.
+			settings.ShowLineNumbers = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.ShowLineNumbers,
+				() => appSettings.ShowLineNumbers = true);
+
+			Assert.True(appSettings.ShowLineNumbers);
 		}
 
 		private readonly Settings settings = new Settings

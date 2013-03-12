@@ -21,9 +21,9 @@ namespace Tests.Unit.Utilities.InputOutput
 			});
 
 			monitor = new DirectoryMonitor(watcher.Object, timerFactory)
-				{
-					FileCreationWaitTimeout = TimeSpan.FromSeconds(2)
-				};
+			{
+				FileCreationWaitTimeout = TimeSpan.FromSeconds(2)
+			};
 		}
 
 		[Fact]

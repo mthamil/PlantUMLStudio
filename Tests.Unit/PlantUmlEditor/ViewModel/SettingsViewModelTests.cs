@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.ViewModel;
@@ -124,12 +125,11 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		public void Test_CanClearRecentFiles_UpdatedWhenCollectionChanges(bool expected, int count, bool alreadyCleared)
 		{
 			// Arrange.
-			recentFiles.SetupGet(rf => rf.Count)
-				.Returns(count);
+			recentFiles.SetupGet(rf => rf.Count).Returns(count);
 
 			recentFiles.As<INotifyCollectionChanged>()
-				.Raise(rf => rf.CollectionChanged += null, 
-					new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+			           .Raise(rf => rf.CollectionChanged += null,
+			                  new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
 			if (alreadyCleared)
 				viewModel.ClearRecentFiles();
@@ -172,8 +172,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			bool couldSave = true;
 
 			settings.Setup(s => s.Save())
-			        .Callback(() => 
-						couldSave = viewModel.CanSave);
+			        .Callback(() => couldSave = viewModel.CanSave);
 
 			// Act.
 			viewModel.Save();
@@ -188,7 +187,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			settings.SetupGet(s => s.RecentFiles)
-					.Returns(new List<FileInfo> { new FileInfo("file1"), new FileInfo("file2") });
+					.Returns(new[] { "file1", "file2" }.Select(f => new FileInfo(f)).ToList());
 
 			viewModel.RememberOpenFiles = true;
 			viewModel.AutoSaveEnabled = true;
@@ -227,7 +226,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			recentFiles.SetupGet(rf => rf.Count)
-				.Returns(0);
+			           .Returns(0);
 
 			// Act.
 			viewModel.Save();

@@ -111,7 +111,7 @@ namespace Tests.Unit.PlantUmlEditor.Core.InputOutput
 
 			var progress = new Mock<IProgress<ReadDiagramsProgress>>();
 			progress.Setup(p => p.Report(It.IsAny<ReadDiagramsProgress>()))
-				.Callback((ReadDiagramsProgress p) => progressData.Add(p));
+			        .Callback((ReadDiagramsProgress p) => progressData.Add(p));
 
 			// Act.
 			var diagrams = await diagramIO.ReadDiagramsAsync(currentDirectory, CancellationToken.None, progress.Object);

@@ -10,6 +10,7 @@ using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.ViewModel;
+using Utilities.Collections;
 using Utilities.Concurrency;
 using Xunit;
 using Xunit.Extensions;
@@ -29,16 +30,16 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		{
 			// Arrange.
 			var diagramPreview = new PreviewDiagramViewModel(new Diagram { File = testDiagramFile });
-			var editor = new Mock<IDiagramEditor>();
+			var editor = Mock.Of<IDiagramEditor>();
 
-			var diagramManager = CreateManager(d => editor.Object);
+			var diagramManager = CreateManager(d => editor);
 
 			// Act.
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
+			Assert.Equal(editor, diagramManager.OpenDiagram);
 		}
 
 		[Fact]
@@ -47,18 +48,17 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagram = new Diagram { File = testDiagramFile };
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			var editor = Mock.Of<IDiagramEditor>(e => e.Diagram == diagram);
 
 			var diagramManager = CreateManager(null);
-			diagramManager.OpenDiagrams.Add(editor.Object);
+			diagramManager.OpenDiagrams.Add(editor);
 
 			// Act.
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
+			Assert.Equal(editor, diagramManager.OpenDiagram);
 		}
 
 		[Fact]
@@ -165,35 +165,28 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramManager = CreateManager(d => diagramMap[d]);
 
 			var files = new[] { testDiagramFile, new FileInfo(testDiagramFile.FullName + "2") };
-			var editors = new List<Mock<IDiagramEditor>>(files.Length);
-			foreach (var file in files)
-			{
-				var diagram = new Diagram { File = file };
-				var diagramPreview = new PreviewDiagramViewModel(diagram);
-
-				var editor = new Mock<IDiagramEditor>();
-				editor.SetupGet(e => e.Diagram).Returns(diagram);
-				editors.Add(editor);
-				diagramMap[diagram] = editor.Object;
-
-				diagramManager.OpenDiagramCommand.Execute(diagramPreview);
-			}
+			var editors = files.Select(file => new Diagram { File = file })
+							   .Select(diagram => Mock.Of<IDiagramEditor>(e => e.Diagram == diagram))
+							   .Tee(editor => diagramMap[editor.Diagram] = editor)
+							   .Select(editor => new { Editor = editor, Preview = new PreviewDiagramViewModel(editor.Diagram) })
+							   .Tee(ep => diagramManager.OpenDiagramCommand.Execute(ep.Preview))
+							   .Select(ep => ep.Editor).ToList();
 
 			// Act.
-			editors.Last().Raise(e => e.Closing += null, new CancelEventArgs());
+			Mock.Get(editors.Last()).Raise(e => e.Closing += null, new CancelEventArgs());
 			diagramManager.SaveClosingDiagramCommand.Execute(null);
 
 			// Assert.
-			Assert.Equal(editors.Last().Object, diagramManager.ClosingDiagram);
+			Assert.Equal(editors.Last(), diagramManager.ClosingDiagram);
 
 			// Act.
-			editors.First().Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the closed event for a different editor.
+			Mock.Get(editors.First()).Raise(e => e.Closed += null, EventArgs.Empty);	// Raise the closed event for a different editor.
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editors.Last().Object, diagramManager.OpenDiagrams.Single());
+			Assert.Equal(editors.Last(), diagramManager.OpenDiagrams.Single());
 			foreach (var editor in editors)
-				editor.Verify(e => e.SaveAsync(), Times.Never());
+				Mock.Get(editor).Verify(e => e.SaveAsync(), Times.Never());
 		}
 
 		[Fact]
@@ -206,16 +199,15 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
 
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.DiagramImage).Returns(image);
+			var editor = Mock.Of<IDiagramEditor>(e => e.Diagram == diagram);
+			Mock.Get(editor).SetupGet(e => e.DiagramImage).Returns(image);
 
-			var diagramManager = CreateManager(d => editor.Object);
+			var diagramManager = CreateManager(d => editor);
 			diagramManager.Explorer.PreviewDiagrams.Add(diagramPreview);
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
-			editor.Raise(e => e.Saved += null, EventArgs.Empty);
+			Mock.Get(editor).Raise(e => e.Saved += null, EventArgs.Empty);
 
 			// Assert.
 			Assert.Equal(image, diagramPreview.ImagePreview);
@@ -230,16 +222,15 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 			var diagramPreview = new PreviewDiagramViewModel(new Diagram { File = new FileInfo(testDiagramFile.FullName + "2") });
 
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(new Diagram { File = testDiagramFile });
-			editor.SetupGet(e => e.DiagramImage).Returns(image);
+			var editor = Mock.Of<IDiagramEditor>(e => e.Diagram == new Diagram { File = testDiagramFile });
+			Mock.Get(editor).SetupGet(e => e.DiagramImage).Returns(image);
 
-			var diagramManager = CreateManager(d => editor.Object);
+			var diagramManager = CreateManager(d => editor);
 			diagramManager.Explorer.PreviewDiagrams.Add(diagramPreview);
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Act.
-			editor.Raise(e => e.Saved += null, EventArgs.Empty);
+			Mock.Get(editor).Raise(e => e.Saved += null, EventArgs.Empty);
 
 			// Assert.
 			Assert.Null(diagramPreview.ImagePreview);
@@ -290,18 +281,17 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagram = new Diagram { File = testDiagramFile };
 			var diagramPreview = new PreviewDiagramViewModel(diagram);
 
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(diagram);
+			var editor = Mock.Of<IDiagramEditor>(e => e.Diagram == diagram);
 
-			var diagramManager = CreateManager(d => editor.Object);
+			var diagramManager = CreateManager(d => editor);
 
 			// Act.
 			explorer.Raise(p => p.OpenPreviewRequested += null, new OpenPreviewRequestedEventArgs(diagramPreview));
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
-			Assert.Equal(editor.Object, diagramManager.OpenDiagrams.Single());
-			Assert.Equal(editor.Object, diagramManager.OpenDiagram);
+			Assert.Equal(editor, diagramManager.OpenDiagrams.Single());
+			Assert.Equal(editor, diagramManager.OpenDiagram);
 		}
 
 		[Fact]
@@ -311,28 +301,22 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagram = new Diagram { File = testDiagramFile };
 
-			var unsavedCodeEditor = new Mock<ICodeEditor>();
-			unsavedCodeEditor.SetupGet(ce => ce.IsModified).Returns(true);
-			var unsavedEditor = new Mock<IDiagramEditor>();
-			unsavedEditor.SetupGet(e => e.Diagram).Returns(diagram);
-			unsavedEditor.SetupGet(e => e.CodeEditor).Returns(unsavedCodeEditor.Object);
+			var unsavedEditor = Mock.Of<IDiagramEditor>(e => e.Diagram == diagram &&
+			                                                 e.CodeEditor.IsModified == true);
 
-			var codeEditor = new Mock<ICodeEditor>();
-			codeEditor.SetupGet(ce => ce.IsModified).Returns(false);
-			var editor = new Mock<IDiagramEditor>();
-			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.SetupGet(e => e.CodeEditor).Returns(codeEditor.Object);
+			var editor = Mock.Of<IDiagramEditor>(e => e.Diagram == diagram &&
+			                                          e.CodeEditor.IsModified == false);
 
-			var diagramManager = CreateManager(d => unsavedEditor.Object);
-			diagramManager.OpenDiagrams.Add(unsavedEditor.Object);
-			diagramManager.OpenDiagrams.Add(editor.Object);
+			var diagramManager = CreateManager(d => unsavedEditor);
+			diagramManager.OpenDiagrams.Add(unsavedEditor);
+			diagramManager.OpenDiagrams.Add(editor);
 
 			// Act.
 			diagramManager.CloseCommand.Execute(null);
 
 			// Assert.
-			unsavedEditor.Verify(c => c.Close());
-			editor.Verify(c => c.Close(), Times.Never());
+			Mock.Get(unsavedEditor).Verify(c => c.Close());
+			Mock.Get(editor).Verify(c => c.Close(), Times.Never());
 		}
 
 		[Fact]
@@ -341,27 +325,25 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagramManager = CreateManager(d => null);
 
-			var modifiedEditors = new List<Mock<IDiagramEditor>>();
-			for (int i = 0; i < 2; i++)
-			{
-				var modifiedEditor = new Mock<IDiagramEditor>();
-				modifiedEditor.SetupGet(ce => ce.CanSave).Returns(true);
-				modifiedEditor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
-				modifiedEditors.Add(modifiedEditor);
-				diagramManager.OpenDiagrams.Add(modifiedEditor.Object);
-			}
+			var modifiedEditors = Mocks.Of<IDiagramEditor>()
+			                           .Where(e => e.CanSave == true &&
+			                                       e.SaveAsync() == Tasks.FromSuccess())
+			                           .Take(2)
+									   .Tee(e => diagramManager.OpenDiagrams.Add(e))
+									   .ToList();
 
-			var unmodifiedEditor = new Mock<IDiagramEditor>();
-			unmodifiedEditor.SetupGet(ce => ce.CanSave).Returns(false);
-			unmodifiedEditor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
-			diagramManager.OpenDiagrams.Add(unmodifiedEditor.Object);
+			var unmodifiedEditor =
+				Mock.Of<IDiagramEditor>(e => e.CanSave == false &&
+				                             e.SaveAsync() == Tasks.FromSuccess());
+				
+			diagramManager.OpenDiagrams.Add(unmodifiedEditor);
 			
 			// Act.
 			diagramManager.SaveAllCommand.Execute(null);
 
 			// Assert.
-			modifiedEditors.ForEach(e => e.Verify(ed => ed.SaveAsync()));
-			unmodifiedEditor.Verify(e => e.SaveAsync(), Times.Never());
+			modifiedEditors.ForEach(e => Mock.Get(e).Verify(ed => ed.SaveAsync()));
+			Mock.Get(unmodifiedEditor).Verify(e => e.SaveAsync(), Times.Never());
 		}
 
 		[Theory]
@@ -374,12 +356,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Arrange.
 			var diagramManager = CreateManager(d => null);
 
-			foreach (bool value in modified)
-			{
-				var editor = new Mock<IDiagramEditor>();
-				editor.SetupGet(e => e.CanSave).Returns(value);
-				diagramManager.OpenDiagrams.Add(editor.Object);
-			}
+			modified.Select(value => Mock.Of<IDiagramEditor>(e => e.CanSave == value))
+			        .AddTo(diagramManager.OpenDiagrams);
 
 			// Act.
 			bool actual = diagramManager.SaveAllCommand.CanExecute(null);
@@ -396,14 +374,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramManager = CreateManager(d => null);
 
 			var diagrams = new [] { "test1.puml", "test2.puml" };
-			foreach (var diagramName in diagrams)
-			{
-				var diagram = new Diagram { File = new FileInfo(diagramName) };
-				var editor = new Mock<IDiagramEditor> { DefaultValue = DefaultValue.Mock };
-				editor.SetupGet(e => e.Diagram).Returns(diagram);
-
-				diagramManager.OpenDiagrams.Add(editor.Object);
-			}
+			diagrams.Select(diagramName => new Diagram { File = new FileInfo(diagramName) })
+					.Select(diagram => Mock.Of<IDiagramEditor>(e => e.Diagram == diagram &&
+																	e.CodeEditor == Mock.Of<ICodeEditor>()))
+					.AddTo(diagramManager.OpenDiagrams);	
 
 			settings.SetupProperty(s => s.OpenFiles);
 			settings.SetupProperty(s => s.RememberOpenFiles, true);
@@ -426,10 +400,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagrams = new[] { "test1.puml", "test2.puml" };
 
 			settings.SetupProperty(s => s.RememberOpenFiles, true);
-			settings.SetupProperty(s => s.OpenFiles, diagrams.Select(dn => new FileInfo(dn)).ToList());
+			settings.SetupProperty(s => s.OpenFiles, diagrams.Select(name => new FileInfo(name)).ToList());
 
 			explorer.Setup(e => e.OpenDiagramAsync(It.IsAny<Uri>()))
-				.Returns((Uri uri) => Task.FromResult(new Diagram { File = new FileInfo(uri.AbsolutePath) }));
+			        .Returns((Uri uri) => Task.FromResult(new Diagram { File = new FileInfo(uri.AbsolutePath) }));
 
 			var diagramManager = CreateManager(d => null);
 

@@ -135,6 +135,18 @@
   <data name="ClearRecentFilesButton" xml:space="preserve">
     <value>Clear Recent Files</value>
   </data>
+  <data name="EditorTabTitle" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="GeneralTabTitle" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="HighlightCurrentLineLabel" xml:space="preserve">
+    <value>Highlight current line</value>
+  </data>
+  <data name="HighlightCurrentLineToolTip" xml:space="preserve">
+    <value>Whether to highlight the line in which the cursor currently resides</value>
+  </data>
   <data name="MaxRecentFilesLabelPrefix" xml:space="preserve">
     <value>Remember up to </value>
   </data>
@@ -152,6 +164,12 @@
   </data>
   <data name="RememberOpenFilesToolTip" xml:space="preserve">
     <value>Reopen the diagram files that were open the last time the application closed at start-up.</value>
+  </data>
+  <data name="ShowLineNumbersLabel" xml:space="preserve">
+    <value>Show line numbers</value>
+  </data>
+  <data name="ShowLineNumbersToolTip" xml:space="preserve">
+    <value>Whether to show line numbers in the text editor</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Options</value>

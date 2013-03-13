@@ -115,6 +115,42 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Editor.
+        /// </summary>
+        internal static string EditorTabTitle {
+            get {
+                return ResourceManager.GetString("EditorTabTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        internal static string GeneralTabTitle {
+            get {
+                return ResourceManager.GetString("GeneralTabTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight current line.
+        /// </summary>
+        internal static string HighlightCurrentLineLabel {
+            get {
+                return ResourceManager.GetString("HighlightCurrentLineLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to highlight the line in which the cursor currently resides.
+        /// </summary>
+        internal static string HighlightCurrentLineToolTip {
+            get {
+                return ResourceManager.GetString("HighlightCurrentLineToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remember up to .
         /// </summary>
         internal static string MaxRecentFilesLabelPrefix {
@@ -165,6 +201,24 @@ namespace PlantUmlEditor.View {
         internal static string RememberOpenFilesToolTip {
             get {
                 return ResourceManager.GetString("RememberOpenFilesToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show line numbers.
+        /// </summary>
+        internal static string ShowLineNumbersLabel {
+            get {
+                return ResourceManager.GetString("ShowLineNumbersLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to show line numbers in the text editor.
+        /// </summary>
+        internal static string ShowLineNumbersToolTip {
+            get {
+                return ResourceManager.GetString("ShowLineNumbersToolTip", resourceCulture);
             }
         }
         

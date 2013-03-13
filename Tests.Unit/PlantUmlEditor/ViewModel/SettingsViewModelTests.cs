@@ -34,6 +34,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			settings.Object.AutoSaveEnabled = true;
 			settings.Object.AutoSaveInterval = TimeSpan.FromSeconds(10);
 			settings.Object.MaximumRecentFiles = 20;
+			settings.Object.HighlightCurrentLine = true;
+			settings.Object.ShowLineNumbers = true;
 
 			// Act.
 			var settingsViewModel = new SettingsViewModel(settings.Object);
@@ -43,6 +45,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settingsViewModel.AutoSaveEnabled);
 			Assert.Equal(TimeSpan.FromSeconds(10), settingsViewModel.AutoSaveInterval);
 			Assert.Equal(20, settingsViewModel.MaximumRecentFiles);
+			Assert.True(settingsViewModel.HighlightCurrentLine);
+			Assert.True(settingsViewModel.ShowLineNumbers);
 		}
 
 		[Fact]
@@ -99,6 +103,34 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 				() => viewModel.MaximumRecentFiles = 6);
 
 			Assert.Equal(6, viewModel.MaximumRecentFiles);
+		}
+
+		[Fact]
+		public void Test_HighlightCurrentLine_Changes()
+		{
+			// Arrange.
+			viewModel.HighlightCurrentLine = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.HighlightCurrentLine,
+				() => viewModel.HighlightCurrentLine = true);
+
+			Assert.True(viewModel.HighlightCurrentLine);
+		}
+
+		[Fact]
+		public void Test_ShowLineNumbers_Changes()
+		{
+			// Arrange.
+			viewModel.ShowLineNumbers = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.ShowLineNumbers,
+				() => viewModel.ShowLineNumbers = true);
+
+			Assert.True(viewModel.ShowLineNumbers);
 		}
 
 		[Theory]
@@ -194,6 +226,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			viewModel.AutoSaveInterval = TimeSpan.FromSeconds(45);
 			viewModel.MaximumRecentFiles = 12;
 			viewModel.ClearRecentFiles();
+			viewModel.HighlightCurrentLine = true;
+			viewModel.ShowLineNumbers = true;
 
 			// Act.
 			viewModel.SaveCommand.Execute(null);
@@ -205,6 +239,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Equal(TimeSpan.FromSeconds(45), settings.Object.AutoSaveInterval);
 			Assert.Equal(12, settings.Object.MaximumRecentFiles);
 			Assert.Empty(settings.Object.RecentFiles);
+			Assert.True(settings.Object.HighlightCurrentLine);
+			Assert.True(settings.Object.ShowLineNumbers);
 		}
 
 		[Fact]

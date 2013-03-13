@@ -37,6 +37,8 @@ namespace PlantUmlEditor.ViewModel
 			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 			_maximumRecentFiles = Property.New(this, p => p.MaximumRecentFiles, OnPropertyChanged);
+			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
+			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
 
 			_canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles, OnPropertyChanged);
 			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
@@ -49,6 +51,8 @@ namespace PlantUmlEditor.ViewModel
 			AutoSaveInterval = _settings.AutoSaveInterval;
 			MaximumRecentFiles = _settings.MaximumRecentFiles;
 			CanClearRecentFiles = _settings.RecentFiles.Count > 0;
+			HighlightCurrentLine = _settings.HighlightCurrentLine;
+			ShowLineNumbers = _settings.ShowLineNumbers;
 
 			var recentFilesChanged = _settings.RecentFiles as INotifyCollectionChanged;
 			if (recentFilesChanged != null)
@@ -120,6 +124,24 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether to highlight the line the cursor currently resides in.
+		/// </summary>
+		public bool HighlightCurrentLine
+		{
+			get { return _highlightCurrentLine.Value; }
+			set { _highlightCurrentLine.Value = value; }
+		}
+
+		/// <summary>
+		/// Whether to show line numbers in the editor.
+		/// </summary>
+		public bool ShowLineNumbers
+		{
+			get { return _showLineNumbers.Value; }
+			set { _showLineNumbers.Value = value; }
+		}
+
+		/// <summary>
 		/// Command that executes a Save operation.
 		/// </summary>
 		public ICommand SaveCommand { get; private set; }
@@ -147,6 +169,9 @@ namespace PlantUmlEditor.ViewModel
 			if (_shouldClearRecentFiles)
 				_settings.RecentFiles.Clear();
 
+			_settings.HighlightCurrentLine = HighlightCurrentLine;
+			_settings.ShowLineNumbers = ShowLineNumbers;
+
 			_settings.Save();
 
 			var recentFilesChanged = _settings.RecentFiles as INotifyCollectionChanged;
@@ -173,6 +198,8 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
 		private readonly Property<int> _maximumRecentFiles;
+		private readonly Property<bool> _highlightCurrentLine;
+		private readonly Property<bool> _showLineNumbers;
 
 		private readonly Property<bool> _canClearRecentFiles; 
 		private readonly Property<bool?> _saveCompleted;

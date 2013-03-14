@@ -154,7 +154,7 @@
                                             </MenuItem>
                                             <MenuItem Header="{Localize CopyImagePathContextMenuItem, ResxName=PlantUmlEditor.View.DiagramEditorViewResources}" 
                                                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
-                                                                                 Path=DataContext.Diagram.ImageFilePath}">
+                                                                                 Path=DataContext.Diagram.ImageFile.FullName}">
                                                 <MenuItem.Command>
                                                     <cmd:CopyTextCommand/>
                                                 </MenuItem.Command>
@@ -164,7 +164,7 @@
                                             </MenuItem>
                                             <MenuItem Header="{Localize BrowseToImageContextMenuItem, ResxName=PlantUmlEditor.View.DiagramEditorViewResources}" 
                                                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
-                                                                                 Path=DataContext.Diagram.ImageFilePath}">
+                                                                                 Path=DataContext.Diagram.ImageFile.FullName}">
                                                 <MenuItem.Command>
                                                     <cmd:BrowseToCommand/>
                                                 </MenuItem.Command>

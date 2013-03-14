@@ -15,24 +15,15 @@ namespace Tests.Unit.Utilities.Collections
 		[Fact]
 		public void Test_IEnumerator_ToEnumerable()
 		{
+			// Arrange.
 			IList<double> values = new List<double> { 1.1, 2.2, 3.3, 4.4 };
 			IEnumerator<double> enumerator = values.GetEnumerator();
 
-			// Convert the enumerator to an enumerable.
+			// Act.
 			IEnumerable<double> valuesEnumerable = enumerator.ToEnumerable();
 
-			int count = 0;
-			using (var valuesEnumerator = valuesEnumerable.GetEnumerator())
-			using (var verifierEnumerator = values.Select(item => item).ToList().GetEnumerator())	// Make a copy of the original list.
-			{
-				while (valuesEnumerator.MoveNext() && verifierEnumerator.MoveNext())
-				{
-					Assert.Equal(verifierEnumerator.Current, valuesEnumerator.Current);
-					count++;
-				}
-			}
-
-			Assert.Equal(values.Count, count);
+			// Assert.
+			AssertThat.SequenceEqual(values.Select(item => item).ToList(), valuesEnumerable);
 		}
 
 		[Fact]
@@ -42,33 +33,31 @@ namespace Tests.Unit.Utilities.Collections
 		}
 
 		[Fact]
-		public void Test_SingleValue_ToEnumerable()
+		public void Test_ValueType_ToEnumerable()
 		{
-			// Test value type.
+			// Arrange.
 			double value = 2.5;
-			IEnumerable<double> valueEnumerable = value.ToEnumerable();
 
-			int count = 0;
-			foreach (double item in valueEnumerable)
-			{
-				Assert.Equal(value, item);
-				count++;
-			}
+			// Act.
+			IEnumerable<double> enumerable = value.ToEnumerable();
 
-			Assert.Equal(1, count);
+			// Assert.
+			Assert.Single(enumerable);
+			Assert.Equal(value, enumerable.Single());
+		}
 
-			// Test reference type.
+		[Fact]
+		public void Test_ReferenceType_ToEnumerable()
+		{
+			// Arrange.
 			object o = new object();
-			IEnumerable<object> objectEnumerable = o.ToEnumerable();
 
-			count = 0;
-			foreach (object item in objectEnumerable)
-			{
-				Assert.Same(o, item);
-				count++;
-			}
+			// Act.
+			IEnumerable<object> enumerable = o.ToEnumerable();
 
-			Assert.Equal(1, count);
+			// Assert.
+			Assert.Single(enumerable);
+			Assert.Same(o, enumerable.Single());
 		}
 
 		[Theory]
@@ -170,7 +159,6 @@ namespace Tests.Unit.Utilities.Collections
 			// Assert.
 			Assert.Empty(slices);
 		}
-
 
 		[Fact]
 		public void Test_Slices_SliceSizeLessThanZero()
@@ -454,7 +442,7 @@ namespace Tests.Unit.Utilities.Collections
 		public async Task Test_GetAwaiter_EnumerableOfTasks_WithResults()
 		{
 			// Act.
-			var results = await Enumerable.Range(0, 5).Select(i => Task.FromResult(i));
+			var results = await Enumerable.Range(0, 5).Select(Task.FromResult);
 
 			// Assert.
 			AssertThat.SequenceEqual(new [] { 0, 1, 2, 3, 4 }, results);

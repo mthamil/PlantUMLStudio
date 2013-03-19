@@ -39,6 +39,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			settings.Object.EnableVirtualSpace = true;
 			settings.Object.EnableWordWrap = true;
 			settings.Object.EmptySelectionCopiesEntireLine = true;
+			settings.Object.AllowScrollingBelowContent = true;
 
 			// Act.
 			var settingsViewModel = new SettingsViewModel(settings.Object);
@@ -53,6 +54,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settingsViewModel.EnableVirtualSpace);
 			Assert.True(settingsViewModel.EnableWordWrap);
 			Assert.True(settingsViewModel.EmptySelectionCopiesEntireLine);
+			Assert.True(settingsViewModel.AllowScrollingBelowContent);
 		}
 
 		[Fact]
@@ -181,6 +183,20 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(viewModel.EmptySelectionCopiesEntireLine);
 		}
 
+		[Fact]
+		public void Test_AllowScrollingBelowContent_Changes()
+		{
+			// Arrange.
+			viewModel.AllowScrollingBelowContent = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.AllowScrollingBelowContent,
+				() => viewModel.AllowScrollingBelowContent = true);
+
+			Assert.True(viewModel.AllowScrollingBelowContent);
+		}
+
 		[Theory]
 		[InlineData(true, 1)]
 		[InlineData(true, 2)]
@@ -279,6 +295,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			viewModel.EnableVirtualSpace = true;
 			viewModel.EnableWordWrap = true;
 			viewModel.EmptySelectionCopiesEntireLine = true;
+			viewModel.AllowScrollingBelowContent = true;
 
 			// Act.
 			viewModel.SaveCommand.Execute(null);
@@ -295,6 +312,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.True(settings.Object.EnableVirtualSpace);
 			Assert.True(settings.Object.EnableWordWrap);
 			Assert.True(settings.Object.EmptySelectionCopiesEntireLine);
+			Assert.True(settings.Object.AllowScrollingBelowContent);
 		}
 
 		[Fact]

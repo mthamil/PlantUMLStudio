@@ -166,6 +166,27 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		}
 
 		[Fact]
+		public void Test_AllowScrollingBelowContent_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.CodeEditor.Options.AllowScrollingBelowContent == false)
+							   .Take(2).ToList();
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+						  .Returns(editors);
+
+			settings.SetupProperty(s => s.AllowScrollingBelowContent, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("AllowScrollingBelowContent"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.CodeEditor.Options.AllowScrollingBelowContent);
+		}
+
+		[Fact]
 		public void Test_ClosedDiagram_AddedToRecentFiles()
 		{
 			// Arrange.

@@ -19,6 +19,7 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 					{ p => p.EnableVirtualSpace, (e, v) => e.EnableVirtualSpace = v },
 					{ p => p.EnableWordWrap, (e, v) => e.EnableWordWrap = v },
 					{ p => p.EmptySelectionCopiesEntireLine, (e, v) => e.EmptySelectionCopiesEntireLine = v },
+					{ p => p.AllowScrollingBelowContent, (e, v) => e.AllowScrollingBelowContent = v }
 				};
 			}
 		}

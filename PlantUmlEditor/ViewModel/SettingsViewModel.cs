@@ -44,6 +44,7 @@ namespace PlantUmlEditor.ViewModel
 			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
 			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
 			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
+			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
 
 			_canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles, OnPropertyChanged);
 			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
@@ -63,6 +64,7 @@ namespace PlantUmlEditor.ViewModel
 			EnableVirtualSpace = _settings.EnableVirtualSpace;
 			EnableWordWrap = _settings.EnableWordWrap;
 			EmptySelectionCopiesEntireLine = _settings.EmptySelectionCopiesEntireLine;
+			AllowScrollingBelowContent = _settings.AllowScrollingBelowContent;
 
 			var recentFilesChanged = _settings.RecentFiles as INotifyCollectionChanged;
 			if (recentFilesChanged != null)
@@ -179,6 +181,15 @@ namespace PlantUmlEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Whether to allow vertical srolling past the end of an editor's content.
+		/// </summary>
+		public bool AllowScrollingBelowContent
+		{
+			get { return _allowScrollingBelowContent.Value; }
+			set { _allowScrollingBelowContent.Value = value; }
+		}
+
+		/// <summary>
 		/// Command that executes a Save operation.
 		/// </summary>
 		public ICommand SaveCommand { get; private set; }
@@ -212,6 +223,7 @@ namespace PlantUmlEditor.ViewModel
 			_settings.EnableVirtualSpace = EnableVirtualSpace;
 			_settings.EnableWordWrap = EnableWordWrap;
 			_settings.EmptySelectionCopiesEntireLine = EmptySelectionCopiesEntireLine;
+			_settings.AllowScrollingBelowContent = AllowScrollingBelowContent;
 
 			_settings.Save();
 
@@ -246,6 +258,7 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<bool> _enableVirtualSpace;
 		private readonly Property<bool> _enableWordWrap;
 		private readonly Property<bool> _emptySelectionCopiesEntireLine;
+		private readonly Property<bool> _allowScrollingBelowContent;
 
 		private readonly Property<bool> _canClearRecentFiles; 
 		private readonly Property<bool?> _saveCompleted;

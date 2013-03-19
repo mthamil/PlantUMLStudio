@@ -251,5 +251,17 @@ namespace PlantUmlEditor.Properties {
                 this["EmptySelectionCopiesEntireLine"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AllowScrollingBelowContent {
+            get {
+                return ((bool)(this["AllowScrollingBelowContent"]));
+            }
+            set {
+                this["AllowScrollingBelowContent"] = value;
+            }
+        }
     }
 }

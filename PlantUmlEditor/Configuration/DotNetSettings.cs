@@ -63,6 +63,7 @@ namespace PlantUmlEditor.Configuration
 			EnableVirtualSpace = settings.EnableVirtualSpace;
 			EnableWordWrap = settings.EnableWordWrap;
 			EmptySelectionCopiesEntireLine = settings.EmptySelectionCopiesEntireLine;
+			AllowScrollingBelowContent = settings.AllowScrollingBelowContent;
 
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
 			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
@@ -98,6 +99,7 @@ namespace PlantUmlEditor.Configuration
 			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
 			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
 			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
+			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
 		}
 
 		/// <see cref="ISettings.LastDiagramLocation"/>
@@ -183,6 +185,13 @@ namespace PlantUmlEditor.Configuration
 			set { _emptySelectionCopiesEntireLine.Value = value; }
 		}
 
+		/// <see cref="ISettings.AllowScrollingBelowContent"/>
+		public bool AllowScrollingBelowContent
+		{
+			get { return _allowScrollingBelowContent.Value; }
+			set { _allowScrollingBelowContent.Value = value; }
+		}
+
 		/// <see cref="ISettings.GraphVizExecutable"/>
 		public FileInfo GraphVizExecutable { get; set; }
 
@@ -235,6 +244,7 @@ namespace PlantUmlEditor.Configuration
 			_settings.EnableVirtualSpace = EnableVirtualSpace;
 			_settings.EnableWordWrap = EnableWordWrap;
 			_settings.EmptySelectionCopiesEntireLine = EmptySelectionCopiesEntireLine;
+			_settings.AllowScrollingBelowContent = AllowScrollingBelowContent;
 
 			_settings.Save();
 		}
@@ -275,6 +285,7 @@ namespace PlantUmlEditor.Configuration
 		private readonly Property<bool> _emptySelectionCopiesEntireLine;
 		private readonly Property<bool> _enableWordWrap;
 		private readonly Property<bool> _enableVirtualSpace;
+		private readonly Property<bool> _allowScrollingBelowContent;
 
 		private readonly Settings _settings;
 

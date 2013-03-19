@@ -25,6 +25,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			settings.EnableVirtualSpace = true;
 			settings.EnableWordWrap = true;
 			settings.EmptySelectionCopiesEntireLine = true;
+			settings.AllowScrollingBelowContent = true;
 
 			// Act.
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
@@ -53,6 +54,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(settings.EnableVirtualSpace, appSettings.EnableVirtualSpace);
 			Assert.Equal(settings.EnableWordWrap, appSettings.EnableWordWrap);
 			Assert.Equal(settings.EmptySelectionCopiesEntireLine, appSettings.EmptySelectionCopiesEntireLine);
+			Assert.Equal(settings.AllowScrollingBelowContent, appSettings.AllowScrollingBelowContent);
 		}
 
 		[Fact]
@@ -70,7 +72,8 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				ShowLineNumbers = false,
 				EnableVirtualSpace = true,
 				EnableWordWrap = true,
-				EmptySelectionCopiesEntireLine = false
+				EmptySelectionCopiesEntireLine = false,
+				AllowScrollingBelowContent = true
 			};
 
 			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
@@ -91,6 +94,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(true, settings.EnableVirtualSpace);
 			Assert.Equal(true, settings.EnableWordWrap);
 			Assert.Equal(false, settings.EmptySelectionCopiesEntireLine);
+			Assert.Equal(true, settings.AllowScrollingBelowContent);
 		}
 
 		[Theory]
@@ -381,6 +385,22 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				() => appSettings.EmptySelectionCopiesEntireLine = true);
 
 			Assert.True(appSettings.EmptySelectionCopiesEntireLine);
+		}
+
+		[Fact]
+		public void Test_AllowScrollingBelowContent_Changes()
+		{
+			// Arrange.
+			settings.AllowScrollingBelowContent = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.AllowScrollingBelowContent,
+				() => appSettings.AllowScrollingBelowContent = true);
+
+			Assert.True(appSettings.AllowScrollingBelowContent);
 		}
 
 		private readonly Settings settings = new Settings

@@ -33,6 +33,7 @@ namespace PlantUmlEditor.ViewModel
 			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
 			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
 			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
+			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
 		}
 
 		/// <summary>
@@ -80,10 +81,20 @@ namespace PlantUmlEditor.ViewModel
 			set { _emptySelectionCopiesEntireLine.Value = value; }
 		}
 
+		/// <summary>
+		/// Whether to allow vertical srolling past the end of an editor's content.
+		/// </summary>
+		public bool AllowScrollingBelowContent
+		{
+			get { return _allowScrollingBelowContent.Value; }
+			set { _allowScrollingBelowContent.Value = value; }
+		}
+
 		private readonly Property<bool> _highlightCurrentLine;
 		private readonly Property<bool> _showLineNumbers;
 		private readonly Property<bool> _enableVirtualSpace;
 		private readonly Property<bool> _enableWordWrap;
 		private readonly Property<bool> _emptySelectionCopiesEntireLine;
+		private readonly Property<bool> _allowScrollingBelowContent;
 	}
 }

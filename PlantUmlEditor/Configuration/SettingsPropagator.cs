@@ -66,7 +66,8 @@ namespace PlantUmlEditor.Configuration
 			{ Reflect.PropertyOf<ISettings>(s => s.ShowLineNumbers).Name, (ed, s) => ed.CodeEditor.Options.ShowLineNumbers = s.ShowLineNumbers },
 			{ Reflect.PropertyOf<ISettings>(s => s.EnableVirtualSpace).Name, (ed, s) => ed.CodeEditor.Options.EnableVirtualSpace = s.EnableVirtualSpace },
 			{ Reflect.PropertyOf<ISettings>(s => s.EnableWordWrap).Name, (ed, s) => ed.CodeEditor.Options.EnableWordWrap = s.EnableWordWrap },
-			{ Reflect.PropertyOf<ISettings>(s => s.EmptySelectionCopiesEntireLine).Name, (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine }
+			{ Reflect.PropertyOf<ISettings>(s => s.EmptySelectionCopiesEntireLine).Name, (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine },
+			{ Reflect.PropertyOf<ISettings>(s => s.AllowScrollingBelowContent).Name, (ed, s) => ed.CodeEditor.Options.AllowScrollingBelowContent = s.AllowScrollingBelowContent }
 		};
 	}
 }

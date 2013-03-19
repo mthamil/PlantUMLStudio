@@ -88,6 +88,11 @@ namespace PlantUmlEditor.Configuration
 		bool EmptySelectionCopiesEntireLine { get; set; }
 
 		/// <summary>
+		/// Whether to allow vertical srolling past the end of an editor's content.
+		/// </summary>
+		bool AllowScrollingBelowContent { get; set; }
+
+		/// <summary>
 		/// The GraphViz executable.
 		/// </summary>
 		FileInfo GraphVizExecutable { get; set; }

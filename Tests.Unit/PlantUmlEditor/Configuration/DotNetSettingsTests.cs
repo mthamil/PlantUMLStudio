@@ -22,6 +22,9 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			settings.AutoSaveInterval = TimeSpan.FromSeconds(15);
 			settings.HighlightCurrentLine = true;
 			settings.ShowLineNumbers = true;
+			settings.EnableVirtualSpace = true;
+			settings.EnableWordWrap = true;
+			settings.EmptySelectionCopiesEntireLine = true;
 
 			// Act.
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
@@ -47,6 +50,9 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			Assert.Equal(settings.HighlightCurrentLine, appSettings.HighlightCurrentLine);
 			Assert.Equal(settings.ShowLineNumbers, appSettings.ShowLineNumbers);
+			Assert.Equal(settings.EnableVirtualSpace, appSettings.EnableVirtualSpace);
+			Assert.Equal(settings.EnableWordWrap, appSettings.EnableWordWrap);
+			Assert.Equal(settings.EmptySelectionCopiesEntireLine, appSettings.EmptySelectionCopiesEntireLine);
 		}
 
 		[Fact]
@@ -61,7 +67,10 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				AutoSaveEnabled = true,
 				AutoSaveInterval = TimeSpan.FromSeconds(15),
 				HighlightCurrentLine = false,
-				ShowLineNumbers = false
+				ShowLineNumbers = false,
+				EnableVirtualSpace = true,
+				EnableWordWrap = true,
+				EmptySelectionCopiesEntireLine = false
 			};
 
 			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
@@ -79,6 +88,9 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(TimeSpan.FromSeconds(15), settings.AutoSaveInterval);
 			Assert.Equal(false, settings.HighlightCurrentLine);
 			Assert.Equal(false, settings.ShowLineNumbers);
+			Assert.Equal(true, settings.EnableVirtualSpace);
+			Assert.Equal(true, settings.EnableWordWrap);
+			Assert.Equal(false, settings.EmptySelectionCopiesEntireLine);
 		}
 
 		[Theory]
@@ -321,6 +333,54 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				() => appSettings.ShowLineNumbers = true);
 
 			Assert.True(appSettings.ShowLineNumbers);
+		}
+
+		[Fact]
+		public void Test_EnableVirtualSpace_Changes()
+		{
+			// Arrange.
+			settings.EnableVirtualSpace = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.EnableVirtualSpace,
+				() => appSettings.EnableVirtualSpace = true);
+
+			Assert.True(appSettings.EnableVirtualSpace);
+		}
+
+		[Fact]
+		public void Test_EnableWordWrap_Changes()
+		{
+			// Arrange.
+			settings.EnableWordWrap = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.EnableWordWrap,
+				() => appSettings.EnableWordWrap = true);
+
+			Assert.True(appSettings.EnableWordWrap);
+		}
+
+		[Fact]
+		public void Test_EmptySelectionCopiesEntireLine_Changes()
+		{
+			// Arrange.
+			settings.EmptySelectionCopiesEntireLine = false;
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(appSettings,
+				s => s.EmptySelectionCopiesEntireLine,
+				() => appSettings.EmptySelectionCopiesEntireLine = true);
+
+			Assert.True(appSettings.EmptySelectionCopiesEntireLine);
 		}
 
 		private readonly Settings settings = new Settings

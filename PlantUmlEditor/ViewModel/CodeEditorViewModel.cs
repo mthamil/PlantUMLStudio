@@ -45,6 +45,7 @@ namespace PlantUmlEditor.ViewModel
 			FoldingStrategy = foldingStrategy;
 			HighlightingDefinition = highlightingDefinition;
 			Snippets = snippets;
+			Options = new EditorOptions();
 
 			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
 			_contentIndex.Value = 0;
@@ -55,9 +56,6 @@ namespace PlantUmlEditor.ViewModel
 			_document = Property.New(this, p => p.Document, OnPropertyChanged);
 
 			_scrollOffset = Property.New(this, p => p.ScrollOffset, OnPropertyChanged);
-
-			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
-			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
 
 			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
 
@@ -163,19 +161,8 @@ namespace PlantUmlEditor.ViewModel
 			set { _scrollOffset.Value = value; }
 		}
 
-		/// <see cref="ICodeEditor.HighlightCurrentLine"/>
-		public bool HighlightCurrentLine
-		{
-			get { return _highlightCurrentLine.Value; }
-			set { _highlightCurrentLine.Value = value; }
-		}
-
-		/// <see cref="ICodeEditor.ShowLineNumbers"/>
-		public bool ShowLineNumbers
-		{
-			get { return _showLineNumbers.Value; }
-			set { _showLineNumbers.Value = value; }
-		}
+		/// <see cref="ICodeEditor.Options"/>
+		public EditorOptions Options { get; private set; }
 
 		/// <summary>
 		/// Whether content has been modified since the last save.
@@ -267,8 +254,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly Property<int> _selectionLength; 
 		private readonly Property<TextDocument> _document;
 		private readonly Property<Vector> _scrollOffset;
-		private readonly Property<bool> _highlightCurrentLine;
-		private readonly Property<bool> _showLineNumbers;
 		private readonly Property<bool> _isModified;
 
 		private readonly IClipboard _clipboard;

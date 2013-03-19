@@ -60,6 +60,9 @@ namespace PlantUmlEditor.Configuration
 
 			HighlightCurrentLine = settings.HighlightCurrentLine;
 			ShowLineNumbers = settings.ShowLineNumbers;
+			EnableVirtualSpace = settings.EnableVirtualSpace;
+			EnableWordWrap = settings.EnableWordWrap;
+			EmptySelectionCopiesEntireLine = settings.EmptySelectionCopiesEntireLine;
 
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
 			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
@@ -92,6 +95,9 @@ namespace PlantUmlEditor.Configuration
 
 			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
 			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
+			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
+			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
+			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
 		}
 
 		/// <see cref="ISettings.LastDiagramLocation"/>
@@ -156,6 +162,27 @@ namespace PlantUmlEditor.Configuration
 			set { _showLineNumbers.Value = value; }
 		}
 
+		/// <see cref="ISettings.EnableVirtualSpace"/>
+		public bool EnableVirtualSpace
+		{
+			get { return _enableVirtualSpace.Value; }
+			set { _enableVirtualSpace.Value = value; }
+		}
+
+		/// <see cref="ISettings.EnableWordWrap"/>
+		public bool EnableWordWrap
+		{
+			get { return _enableWordWrap.Value; }
+			set { _enableWordWrap.Value = value; }
+		}
+
+		/// <see cref="ISettings.EmptySelectionCopiesEntireLine"/>
+		public bool EmptySelectionCopiesEntireLine
+		{
+			get { return _emptySelectionCopiesEntireLine.Value; }
+			set { _emptySelectionCopiesEntireLine.Value = value; }
+		}
+
 		/// <see cref="ISettings.GraphVizExecutable"/>
 		public FileInfo GraphVizExecutable { get; set; }
 
@@ -205,6 +232,9 @@ namespace PlantUmlEditor.Configuration
 
 			_settings.HighlightCurrentLine = HighlightCurrentLine;
 			_settings.ShowLineNumbers = ShowLineNumbers;
+			_settings.EnableVirtualSpace = EnableVirtualSpace;
+			_settings.EnableWordWrap = EnableWordWrap;
+			_settings.EmptySelectionCopiesEntireLine = EmptySelectionCopiesEntireLine;
 
 			_settings.Save();
 		}
@@ -236,10 +266,15 @@ namespace PlantUmlEditor.Configuration
 		private readonly Property<bool> _rememberOpenFiles;
 		private readonly Property<IEnumerable<FileInfo>> _openFiles;
 		private readonly RecentFilesCollection _recentFiles;
+
 		private readonly Property<bool> _autoSaveEnabled;
 		private readonly Property<TimeSpan> _autoSaveInterval;
+
 		private readonly Property<bool> _highlightCurrentLine;
 		private readonly Property<bool> _showLineNumbers;
+		private readonly Property<bool> _emptySelectionCopiesEntireLine;
+		private readonly Property<bool> _enableWordWrap;
+		private readonly Property<bool> _enableVirtualSpace;
 
 		private readonly Settings _settings;
 

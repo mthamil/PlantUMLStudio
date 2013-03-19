@@ -34,14 +34,9 @@ namespace PlantUmlEditor.ViewModel
 		int ContentIndex { get; set; }
 
 		/// <summary>
-		/// Whether to highlight the current line.
+		/// Various text editor options.
 		/// </summary>
-		bool HighlightCurrentLine { get; set; }
-
-		/// <summary>
-		/// Whether to display line numbers.
-		/// </summary>
-		bool ShowLineNumbers { get; set; }
+		EditorOptions Options { get; }
 
 		/// <summary>
 		/// Whether content has been modified since the last save.

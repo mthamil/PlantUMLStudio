@@ -126,6 +126,7 @@
     <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\DiagramManagerViewModelTests.cs" />
+    <Compile Include="PlantUmlEditor\ViewModel\EditorOptionsTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\Notifications\ExceptionNotificationTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationsHubTests.cs" />
     <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationTests.cs" />

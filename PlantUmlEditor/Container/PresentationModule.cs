@@ -87,8 +87,11 @@ namespace PlantUmlEditor.Container
 				                      c.Resolve<IClipboard>())).As<ICodeEditor>()
 			       .OnActivating(c =>
 			       {
-				       c.Instance.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;
-					   c.Instance.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
+				       c.Instance.Options.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;
+					   c.Instance.Options.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
+					   c.Instance.Options.EnableVirtualSpace = c.Context.Resolve<ISettings>().EnableVirtualSpace;
+					   c.Instance.Options.EnableWordWrap = c.Context.Resolve<ISettings>().EnableWordWrap;
+					   c.Instance.Options.EmptySelectionCopiesEntireLine = c.Context.Resolve<ISettings>().EmptySelectionCopiesEntireLine;
 			       });
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()

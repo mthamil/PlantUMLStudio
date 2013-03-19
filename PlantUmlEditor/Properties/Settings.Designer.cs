@@ -215,5 +215,41 @@ namespace PlantUmlEditor.Properties {
                 this["ShowLineNumbers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableVirtualSpace {
+            get {
+                return ((bool)(this["EnableVirtualSpace"]));
+            }
+            set {
+                this["EnableVirtualSpace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableWordWrap {
+            get {
+                return ((bool)(this["EnableWordWrap"]));
+            }
+            set {
+                this["EnableWordWrap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EmptySelectionCopiesEntireLine {
+            get {
+                return ((bool)(this["EmptySelectionCopiesEntireLine"]));
+            }
+            set {
+                this["EmptySelectionCopiesEntireLine"] = value;
+            }
+        }
     }
 }

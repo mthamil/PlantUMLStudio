@@ -73,6 +73,21 @@ namespace PlantUmlEditor.Configuration
 		bool ShowLineNumbers { get; set; }
 
 		/// <summary>
+		/// Whether virtual space is enabled. That is, can editing occur beyond the end of a line.
+		/// </summary>
+		bool EnableVirtualSpace { get; set; }
+
+		/// <summary>
+		/// Whether word wrap is enabled.
+		/// </summary>
+		bool EnableWordWrap { get; set; }
+
+		/// <summary>
+		/// Whether a cut or copy operation with no text selected copies the entire current line.
+		/// </summary>
+		bool EmptySelectionCopiesEntireLine { get; set; }
+
+		/// <summary>
 		/// The GraphViz executable.
 		/// </summary>
 		FileInfo GraphVizExecutable { get; set; }

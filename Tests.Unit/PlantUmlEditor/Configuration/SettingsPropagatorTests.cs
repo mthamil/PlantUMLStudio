@@ -65,7 +65,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		{
 			// Arrange.
 			var editors = Mocks.Of<IDiagramEditor>()
-			                   .Where(e => e.CodeEditor.HighlightCurrentLine == false)
+			                   .Where(e => e.CodeEditor.Options.HighlightCurrentLine == false)
 			                   .Take(2).ToList();
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
@@ -78,7 +78,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			// Assert.
 			foreach (var editor in editors)
-				Assert.True(editor.CodeEditor.HighlightCurrentLine);
+				Assert.True(editor.CodeEditor.Options.HighlightCurrentLine);
 		}
 
 		[Fact]
@@ -86,7 +86,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 		{
 			// Arrange.
 			var editors = Mocks.Of<IDiagramEditor>()
-							   .Where(e => e.CodeEditor.ShowLineNumbers == false)
+							   .Where(e => e.CodeEditor.Options.ShowLineNumbers == false)
 							   .Take(2).ToList();
 
 			diagramManager.SetupGet(dm => dm.OpenDiagrams)
@@ -99,7 +99,70 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 
 			// Assert.
 			foreach (var editor in editors)
-				Assert.True(editor.CodeEditor.ShowLineNumbers);
+				Assert.True(editor.CodeEditor.Options.ShowLineNumbers);
+		}
+
+		[Fact]
+		public void Test_EnableVirtualSpace_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.CodeEditor.Options.EnableVirtualSpace == false)
+							   .Take(2).ToList();
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+						  .Returns(editors);
+
+			settings.SetupProperty(s => s.EnableVirtualSpace, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EnableVirtualSpace"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.CodeEditor.Options.EnableVirtualSpace);
+		}
+
+		[Fact]
+		public void Test_EnableWordWrap_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.CodeEditor.Options.EnableWordWrap == false)
+							   .Take(2).ToList();
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+						  .Returns(editors);
+
+			settings.SetupProperty(s => s.EnableWordWrap, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EnableWordWrap"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.CodeEditor.Options.EnableWordWrap);
+		}
+
+		[Fact]
+		public void Test_EmptySelectionCopiesEntireLine_Changes_UpdateDiagramEditors()
+		{
+			// Arrange.
+			var editors = Mocks.Of<IDiagramEditor>()
+							   .Where(e => e.CodeEditor.Options.EmptySelectionCopiesEntireLine == false)
+							   .Take(2).ToList();
+
+			diagramManager.SetupGet(dm => dm.OpenDiagrams)
+						  .Returns(editors);
+
+			settings.SetupProperty(s => s.EmptySelectionCopiesEntireLine, true);
+
+			// Act.
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EmptySelectionCopiesEntireLine"));
+
+			// Assert.
+			foreach (var editor in editors)
+				Assert.True(editor.CodeEditor.Options.EmptySelectionCopiesEntireLine);
 		}
 
 		[Fact]

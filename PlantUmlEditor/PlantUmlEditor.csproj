@@ -139,6 +139,7 @@
     <Compile Include="ViewModel\DiagramDeletedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />
     <Compile Include="ViewModel\DiagramManagerViewModel.cs" />
+    <Compile Include="ViewModel\EditorOptions.cs" />
     <Compile Include="ViewModel\ICodeEditor.cs" />
     <Compile Include="ViewModel\IDiagramEditor.cs" />
     <Compile Include="ViewModel\IDiagramExplorer.cs" />

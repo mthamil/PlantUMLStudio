@@ -62,8 +62,11 @@ namespace PlantUmlEditor.Configuration
 		{
 			{ Reflect.PropertyOf<ISettings>(s => s.AutoSaveEnabled).Name, (ed, s) => ed.AutoSave = s.AutoSaveEnabled },
 			{ Reflect.PropertyOf<ISettings>(s => s.AutoSaveInterval).Name, (ed, s) => ed.AutoSaveInterval = s.AutoSaveInterval },
-			{ Reflect.PropertyOf<ISettings>(s => s.HighlightCurrentLine).Name, (ed, s) => ed.CodeEditor.HighlightCurrentLine = s.HighlightCurrentLine },
-			{ Reflect.PropertyOf<ISettings>(s => s.ShowLineNumbers).Name, (ed, s) => ed.CodeEditor.ShowLineNumbers = s.ShowLineNumbers }
+			{ Reflect.PropertyOf<ISettings>(s => s.HighlightCurrentLine).Name, (ed, s) => ed.CodeEditor.Options.HighlightCurrentLine = s.HighlightCurrentLine },
+			{ Reflect.PropertyOf<ISettings>(s => s.ShowLineNumbers).Name, (ed, s) => ed.CodeEditor.Options.ShowLineNumbers = s.ShowLineNumbers },
+			{ Reflect.PropertyOf<ISettings>(s => s.EnableVirtualSpace).Name, (ed, s) => ed.CodeEditor.Options.EnableVirtualSpace = s.EnableVirtualSpace },
+			{ Reflect.PropertyOf<ISettings>(s => s.EnableWordWrap).Name, (ed, s) => ed.CodeEditor.Options.EnableWordWrap = s.EnableWordWrap },
+			{ Reflect.PropertyOf<ISettings>(s => s.EmptySelectionCopiesEntireLine).Name, (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine }
 		};
 	}
 }

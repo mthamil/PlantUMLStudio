@@ -55,12 +55,15 @@
                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                        FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
                                        FocusManager.IsFocusScope="True"
-                                       ShowLineNumbers="{Binding CodeEditor.ShowLineNumbers}"
+                                       ShowLineNumbers="{Binding CodeEditor.Options.ShowLineNumbers}"
+                                       WordWrap="{Binding CodeEditor.Options.EnableWordWrap}"
                                        IsEnabled="{Binding IsIdle}"
                                        Document="{Binding CodeEditor.Document}"
                                        SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}">
                     
                     <i:Interaction.Behaviors>
+                        <avalon:BindableOptions EnableVirtualSpace="{Binding CodeEditor.Options.EnableVirtualSpace}"
+                                                CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"/>
                         <avalon:BindableScrollOffsetBehavior ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <folding:FoldingStrategyBehavior FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"/>
                         <avalon:SelectionManagement CaretIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -69,7 +72,7 @@
                         <avalon:AddLineTransformers>
                             <vw:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>
-                        <avalon:HighlightCurrentLine IsEnabled="{Binding CodeEditor.HighlightCurrentLine}" />
+                        <avalon:HighlightCurrentLine IsEnabled="{Binding CodeEditor.Options.HighlightCurrentLine}" />
                     </i:Interaction.Behaviors>
                     
                     <avalonEdit:TextEditor.InputBindings>

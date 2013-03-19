@@ -91,9 +91,21 @@
                               ToolTip="{Localize HighlightCurrentLineToolTip}"
                               IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"/>
 
-                    <CheckBox Grid.Row="1" Content="{Localize ShowLineNumbersLabel}" VerticalAlignment="Center" Margin="0,20,0,0"
+                    <CheckBox Grid.Row="1" Content="{Localize ShowLineNumbersLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
                               ToolTip="{Localize ShowLineNumbersToolTip}"
                               IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"/>
+
+                    <CheckBox Grid.Row="1" Content="{Localize EnableVirtualSpaceLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                              ToolTip="{Localize EnableVirtualSpaceToolTip}"
+                              IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"/>
+
+                    <CheckBox Grid.Row="1" Content="{Localize EnableWordWrapLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                              ToolTip="{Localize EnableWordWrapToolTip}"
+                              IsChecked="{Binding EnableWordWrap, Mode=TwoWay}"/>
+
+                    <CheckBox Grid.Row="1" Content="{Localize EmptySelectionCopiesEntireLineLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                              ToolTip="{Localize EmptySelectionCopiesEntireLineToolTip}"
+                              IsChecked="{Binding EmptySelectionCopiesEntireLine, Mode=TwoWay}"/>
 
                 </StackPanel>
             </TabItem>

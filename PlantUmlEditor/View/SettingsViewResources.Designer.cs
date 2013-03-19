@@ -124,6 +124,60 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply Cut or Copy to entire line if there is no selection.
+        /// </summary>
+        internal static string EmptySelectionCopiesEntireLineLabel {
+            get {
+                return ResourceManager.GetString("EmptySelectionCopiesEntireLineLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If the current selection contains no text, a Cut or Copy operation affects the entire line the cursor resides on..
+        /// </summary>
+        internal static string EmptySelectionCopiesEntireLineToolTip {
+            get {
+                return ResourceManager.GetString("EmptySelectionCopiesEntireLineToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable virtual space.
+        /// </summary>
+        internal static string EnableVirtualSpaceLabel {
+            get {
+                return ResourceManager.GetString("EnableVirtualSpaceLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to use virtual space in the text editor..
+        /// </summary>
+        internal static string EnableVirtualSpaceToolTip {
+            get {
+                return ResourceManager.GetString("EnableVirtualSpaceToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable word wrap.
+        /// </summary>
+        internal static string EnableWordWrapLabel {
+            get {
+                return ResourceManager.GetString("EnableWordWrapLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to wrap long lines..
+        /// </summary>
+        internal static string EnableWordWrapToolTip {
+            get {
+                return ResourceManager.GetString("EnableWordWrapToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         internal static string GeneralTabTitle {
@@ -142,7 +196,7 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Whether to highlight the line in which the cursor currently resides.
+        ///   Looks up a localized string similar to Whether to highlight the line in which the cursor currently resides..
         /// </summary>
         internal static string HighlightCurrentLineToolTip {
             get {
@@ -214,7 +268,7 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Whether to show line numbers in the text editor.
+        ///   Looks up a localized string similar to Whether to show line numbers in the text editor..
         /// </summary>
         internal static string ShowLineNumbersToolTip {
             get {

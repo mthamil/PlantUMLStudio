@@ -36,6 +36,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			settings.Object.MaximumRecentFiles = 20;
 			settings.Object.HighlightCurrentLine = true;
 			settings.Object.ShowLineNumbers = true;
+			settings.Object.EnableVirtualSpace = true;
+			settings.Object.EnableWordWrap = true;
+			settings.Object.EmptySelectionCopiesEntireLine = true;
 
 			// Act.
 			var settingsViewModel = new SettingsViewModel(settings.Object);
@@ -47,6 +50,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Equal(20, settingsViewModel.MaximumRecentFiles);
 			Assert.True(settingsViewModel.HighlightCurrentLine);
 			Assert.True(settingsViewModel.ShowLineNumbers);
+			Assert.True(settingsViewModel.EnableVirtualSpace);
+			Assert.True(settingsViewModel.EnableWordWrap);
+			Assert.True(settingsViewModel.EmptySelectionCopiesEntireLine);
 		}
 
 		[Fact]
@@ -131,6 +137,48 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 				() => viewModel.ShowLineNumbers = true);
 
 			Assert.True(viewModel.ShowLineNumbers);
+		}
+
+		[Fact]
+		public void Test_EnableVirtualSpace_Changes()
+		{
+			// Arrange.
+			viewModel.EnableVirtualSpace = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.EnableVirtualSpace,
+				() => viewModel.EnableVirtualSpace = true);
+
+			Assert.True(viewModel.EnableVirtualSpace);
+		}
+
+		[Fact]
+		public void Test_EnableWordWrap_Changes()
+		{
+			// Arrange.
+			viewModel.EnableWordWrap = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.EnableWordWrap,
+				() => viewModel.EnableWordWrap = true);
+
+			Assert.True(viewModel.EnableWordWrap);
+		}
+
+		[Fact]
+		public void Test_EmptySelectionCopiesEntireLine_Changes()
+		{
+			// Arrange.
+			viewModel.EmptySelectionCopiesEntireLine = false;
+
+			// Act/Assert.
+			AssertThat.PropertyChanged(viewModel,
+				s => s.EmptySelectionCopiesEntireLine,
+				() => viewModel.EmptySelectionCopiesEntireLine = true);
+
+			Assert.True(viewModel.EmptySelectionCopiesEntireLine);
 		}
 
 		[Theory]
@@ -228,6 +276,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			viewModel.ClearRecentFiles();
 			viewModel.HighlightCurrentLine = true;
 			viewModel.ShowLineNumbers = true;
+			viewModel.EnableVirtualSpace = true;
+			viewModel.EnableWordWrap = true;
+			viewModel.EmptySelectionCopiesEntireLine = true;
 
 			// Act.
 			viewModel.SaveCommand.Execute(null);
@@ -241,6 +292,9 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Empty(settings.Object.RecentFiles);
 			Assert.True(settings.Object.HighlightCurrentLine);
 			Assert.True(settings.Object.ShowLineNumbers);
+			Assert.True(settings.Object.EnableVirtualSpace);
+			Assert.True(settings.Object.EnableWordWrap);
+			Assert.True(settings.Object.EmptySelectionCopiesEntireLine);
 		}
 
 		[Fact]

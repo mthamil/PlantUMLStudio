@@ -32,12 +32,12 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 	{
 		protected override void OnAttached()
 		{
-			AssociatedObject.Options.PropertyChanged += Options_PropertyChanged;
+			AssociatedObject.OptionChanged += TextEditor_OptionChanged;
 		}
 
 		protected override void OnDetaching()
 		{
-			AssociatedObject.Options.PropertyChanged -= Options_PropertyChanged;
+			AssociatedObject.OptionChanged -= TextEditor_OptionChanged;
 		}
 
 		/// <summary>
@@ -59,8 +59,10 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			DependencyProperty.Register(
 				"EnableVirtualSpace", 
 				typeof(bool), 
-				typeof(BindableOptions), 
-				new PropertyMetadata(default(bool), OnEnableVirtualSpaceChanged));
+				typeof(BindableOptions),
+				new FrameworkPropertyMetadata(default(bool),
+					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+					OnEnableVirtualSpaceChanged));
 
 		private static void OnEnableVirtualSpaceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
@@ -84,18 +86,18 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				"CutCopyWholeLine", 
 				typeof(bool), 
 				typeof(BindableOptions), 
-				new PropertyMetadata(default(bool), OnCutCopyWholeLineChanged));
+				new FrameworkPropertyMetadata(default(bool), 
+					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+					OnCutCopyWholeLineChanged));
 
 		private static void OnCutCopyWholeLineChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
 			((BindableOptions)dependencyObject).AssociatedObject.Options.CutCopyWholeLine = (bool)e.NewValue;
 		}
 
-
-		void Options_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		void TextEditor_OptionChanged(object sender, PropertyChangedEventArgs e)
 		{
 			optionsUpdateMap.TryGetValue(e.PropertyName).Apply(update => update(this, AssociatedObject.Options));
-
 		}
 
 		private static readonly IDictionary<string, Action<BindableOptions, TextEditorOptions>> optionsUpdateMap = new Dictionary<string, Action<BindableOptions, TextEditorOptions>>

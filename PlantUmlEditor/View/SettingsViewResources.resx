@@ -138,6 +138,24 @@
   <data name="EditorTabTitle" xml:space="preserve">
     <value>Editor</value>
   </data>
+  <data name="EmptySelectionCopiesEntireLineLabel" xml:space="preserve">
+    <value>Apply Cut or Copy to entire line if there is no selection</value>
+  </data>
+  <data name="EmptySelectionCopiesEntireLineToolTip" xml:space="preserve">
+    <value>If the current selection contains no text, a Cut or Copy operation affects the entire line the cursor resides on.</value>
+  </data>
+  <data name="EnableVirtualSpaceLabel" xml:space="preserve">
+    <value>Enable virtual space</value>
+  </data>
+  <data name="EnableVirtualSpaceToolTip" xml:space="preserve">
+    <value>Whether to use virtual space in the text editor.</value>
+  </data>
+  <data name="EnableWordWrapLabel" xml:space="preserve">
+    <value>Enable word wrap</value>
+  </data>
+  <data name="EnableWordWrapToolTip" xml:space="preserve">
+    <value>Whether to wrap long lines.</value>
+  </data>
   <data name="GeneralTabTitle" xml:space="preserve">
     <value>General</value>
   </data>
@@ -145,7 +163,7 @@
     <value>Highlight current line</value>
   </data>
   <data name="HighlightCurrentLineToolTip" xml:space="preserve">
-    <value>Whether to highlight the line in which the cursor currently resides</value>
+    <value>Whether to highlight the line in which the cursor currently resides.</value>
   </data>
   <data name="MaxRecentFilesLabelPrefix" xml:space="preserve">
     <value>Remember up to </value>
@@ -169,7 +187,7 @@
     <value>Show line numbers</value>
   </data>
   <data name="ShowLineNumbersToolTip" xml:space="preserve">
-    <value>Whether to show line numbers in the text editor</value>
+    <value>Whether to show line numbers in the text editor.</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Options</value>

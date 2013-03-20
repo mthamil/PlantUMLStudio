@@ -72,7 +72,7 @@ namespace Utilities.Mvvm.Commands
 			foreach (var existingChild in collection)
 				WeakEventManager<INotifyPropertyChanged, PropertyChangedEventArgs>.AddHandler(existingChild, "PropertyChanged", item_PropertyChanged);
 
-			var childProperty = Reflect.PropertyOf(typeof(TPropertySource), childPropertyExpression);
+			var childProperty = Reflect.PropertyOf(childPropertyExpression);
 			_childPropertyName = childProperty.Name;
 		}
 

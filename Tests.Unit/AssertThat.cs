@@ -31,7 +31,7 @@ namespace Tests.Unit
 		public static void PropertyChanged<TDeclaring, TValue>(TDeclaring @object, Expression<Func<TDeclaring, TValue>> property, Assert.PropertyChangedDelegate testCode)
 			where TDeclaring : INotifyPropertyChanged
 		{
-			Assert.PropertyChanged(@object, Reflect.PropertyOf(typeof(TDeclaring), property).Name, testCode);
+			Assert.PropertyChanged(@object, Reflect.PropertyOf(property).Name, testCode);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace Tests.Unit
 
 			if (args != null && ReferenceEquals(sender, @object))
 			{
-				string propertyName = Reflect.PropertyOf(typeof(TDeclaring), property).Name;
+				string propertyName = Reflect.PropertyOf(property).Name;
 				if (args.PropertyName == propertyName)
 				{
 					throw new PropertyDoesNotChangeException(propertyName);

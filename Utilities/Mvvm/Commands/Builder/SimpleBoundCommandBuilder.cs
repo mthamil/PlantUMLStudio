@@ -38,7 +38,7 @@ namespace Utilities.Mvvm.Commands.Builder
 		public SimpleBoundCommandBuilder(TSource source, Expression<Func<TSource, bool>> predicateProperty)
 		{
 			_source = source;
-			_property = new Lazy<PropertyInfo>(() => Reflect.PropertyOf(typeof(TSource), predicateProperty));
+			_property = new Lazy<PropertyInfo>(() => Reflect.PropertyOf(predicateProperty));
 			_canExecutePredicate = new Lazy<Func<bool>>(() =>
 			{
 				Func<TSource, bool> func = predicateProperty.Compile();

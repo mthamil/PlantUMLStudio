@@ -74,7 +74,7 @@ namespace Utilities.Mvvm.Commands.Builder
 			if (parentProperty == null)
 				throw new ArgumentNullException("parentProperty");
 
-			if (Reflect.PropertyOf(typeof(TParent), parentProperty).SetMethod != null)
+			if (Reflect.PropertyOf(parentProperty).SetMethod != null)
 				throw new ArgumentException("Parent property must not have a setter.");
 
 			return new DependentChildPropertyCommandBuilder<TParent, TChild>(_parent, _collectionGetter, parentProperty);

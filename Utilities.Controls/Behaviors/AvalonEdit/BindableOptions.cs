@@ -61,13 +61,8 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				typeof(bool), 
 				typeof(BindableOptions),
 				new FrameworkPropertyMetadata(default(bool),
-					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
-					OnEnableVirtualSpaceChanged));
-
-		private static void OnEnableVirtualSpaceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-		{
-			((BindableOptions)dependencyObject).AssociatedObject.Options.EnableVirtualSpace = (bool)e.NewValue;
-		}
+					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+					CreateCallback<bool>((options, value) => options.EnableVirtualSpace = value)));
 
 		/// <summary>
 		/// Gets/Sets whether copying without a selection copies the whole current line.
@@ -87,13 +82,8 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				typeof(bool), 
 				typeof(BindableOptions), 
 				new FrameworkPropertyMetadata(default(bool), 
-					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
-					OnCutCopyWholeLineChanged));
-
-		private static void OnCutCopyWholeLineChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-		{
-			((BindableOptions)dependencyObject).AssociatedObject.Options.CutCopyWholeLine = (bool)e.NewValue;
-		}
+					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+					CreateCallback<bool>((options, value) => options.CutCopyWholeLine = value)));
 
 		/// <summary>
 		/// Gets/Sets whether the user can scroll below the bottom of the document.
@@ -115,11 +105,11 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 				typeof(BindableOptions), 
 				new FrameworkPropertyMetadata(default(bool),
 					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
-					OnAllowScrollBelowDocumentChanged));
+					CreateCallback<bool>((options, value) => options.AllowScrollBelowDocument = value)));
 
-		private static void OnAllowScrollBelowDocumentChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		private static PropertyChangedCallback CreateCallback<TValue>(Action<TextEditorOptions, TValue> update)
 		{
-			((BindableOptions)dependencyObject).AssociatedObject.Options.AllowScrollBelowDocument = (bool)e.NewValue;
+			return (dependencyObject, e) => update(((BindableOptions)dependencyObject).AssociatedObject.Options, (TValue)e.NewValue); 
 		}
 
 		void TextEditor_OptionChanged(object sender, PropertyChangedEventArgs e)

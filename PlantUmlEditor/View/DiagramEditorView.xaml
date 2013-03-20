@@ -63,7 +63,8 @@
                     
                     <i:Interaction.Behaviors>
                         <avalon:BindableOptions EnableVirtualSpace="{Binding CodeEditor.Options.EnableVirtualSpace}"
-                                                CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"/>
+                                                CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"
+                                                AllowScrollBelowDocument="{Binding CodeEditor.Options.AllowScrollingBelowContent}"/>
                         <avalon:BindableScrollOffsetBehavior ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <folding:FoldingStrategyBehavior FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"/>
                         <avalon:SelectionManagement CaretIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

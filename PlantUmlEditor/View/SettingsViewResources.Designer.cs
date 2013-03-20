@@ -61,6 +61,24 @@ namespace PlantUmlEditor.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow vertical scrolling beyond content.
+        /// </summary>
+        internal static string AllowScrollingBelowContentLabel {
+            get {
+                return ResourceManager.GetString("AllowScrollingBelowContentLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to allow vertical srolling past the end of a text editor&apos;s content..
+        /// </summary>
+        internal static string AllowScrollingBelowContentToolTip {
+            get {
+                return ResourceManager.GetString("AllowScrollingBelowContentToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatically save changes to open diagrams..
         /// </summary>
         internal static string AutoSaveCheckBoxToolTip {

@@ -95,6 +95,33 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 			((BindableOptions)dependencyObject).AssociatedObject.Options.CutCopyWholeLine = (bool)e.NewValue;
 		}
 
+		/// <summary>
+		/// Gets/Sets whether the user can scroll below the bottom of the document.
+		/// The default value is false; but it a good idea to set this property to true when using folding.
+		/// </summary>
+		public bool AllowScrollBelowDocument
+		{
+			get { return (bool)GetValue(AllowScrollBelowDocumentProperty); }
+			set { SetValue(AllowScrollBelowDocumentProperty, value); }
+		}
+
+		/// <summary>
+		/// The AllowScrollBelowDocument dependency property.
+		/// </summary>
+		public static readonly DependencyProperty AllowScrollBelowDocumentProperty =
+			DependencyProperty.Register(
+				"AllowScrollBelowDocument", 
+				typeof(bool), 
+				typeof(BindableOptions), 
+				new FrameworkPropertyMetadata(default(bool),
+					FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+					OnAllowScrollBelowDocumentChanged));
+
+		private static void OnAllowScrollBelowDocumentChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+		{
+			((BindableOptions)dependencyObject).AssociatedObject.Options.AllowScrollBelowDocument = (bool)e.NewValue;
+		}
+
 		void TextEditor_OptionChanged(object sender, PropertyChangedEventArgs e)
 		{
 			optionsUpdateMap.TryGetValue(e.PropertyName).Apply(update => update(this, AssociatedObject.Options));
@@ -103,7 +130,8 @@ namespace Utilities.Controls.Behaviors.AvalonEdit
 		private static readonly IDictionary<string, Action<BindableOptions, TextEditorOptions>> optionsUpdateMap = new Dictionary<string, Action<BindableOptions, TextEditorOptions>>
 		{
 			{ Reflect.PropertyOf<TextEditorOptions>(p => p.EnableVirtualSpace).Name, (bo, to) => bo.EnableVirtualSpace = to.EnableVirtualSpace },
-			{ Reflect.PropertyOf<TextEditorOptions>(p => p.CutCopyWholeLine).Name, (bo, to) => bo.CutCopyWholeLine = to.CutCopyWholeLine }
+			{ Reflect.PropertyOf<TextEditorOptions>(p => p.CutCopyWholeLine).Name, (bo, to) => bo.CutCopyWholeLine = to.CutCopyWholeLine },
+			{ Reflect.PropertyOf<TextEditorOptions>(p => p.AllowScrollBelowDocument).Name, (bo, to) => bo.AllowScrollBelowDocument = to.AllowScrollBelowDocument }
 		};
 	}
 }

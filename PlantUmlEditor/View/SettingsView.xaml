@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         LocalizeExtension.DefaultResxName="PlantUmlEditor.View.SettingsViewResources" Language="{UICulture}"
         Title="{Localize Title}"
-        Height="206" Width="437"
+        Height="232" Width="437"
         Background="#F0F0F0"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False" ResizeMode="NoResize"
@@ -32,8 +32,8 @@
 
     <Grid VerticalAlignment="Stretch" Margin="5,5,5,5" Background="#F0F0F0">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".80*"/>
-            <RowDefinition Height=".20*"/>
+            <RowDefinition Height=".82*"/>
+            <RowDefinition Height=".18*"/>
         </Grid.RowDefinitions>
         
         <TabControl Grid.Row="0" TabStripPlacement="Left">
@@ -87,23 +87,27 @@
             <TabItem Header="{Localize EditorTabTitle}">
                 <StackPanel>
                     
-                    <CheckBox Grid.Row="0" Content="{Localize HighlightCurrentLineLabel}" VerticalAlignment="Center" Margin="0,10,0,0"
+                    <CheckBox Content="{Localize HighlightCurrentLineLabel}" VerticalAlignment="Center" Margin="0,10,0,0"
                               ToolTip="{Localize HighlightCurrentLineToolTip}"
                               IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"/>
 
-                    <CheckBox Grid.Row="1" Content="{Localize ShowLineNumbersLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                    <CheckBox Content="{Localize ShowLineNumbersLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
                               ToolTip="{Localize ShowLineNumbersToolTip}"
                               IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"/>
 
-                    <CheckBox Grid.Row="1" Content="{Localize EnableVirtualSpaceLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                    <CheckBox Content="{Localize EnableVirtualSpaceLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
                               ToolTip="{Localize EnableVirtualSpaceToolTip}"
                               IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"/>
 
-                    <CheckBox Grid.Row="1" Content="{Localize EnableWordWrapLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                    <CheckBox Content="{Localize AllowScrollingBelowContentLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                              ToolTip="{Localize AllowScrollingBelowContentToolTip}"
+                              IsChecked="{Binding AllowScrollingBelowContent, Mode=TwoWay}"/>
+
+                    <CheckBox Content="{Localize EnableWordWrapLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
                               ToolTip="{Localize EnableWordWrapToolTip}"
                               IsChecked="{Binding EnableWordWrap, Mode=TwoWay}"/>
 
-                    <CheckBox Grid.Row="1" Content="{Localize EmptySelectionCopiesEntireLineLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
+                    <CheckBox Content="{Localize EmptySelectionCopiesEntireLineLabel}" VerticalAlignment="Center" Margin="0,5,0,0"
                               ToolTip="{Localize EmptySelectionCopiesEntireLineToolTip}"
                               IsChecked="{Binding EmptySelectionCopiesEntireLine, Mode=TwoWay}"/>
 

@@ -89,6 +89,8 @@
     <Compile Include="Behaviors\GridSplitterExpanderSupport\GridSplitterExpanderSupportBehavior.cs" />
     <Compile Include="Behaviors\GridSplitterExpanderSupport\RowExpanderSize.cs" />
     <Compile Include="Behaviors\Interactivity\Interactions.cs" />
+    <Compile Include="Behaviors\LoadDependentBehavior.cs" />
+    <Compile Include="Behaviors\TabWheelScrolling.cs" />
     <Compile Include="Behaviors\TitleBarOptions.cs" />
     <Compile Include="Behaviors\AutoSelectOnFocusBehavior.cs" />
     <Compile Include="Behaviors\TextBoxWatermark.cs" />
@@ -147,6 +149,7 @@
     </Compile>
     <Compile Include="Selectors\TypeBasedDataTemplateSelector.cs" />
     <Compile Include="Selectors\TypeBasedStyleSelector.cs" />
+    <Compile Include="VisualTreeExtensions.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -527,6 +527,10 @@
                             SelectedItem="{Binding OpenDiagram}"
                             Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
 
+                    <i:Interaction.Behaviors>
+                        <attached:TabWheelScrolling InvertScrollDirection="False" ScrollWrapsAround="False"/>    
+                    </i:Interaction.Behaviors>
+                    
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
                             <vw:DiagramEditorView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>

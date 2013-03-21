@@ -1,23 +1,22 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Interactivity;
 using System.Windows.Interop;
 
 namespace Utilities.Controls.Behaviors
@@ -25,21 +24,12 @@ namespace Utilities.Controls.Behaviors
 	/// <summary>
 	/// Behavior that enables configuration of a Window's titlebar.
 	/// </summary>
-	public class TitleBarOptions : Behavior<Window>
+	public class TitleBarOptions : LoadDependentBehavior<Window>
 	{
-		/// <see cref="Behavior.OnAttached"/>
-		protected override void OnAttached()
+		/// <see cref="LoadDependentBehavior{T}.OnLoaded"/>
+		protected override void OnLoaded()
 		{
-			if (AssociatedObject.IsLoaded)
-				SetButtonVisibility(AssociatedObject, ShowButtons);
-			else
-				AssociatedObject.Loaded += AssociatedObject_Loaded;
-		}
-
-		/// <see cref="Behavior.OnDetaching"/>
-		protected override void OnDetaching()
-		{
-			AssociatedObject.Loaded -= AssociatedObject_Loaded;
+			SetButtonVisibility(AssociatedObject, ShowButtons);
 		}
 
 		/// <summary>
@@ -56,22 +46,16 @@ namespace Utilities.Controls.Behaviors
 		/// </summary>
 		public static readonly DependencyProperty ShowButtonsProperty =
 			DependencyProperty.Register(
-			"ShowButtons",
-			typeof(bool),
-			typeof(TitleBarOptions),
-			new UIPropertyMetadata(false, ShowButtonsChanged));
+				"ShowButtons",
+				typeof(bool),
+				typeof(TitleBarOptions),
+				new UIPropertyMetadata(false, ShowButtonsChanged));
 
 		private static void ShowButtonsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
 			var behavior = (TitleBarOptions)dependencyObject;
 			if (behavior.AssociatedObject != null)
 				SetButtonVisibility(behavior.AssociatedObject, (bool)e.NewValue);
-		}
-
-		void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
-		{
-			SetButtonVisibility(AssociatedObject, ShowButtons);
-			AssociatedObject.Loaded -= AssociatedObject_Loaded;
 		}
 
 		private static void SetButtonVisibility(Window window, bool isVisible)

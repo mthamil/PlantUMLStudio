@@ -31,7 +31,7 @@ namespace Utilities.Controls
 		/// </summary>
 		/// <param name="parent">The parent</param>
 		/// <returns>An enumerable over immediate child visual tree elements</returns>
-		public static IEnumerable<DependencyObject> Children(this DependencyObject parent)
+		public static IEnumerable<DependencyObject> VisualChildren(this DependencyObject parent)
 		{
 			if (parent == null)
 				throw new ArgumentNullException("parent");

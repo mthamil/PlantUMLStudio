@@ -32,8 +32,8 @@ namespace Utilities.Controls.Behaviors
 		protected override void OnLoaded()
 		{
 			_tabPanel = (
-				from child in AssociatedObject.Children()
-				from subChild in child.Children()
+				from child in AssociatedObject.VisualChildren()
+				from subChild in child.VisualChildren()
 				select subChild).OfType<TabPanel>().Single();
 
 			_tabPanel.MouseWheel += tabPanel_MouseWheel;

@@ -91,6 +91,7 @@ namespace Utilities
 		/// </summary>
 		/// <typeparam name="TResult">The type of Option to map to</typeparam>
 		/// <param name="optionSelector">The mapping function</param>
+		/// <remarks>This method corresponds to the monad pattern's Bind.</remarks>
 		public abstract Option<TResult> SelectMany<TResult>(Func<T, Option<TResult>> optionSelector);
 
 		/// <summary>

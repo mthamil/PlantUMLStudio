@@ -149,7 +149,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="propertyName">The name of the property</param>
 		/// <param name="propertyChangedRaiser">Raises a property changed event when a property's value changes</param>
 		public Property(string propertyName, Action<string> propertyChangedRaiser)
-			: this(propertyName, propertyChangedRaiser, Enumerable.Empty<string>()) { }
+			: this(propertyName, propertyChangedRaiser, Enumerable.Empty<string>(), null) { }
 
 		/// <summary>
 		/// Creates a new property.
@@ -158,7 +158,7 @@ namespace Utilities.PropertyChanged
 		/// <param name="propertyChangedRaiser">Raises a property changed event when a property's value changes</param>
 		/// <param name="dependentPropertyNames">Names of properties that are also changed when the property's value changes</param>
 		/// <param name="equalityComparison">An optional custom equality comparison, if Object.Equals is not suitable for comparing objects of type V</param>
-		public Property(string propertyName, Action<string> propertyChangedRaiser, IEnumerable<string> dependentPropertyNames, Func<V, V, bool> equalityComparison = null)
+		public Property(string propertyName, Action<string> propertyChangedRaiser, IEnumerable<string> dependentPropertyNames, Func<V, V, bool> equalityComparison)
 		{
 			_propertyChangedRaiser = propertyChangedRaiser;
 			_name = propertyName;

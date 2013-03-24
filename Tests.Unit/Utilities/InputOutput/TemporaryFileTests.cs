@@ -39,10 +39,7 @@ namespace Tests.Unit.Utilities.InputOutput
 		public void Test_Dispose()
 		{
 			// Arrange.
-			var temp = new TemporaryFile();
-			temp.File.Create().Close();
-
-			Assert.True(temp.File.Exists);
+			var temp = new TemporaryFile().Touch();
 
 			// Act.
 			temp.Dispose();

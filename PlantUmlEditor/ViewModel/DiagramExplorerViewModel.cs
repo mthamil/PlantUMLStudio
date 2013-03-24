@@ -27,6 +27,7 @@ using PlantUmlEditor.Core;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Properties;
 using PlantUmlEditor.ViewModel.Notifications;
+using Utilities.Collections;
 using Utilities.Concurrency;
 using Utilities.InputOutput;
 using Utilities.Mvvm;
@@ -324,15 +325,12 @@ namespace PlantUmlEditor.ViewModel
 
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)
 		{
-			Task.Factory.StartNew(() =>
-			{
-				var existingPreview = PreviewDiagrams.FirstOrDefault(pd => fileComparer.Equals(pd.Diagram.File, e.DeletedDiagramFile));
-				if (existingPreview != null)
+			Task.Factory.StartNew(() => 
+				PreviewDiagrams.FirstOrNone(pd => fileComparer.Equals(pd.Diagram.File, e.DeletedDiagramFile)).Apply(existingPreview =>
 				{
 					OnDiagramDeleted(existingPreview.Diagram);
 					PreviewDiagrams.Remove(existingPreview);
-				}
-			}, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
+				}), CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
 		}
 
 

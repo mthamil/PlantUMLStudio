@@ -1,19 +1,19 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -248,6 +248,41 @@ namespace Utilities.Collections
 		{
 			foreach (var item in source)
 				destination.Add(item);
+		}
+
+		/// <summary>
+		/// Returns the first element of a sequence or <see cref="Option&lt;T>.None"/> if the sequence is empty.
+		/// </summary>
+		/// <typeparam name="T">The type of items in the sequence</typeparam>
+		/// <param name="source">The source items to query</param>
+		/// <returns>An <see cref="Option&lt;T>.Some"/> containing the first element of the sequence or <see cref="Option&lt;T>.None"/></returns>
+		public static Option<T> FirstOrNone<T>(this IEnumerable<T> source)
+		{
+			return source.FirstOrNone(x => true);
+		}
+
+		/// <summary>
+		/// Returns the first element of a sequence that satisfies a condition or <see cref="Option&lt;T>.None"/> if no such
+		/// element is found.
+		/// </summary>
+		/// <typeparam name="T">The type of items in the sequence</typeparam>
+		/// <param name="source">The source items to query</param>
+		/// <param name="predicate">The condition an item must satisfy</param>
+		/// <returns>An <see cref="Option&lt;T>.Some"/> containing the first element of the sequence meeting the condition or <see cref="Option&lt;T>.None"/></returns>
+		public static Option<T> FirstOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+		{
+			if (source == null)
+				throw new ArgumentNullException("source");
+			if (predicate == null)
+				throw new ArgumentNullException("predicate");
+
+			foreach (var item in source)
+			{
+				if (predicate(item))
+					return Option<T>.Some(item);
+			}
+
+			return Option<T>.None();
 		}
 
 		/// <summary>

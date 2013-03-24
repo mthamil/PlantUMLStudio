@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities;
 using Utilities.Collections;
 using Utilities.Concurrency;
 using Xunit;
@@ -499,6 +500,76 @@ namespace Tests.Unit.Utilities.Collections
 
 			// Assert.
 			AssertThat.SequenceEqual(new [] { 1, 2, 3, 4, 5, 6 }, sink);
+		}
+
+		public static IEnumerable<object[]> FirstOrNoneWithPredicateData
+		{
+			get
+			{
+				return new TheoryDataSet<Option<string>, IEnumerable<string>>
+				{
+					{ "2",					 new [] { "1", "2", "3", "4" } },
+					{ "4",					 new [] { "4", "3", "2", "1" } },
+					{ Option<string>.None(), new [] { "1", "3", "5", "7" } },
+					{ Option<string>.None(), Enumerable.Empty<string>() },
+				};
+			}
+		}
+			
+		[Theory]
+		[PropertyData("FirstOrNoneWithPredicateData")]
+		public void Test_FirstOrNone_WithPredicate(Option<string> expected, IEnumerable<string> input)
+		{
+			// Act.
+			var actual = input.FirstOrNone(x => Int32.Parse(x) % 2 == 0);
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void Test_FirstOrNone_WithPredicate_NullSource_ThrowsException()
+		{
+			// Act/Assert.
+			Assert.Throws<ArgumentNullException>(() => ((IEnumerable<int>)null).FirstOrNone(x => x == 2));
+		}
+
+		[Fact]
+		public void Test_FirstOrNone_WithPredicate_NullPredicate_ThrowsException()
+		{
+			// Act/Assert.
+			Assert.Throws<ArgumentNullException>(() => new[] { 1, 2, 3 }.FirstOrNone(null));
+		}
+
+		public static IEnumerable<object[]> FirstOrNoneData
+		{
+			get
+			{
+				return new TheoryDataSet<Option<string>, IEnumerable<string>>
+				{
+					{ "1",					 new [] { "1", "2", "3", "4" } },
+					{ "4",					 new [] { "4" } },
+					{ Option<string>.None(), Enumerable.Empty<string>() },
+				};
+			}
+		}
+
+		[Theory]
+		[PropertyData("FirstOrNoneData")]
+		public void Test_FirstOrNone(Option<string> expected, IEnumerable<string> input)
+		{
+			// Act.
+			var actual = input.FirstOrNone();
+
+			// Assert.
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void Test_FirstOrNone_NullSource_ThrowsException()
+		{
+			// Act/Assert.
+			Assert.Throws<ArgumentNullException>(() => ((IEnumerable<int>)null).FirstOrNone());
 		}
 	}
 }

@@ -99,18 +99,16 @@ namespace PlantUmlEditor.ViewModel
 			if (diagram == null)
 				throw new ArgumentNullException("diagram");
 
-			var diagramEditor = OpenDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagram.Diagram));
-			if (diagramEditor == null)
+			OpenDiagram = OpenDiagrams.FirstOrNone(d => d.Diagram.Equals(diagram.Diagram)).GetOrElse(() =>
 			{
-				diagramEditor = _editorFactory(diagram.Diagram);
-				diagramEditor.DiagramImage = diagram.ImagePreview;
-				diagramEditor.Closing += diagramEditor_Closing;
-				diagramEditor.Closed += diagramEditor_Closed;
-				diagramEditor.Saved += diagramEditor_Saved;
-				OpenDiagrams.Add(diagramEditor);
-			}
-
-			OpenDiagram = diagramEditor;
+				var newEditor = _editorFactory(diagram.Diagram);
+				newEditor.DiagramImage = diagram.ImagePreview;
+				newEditor.Closing += diagramEditor_Closing;
+				newEditor.Closed += diagramEditor_Closed;
+				newEditor.Saved += diagramEditor_Saved;
+				OpenDiagrams.Add(newEditor);
+				return newEditor;
+			});
 		}
 
 		/// <see cref="IDiagramManager.DiagramClosed"/>
@@ -137,21 +135,20 @@ namespace PlantUmlEditor.ViewModel
 		void diagramEditor_Saved(object sender, EventArgs e)
 		{
 			var diagramEditor = (IDiagramEditor)sender;
-			var preview = Explorer.PreviewDiagrams.FirstOrDefault(d => d.Diagram.Equals(diagramEditor.Diagram));
-			if (preview == null)
-				return;
-
-			preview.ImagePreview = diagramEditor.DiagramImage;	// Update preview with new image.
-
-			// If for some reason the matching preview's Diagram is a different instance than the 
-			// editor's Diagram (which may occur if the preview list was refreshed or the diagram was
-			// restored through the 'restore open diagrams' feature), update the preview's Diagram's
-			// data.
-			if (!ReferenceEquals(preview.Diagram, diagramEditor.Diagram))
+			Explorer.PreviewDiagrams.FirstOrNone(d => d.Diagram.Equals(diagramEditor.Diagram)).Apply(preview =>
 			{
-				preview.Diagram.Content = diagramEditor.Diagram.Content;
-				preview.Diagram.ImageFile = diagramEditor.Diagram.ImageFile;
-			}
+				preview.ImagePreview = diagramEditor.DiagramImage; // Update preview with new image.
+
+				// If for some reason the matching preview's Diagram is a different instance than the 
+				// editor's Diagram (which may occur if the preview list was refreshed or the diagram was
+				// restored through the 'restore open diagrams' feature), update the preview's Diagram's
+				// data.
+				if (!ReferenceEquals(preview.Diagram, diagramEditor.Diagram))
+				{
+					preview.Diagram.Content = diagramEditor.Diagram.Content;
+					preview.Diagram.ImageFile = diagramEditor.Diagram.ImageFile;
+				}
+			});
 		}
 
 		void diagramEditor_Closing(object sender, CancelEventArgs e)

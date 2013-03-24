@@ -116,20 +116,17 @@ namespace PlantUmlEditor.Core.InputOutput
 		}
 
 		/// <see cref="IDiagramIOService.SaveAsync"/>
-		public Task SaveAsync(Diagram diagram, bool makeBackup)
+		public async Task SaveAsync(Diagram diagram, bool makeBackup)
 		{
-			return Task.Factory.StartNew(() =>
-			{
-				if (makeBackup)
-					diagram.File.CopyTo(diagram.File.FullName + ".bak", true);
+			if (makeBackup)
+				await diagram.File.CopyToAsync(diagram.File.FullName + ".bak", true).ConfigureAwait(false);
 
-				//Thread.Sleep(4000);
-				// Save the diagram content using UTF-8 encoding to support 
-				// various international characters, which ASCII won't support
-				// and Unicode won't make it cross platform
-				File.WriteAllText(diagram.File.FullName, diagram.Content, Encoding.UTF8);
-
-			}, CancellationToken.None, TaskCreationOptions.None, _scheduler);
+			//Thread.Sleep(4000);
+			// Save the diagram content using UTF-8 encoding to support 
+			// various international characters, which ASCII won't support
+			// and Unicode won't make it cross platform.
+			using (var writer = new StreamWriter(diagram.File.OpenWrite(), Encoding.UTF8))
+				await writer.WriteAsync(diagram.Content).ConfigureAwait(false);
 		}
 
 		/// <see cref="IDiagramIOService.DeleteAsync"/>

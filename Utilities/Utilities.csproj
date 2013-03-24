@@ -113,6 +113,7 @@
     <Compile Include="InputOutput\IDirectoryMonitor.cs" />
     <Compile Include="InputOutput\IFileSystemWatcher.cs" />
     <Compile Include="InputOutput\StreamExtensions.cs" />
+    <Compile Include="InputOutput\TemporaryFile.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommand.cs" />
     <Compile Include="Mvvm\Commands\BoundRelayCommandBase.cs" />
     <Compile Include="Mvvm\Commands\AsyncCommandBuilderExtensions.cs" />

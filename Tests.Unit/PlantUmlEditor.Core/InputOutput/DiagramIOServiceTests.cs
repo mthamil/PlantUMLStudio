@@ -135,6 +135,54 @@ namespace Tests.Unit.PlantUmlEditor.Core.InputOutput
 			Assert.Equal(2, progressData.Last().TotalDiagramCount);
 		}
 
+		[Fact]
+		public async Task Test_SaveAsync()
+		{
+			// Arrange.
+			using (var temp = new TemporaryFile())
+			{
+				var diagram = new Diagram
+				{
+					File = temp.File,
+					Content = "test test test"
+				};
+
+				// Act.
+				await diagramIO.SaveAsync(diagram, false);
+
+				// Assert.
+				Assert.Equal("test test test", File.ReadAllText(temp.File.FullName));
+				Assert.False(File.Exists(temp.File.FullName + ".bak"));
+			}
+		}
+
+		[Fact]
+		public async Task Test_SaveAsync_WithBackup()
+		{
+			// Arrange.
+			using (var temp = new TemporaryFile())
+			{
+				File.WriteAllText(temp.File.FullName, "original");
+
+				var diagram = new Diagram
+				{
+					File = temp.File,
+					Content = "test test test"
+				};
+
+				// Act.
+				await diagramIO.SaveAsync(diagram, true);
+				var backup = new FileInfo(temp.File.FullName + ".bak");
+
+				// Assert.
+				Assert.Equal("test test test", File.ReadAllText(temp.File.FullName));
+				Assert.True(backup.Exists);
+				Assert.Equal("original", File.ReadAllText(backup.FullName));
+
+				backup.Delete();
+			}
+		}
+
 		private readonly DiagramIOService diagramIO;
 
 		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();

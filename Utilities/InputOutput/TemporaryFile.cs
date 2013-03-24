@@ -34,6 +34,16 @@ namespace Utilities.InputOutput
 		}
 
 		/// <summary>
+		/// Creates an empty temporary file for the file path represented by this <see cref="TemporaryFile"/>.
+		/// </summary>
+		/// <remarks>This object is returned to enable a more fluent syntax.</remarks>
+		public TemporaryFile Touch()
+		{
+			File.Create().Close();
+			return this;
+		}
+
+		/// <summary>
 		/// The actual temporary file.
 		/// </summary>
 		public FileInfo File { get; private set; }

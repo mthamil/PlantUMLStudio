@@ -183,6 +183,30 @@ namespace Tests.Unit.PlantUmlEditor.Core.InputOutput
 			}
 		}
 
+		[Fact]
+		public async Task Test_DeleteAsync()
+		{
+			// Arrange.
+			using (var tempDiagram = new TemporaryFile().Touch())
+			using (var tempImage = new TemporaryFile().Touch())
+			{
+				var diagram = new Diagram
+				{
+					File = tempDiagram.File,
+					ImageFile = tempImage.File
+				};
+
+				// Act.
+				await diagramIO.DeleteAsync(diagram);
+				tempDiagram.File.Refresh();
+				tempImage.File.Refresh();
+
+				// Assert.
+				Assert.False(tempDiagram.File.Exists);
+				Assert.False(tempImage.File.Exists);
+			}
+		}
+
 		private readonly DiagramIOService diagramIO;
 
 		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();

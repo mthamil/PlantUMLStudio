@@ -21,6 +21,21 @@ namespace Tests.Unit.Utilities.InputOutput
 		}
 
 		[Fact]
+		public void Test_Touch()
+		{
+			// Arrange.
+			using (var temp = new TemporaryFile())
+			{
+				// Act.
+				var returned = temp.Touch();
+
+				// Assert.
+				Assert.True(temp.File.Exists);
+				Assert.Same(temp, returned);
+			}
+		}
+
+		[Fact]
 		public void Test_Dispose()
 		{
 			// Arrange.

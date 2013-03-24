@@ -372,6 +372,31 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
+		public void Test_DiagramFileAdded_PreviewAlreadyExists()
+		{
+			// Arrange.
+			var existingFile = new FileInfo("test.puml");
+			var existingPreview = new PreviewDiagramViewModel(new Diagram { File = existingFile });
+
+			explorer.DiagramLocation = existingFile.Directory;
+			explorer.PreviewDiagrams.Add(existingPreview);
+
+			diagramIO.Setup(dio => dio.ReadAsync(It.IsAny<FileInfo>()))
+					 .Returns(Task.FromResult(new Diagram
+					 {
+						 File = existingFile,
+						 Content = "New Diagram"
+					 }));
+
+			// Act.
+			diagramIO.Raise(dio => dio.DiagramFileAdded += null, new DiagramFileAddedEventArgs(existingFile));
+
+			// Assert.
+			Assert.Single(explorer.PreviewDiagrams);
+			Assert.Same(existingPreview, explorer.PreviewDiagrams.Single());
+		}
+
+		[Fact]
 		public void Test_DiagramFileAdded_NullDiagram()
 		{
 			// Arrange.

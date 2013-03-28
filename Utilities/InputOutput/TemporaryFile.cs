@@ -14,7 +14,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using System;
 using System.IO;
 
 namespace Utilities.InputOutput
@@ -23,7 +22,7 @@ namespace Utilities.InputOutput
 	/// Class that manages a temporary file and aids in clean up
 	/// after its use.
 	/// </summary>
-	public class TemporaryFile : IDisposable
+	public class TemporaryFile : DisposableBase
 	{
 		/// <summary>
 		/// Initializes a new <see cref="TemporaryFile"/>.
@@ -48,8 +47,11 @@ namespace Utilities.InputOutput
 		/// </summary>
 		public FileInfo File { get; private set; }
 
-		/// <see cref="IDisposable.Dispose"/>
-		public void Dispose()
+		/// <see cref="DisposableBase.OnDisposing"/>
+		protected override void OnDisposing() { }
+
+		/// <see cref="DisposableBase.OnDispose"/>
+		protected override void OnDispose()
 		{
 			if (File.Exists)
 				File.Delete();

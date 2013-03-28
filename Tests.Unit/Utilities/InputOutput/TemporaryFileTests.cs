@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Utilities.InputOutput;
 using Xunit;
 
@@ -47,6 +48,26 @@ namespace Tests.Unit.Utilities.InputOutput
 
 			// Assert.
 			Assert.False(temp.File.Exists);
+		}
+
+		[Fact]
+		public void Test_Destructor()
+		{
+			// Act.
+			FileInfo file = GetTempFile();
+
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			file.Refresh();
+
+			// Assert.
+			Assert.False(file.Exists);
+		}
+
+		private FileInfo GetTempFile()
+		{
+			var temp = new TemporaryFile().Touch();
+			return temp.File;
 		}
 	}
 }

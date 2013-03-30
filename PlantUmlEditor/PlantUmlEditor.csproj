@@ -120,7 +120,7 @@
     <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
     <Compile Include="Container\CoreModule.cs" />
-    <Compile Include="Container\CustomRegistrationExtensions.cs" />
+    <Compile Include="Container\RegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
     <Compile Include="Converters\DiagramTabNameConverter.cs" />
     <Compile Include="DesignTimeData\DesignTimeDiagramExplorer.cs" />

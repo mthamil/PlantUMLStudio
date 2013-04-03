@@ -65,9 +65,9 @@ namespace PlantUmlEditor.Core
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2, cancellationToken).ConfigureAwait(false);
+			await HandleErrorStream(result.Error, cancellationToken).ConfigureAwait(false);
 
-			return _renderers[imageFormat].Render(result.Item1);
+			return _renderers[imageFormat].Render(result.Output);
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
@@ -102,10 +102,10 @@ namespace PlantUmlEditor.Core
 				input: Stream.Null
 			).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Item2, CancellationToken.None).ConfigureAwait(false);
+			await HandleErrorStream(result.Error, CancellationToken.None).ConfigureAwait(false);
 
 			var output = Encoding.Default.GetString(
-				await result.Item1.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
+				await result.Output.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}

@@ -1,19 +1,19 @@
-﻿//  PlantUML Editor 2
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+﻿//  PlantUML Editor
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// 
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -97,7 +97,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The data to write to the Process's input stream</param>
 		/// <param name="cancellationToken">Allows termination of the process</param>
 		/// <returns> A Task that, when completed successfully, contains a Process's output and error streams</returns>
-		public async Task<Tuple<Stream, Stream>> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
+		public async Task<ProcessResult> StartNew(ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken)
 		{
 			using (var process = new Process { EnableRaisingEvents = true, StartInfo = processInfo })
 			{
@@ -127,7 +127,7 @@ namespace Utilities.Concurrency.Processes
 					// Reset streams for reading.
 					outputStream.Position = 0;
 					errorStream.Position = 0;
-					return Tuple.Create(outputStream, errorStream);
+					return new ProcessResult(outputStream, errorStream);
 				}
 
 				throw new ProcessErrorException("Process " + processInfo.FileName + " did not start.");

@@ -66,7 +66,7 @@ namespace PlantUmlEditor.Core
 
 			// For some reason output is written to standard error.
 			var output = Encoding.Default.GetString(
-				await result.Item2.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
+				await result.Error.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}

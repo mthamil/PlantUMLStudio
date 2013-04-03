@@ -91,6 +91,7 @@
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\ReverseComparer.cs" />
+    <Compile Include="Concurrency\Processes\ProcessResult.cs" />
     <Compile Include="Concurrency\ProgressExtensions.cs" />
     <Compile Include="Concurrency\Processes\IProcessTaskAdapter.cs" />
     <Compile Include="Concurrency\Processes\ProcessErrorException.cs" />

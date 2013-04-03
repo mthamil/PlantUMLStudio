@@ -37,7 +37,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The process input stream</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>
-		public static Task<Tuple<Stream, Stream>> FromProcess(this TaskFactory taskFactory, string executable, string arguments, Stream input, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<ProcessResult> FromProcess(this TaskFactory taskFactory, string executable, string arguments, Stream input, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return taskFactory.FromProcess(new ProcessStartInfo
 			{
@@ -61,7 +61,7 @@ namespace Utilities.Concurrency.Processes
 		/// <param name="input">The process input stream</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>
-		public static Task<Tuple<Stream, Stream>> FromProcess(this TaskFactory taskFactory, ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<ProcessResult> FromProcess(this TaskFactory taskFactory, ProcessStartInfo processInfo, Stream input, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return ProcessAdapterFactory(taskFactory).StartNew(processInfo, input, cancellationToken);
 		}

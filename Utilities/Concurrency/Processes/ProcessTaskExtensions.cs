@@ -71,6 +71,28 @@ namespace Utilities.Concurrency.Processes
 		/// no input and returns no output.
 		/// </summary>
 		/// <param name="taskFactory">Creates tasks</param>
+		/// <param name="executable">The name of the executable to run</param>
+		/// <param name="arguments">Any arguments to the process</param>
+		/// <param name="cancellationToken">An optional token that can cancel the task</param>
+		/// <returns>A Task representing the process</returns>
+		public static Task FromProcess(this TaskFactory taskFactory, string executable, string arguments, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return taskFactory.FromProcess(new ProcessStartInfo
+			{
+				FileName = executable,
+				Arguments = arguments,
+				WindowStyle = ProcessWindowStyle.Hidden,
+				CreateNoWindow = true,
+				RedirectStandardError = true,
+				UseShellExecute = false
+			}, cancellationToken);
+		}
+
+		/// <summary>
+		/// Creates a Task representing an external process that takes
+		/// no input and returns no output.
+		/// </summary>
+		/// <param name="taskFactory">Creates tasks</param>
 		/// <param name="processInfo">Describes the process to execute</param>
 		/// <param name="cancellationToken">An optional token that can cancel the task</param>
 		/// <returns>A Task representing the process</returns>

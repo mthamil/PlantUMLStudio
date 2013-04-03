@@ -73,19 +73,13 @@ namespace PlantUmlEditor.Core
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
 		public Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat)
 		{
-			return Task.Factory.FromProcess(new ProcessStartInfo
-			{
-				FileName = "java",
-				Arguments = String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" ""{3}""", 
+			return Task.Factory.FromProcess(
+				executable: "java",
+				arguments: String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" ""{3}""", 
 								PlantUmlJar.FullName,
 								imageFormat == ImageFormat.SVG ? "-tsvg" : string.Empty, 
 								GraphVizExecutable.FullName, 
-								diagramFile.FullName),
-				WindowStyle = ProcessWindowStyle.Hidden,
-				CreateNoWindow = true,
-				RedirectStandardError = true,
-				UseShellExecute = false
-			});
+								diagramFile.FullName));
 		}
 
 		#region Implementation of IExternalComponent

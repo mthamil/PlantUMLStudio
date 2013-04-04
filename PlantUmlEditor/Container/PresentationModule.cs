@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
@@ -44,7 +45,8 @@ namespace PlantUmlEditor.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.RegisterType<DispatcherTimerAdapter>();
+			builder.RegisterType<DispatcherTimerAdapter>()
+			       .OnActivating(c => c.Instance.Interval = c.Parameters.Any() ? c.Parameters.TypedAs<TimeSpan>() : TimeSpan.Zero);
 
 			builder.RegisterType<NotificationsHub>().As<NotificationsHub, INotifications>()
 			       .SingleInstance();
@@ -88,20 +90,15 @@ namespace PlantUmlEditor.Container
 			       .OnActivating(c =>
 			       {
 				       c.Instance.Options.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;
-					   c.Instance.Options.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
-					   c.Instance.Options.EnableVirtualSpace = c.Context.Resolve<ISettings>().EnableVirtualSpace;
-					   c.Instance.Options.EnableWordWrap = c.Context.Resolve<ISettings>().EnableWordWrap;
-					   c.Instance.Options.EmptySelectionCopiesEntireLine = c.Context.Resolve<ISettings>().EmptySelectionCopiesEntireLine;
+				       c.Instance.Options.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
+				       c.Instance.Options.EnableVirtualSpace = c.Context.Resolve<ISettings>().EnableVirtualSpace;
+				       c.Instance.Options.EnableWordWrap = c.Context.Resolve<ISettings>().EnableWordWrap;
+				       c.Instance.Options.EmptySelectionCopiesEntireLine = c.Context.Resolve<ISettings>().EmptySelectionCopiesEntireLine;
 			       });
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
-			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) =>
-			       {
-					   var t = c.Resolve<DispatcherTimerAdapter>();
-				       t.Interval = TimeSpan.FromSeconds(2);
-				       return t;
-			       })
 			       .WithParameter((p, c) => p.Name == "autoSaveTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>())
+			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>(TypedParameter.From(TimeSpan.FromSeconds(2))))
 			       .OnActivating(c =>
 			       {
 				       c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;

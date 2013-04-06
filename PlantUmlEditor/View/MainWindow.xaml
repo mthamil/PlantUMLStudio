@@ -315,10 +315,10 @@
 
                 </Menu>
 
-                <ctrl:FilePicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
-                                 InitialLocationUri="{Binding Explorer.DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
-                                 Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
-                                 Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(Clickable:BindableClick.IsClicked)}"/>
+                <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
+                                       InitialLocationUri="{Binding Explorer.DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
+                                       Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
+                                       Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(Clickable:BindableClick.IsClicked)}"/>
             </StackPanel>
       
               <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
@@ -371,10 +371,10 @@
                                              attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <ctrl:FilePicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}"
-                                                     Trigger="{Binding ElementName=BrowseForFile, Path=(Clickable:BindableClick.IsClicked)}" 
-                                                     InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
-                                                     Mode="Directory"/>
+                                    <ctrl:FileSystemPicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}"
+                                                           Trigger="{Binding ElementName=BrowseForFile, Path=(Clickable:BindableClick.IsClicked)}" 
+                                                           InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
+                                                           Mode="Directory"/>
                       
                                     <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..." ToolTip="Browse...">
                                         <i:Interaction.Triggers>
@@ -462,15 +462,15 @@
                                 </ListBox>
             
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-                                <ctrl:FilePicker AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
-                                                 InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
-                                                 Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
-                                    <ctrl:FilePicker.Trigger>
+                                <ctrl:FileSystemPicker AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
+                                                       InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
+                                                       Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
+                                    <ctrl:FileSystemPicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">
                                             <Binding ElementName="NewDiagramMenuItem" Path="(Clickable:BindableClick.IsClicked)"/>
                                         </MultiBinding>
-                                    </ctrl:FilePicker.Trigger>
-                                </ctrl:FilePicker>
+                                    </ctrl:FileSystemPicker.Trigger>
+                                </ctrl:FileSystemPicker>
                         
                                 <Button Height="25">
                                     <Button.Style>

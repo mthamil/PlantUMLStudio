@@ -1,18 +1,18 @@
 ﻿//  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 // 
-//        http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 // 
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 using System;
 using System.ComponentModel;
@@ -24,15 +24,15 @@ using Control = System.Windows.Controls.Control;
 namespace Utilities.Controls
 {
 	/// <summary>
-	/// Encapsulates a file dialog for use by MVVM.
+	/// Encapsulates a file system browser dialog for use in XAML.
 	/// </summary>
 	[DesignTimeVisible(false)]
-	public class FilePicker : Control
+	public class FileSystemPicker : Control
 	{
 		/// <summary>
 		/// Initializes the control.
 		/// </summary>
-		public FilePicker()
+		public FileSystemPicker()
 		{
 			// The control doesn't have any specific rendering of its own.
 			Visibility = Visibility.Hidden;
@@ -53,7 +53,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty TriggerProperty =
 			DependencyProperty.Register("Trigger",
 			typeof(bool),
-			typeof(FilePicker),
+			typeof(FileSystemPicker),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTriggerChanged)));
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace Utilities.Controls
 		/// </summary>
 		private static void OnTriggerChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
-			var filePicker = (FilePicker)dependencyObject;
+			var filePicker = (FileSystemPicker)dependencyObject;
 			if (!filePicker.Trigger)
 				return;
 
@@ -125,7 +125,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty SelectedUriProperty =
 			DependencyProperty.Register("SelectedUri",
 			typeof(Uri),
-			typeof(FilePicker),
+			typeof(FileSystemPicker),
 			new FrameworkPropertyMetadata(null));
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty InitialFileNameProperty =
 			DependencyProperty.Register("InitialFileName",
 			typeof(string),
-			typeof(FilePicker));
+			typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The URI of the initial directory.
@@ -160,7 +160,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty InitialLocationUriProperty =
 			DependencyProperty.Register("InitialLocationUri",
 			typeof(Uri),
-			typeof(FilePicker),
+			typeof(FileSystemPicker),
 			new FrameworkPropertyMetadata(null));
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty FilterProperty =
 			DependencyProperty.Register("Filter",
 			typeof(string),
-			typeof(FilePicker));
+			typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The picker mode.
@@ -195,7 +195,7 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty ModeProperty =
 			DependencyProperty.Register("Mode",
 			typeof(FilePickerMode),
-			typeof(FilePicker));
+			typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The command to be executed when an affirmative choice is made.
@@ -214,7 +214,7 @@ namespace Utilities.Controls
 			DependencyProperty.Register(
 			"AffirmativeCommand",
 			typeof(ICommand),
-			typeof(FilePicker));
+			typeof(FileSystemPicker));
 	}
 
 	/// <summary>

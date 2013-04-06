@@ -117,7 +117,7 @@
     <Compile Include="Converters\TextInputToVisibilityConverter.cs" />
     <Compile Include="Converters\UriConverter.cs" />
     <Compile Include="Converters\UriToCachedImageConverter.cs" />
-    <Compile Include="FilePicker.cs" />
+    <Compile Include="FileSystemPicker.cs" />
     <Compile Include="Localization\CultureManager.cs" />
     <Compile Include="Localization\ICultureManager.cs" />
     <Compile Include="Localization\ManagedMarkupExtension.cs" />

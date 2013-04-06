@@ -52,13 +52,13 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty TriggerProperty =
 			DependencyProperty.Register("Trigger",
-			typeof(bool),
-			typeof(FileSystemPicker),
-			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTriggerChanged)));
+				typeof(bool),
+				typeof(FileSystemPicker),
+				new FrameworkPropertyMetadata(OnTriggerChanged));
 
 		/// <summary>
-		/// The "Trigger" propery changed override. Whenever the "Trigger" property changes to true or false this will be executed.
-		/// When the property changes to true, the message box will be shown.
+		/// The <see cref="Trigger"/> property changed handler. Whenever this property changes the handler will be executed.
+		/// When the property changes to true, a dialog will be shown.
 		/// </summary>
 		private static void OnTriggerChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
@@ -75,13 +75,8 @@ namespace Utilities.Controls
 						folderDialog.RootFolder = Environment.SpecialFolder.Desktop;
 						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
 							folderDialog.SelectedPath = filePicker.InitialLocationUri.LocalPath;
-						var result = folderDialog.ShowDialog();
-						if (result == DialogResult.OK)
-						{
-							filePicker.SelectedUri = new Uri(folderDialog.SelectedPath, UriKind.Absolute);
-							if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
-								filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
-						}
+
+						ShowDialog(filePicker, folderDialog, d => d.SelectedPath);
 					}
 					break;
 
@@ -98,15 +93,24 @@ namespace Utilities.Controls
 						fileDialog.Filter = filePicker.Filter;
 						fileDialog.AddExtension = true;
 
-						var result = fileDialog.ShowDialog();
-						if (result == DialogResult.OK)
-						{
-							filePicker.SelectedUri = new Uri(fileDialog.FileName, UriKind.Absolute);
-							if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
-								filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
-						}
+						ShowDialog(filePicker, fileDialog, d => d.FileName);
 					}
 					break;
+
+				default:
+					throw new InvalidOperationException(String.Format("{0}.{1} is unsupported.", typeof(FilePickerMode).Name, filePicker.Mode));
+			}
+		}
+
+		private static void ShowDialog<TDialog>(FileSystemPicker filePicker, TDialog dialog, Func<TDialog, string> resultRetriever)
+			where TDialog : CommonDialog
+		{
+			var result = dialog.ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				filePicker.SelectedUri = new Uri(resultRetriever(dialog), UriKind.Absolute);
+				if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
+					filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
 			}
 		}
 
@@ -124,9 +128,9 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty SelectedUriProperty =
 			DependencyProperty.Register("SelectedUri",
-			typeof(Uri),
-			typeof(FileSystemPicker),
-			new FrameworkPropertyMetadata(null));
+				typeof(Uri),
+				typeof(FileSystemPicker),
+				new FrameworkPropertyMetadata(null));
 
 		/// <summary>
 		/// The initial file name.
@@ -142,8 +146,8 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty InitialFileNameProperty =
 			DependencyProperty.Register("InitialFileName",
-			typeof(string),
-			typeof(FileSystemPicker));
+				typeof(string),
+				typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The URI of the initial directory.
@@ -159,9 +163,9 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty InitialLocationUriProperty =
 			DependencyProperty.Register("InitialLocationUri",
-			typeof(Uri),
-			typeof(FileSystemPicker),
-			new FrameworkPropertyMetadata(null));
+				typeof(Uri),
+				typeof(FileSystemPicker),
+				new FrameworkPropertyMetadata(null));
 
 		/// <summary>
 		/// The file filter.
@@ -177,8 +181,8 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty FilterProperty =
 			DependencyProperty.Register("Filter",
-			typeof(string),
-			typeof(FileSystemPicker));
+				typeof(string),
+				typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The picker mode.
@@ -194,8 +198,8 @@ namespace Utilities.Controls
 		/// </summary>
 		public static readonly DependencyProperty ModeProperty =
 			DependencyProperty.Register("Mode",
-			typeof(FilePickerMode),
-			typeof(FileSystemPicker));
+				typeof(FilePickerMode),
+				typeof(FileSystemPicker));
 
 		/// <summary>
 		/// The command to be executed when an affirmative choice is made.
@@ -213,8 +217,8 @@ namespace Utilities.Controls
 		public static readonly DependencyProperty AffirmativeCommandProperty =
 			DependencyProperty.Register(
 			"AffirmativeCommand",
-			typeof(ICommand),
-			typeof(FileSystemPicker));
+				typeof(ICommand),
+				typeof(FileSystemPicker));
 	}
 
 	/// <summary>

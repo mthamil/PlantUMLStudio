@@ -108,7 +108,8 @@
     <Compile Include="Converters\ComposingConverter.cs" />
     <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Converters\DirectoryInfoConverter.cs" />
-    <Compile Include="Converters\DirectoryInfoUriConverter.cs" />
+    <Compile Include="Converters\DirectoryInfoToUriConverter.cs" />
+    <Compile Include="Converters\FileInfoToUriConverter.cs" />
     <Compile Include="Converters\NegatingConverter.cs" />
     <Compile Include="Converters\NullToFalseValueConverter.cs" />
     <Compile Include="Converters\OrConverter.cs" />

@@ -42,7 +42,7 @@
             
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
-            <utilconvert:DirectoryInfoUriConverter x:Key="DirectoryUriConverter"/>
+            <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryUriConverter"/>
 
             <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>

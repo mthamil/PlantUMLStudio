@@ -25,7 +25,7 @@ namespace Utilities.Controls.Converters
 	/// Converts between DirectoryInfos and URIs.
 	/// </summary>
 	[ValueConversion(typeof(DirectoryInfo), typeof(Uri))]
-	public class DirectoryInfoUriConverter : IValueConverter
+	public class DirectoryInfoToUriConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter
 

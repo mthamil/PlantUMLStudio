@@ -16,7 +16,10 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
+using System.IO;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Control = System.Windows.Controls.Control;
@@ -73,10 +76,10 @@ namespace Utilities.Controls
 					{
 						folderDialog.ShowNewFolderButton = true;
 						folderDialog.RootFolder = Environment.SpecialFolder.Desktop;
-						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
-							folderDialog.SelectedPath = filePicker.InitialLocationUri.LocalPath;
+						if (filePicker.InitialLocation != null)
+							folderDialog.SelectedPath = filePicker.InitialLocation.FullName;
 
-						ShowDialog(filePicker, folderDialog, d => d.SelectedPath);
+						ShowDialog(filePicker, folderDialog, d => new DirectoryInfo(d.SelectedPath));
 					}
 					break;
 
@@ -84,8 +87,8 @@ namespace Utilities.Controls
 				case FilePickerMode.Save:
 					using (var fileDialog = filePicker.Mode == FilePickerMode.Save ? new SaveFileDialog() : (FileDialog)new OpenFileDialog())
 					{
-						if (filePicker.InitialLocationUri != null && filePicker.InitialLocationUri.IsAbsoluteUri)
-							fileDialog.InitialDirectory = filePicker.InitialLocationUri.LocalPath;
+						if (filePicker.InitialLocation != null)
+							fileDialog.InitialDirectory = filePicker.InitialLocation.FullName;
 
 						if (filePicker.InitialFileName != null)
 							fileDialog.FileName = filePicker.InitialFileName;
@@ -93,7 +96,7 @@ namespace Utilities.Controls
 						fileDialog.Filter = filePicker.Filter;
 						fileDialog.AddExtension = true;
 
-						ShowDialog(filePicker, fileDialog, d => d.FileName);
+						ShowDialog(filePicker, fileDialog, d => new FileInfo(d.FileName));
 					}
 					break;
 
@@ -102,33 +105,36 @@ namespace Utilities.Controls
 			}
 		}
 
-		private static void ShowDialog<TDialog>(FileSystemPicker filePicker, TDialog dialog, Func<TDialog, string> resultRetriever)
-			where TDialog : CommonDialog
+		private static void ShowDialog<TDialog, TFileSystemInfo>(FileSystemPicker filePicker, TDialog dialog, Func<TDialog, TFileSystemInfo> resultRetriever)
+			where TDialog : CommonDialog 
+			where TFileSystemInfo : FileSystemInfo
 		{
 			var result = dialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
-				filePicker.SelectedUri = new Uri(resultRetriever(dialog), UriKind.Absolute);
-				if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(filePicker.SelectedUri))
-					filePicker.AffirmativeCommand.Execute(filePicker.SelectedUri);
+				filePicker.SelectedPath = resultRetriever(dialog);
+				var resultConverter = filePicker.GetConverter();
+				var convertedResult = resultConverter(filePicker.SelectedPath);
+				if (filePicker.AffirmativeCommand != null && filePicker.AffirmativeCommand.CanExecute(convertedResult))
+					filePicker.AffirmativeCommand.Execute(convertedResult);
 			}
 		}
 
 		/// <summary>
-		/// The URI of the file chosen.
+		/// The selected file system path.
 		/// </summary>
-		public Uri SelectedUri
+		public FileSystemInfo SelectedPath
 		{
-			get { return (Uri)GetValue(SelectedUriProperty); }
-			set { SetValue(SelectedUriProperty, value); }
+			get { return (FileSystemInfo)GetValue(SelectedPathProperty); }
+			set { SetValue(SelectedPathProperty, value); }
 		}
 
 		/// <summary>
-		/// DependencyProperty for the URI of the file chosen.
+		/// DependencyProperty for the chosen file system path.
 		/// </summary>
-		public static readonly DependencyProperty SelectedUriProperty =
-			DependencyProperty.Register("SelectedUri",
-				typeof(Uri),
+		public static readonly DependencyProperty SelectedPathProperty =
+			DependencyProperty.Register("SelectedPath",
+				typeof(FileSystemInfo),
 				typeof(FileSystemPicker),
 				new FrameworkPropertyMetadata(null));
 
@@ -150,20 +156,20 @@ namespace Utilities.Controls
 				typeof(FileSystemPicker));
 
 		/// <summary>
-		/// The URI of the initial directory.
+		/// The initial directory.
 		/// </summary>
-		public Uri InitialLocationUri
+		public DirectoryInfo InitialLocation
 		{
-			get { return (Uri)GetValue(InitialLocationUriProperty); }
-			set { SetValue(InitialLocationUriProperty, value); }
+			get { return (DirectoryInfo)GetValue(InitialLocationProperty); }
+			set { SetValue(InitialLocationProperty, value); }
 		}
 
 		/// <summary>
-		/// DependencyProperty for the URI of the initial directory.
+		/// DependencyProperty for the initial directory.
 		/// </summary>
-		public static readonly DependencyProperty InitialLocationUriProperty =
-			DependencyProperty.Register("InitialLocationUri",
-				typeof(Uri),
+		public static readonly DependencyProperty InitialLocationProperty =
+			DependencyProperty.Register("InitialLocation",
+				typeof(DirectoryInfo),
 				typeof(FileSystemPicker),
 				new FrameworkPropertyMetadata(null));
 
@@ -219,6 +225,32 @@ namespace Utilities.Controls
 			"AffirmativeCommand",
 				typeof(ICommand),
 				typeof(FileSystemPicker));
+
+		/// <summary>
+		/// An optional value converter to be used on the parameter being passed to <see cref="AffirmativeCommand"/>.
+		/// </summary>
+		public IValueConverter AffirmativeCommandConverter
+		{
+			get { return (IValueConverter)GetValue(AffirmativeCommandConverterProperty); }
+			set { SetValue(AffirmativeCommandConverterProperty, value); }
+		}
+
+		/// <summary>
+		/// The AffirmativeCommandConverter dependency property.
+		/// </summary>
+		public static readonly DependencyProperty AffirmativeCommandConverterProperty =
+			DependencyProperty.Register("AffirmativeCommandConverter", 
+				typeof(IValueConverter), 
+				typeof(FileSystemPicker), 
+				new PropertyMetadata(default(IValueConverter)));
+
+		private Func<FileSystemInfo, object> GetConverter()
+		{
+			var converter = AffirmativeCommandConverter;
+			return converter == null
+				? new Func<FileSystemInfo, object>(r => r)
+				: r => converter.Convert(r, typeof(object), null, CultureInfo.CurrentUICulture);
+		}
 	}
 
 	/// <summary>

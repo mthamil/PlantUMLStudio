@@ -42,7 +42,8 @@
             
             <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
             <utilconvert:UriConverter x:Key="UriConverter"/>
-            <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryUriConverter"/>
+            <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryToUriConverter"/>
+            <utilconvert:FileInfoToUriConverter x:Key="FileToUriConverter"/>
 
             <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
@@ -316,7 +317,8 @@
                 </Menu>
 
                 <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
-                                       InitialLocationUri="{Binding Explorer.DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
+                                       AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                                       InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
                                        Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
                                        Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(Clickable:BindableClick.IsClicked)}"/>
             </StackPanel>
@@ -371,9 +373,9 @@
                                              attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <ctrl:FileSystemPicker SelectedUri="{Binding DiagramLocation, Mode=TwoWay, Converter={StaticResource DirectoryUriConverter}}"
+                                    <ctrl:FileSystemPicker SelectedPath="{Binding DiagramLocation, Mode=TwoWay}"
                                                            Trigger="{Binding ElementName=BrowseForFile, Path=(Clickable:BindableClick.IsClicked)}" 
-                                                           InitialLocationUri="{Binding DiagramLocation, Converter={StaticResource DirectoryUriConverter}, Mode=OneWay}"
+                                                           InitialLocation="{Binding DiagramLocation, Mode=OneWay}"
                                                            Mode="Directory"/>
                       
                                     <Button Grid.Column="1" Width="Auto" Height="26" Name="BrowseForFile" Content="..." ToolTip="Browse...">
@@ -463,7 +465,8 @@
             
                             <StackPanel Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,4">
                                 <ctrl:FileSystemPicker AffirmativeCommand="{Binding AddNewDiagramCommand, Mode=OneWay}"
-                                                       InitialLocationUri="{Binding DiagramLocation.FullName, Converter={StaticResource UriConverter}, Mode=OneWay}"
+                                                       AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                                                       InitialLocation="{Binding DiagramLocation, Mode=OneWay}"
                                                        Mode="Save" Filter="{Binding FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
                                     <ctrl:FileSystemPicker.Trigger>
                                         <MultiBinding Converter="{StaticResource OrConverter}">

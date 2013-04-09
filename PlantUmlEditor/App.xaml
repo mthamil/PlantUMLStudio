@@ -23,6 +23,11 @@
 
         <utilconvert:BooleanToVisibilityValueConverter x:Key="BoolToVisibilityConverter"/>
 
+        <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>
+        <utilconvert:UriConverter x:Key="UriConverter"/>
+        <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryToUriConverter"/>
+        <utilconvert:FileInfoToUriConverter x:Key="FileToUriConverter"/>
+
         <Style x:Key="ButtonFocusVisual">
     		<Setter Property="Control.Template">
     			<Setter.Value>

@@ -40,11 +40,6 @@
 
             <design:DesignTimeDiagramExplorer x:Key="DesignTimeExplorer"/>
             
-            <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>               
-            <utilconvert:UriConverter x:Key="UriConverter"/>
-            <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryToUriConverter"/>
-            <utilconvert:FileInfoToUriConverter x:Key="FileToUriConverter"/>
-
             <utilconvert:ComposingConverter x:Key="ReverseNullToVisibilityConverter">
                 <utilconvert:ComposingConverter.Converters>
                     <utilconvert:NullToFalseValueConverter/>

@@ -14,6 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
 using System.Security.Principal;
 
 namespace PlantUmlEditor.Core.Security
@@ -23,12 +24,22 @@ namespace PlantUmlEditor.Core.Security
 	/// </summary>
 	public class WindowsSecurityService : ISecurityService
 	{
+		/// <summary>
+		/// Initializes a <see cref="WindowsSecurityService"/>.
+		/// </summary>
+		/// <param name="principalFactory">Retrieves the current <see cref="IPrincipal"/></param>
+		public WindowsSecurityService(Func<IPrincipal> principalFactory)
+		{
+			_principalFactory = principalFactory;
+		}
+
 		/// <see cref="ISecurityService.HasAdminPriviledges"/>
 		public bool HasAdminPriviledges()
 		{
-			var identity = WindowsIdentity.GetCurrent();
-			var principal = new WindowsPrincipal(identity);
-			return principal.IsInRole(WindowsBuiltInRole.Administrator);
+			var principal = _principalFactory();
+			return principal.IsInRole(@"BUILTIN\\Administrators");
 		}
+
+		private readonly Func<IPrincipal> _principalFactory;
 	}
 }

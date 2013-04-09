@@ -1,5 +1,5 @@
 ﻿//  PlantUML Editor
-//  Copyright 2012 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlEditor.Configuration;
@@ -24,7 +25,6 @@ using PlantUmlEditor.Core.Dependencies;
 using PlantUmlEditor.Core.Imaging;
 using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.Core.Security;
-using PlantUmlEditor.Model;
 using PlantUmlEditor.Model.Snippets;
 using PlantUmlEditor.Properties;
 using Utilities.Chronology;
@@ -47,6 +47,9 @@ namespace PlantUmlEditor.Container
 
 			builder.RegisterType<SystemClock>().As<IClock>()
 			       .SingleInstance();
+
+			builder.Register(c => WindowsIdentity.GetCurrent());
+			builder.RegisterType<WindowsPrincipal>().As<IPrincipal>();
 
 			builder.Register(c => new DotNetSettings(
 				        Settings.Default,

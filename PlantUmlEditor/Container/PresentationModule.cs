@@ -58,6 +58,13 @@ namespace PlantUmlEditor.Container
 			       .AutoActivate()
 			       .SingleInstance();
 
+			builder.RegisterType<SnippetParser>().As<ISnippetParser>();
+
+			builder.RegisterType<SnippetProvider>()
+				   .WithProperty(p => p.SnippetLocation, new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"snippets\")))
+				   .OnActivating(c => c.Instance.Load())
+				   .SingleInstance();
+
 			builder.RegisterType<PreviewDiagramViewModel>()
 			       .OnActivating(c =>
 			       {

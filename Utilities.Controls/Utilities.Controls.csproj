@@ -110,6 +110,7 @@
     <Compile Include="Converters\DirectoryInfoConverter.cs" />
     <Compile Include="Converters\DirectoryInfoToUriConverter.cs" />
     <Compile Include="Converters\FileInfoToUriConverter.cs" />
+    <Compile Include="Converters\FileSystemInfoToDirectoryInfoConverter.cs" />
     <Compile Include="Converters\NegatingConverter.cs" />
     <Compile Include="Converters\NullToFalseValueConverter.cs" />
     <Compile Include="Converters\OrConverter.cs" />

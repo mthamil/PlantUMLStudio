@@ -48,6 +48,8 @@
                 </utilconvert:ComposingConverter.Converters>
             </utilconvert:ComposingConverter>
             
+            <utilconvert:FileSystemInfoToDirectoryInfoConverter x:Key="FileSystemInfoCastingConverter"/>
+            
             <utilconvert:OrConverter x:Key="OrConverter"/>
             
             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
@@ -368,7 +370,7 @@
                                              attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <ctrl:FileSystemPicker SelectedPath="{Binding DiagramLocation, Mode=TwoWay}"
+                                    <ctrl:FileSystemPicker SelectedPath="{Binding DiagramLocation, Converter={StaticResource FileSystemInfoCastingConverter}, Mode=TwoWay}"
                                                            Trigger="{Binding ElementName=BrowseForFile, Path=(Clickable:BindableClick.IsClicked)}" 
                                                            InitialLocation="{Binding DiagramLocation, Mode=OneWay}"
                                                            Mode="Directory"/>

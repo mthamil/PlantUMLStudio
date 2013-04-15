@@ -115,6 +115,7 @@
     <Compile Include="MethodRecorder.cs" />
     <Compile Include="PlantUmlEditor.Core\DiagramTests.cs" />
     <Compile Include="PlantUmlEditor.Core\InputOutput\DiagramIOServiceTests.cs" />
+    <Compile Include="PlantUmlEditor.Core\Security\WindowsSecurityServiceTests.cs" />
     <Compile Include="PlantUmlEditor\Configuration\DotNetSettingsTests.cs" />
     <Compile Include="PlantUmlEditor\Configuration\RecentFilesCollectionTests.cs" />
     <Compile Include="PlantUmlEditor\Configuration\SettingsPropagatorTests.cs" />

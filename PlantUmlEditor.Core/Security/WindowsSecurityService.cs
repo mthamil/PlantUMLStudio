@@ -37,9 +37,11 @@ namespace PlantUmlEditor.Core.Security
 		public bool HasAdminPriviledges()
 		{
 			var principal = _principalFactory();
-			return principal.IsInRole(@"BUILTIN\\Administrators");
+			return principal.IsInRole(AdministratorRole);
 		}
 
 		private readonly Func<IPrincipal> _principalFactory;
+
+		private const string AdministratorRole = @"BUILTIN\Administrators";
 	}
 }

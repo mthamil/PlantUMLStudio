@@ -158,6 +158,7 @@
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureConverterTests.cs" />
     <Compile Include="Utilities.Controls\MultiKey\MultiKeyGestureTests.cs" />
     <Compile Include="Utilities.Controls\Selectors\TypeMapDataTemplateSelectorTests.cs" />
+    <Compile Include="Utilities\Collections\CollectionExtensionTests.cs" />
     <Compile Include="Utilities\Collections\CollectionMirrorTests.cs" />
     <Compile Include="Utilities\Collections\DictionaryExtensionsTests.cs" />
     <Compile Include="Utilities\Collections\EnumerableExtensionsTests.cs" />

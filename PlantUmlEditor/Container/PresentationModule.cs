@@ -83,10 +83,12 @@ namespace PlantUmlEditor.Container
 			       .Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
 			       .SingleInstance();
 
+			builder.Register(c => HighlightingManager.Instance).As<IHighlightingDefinitionReferenceResolver>();
+
 			builder.Register(c =>
 			{
 				using (var reader = XmlReader.Create(c.Resolve<ISettings>().PlantUmlHighlightingDefinition.OpenRead()))
-					return HighlightingLoader.Load(reader, HighlightingManager.Instance);
+					return HighlightingLoader.Load(reader, c.Resolve<IHighlightingDefinitionReferenceResolver>());
 			}).SingleInstance();
 
 			builder.Register(c => new CodeEditorViewModel(

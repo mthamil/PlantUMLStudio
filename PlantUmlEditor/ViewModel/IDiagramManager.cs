@@ -42,6 +42,11 @@ namespace PlantUmlEditor.ViewModel
 		void OpenDiagramForEdit(PreviewDiagramViewModel diagram);
 
 		/// <summary>
+		/// Event raised when a diagram is opened for editing.
+		/// </summary>
+		event EventHandler<DiagramOpenedEventArgs> DiagramOpened;
+
+		/// <summary>
 		/// Event raised when an open diagram has closed.
 		/// </summary>
 		event EventHandler<DiagramClosedEventArgs> DiagramClosed;
@@ -55,5 +60,11 @@ namespace PlantUmlEditor.ViewModel
 		/// Closes a diagram manager.
 		/// </summary>
 		void Close();
+
+		/// <summary>
+		/// Event raised when a diagram manager is closing.
+		/// This occurs before any final cleanup/save operations.
+		/// </summary>
+		event EventHandler<EventArgs> Closing;
 	}
 }

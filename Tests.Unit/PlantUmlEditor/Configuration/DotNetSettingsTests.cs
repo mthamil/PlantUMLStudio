@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Properties;
+using Utilities.Collections;
+using Utilities.InputOutput;
 using Xunit;
 using Xunit.Extensions;
 
@@ -76,8 +78,7 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 				AllowScrollingBelowContent = true
 			};
 
-			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile1"));
-			appSettings.RecentFiles.Add(new FileInfo(@"C:\recentFile2"));
+			appSettings.RecentFiles.AddRange(new FileInfo(@"C:\recentFile1"), new FileInfo(@"C:\recentFile2"));
 
 			// Act.
 			appSettings.Save();
@@ -95,6 +96,23 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.Equal(true, settings.EnableWordWrap);
 			Assert.Equal(false, settings.EmptySelectionCopiesEntireLine);
 			Assert.Equal(true, settings.AllowScrollingBelowContent);
+		}
+
+		[Fact]
+		public void Test_Save_OpenFiles_EvenWhen_OpenFilesNotRemembered()
+		{
+			// Arrange.
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"))
+			{
+				RememberOpenFiles = false,
+				OpenFiles = new List<FileInfo> { new FileInfo(@"C:\openFile1"), new FileInfo(@"C:\openFile2") },
+			};
+
+			// Act.
+			appSettings.Save();
+
+			// Assert.
+			AssertThat.SequenceEqual(settings.OpenFiles.Cast<string>(), new[] { @"C:\openFile1", @"C:\openFile2" });
 		}
 
 		[Theory]
@@ -161,6 +179,23 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			Assert.NotEmpty(actual);
 			Assert.Equal(2, actual.Count());
 			AssertThat.SequenceEqual(actual.Select(f => f.FullName), new[] { @"C:\file1", @"C:\file2" });
+		}
+
+		[Fact]
+		public void Test_OpenFiles_Preserves_InsertionOrder()
+		{
+			// Arrange.
+			settings.OpenFiles = new StringCollection();
+			var files = new[] { new FileInfo(@"C:\fileC"), new FileInfo(@"C:\fileA"), new FileInfo(@"C:\fileB") };
+
+			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+
+			// Act.
+			foreach (var file in files)
+				appSettings.OpenFiles.Add(file);
+
+			// Assert.
+			AssertThat.SequenceEqual(appSettings.OpenFiles, files, FileInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]

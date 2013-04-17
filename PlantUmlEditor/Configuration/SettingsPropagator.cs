@@ -17,8 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using PlantUmlEditor.ViewModel;
 using Utilities.Collections;
+using Utilities.InputOutput;
 using Utilities.Reflection;
 
 namespace PlantUmlEditor.Configuration
@@ -36,6 +39,13 @@ namespace PlantUmlEditor.Configuration
 
 			_settings.PropertyChanged += settings_PropertyChanged;
 			_diagramManager.DiagramClosed += diagramManager_DiagramClosed;
+			_diagramManager.DiagramOpened += diagramManager_DiagramOpened;
+			_diagramManager.Closing += diagramManager_Closing;
+		}
+
+		private void diagramManager_Closing(object sender, EventArgs e)
+		{
+			_settings.Save();	// Save before the app shuts down.
 		}
 
 		private void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -50,6 +60,15 @@ namespace PlantUmlEditor.Configuration
 		private void diagramManager_DiagramClosed(object sender, DiagramClosedEventArgs e)
 		{
 			_settings.RecentFiles.Add(e.Diagram.File);
+
+			_settings.OpenFiles.FirstOrNone(file => fileComparer.Equals(file, e.Diagram.File)).Apply(file => 
+				_settings.OpenFiles.Remove(file));
+		}
+
+		private void diagramManager_DiagramOpened(object sender, DiagramOpenedEventArgs e)
+		{
+			if (!_settings.OpenFiles.Contains(e.Diagram.File, fileComparer))
+				_settings.OpenFiles.Add(e.Diagram.File);
 		}
 
 		private readonly ISettings _settings;
@@ -69,5 +88,7 @@ namespace PlantUmlEditor.Configuration
 			{ Reflect.PropertyOf<ISettings>(s => s.EmptySelectionCopiesEntireLine).Name, (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine },
 			{ Reflect.PropertyOf<ISettings>(s => s.AllowScrollingBelowContent).Name, (ed, s) => ed.CodeEditor.Options.AllowScrollingBelowContent = s.AllowScrollingBelowContent }
 		};
+
+		private static readonly IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
 	}
 }

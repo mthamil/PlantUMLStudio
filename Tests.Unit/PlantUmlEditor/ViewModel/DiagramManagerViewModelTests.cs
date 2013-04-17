@@ -29,10 +29,14 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		public void Test_OpenDiagramCommand()
 		{
 			// Arrange.
-			var diagramPreview = new PreviewDiagramViewModel(new Diagram { File = testDiagramFile });
+			var diagram = new Diagram { File = testDiagramFile };
+			var diagramPreview = new PreviewDiagramViewModel(diagram);
 			var editor = Mock.Of<IDiagramEditor>();
 
 			var diagramManager = CreateManager(d => editor);
+
+			DiagramOpenedEventArgs openedArgs = null;
+			diagramManager.DiagramOpened += (o, e) => openedArgs = e;
 
 			// Act.
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
@@ -40,6 +44,8 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
 			Assert.Equal(editor, diagramManager.OpenDiagram);
+			Assert.NotNull(openedArgs);
+			Assert.Equal(diagram, openedArgs.Diagram);
 		}
 
 		[Fact]
@@ -53,12 +59,16 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			var diagramManager = CreateManager(null);
 			diagramManager.OpenDiagrams.Add(editor);
 
+			DiagramOpenedEventArgs openedArgs = null;
+			diagramManager.DiagramOpened += (o, e) => openedArgs = e;
+
 			// Act.
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
 
 			// Assert.
 			Assert.Single(diagramManager.OpenDiagrams);
 			Assert.Equal(editor, diagramManager.OpenDiagram);
+			Assert.Null(openedArgs);
 		}
 
 		[Fact]
@@ -320,6 +330,17 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
+		[Synchronous]
+		public void Test_Close_Raises_Closing_Event()
+		{
+			// Arrange.
+			var diagramManager = CreateManager(d => null);
+
+			// Act/Assert.
+			AssertThat.Raises<IDiagramManager>(diagramManager, m => m.Closing += null, diagramManager.Close);
+		}
+
+		[Fact]
 		public void Test_SaveAllCommand()
 		{
 			// Arrange.
@@ -368,39 +389,13 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_Close_RemembersOpenFiles()
-		{
-			// Arrange.
-			var diagramManager = CreateManager(d => null);
-
-			var diagrams = new [] { "test1.puml", "test2.puml" };
-			diagrams.Select(diagramName => new Diagram { File = new FileInfo(diagramName) })
-					.Select(diagram => Mock.Of<IDiagramEditor>(e => e.Diagram == diagram &&
-																	e.CodeEditor == Mock.Of<ICodeEditor>()))
-					.AddTo(diagramManager.OpenDiagrams);	
-
-			settings.SetupProperty(s => s.OpenFiles);
-			settings.SetupProperty(s => s.RememberOpenFiles, true);
-
-			// Act.
-			diagramManager.CloseCommand.Execute(null);
-
-			// Assert.
-			Assert.NotNull(settings.Object.OpenFiles);
-			Assert.Equal(diagrams.Length, settings.Object.OpenFiles.Count());
-			foreach (var diagramName in diagrams)
-				Assert.Contains(diagramName, settings.Object.OpenFiles.Select(f => f.Name));
-		}
-
-		[Fact]
-		[Synchronous]
 		public async Task Test_RememberedFiles_Reopened()
 		{
 			// Arrange.
 			var diagrams = new[] { "test1.puml", "test2.puml" };
 
 			settings.SetupProperty(s => s.RememberOpenFiles, true);
-			settings.SetupProperty(s => s.OpenFiles, diagrams.Select(name => new FileInfo(name)).ToList());
+			settings.SetupGet(s => s.OpenFiles).Returns(diagrams.Select(name => new FileInfo(name)).ToList());
 
 			explorer.Setup(e => e.OpenDiagramAsync(It.IsAny<Uri>()))
 			        .Returns((Uri uri) => Task.FromResult(new Diagram { File = new FileInfo(uri.AbsolutePath) }));

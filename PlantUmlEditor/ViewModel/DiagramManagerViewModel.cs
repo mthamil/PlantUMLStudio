@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -39,7 +40,8 @@ namespace PlantUmlEditor.ViewModel
 		{
 			_explorer = explorer;
 			_editorFactory = editorFactory;
-			_settings = settings;
+			_openInitialFiles = settings.RememberOpenFiles;
+			_initialFiles = settings.OpenFiles;
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
 			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
@@ -66,8 +68,8 @@ namespace PlantUmlEditor.ViewModel
 		public async Task InitializeAsync()
 		{
 			// Restore previously opened files.
-			if (_settings.RememberOpenFiles)
-				await _settings.OpenFiles.Select(f => _explorer.OpenDiagramAsync(new Uri(f.FullName))).ToList();
+			if (_openInitialFiles)
+				await _initialFiles.Select(f => _explorer.OpenDiagramAsync(new Uri(f.FullName))).ToList();
 		}
 
 		private void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
@@ -107,8 +109,19 @@ namespace PlantUmlEditor.ViewModel
 				newEditor.Closed += diagramEditor_Closed;
 				newEditor.Saved += diagramEditor_Saved;
 				OpenDiagrams.Add(newEditor);
+				OnDiagramOpened(diagram.Diagram);
 				return newEditor;
 			});
+		}
+
+		/// <see cref="IDiagramManager.DiagramOpened"/>
+		public event EventHandler<DiagramOpenedEventArgs> DiagramOpened;
+
+		private void OnDiagramOpened(Diagram diagram)
+		{
+			var localEvent = DiagramOpened;
+			if (localEvent != null)
+				localEvent(this, new DiagramOpenedEventArgs(diagram));
 		}
 
 		/// <see cref="IDiagramManager.DiagramClosed"/>
@@ -215,8 +228,7 @@ namespace PlantUmlEditor.ViewModel
 		/// <see cref="IDiagramManager.Close"/>
 		public void Close()
 		{
-			if (_settings.RememberOpenFiles)
-				_settings.OpenFiles = OpenDiagrams.Select(diagram => diagram.Diagram.File).ToList();
+			OnClosing();
 
 			var unsavedOpenDiagrams = OpenDiagrams.Where(od => od.CodeEditor.IsModified).ToList();
 			foreach (var openDiagram in unsavedOpenDiagrams)
@@ -225,8 +237,16 @@ namespace PlantUmlEditor.ViewModel
 			}
 
 			Task.WaitAll(_editorSaveTasks.ToArray());
+		}
 
-			_settings.Save();
+		/// <see cref="IDiagramManager.Closing"/>
+		public event EventHandler<EventArgs> Closing;
+
+		private void OnClosing()
+		{
+			var localEvent = Closing;
+			if (localEvent != null)
+				Closing(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -244,8 +264,10 @@ namespace PlantUmlEditor.ViewModel
 		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
 		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
 
+		private readonly bool _openInitialFiles;
+		private readonly IEnumerable<FileInfo> _initialFiles;
+
 		private readonly IDiagramExplorer _explorer;
-		private readonly Func<Diagram, IDiagramEditor> _editorFactory;
-		private readonly ISettings _settings;
+		private readonly Func<Diagram, IDiagramEditor> _editorFactory; 
 	}
 }

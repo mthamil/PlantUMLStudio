@@ -43,9 +43,10 @@ namespace PlantUmlEditor.Configuration
 				: new DirectoryInfo(_settings.LastPath);
 
 			RememberOpenFiles = settings.RememberOpenFiles;
-			OpenFiles = settings.OpenFiles == null ? 
-				Enumerable.Empty<FileInfo>() :
-				settings.OpenFiles.Cast<string>().Select(fileName => new FileInfo(fileName)).ToList();
+			OpenFiles = new List<FileInfo>(
+				settings.OpenFiles == null 
+					? Enumerable.Empty<FileInfo>() 
+					: settings.OpenFiles.Cast<string>().Select(fileName => new FileInfo(fileName)));
 
 			_recentFiles.MaximumCount = settings.MaximumRecentFiles;
 			if (settings.RecentFiles != null)
@@ -117,7 +118,7 @@ namespace PlantUmlEditor.Configuration
 		}
 
 		/// <see cref="ISettings.OpenFiles"/>
-		public IEnumerable<FileInfo> OpenFiles
+		public ICollection<FileInfo> OpenFiles
 		{ 
 			get { return _openFiles.Value; }
 			set { _openFiles.Value = value; }
@@ -274,7 +275,7 @@ namespace PlantUmlEditor.Configuration
 
 		private readonly Property<DirectoryInfo> _lastDiagramLocation;
 		private readonly Property<bool> _rememberOpenFiles;
-		private readonly Property<IEnumerable<FileInfo>> _openFiles;
+		private readonly Property<ICollection<FileInfo>> _openFiles;
 		private readonly RecentFilesCollection _recentFiles;
 
 		private readonly Property<bool> _autoSaveEnabled;

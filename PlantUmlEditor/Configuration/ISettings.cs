@@ -40,7 +40,7 @@ namespace PlantUmlEditor.Configuration
 		/// <summary>
 		/// The files that were open the last time the application exited.
 		/// </summary>
-		IEnumerable<FileInfo> OpenFiles { get; set; }
+		ICollection<FileInfo> OpenFiles { get; }
 
 		/// <summary>
 		/// Recently opened files.

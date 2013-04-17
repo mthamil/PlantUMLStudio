@@ -7,7 +7,9 @@ using Moq;
 using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using PlantUmlEditor.ViewModel;
+using Utilities.InputOutput;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlEditor.Configuration
 {
@@ -15,6 +17,8 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 	{
 		public SettingsPropagatorTests()
 		{
+			settings.SetupGet(s => s.RecentFiles).Returns(new List<FileInfo>());
+			settings.SetupGet(s => s.OpenFiles).Returns(new List<FileInfo>());
 			propagator = new SettingsPropagator(settings.Object, diagramManager.Object);		
 		}
 
@@ -192,14 +196,93 @@ namespace Tests.Unit.PlantUmlEditor.Configuration
 			// Arrange.
 			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
 
-			settings.SetupGet(s => s.RecentFiles)
-			        .Returns(new List<FileInfo>());
+			// Act.
+			diagramManager.Raise(dm => dm.DiagramClosed += null, new DiagramClosedEventArgs(diagram));
+
+			// Assert.
+			Assert.Single(settings.Object.RecentFiles);
+			Assert.Equal(settings.Object.RecentFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+		}
+
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public void Test_OpenedDiagram_AddedToOpenFiles_When_OpenFilesRemembered(bool rememberOpenFiles)
+		{
+			// Arrange.
+			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
+
+			settings.SetupGet(s => s.RememberOpenFiles).Returns(rememberOpenFiles);
+
+			// Act.
+			diagramManager.Raise(dm => dm.DiagramOpened += null, new DiagramOpenedEventArgs(diagram));
+
+			// Assert.
+			Assert.Single(settings.Object.OpenFiles);
+			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+		}
+
+		[Fact]
+		public void Test_OpenedDiagram_NotAddedToOpenFiles_When_FileAlreadyExists()
+		{
+			// Arrange.
+			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
+
+			settings.Object.OpenFiles.Add(new FileInfo(@"C:\file"));
+
+			// Act.
+			diagramManager.Raise(dm => dm.DiagramOpened += null, new DiagramOpenedEventArgs(diagram));
+
+			// Assert.
+			Assert.Single(settings.Object.OpenFiles);
+			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+		}
+
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public void Test_ClosedDiagram_RemovedFromOpenFiles(bool rememberOpenFiles)
+		{
+			// Arrange.
+			var diagram = new Diagram { File = new FileInfo(@"C:\file") };
+
+			settings.SetupGet(s => s.RememberOpenFiles).Returns(rememberOpenFiles);
+			settings.Object.OpenFiles.Add(new FileInfo(@"C:\file"));
 
 			// Act.
 			diagramManager.Raise(dm => dm.DiagramClosed += null, new DiagramClosedEventArgs(diagram));
 
 			// Assert.
-			Assert.Single(settings.Object.RecentFiles, diagram.File);
+			Assert.Empty(settings.Object.OpenFiles);
+		}
+
+		[Fact]
+		public void Test_Multiple_Diagrams_Opened()
+		{
+			// Arrange.
+			settings.SetupGet(s => s.RememberOpenFiles).Returns(true);
+
+			var files = new[] { new FileInfo("fileC"), new FileInfo("fileA"), new FileInfo("fileB") };
+
+			// Act.
+			foreach (var file in files)
+			{
+				diagramManager.Raise(dm => dm.DiagramOpened += null,
+					new DiagramOpenedEventArgs(new Diagram { File = file }));
+			}
+
+			// Assert.
+			AssertThat.SequenceEqual(settings.Object.OpenFiles, files, FileInfoPathEqualityComparer.Instance);
+		}
+
+		[Fact]
+		public void Test_DiagramManager_Closing_Saves_Settings()
+		{
+			// Act.
+			diagramManager.Raise(dm => dm.Closing += null, EventArgs.Empty);
+
+			// Assert.
+			settings.Verify(s => s.Save());
 		}
 
 		private readonly SettingsPropagator propagator;

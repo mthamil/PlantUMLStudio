@@ -135,6 +135,7 @@
     <Compile Include="ViewModel\Commands\ImageCommands.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
     <Compile Include="ViewModel\ComponentViewModel.cs" />
+    <Compile Include="ViewModel\DiagramOpenedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramClosedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramDeletedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramEditorViewModel.cs" />

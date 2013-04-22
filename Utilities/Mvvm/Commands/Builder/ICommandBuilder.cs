@@ -37,11 +37,11 @@ namespace Utilities.Mvvm.Commands.Builder
 		ICommandCompleter DependsOn(Expression<Func<TSource, bool>> predicateProperty);
 
 		/// <summary>
-		/// Indicates that a command is bound to a property of each object of a child collection to determine
+		/// Indicates that a command is bound to a property of each element of a collection to determine
 		/// whether it can execute.
 		/// </summary>
 		/// <typeparam name="TChild">The type of child object</typeparam>
-		/// <param name="collection">The collection whose items determine whether a command can execute</param>
+		/// <param name="collection">The collection whose elements determine whether a command can execute</param>
 		/// <returns>A builder for a command bound to a child property</returns>
 		ChildBoundCommandBuilder<TSource, TChild> DependsOnCollection<TChild>(Expression<Func<TSource, IEnumerable<TChild>>> collection)
 			where TChild : INotifyPropertyChanged;

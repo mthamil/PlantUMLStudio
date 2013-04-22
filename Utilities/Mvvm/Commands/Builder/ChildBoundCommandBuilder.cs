@@ -25,7 +25,7 @@ namespace Utilities.Mvvm.Commands.Builder
 {
 	/// <summary>
 	/// Class that aids in creating commands who abilituy to execute depends on properties of a child collection's
-	/// objects.
+	/// elements.
 	/// </summary>
 	/// <typeparam name="TParent">The type of parent that owns the child collection</typeparam>
 	/// <typeparam name="TChild">The type of object whose properties the parent depends on</typeparam>

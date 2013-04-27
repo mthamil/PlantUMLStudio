@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using PlantUmlEditor.Core.InputOutput;
 using PlantUmlEditor.ViewModel;
 using PlantUmlEditor.ViewModel.Notifications;
 using Utilities.Concurrency;
+using Utilities.InputOutput;
 using Xunit;
 using Xunit.Extensions;
 
@@ -285,6 +287,28 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Same(existingPreview.Diagram, explorer.PreviewDiagrams.Single().Diagram);
 			Assert.NotNull(openArgs);
 			Assert.Same(existingPreview, openArgs.RequestedPreview);
+		}
+
+		[Fact]
+		public async Task Test_OpenDiagramFilesAsync()
+		{
+			// Arrange.
+			var diagrams = new[] { new FileInfo("test1.puml"), new FileInfo("test2.puml") };
+
+			diagramIO.Setup(io => io.ReadAsync(It.IsAny<FileInfo>()))
+					 .Returns((FileInfo file) => Task.FromResult(new Diagram { File = file }));
+
+			var args = new List<OpenPreviewRequestedEventArgs>();
+			explorer.OpenPreviewRequested += (o, e) => args.Add(e);
+
+			// Act.
+			await explorer.OpenDiagramFilesAsync(diagrams);
+
+			// Assert.
+			foreach (var diagram in diagrams)
+				diagramIO.Verify(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == diagram.FullName)));
+
+			AssertThat.SequenceEqual(diagrams, args.Select(arg => arg.RequestedPreview.Diagram.File), FileInfoPathEqualityComparer.Instance);
 		}
 
 		[Theory]

@@ -387,37 +387,12 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			Assert.Equal(expected, actual);
 		}
 
-		[Fact]
-		[Synchronous]
-		public async Task Test_RememberedFiles_Reopened()
-		{
-			// Arrange.
-			var diagrams = new[] { "test1.puml", "test2.puml" };
-
-			settings.SetupProperty(s => s.RememberOpenFiles, true);
-			settings.SetupGet(s => s.OpenFiles).Returns(diagrams.Select(name => new FileInfo(name)).ToList());
-
-			explorer.Setup(e => e.OpenDiagramAsync(It.IsAny<Uri>()))
-			        .Returns((Uri uri) => Task.FromResult(new Diagram { File = new FileInfo(uri.AbsolutePath) }));
-
-			var diagramManager = CreateManager(d => null);
-
-			// Act.
-			await diagramManager.InitializeAsync();
-
-			// Assert.
-			explorer.Verify(e => e.OpenDiagramAsync(It.IsAny<Uri>()), Times.Exactly(2));
-			foreach (var diagram in diagrams)
-				explorer.Verify(e => e.OpenDiagramAsync(It.Is<Uri>(uri => Path.GetFileName(uri.AbsolutePath) == diagram)));
-		}
-
 		private DiagramManagerViewModel CreateManager(Func<Diagram, IDiagramEditor> editorFactory)
 		{
-			return new DiagramManagerViewModel(explorer.Object, editorFactory, settings.Object);
+			return new DiagramManagerViewModel(explorer.Object, editorFactory);
 		}
 
 		private readonly Mock<IDiagramExplorer> explorer = new Mock<IDiagramExplorer>();
-		private readonly Mock<ISettings> settings = new Mock<ISettings>();
 
 		private static readonly FileInfo testDiagramFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestDiagrams\class.puml"));
 	}

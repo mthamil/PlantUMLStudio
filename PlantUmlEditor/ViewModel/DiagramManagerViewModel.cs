@@ -18,11 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using PlantUmlEditor.Configuration;
 using PlantUmlEditor.Core;
 using Utilities.Collections;
 using Utilities.Mvvm;
@@ -36,12 +34,10 @@ namespace PlantUmlEditor.ViewModel
 	/// </summary>
 	public class DiagramManagerViewModel : ViewModelBase, IDiagramManager
 	{
-		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<Diagram, IDiagramEditor> editorFactory, ISettings settings)
+		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<Diagram, IDiagramEditor> editorFactory)
 		{
 			_explorer = explorer;
 			_editorFactory = editorFactory;
-			_openInitialFiles = settings.RememberOpenFiles;
-			_initialFiles = settings.OpenFiles;
 
 			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
 			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
@@ -60,16 +56,6 @@ namespace PlantUmlEditor.ViewModel
 			                        .Executes(SaveAllAsync);
 
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
-		}
-
-		/// <summary>
-		/// Initializes the diagram manager.
-		/// </summary>
-		public async Task InitializeAsync()
-		{
-			// Restore previously opened files.
-			if (_openInitialFiles)
-				await _initialFiles.Select(f => _explorer.OpenDiagramAsync(new Uri(f.FullName))).ToList();
 		}
 
 		private void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
@@ -263,9 +249,6 @@ namespace PlantUmlEditor.ViewModel
 
 		private readonly ICollection<IDiagramEditor> _editorsNeedingSaving = new HashSet<IDiagramEditor>();
 		private readonly ICollection<Task> _editorSaveTasks = new HashSet<Task>();
-
-		private readonly bool _openInitialFiles;
-		private readonly IEnumerable<FileInfo> _initialFiles;
 
 		private readonly IDiagramExplorer _explorer;
 		private readonly Func<Diagram, IDiagramEditor> _editorFactory; 

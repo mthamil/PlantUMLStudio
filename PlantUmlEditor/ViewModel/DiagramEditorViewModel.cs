@@ -56,9 +56,10 @@ namespace PlantUmlEditor.ViewModel
 		/// <param name="compiler">Compiles diagrams</param>
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
+		/// <param name="uiScheduler">A task scheduler for executing UI tasks</param>
 		public DiagramEditorViewModel(Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
 			IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
-			ITimer autoSaveTimer, ITimer refreshTimer)
+			ITimer autoSaveTimer, ITimer refreshTimer, TaskScheduler uiScheduler)
 		{
 			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
 			Diagram = diagram;
@@ -69,6 +70,7 @@ namespace PlantUmlEditor.ViewModel
 			_compiler = compiler;
 			_autoSaveTimer = autoSaveTimer;
 			_refreshTimer = refreshTimer;
+			_uiScheduler = uiScheduler;
 
 			CodeEditor = codeEditor;
 			CodeEditor.Content = Diagram.Content;
@@ -468,6 +470,6 @@ namespace PlantUmlEditor.ViewModel
 		private readonly IDiagramCompiler _compiler;
 		private readonly ITimer _autoSaveTimer;
 		private readonly ITimer _refreshTimer;
-		private readonly TaskScheduler _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+		private readonly TaskScheduler _uiScheduler;
 	}
 }

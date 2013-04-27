@@ -108,6 +108,7 @@ namespace PlantUmlEditor.Container
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "autoSaveTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>())
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>(TypedParameter.From(TimeSpan.FromSeconds(2))))
+				   .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
 			       .OnActivating(c =>
 			       {
 				       c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;
@@ -115,16 +116,18 @@ namespace PlantUmlEditor.Container
 			       });
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
-			       .WithParameter((p, c) => p.Name == "uiScheduler", (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
+			       .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
 			       .WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
 			       .OnActivating(c =>
 			       {
 				       c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
 				       c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
-			       });
+			       })
+			       .OnActivated(c => c.Instance.OpenDiagramFilesAsync(c.Context.Resolve<ISettings>().RememberOpenFiles
+				                                                          ? c.Context.Resolve<ISettings>().OpenFiles
+				                                                          : Enumerable.Empty<FileInfo>()));
 
 			builder.RegisterType<DiagramManagerViewModel>().As<DiagramManagerViewModel, IDiagramManager>()
-			       .OnActivated(c => c.Instance.InitializeAsync())
 			       .SingleInstance();
 
 			builder.RegisterType<ComponentViewModel>();

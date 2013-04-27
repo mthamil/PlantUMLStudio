@@ -66,7 +66,7 @@ namespace PlantUmlEditor.ViewModel
 			_currentPreviewDiagram = Property.New(this, p => p.CurrentPreviewDiagram, OnPropertyChanged);
 
 			_diagramLocation = Property.New(this, p => p.DiagramLocation, OnPropertyChanged)
-				.AlsoChanges(p => p.IsDiagramLocationValid);
+			                           .AlsoChanges(p => p.IsDiagramLocationValid);
 
 			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
 
@@ -321,6 +321,16 @@ namespace PlantUmlEditor.ViewModel
 
 			OnOpenPreviewRequested(preview);
 			return diagram;
+		}
+
+		/// <summary>
+		/// Asynchronously opens a sequence of diagrams.
+		/// </summary>
+		/// <param name="diagramFiles">The diagram files to open</param>
+		/// <returns>A task representing the open operation</returns>
+		public async Task OpenDiagramFilesAsync(IEnumerable<FileInfo> diagramFiles)
+		{
+			await diagramFiles.Select(file => OpenDiagramAsync(new Uri(file.FullName))).ToList();
 		}
 
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)

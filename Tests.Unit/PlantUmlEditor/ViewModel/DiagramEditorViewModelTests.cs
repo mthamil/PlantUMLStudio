@@ -34,20 +34,16 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_Initialization()
 		{
 			// Arrange.
-			var populatedDiagram = new Diagram
-			{
-				Content = "Test content",
-				ImageFile = new FileInfo("image.svg")
-			};
+			diagram.Content = "Test content";
+			diagram.ImageFile = new FileInfo("image.svg");
 
 			codeEditor.SetupProperty(c => c.Content);
 
 			// Act.
-			editor = CreateEditor(populatedDiagram);
+			editor = CreateEditor();
 
 			// Assert.
 			Assert.Equal("Test content", editor.CodeEditor.Content);
@@ -55,7 +51,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_AutoSave_Enabled_ContentIsModified()
 		{
 			// Arrange.
@@ -72,7 +67,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_AutoSave_Enabled_ContentIsNotModified()
 		{
 			// Arrange.
@@ -89,7 +83,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_AutoSave_Disabled()
 		{
 			// Arrange.
@@ -108,7 +101,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		[InlineData(true, true, true)]
 		[InlineData(false, false, true)]
 		[InlineData(false, true, false)]
-		[Synchronous]
 		public void Test_AutoSaveInterval(bool expectRestart, bool isAutoSaveEnabled, bool isAutoSaveTimerStarted)
 		{
 			// Arrange.
@@ -126,7 +118,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Theory]
-		[Synchronous]
 		[InlineData(true, true, true)]
 		[InlineData(false, false, true)]
 		[InlineData(false, true, false)]
@@ -147,7 +138,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Theory]
-		[Synchronous]
 		[InlineData(true, true)]
 		[InlineData(false, false)]
 		public void Test_CanRefresh(bool expected, bool isIdle)
@@ -164,7 +154,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Theory]
-		[Synchronous]
 		[InlineData(true, true)]
 		[InlineData(false, false)]
 		public void Test_CanClose(bool expected, bool isIdle)
@@ -181,7 +170,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_CodeEditor_IsModified_ChangedToTrue()
 		{
 			// Arrange.
@@ -198,7 +186,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_CodeEditor_IsModified_ChangedToFalse()
 		{
 			// Arrange.
@@ -215,7 +202,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_CloseCommand()
 		{
 			// Arrange.
@@ -240,7 +226,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_CloseCommand_Cancelled()
 		{
 			// Arrange.
@@ -269,7 +254,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_SaveCommand_SaveSuccessful()
 		{
 			// Arrange.
@@ -303,7 +287,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_SaveCommand_SaveUnuccessful()
 		{
 			// Arrange.
@@ -330,7 +313,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public async Task Test_Save_Then_SavedAgain()
 		{
 			// Arrange.
@@ -363,7 +345,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public async Task Test_Save_Updates_ImageFile()
 		{
 			// Arrange.
@@ -394,7 +375,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_RefreshCommand_Successful()
 		{
 			// Arrange.
@@ -415,7 +395,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public async Task Test_Refresh_Unsuccessful()
 		{
 			// Arrange.
@@ -435,7 +414,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public async Task Test_Refresh_Canceled()
 		{
 			// Arrange.
@@ -455,7 +433,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_ImageFormat_Change_TriggersRefresh()
 		{
 			// Arrange.
@@ -514,7 +491,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
 		public void Test_Dispose()
 		{
 			// Arrange.
@@ -535,10 +511,10 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 			disposableCodeEditor.Verify(ce => ce.Dispose());
 		}
 
-		private DiagramEditorViewModel CreateEditor(Diagram suppliedDiagram = null)
+		private DiagramEditorViewModel CreateEditor()
 		{
-			return new DiagramEditorViewModel(suppliedDiagram ?? diagram, codeEditor.Object, notifications.Object, renderers.Object,
-											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object);
+			return new DiagramEditorViewModel(diagram, codeEditor.Object, notifications.Object, renderers.Object,
+											  diagramIO.Object, compiler.Object, autoSaveTimer.Object, refreshTimer.Object, scheduler);
 		}
 
 
@@ -554,5 +530,6 @@ namespace Tests.Unit.PlantUmlEditor.ViewModel
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();
 		private readonly Mock<ITimer> autoSaveTimer = new Mock<ITimer>();
 		private readonly Mock<ITimer> refreshTimer = new Mock<ITimer>();
+		private readonly TaskScheduler scheduler = new SynchronousTaskScheduler();
 	}
 }

@@ -125,7 +125,7 @@ namespace PlantUmlStudio.Core.InputOutput
 			// Save the diagram content using UTF-8 encoding to support 
 			// various international characters, which ASCII won't support
 			// and Unicode won't make it cross platform.
-			using (var writer = new StreamWriter(diagram.File.OpenWrite(), Encoding.UTF8))
+			using (var writer = new StreamWriter(diagram.File.Open(FileMode.Create, FileAccess.Write), Encoding.UTF8))
 				await writer.WriteAsync(diagram.Content).ConfigureAwait(false);
 		}
 

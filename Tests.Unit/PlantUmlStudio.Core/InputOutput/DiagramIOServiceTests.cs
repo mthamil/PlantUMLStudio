@@ -184,6 +184,30 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 		}
 
 		[Fact]
+		public async Task Test_SaveAsync_When_ContentShortened()
+		{
+			// Arrange.
+			using (var temp = new TemporaryFile())
+			{
+				var diagram = new Diagram
+				{
+					File = temp.File,
+					Content = "test\ntest\ntest"
+				};
+
+				File.WriteAllText(diagram.File.FullName, diagram.Content);
+
+				diagram.Content = "test\ntest";
+
+				// Act.
+				await diagramIO.SaveAsync(diagram, false);
+
+				// Assert.
+				Assert.Equal("test\ntest", File.ReadAllText(temp.File.FullName));
+			}
+		}
+
+		[Fact]
 		public async Task Test_DeleteAsync()
 		{
 			// Arrange.

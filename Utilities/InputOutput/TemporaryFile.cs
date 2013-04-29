@@ -43,6 +43,19 @@ namespace Utilities.InputOutput
 		}
 
 		/// <summary>
+		/// Populates a temporary file with the given content.
+		/// </summary>
+		/// <param name="content">The content to write to the temporary file</param>
+		/// <remarks>This object is returned to enable a more fluent syntax.</remarks>
+		public TemporaryFile WithContent(string content)
+		{
+			using (var writer = File.CreateText())
+				writer.Write(content);
+
+			return this;
+		}
+
+		/// <summary>
 		/// The actual temporary file.
 		/// </summary>
 		public FileInfo File { get; private set; }

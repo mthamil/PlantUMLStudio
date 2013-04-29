@@ -37,6 +37,22 @@ namespace Tests.Unit.Utilities.InputOutput
 		}
 
 		[Fact]
+		public void Test_WithContent()
+		{
+			// Arrange.
+			using (var temp = new TemporaryFile())
+			{
+				// Act.
+				var returned = temp.WithContent("stuff");
+
+				// Assert.
+				Assert.True(temp.File.Exists);
+				Assert.Equal("stuff", File.ReadAllText(temp.File.FullName));
+				Assert.Same(temp, returned);
+			}
+		}
+
+		[Fact]
 		public void Test_Dispose()
 		{
 			// Arrange.

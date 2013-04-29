@@ -187,15 +187,14 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 		public async Task Test_SaveAsync_When_ContentShortened()
 		{
 			// Arrange.
-			using (var temp = new TemporaryFile())
+			const string initialContent = "test\ntest\ntest";
+			using (var temp = new TemporaryFile().WithContent(initialContent))
 			{
 				var diagram = new Diagram
 				{
 					File = temp.File,
-					Content = "test\ntest\ntest"
+					Content = initialContent
 				};
-
-				File.WriteAllText(diagram.File.FullName, diagram.Content);
 
 				diagram.Content = "test\ntest";
 

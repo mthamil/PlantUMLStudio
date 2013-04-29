@@ -14,6 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,9 +35,25 @@ namespace Utilities.Controls.Behaviors
 			_tabPanel = (
 				from child in AssociatedObject.VisualChildren()
 				from subChild in child.VisualChildren()
-				select subChild).OfType<TabPanel>().Single();
+				select subChild).OfType<TabPanel>().SingleOrDefault();
 
-			_tabPanel.MouseWheel += tabPanel_MouseWheel;
+			// If the tab panel is not found, no tab panel may exist because there are no tabs.
+			// Therefore, subscribe to the event that will occur when a tab is finally added.
+			if (_tabPanel == null)
+				AssociatedObject.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+			else
+				_tabPanel.MouseWheel += tabPanel_MouseWheel;
+		}
+
+		private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+		{
+			// The status here is important because the event will fire more than once at different stages.
+			// The tab panel will only exist after container generation has completed.
+			if (AssociatedObject.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+			{
+				AssociatedObject.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
+				OnLoaded();
+			}
 		}
 
 		/// <see cref="Behavior.OnDetaching"/>

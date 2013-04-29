@@ -1,5 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue"> PlantUML Editor 2&#xD;
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue"> PlantUML Studio&#xD;
  Copyright $CURRENT_YEAR$ Matthew Hamilton - matthamilton@live.com&#xD;
  Copyright 2010 Omar Al Zabir - omaralzabir@gmail.com (original author)&#xD;
 &#xD;
@@ -13,6 +13,5 @@
  distributed under the License is distributed on an "AS IS" BASIS,&#xD;
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;
  See the License for the specific language governing permissions and&#xD;
- limitations under the License.&#xD;
-&#xD;
+ limitations under the License.
 </s:String></wpf:ResourceDictionary>

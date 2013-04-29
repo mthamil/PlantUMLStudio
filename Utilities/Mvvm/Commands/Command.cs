@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor
+﻿//  PlantUML Studio
 //  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 

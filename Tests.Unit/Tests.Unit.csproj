@@ -113,29 +113,29 @@
     <Compile Include="AssertThatTests.cs" />
     <Compile Include="CultureAttribute.cs" />
     <Compile Include="MethodRecorder.cs" />
-    <Compile Include="PlantUmlEditor.Core\DiagramTests.cs" />
-    <Compile Include="PlantUmlEditor.Core\InputOutput\DiagramIOServiceTests.cs" />
-    <Compile Include="PlantUmlEditor.Core\Security\WindowsSecurityServiceTests.cs" />
-    <Compile Include="PlantUmlEditor\Configuration\DotNetSettingsTests.cs" />
-    <Compile Include="PlantUmlEditor\Configuration\RecentFilesCollectionTests.cs" />
-    <Compile Include="PlantUmlEditor\Configuration\SettingsPropagatorTests.cs" />
-    <Compile Include="PlantUmlEditor\Converters\DiagramTabNameConverterTests.cs" />
-    <Compile Include="PlantUmlEditor\Model\Snippets\SnippetParserTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\CodeEditorViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Commands\CloseWindowCommandTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Commands\OpenContextMenuCommandTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\ComponentViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\DiagramExplorerViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\DiagramEditorViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\DiagramManagerViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\EditorOptionsTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Notifications\ExceptionNotificationTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationsHubTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Notifications\NotificationTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\Notifications\ProgressNotificationTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\PreviewDiagramViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\ViewModel\SettingsViewModelTests.cs" />
-    <Compile Include="PlantUmlEditor\View\HexColorCodeTextHighlighterTests.cs" />
+    <Compile Include="PlantUmlStudio.Core\DiagramTests.cs" />
+    <Compile Include="PlantUmlStudio.Core\InputOutput\DiagramIOServiceTests.cs" />
+    <Compile Include="PlantUmlStudio.Core\Security\WindowsSecurityServiceTests.cs" />
+    <Compile Include="PlantUmlStudio\Configuration\DotNetSettingsTests.cs" />
+    <Compile Include="PlantUmlStudio\Configuration\RecentFilesCollectionTests.cs" />
+    <Compile Include="PlantUmlStudio\Configuration\SettingsPropagatorTests.cs" />
+    <Compile Include="PlantUmlStudio\Converters\DiagramTabNameConverterTests.cs" />
+    <Compile Include="PlantUmlStudio\Model\Snippets\SnippetParserTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\CodeEditorViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Commands\CloseWindowCommandTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Commands\OpenContextMenuCommandTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\ComponentViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\DiagramExplorerViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\DiagramEditorViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\DiagramManagerViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\EditorOptionsTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Notifications\ExceptionNotificationTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Notifications\NotificationsHubTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Notifications\NotificationTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\Notifications\ProgressNotificationTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\PreviewDiagramViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\ViewModel\SettingsViewModelTests.cs" />
+    <Compile Include="PlantUmlStudio\View\HexColorCodeTextHighlighterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousAttribute.cs" />
     <Compile Include="TheoryDataSet.cs" />
@@ -188,13 +188,13 @@
     <Compile Include="Utilities\WeakEventHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PlantUmlEditor.Core\PlantUmlEditor.Core.csproj">
+    <ProjectReference Include="..\PlantUmlStudio.Core\PlantUmlStudio.Core.csproj">
       <Project>{F8E4AD9F-72F7-4205-803B-E3B242D32E5C}</Project>
-      <Name>PlantUmlEditor.Core</Name>
+      <Name>PlantUmlStudio.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PlantUmlEditor\PlantUmlEditor.csproj">
+    <ProjectReference Include="..\PlantUmlStudio\PlantUmlStudio.csproj">
       <Project>{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}</Project>
-      <Name>PlantUmlEditor</Name>
+      <Name>PlantUmlStudio</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utilities.Controls\Utilities.Controls.csproj">
       <Project>{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}</Project>

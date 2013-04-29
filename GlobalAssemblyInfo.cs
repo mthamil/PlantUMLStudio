@@ -1,4 +1,4 @@
-﻿//  PlantUML Editor
+﻿//  PlantUML Studio
 //  Copyright 2013 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
@@ -16,12 +16,12 @@
 
 using System.Reflection;
 
-[assembly: AssemblyProduct("PlantUML Editor")]
+[assembly: AssemblyProduct("PlantUML Studio")]
 [assembly: AssemblyCopyright("Copyright © 2012")]
 
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.*")]
-[assembly: AssemblyInformationalVersion("2.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.*")]
+[assembly: AssemblyInformationalVersion("1.0")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]

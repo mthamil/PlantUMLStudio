@@ -1,5 +1,5 @@
-   PlantUML Editor
-   Copyright 2012 Matthew Hamilton - https://github.com/mthamil/PlantUMLEditor
+   PlantUML Studio
+   Copyright 2013 Matthew Hamilton - https://github.com/mthamil/PlantUMLStudio
    Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 
    This software makes use of the AvalonEdit component, developed as
@@ -50,6 +50,6 @@
             http://aspnetwebstack.codeplex.com/
 
 
-   The PlantUML Editor software originated at: 
+   The original PlantUMLEditor software originated at: 
         http://code.google.com/p/plantumleditor/
    

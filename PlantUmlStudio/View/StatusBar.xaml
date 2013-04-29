@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="PlantUmlStudio.View.StatusBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ctrl="clr-namespace:Utilities.Controls;assembly=Utilities.Controls"
+             xmlns:Clickable="clr-namespace:Utilities.Controls.Behaviors.Clickable;assembly=Utilities.Controls"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:xtn="clr-namespace:PlantUmlStudio.View.MarkupExtensions"
+             xmlns:notifications="clr-namespace:PlantUmlStudio.ViewModel.Notifications"
+             mc:Ignorable="d" 
+             d:DesignHeight="25" d:DesignWidth="800">
+    
+    <StatusBar VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MinHeight="25" Background="#2B3C59" Foreground="White"
+               DataContext="{Binding Source={xtn:ViewModelLocator {x:Type notifications:NotificationsHub}}, Path=ViewModel}">
+
+        <StatusBar.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".85*"/>
+                        <ColumnDefinition Width=".15*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </ItemsPanelTemplate>
+        </StatusBar.ItemsPanel>
+
+        <StatusBarItem Grid.Column="0" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="SummaryText" Text="{Binding LatestNotification.Summary, FallbackValue=Ready.}" Padding="0" HorizontalAlignment="Stretch" FontFamily="Segoe UI" >
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LatestNotification.Severity}" Value="Informational">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding LatestNotification.Severity}" Value="Critical">
+                                    <Setter Property="Foreground" Value="Crimson"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                
+                <Button x:Name="MoreInfoButton" Content="..." Visibility="{Binding LatestNotification.HasMoreInfo, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
+                        ToolTip="View full message." Margin="0,0,0,0" MinHeight="16" Width="20" Padding="0" FocusVisualStyle="{StaticResource ButtonFocusVisual}"
+                         Foreground="{Binding ElementName=SummaryText, Path=Foreground}"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Top" VerticalAlignment="Center">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <Clickable:BindableClickAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+
+                                        <Border x:Name="Chrome" 
+                                                Background="{TemplateBinding Background}" 
+                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True"
+                                                CornerRadius="2">
+
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                              Margin="{TemplateBinding Padding}" 
+                                                              RecognizesAccessKey="True" 
+                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True">
+                                                <Setter Property="BorderBrush" Value="#445F8D"/>
+                                                <Setter Property="Background" Value="#33486A"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="False">
+                                                <Setter Property="BorderBrush" Value="#233048"/>
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <ctrl:MVVMMessageBox
+                    Message="{Binding LatestNotification.Message}"
+                    Trigger="{Binding ElementName=MoreInfoButton, Path=(Clickable:BindableClick.IsClicked)}"
+                    Caption="View Notification"
+                    Type="OK"/>
+            </StackPanel>
+        </StatusBarItem>
+
+        <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch">
+            <ProgressBar Foreground="LightGreen" Background="Gray" VerticalAlignment="Stretch" HorizontalAlignment="Right" 
+                         Minimum="0" Maximum="100" Height="18" Width="165" 
+                         IsIndeterminate="{Binding LatestNotification.HasDiscreteProgress, Converter={StaticResource NotConverter}}" 
+                         Value="{Binding LatestNotification.PercentComplete, TargetNullValue=-1}">
+
+                <ProgressBar.Style>
+                    <Style TargetType="{x:Type ProgressBar}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LatestNotification, FallbackValue={x:Null}}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LatestNotification.InProgress, FallbackValue=False}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LatestNotification.InProgress, FallbackValue=False}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ProgressBar.Style>
+
+            </ProgressBar>
+        </StatusBarItem>
+
+    </StatusBar>
+    
+</UserControl>

@@ -177,7 +177,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 
 			// Assert.
 			Assert.NotEmpty(actual);
-			Assert.Equal(2, actual.Count());
+			Assert.Equal(2, actual.Count);
 			AssertThat.SequenceEqual(actual.Select(f => f.FullName), new[] { @"C:\file1", @"C:\file2" });
 		}
 
@@ -242,7 +242,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 
 			// Assert.
 			Assert.NotEmpty(actual);
-			Assert.Equal(2, actual.Count());
+			Assert.Equal(2, actual.Count);
 			AssertThat.SequenceEqual(actual.Select(f => f.FullName), new[] { @"C:\file1", @"C:\file2" });
 		}
 

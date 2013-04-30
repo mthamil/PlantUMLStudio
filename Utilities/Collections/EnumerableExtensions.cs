@@ -55,22 +55,22 @@ namespace Utilities.Collections
 		}
 
 		/// <summary>
-		/// Returns an enumerable of items grouped into sliceSize number of items.
-		/// If the number of items remaining is less than the slice size, the last slice
-		/// will be the size of just the remaining items.
+		/// Groups an enumerable of items into a sequence of <paramref name="sliceSize"/>-sized collections.
+		/// However, if the number of items remaining is fewer than the <paramref name="sliceSize"/>, the last
+		/// slice will contain just the remaining items.
 		/// </summary>
-		/// <param name="items">The items to slice</param>
+		/// <param name="sourceItems">The items to slice</param>
 		/// <param name="sliceSize">The number of items per slice</param>
-		/// <returns>An enumerable of items grouped into slizeSize number of items</returns>
-		public static IEnumerable<IEnumerable<T>> Slices<T>(this IEnumerable<T> items, int sliceSize)
+		/// <returns>An enumerable of items grouped into <paramref name="sliceSize"/> number of items</returns>
+		public static IEnumerable<IReadOnlyCollection<T>> Slices<T>(this IEnumerable<T> sourceItems, int sliceSize)
 		{
-			if (items == null)
-				throw new ArgumentNullException("items");
+			if (sourceItems == null)
+				throw new ArgumentNullException("sourceItems");
 
 			if (sliceSize < 1)
-				return Enumerable.Empty<IEnumerable<T>>();
+				return Enumerable.Empty<IReadOnlyCollection<T>>();
 
-			return new SliceEnumerable<T>(items, sliceSize);
+			return new SliceEnumerable<T>(sourceItems, sliceSize);
 		}
 
 		/// <summary>
@@ -288,18 +288,15 @@ namespace Utilities.Collections
 		/// <summary>
 		/// Private class that provides the Slices enumerator.
 		/// </summary>
-		private class SliceEnumerable<T> : IEnumerable<IEnumerable<T>>
+		private class SliceEnumerable<T> : IEnumerable<IReadOnlyCollection<T>>
 		{
-			private readonly IEnumerable<T> items;
-			private readonly int sliceSize;
-
 			/// <summary>
 			/// Creates a new Slice enumerable.
 			/// </summary>
-			public SliceEnumerable(IEnumerable<T> items, int sliceSize)
+			public SliceEnumerable(IEnumerable<T> sourceItems, int sliceSize)
 			{
-				this.items = items;
-				this.sliceSize = sliceSize;
+				_sourceItems = sourceItems;
+				_sliceSize = sliceSize;
 			}
 
 			#region IEnumerable Members
@@ -315,27 +312,30 @@ namespace Utilities.Collections
 			#region IEnumerable<IEnumerable<T>> Members
 
 			/// <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/>
-			public IEnumerator<IEnumerable<T>> GetEnumerator()
+			public IEnumerator<IReadOnlyCollection<T>> GetEnumerator()
 			{
-				IList<T> group = new List<T>();
+				IList<T> buffer = new List<T>(_sliceSize);
 				int itemCounter = 1;
-				foreach (T item in items)
+				foreach (T item in _sourceItems)
 				{
-					group.Add(item);
-					if (itemCounter % sliceSize == 0)
+					buffer.Add(item);
+					if (itemCounter % _sliceSize == 0)
 					{
-						yield return new List<T>(group);
-						group.Clear();
+						yield return new List<T>(buffer);
+						buffer.Clear();
 					}
 
 					itemCounter++;
 				}
 
-				if (group.Count > 0)
-					yield return new List<T>(group);
+				if (buffer.Count > 0)
+					yield return new List<T>(buffer);
 			}
 
 			#endregion
+
+			private readonly IEnumerable<T> _sourceItems;
+			private readonly int _sliceSize;
 		}
 	}
 }

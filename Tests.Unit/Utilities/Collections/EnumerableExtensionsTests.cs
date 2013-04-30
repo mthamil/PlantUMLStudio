@@ -122,7 +122,7 @@ namespace Tests.Unit.Utilities.Collections
 				while (slicesEnumerator.MoveNext())
 				{
 					var slice = slicesEnumerator.Current;
-					int sliceCount = slice.Count();
+					int sliceCount = slice.Count;
 
 					if (counter < 2)
 						Assert.Equal(sliceSize, sliceCount);
@@ -148,40 +148,30 @@ namespace Tests.Unit.Utilities.Collections
 			Assert.Throws<ArgumentNullException>(() => ((IEnumerable<int>)null).Slices(1));
 		}
 
-		[Fact]
-		public void Test_Slices_SliceSizeIsZero()
+		[Theory]
+		[InlineData(0)]
+		[InlineData(-1)]
+		[InlineData(-2)]
+		public void Test_Slices_SliceSize_LessThan_One(int sliceSize)
 		{
 			// Arrange.
-			IEnumerable<string> items = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
+			IEnumerable<string> items = new List<string> { "1", "2", "3", "4" };
 
 			// Act.
-			IEnumerable<IEnumerable<string>> slices = items.Slices(0);
+			var slices = items.Slices(sliceSize);
 
 			// Assert.
 			Assert.Empty(slices);
 		}
 
 		[Fact]
-		public void Test_Slices_SliceSizeLessThanZero()
+		public void Test_Slices_SliceSize_Equals_One()
 		{
 			// Arrange.
 			IEnumerable<string> items = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
 
 			// Act.
-			IEnumerable<IEnumerable<string>> slices = items.Slices(-1);
-
-			// Assert.
-			Assert.Empty(slices);
-		}
-
-		[Fact]
-		public void Test_Slices_SliceSizeIsOne()
-		{
-			// Arrange.
-			IEnumerable<string> items = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
-
-			// Act.
-			IEnumerable<IEnumerable<string>> slices = items.Slices(1);
+			var slices = items.Slices(1);
 
 			// Assert.
 			Assert.Equal(items.Count(), slices.Count());
@@ -194,20 +184,20 @@ namespace Tests.Unit.Utilities.Collections
 					string item = itemsEnumerator.Current;
 					var slice = slicesEnumerator.Current;
 
-					Assert.Equal(1, slice.Count());
+					Assert.Equal(1, slice.Count);
 					Assert.Equal(item, slice.Single());
 				}
 			}
 		}
 
 		[Fact]
-		public void Test_Slices_SliceSizeIsCount()
+		public void Test_Slices_SliceSize_Equals_Count()
 		{
 			// Arrange.
 			IEnumerable<string> items = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
 
 			// Act.
-			IEnumerable<IEnumerable<string>> slices = items.Slices(items.Count());
+			var slices = items.Slices(items.Count());
 
 			// Assert.
 			Assert.Single(slices);

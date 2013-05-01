@@ -37,8 +37,8 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		/// <summary>
 		/// Retrieves a dependency's latest version.
 		/// </summary>
-		/// <param name="cancellationToken">An optional token that can cancel download of an update</param>
 		/// <param name="progress">An optional object that can report progress on an update download</param>
-		Task DownloadLatestAsync(CancellationToken cancellationToken = default(CancellationToken), IProgress<DownloadProgressChangedEventArgs> progress = null);
+		/// <param name="cancellationToken">An optional token that can cancel download of an update</param>
+		Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

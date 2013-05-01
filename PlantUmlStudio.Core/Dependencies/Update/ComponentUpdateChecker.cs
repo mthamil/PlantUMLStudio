@@ -59,7 +59,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
         }
 
 		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
-        public async Task DownloadLatestAsync(CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null)
+        public async Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
         {
 			if (LocalLocation.Exists)
 			{

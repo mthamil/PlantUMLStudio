@@ -62,7 +62,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
-			component.Setup(c => c.DownloadLatestAsync(It.IsAny<CancellationToken>(), It.IsAny<IProgress<DownloadProgressChangedEventArgs>>()))
+			component.Setup(c => c.DownloadLatestAsync(It.IsAny<IProgress<DownloadProgressChangedEventArgs>>(), It.IsAny<CancellationToken>()))
 			         .Returns(Tasks.FromSuccess());
 
 			var viewModel = new ComponentViewModel(component.Object, securityService.Object);

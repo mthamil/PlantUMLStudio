@@ -43,7 +43,7 @@ namespace PlantUmlStudio.Core
 		}
 
 		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
-		public Task DownloadLatestAsync(CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null)
+		public Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
 		{
 			throw new NotSupportedException();
 		}

@@ -181,7 +181,7 @@ namespace PlantUmlStudio.ViewModel
 				UpdateProgress.PercentComplete = p.ProgressPercentage;
 			});
 
-			await _externalComponent.DownloadLatestAsync(progress:progress);
+			await _externalComponent.DownloadLatestAsync(progress);
 
 			UpdateProgress.PercentComplete = null;
 			UpdateCompleted = true;

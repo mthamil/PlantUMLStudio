@@ -50,7 +50,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>(), It.IsAny<CancellationToken>()))
 			         .Returns(() => Task.FromResult<IEnumerable<Diagram>>(diagrams))
-			         .Callback((DirectoryInfo dir, CancellationToken ct, IProgress<ReadDiagramsProgress> prog) =>
+			         .Callback((DirectoryInfo dir, IProgress<ReadDiagramsProgress> prog, CancellationToken ct) =>
 			         {
 				         foreach (var diagram in diagrams)
 					         prog.Report(new ReadDiagramsProgress(1, 1, diagram));

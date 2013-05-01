@@ -136,6 +136,24 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 		}
 
 		[Fact]
+		public void Test_ReadDiagramsAsync_Cancelled()
+		{
+			// Arrange.
+			var progress = new Mock<IProgress<ReadDiagramsProgress>>();
+			progress.Setup(p => p.Report(It.IsAny<ReadDiagramsProgress>()));
+
+			var tcs = new CancellationTokenSource();
+			tcs.Cancel();
+
+			// Act.
+			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, tcs.Token, progress.Object);
+
+			// Assert.
+			AssertThat.Throws<TaskCanceledException>(readTask);
+			Assert.True(readTask.IsCanceled);
+		}
+
+		[Fact]
 		public async Task Test_SaveAsync()
 		{
 			// Arrange.

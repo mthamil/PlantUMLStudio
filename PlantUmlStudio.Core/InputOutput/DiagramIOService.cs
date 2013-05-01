@@ -53,48 +53,42 @@ namespace PlantUmlStudio.Core.InputOutput
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
-		public Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, CancellationToken cancellationToken, IProgress<ReadDiagramsProgress> progress)
+		public async Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, CancellationToken cancellationToken, IProgress<ReadDiagramsProgress> progress)
 		{
-			return Task<IEnumerable<Diagram>>.Factory.StartNew(() =>
+			var files = await Task.Factory.StartNew(() => directory.GetFiles(FileFilter),
+				cancellationToken, TaskCreationOptions.None, _scheduler).ConfigureAwait(false);
+
+			int numberOfFiles = files.Length;
+			int processed = 0;
+			var diagrams = new List<Diagram>(numberOfFiles);
+			foreach (var file in files)
 			{
-				var diagrams = new List<Diagram>();
+				cancellationToken.ThrowIfCancellationRequested();
 
-				FileInfo[] files = directory.GetFiles(FileFilter);
-				int numberOfFiles = files.Length;
-				int processed = 0;
-				foreach (FileInfo file in files)
-				{
-					if (cancellationToken.IsCancellationRequested)
-						break;
+				var diagram = await ReadFileAsync(file).ConfigureAwait(false);
+				diagram.Apply(diagrams.Add);
+				//Thread.Sleep(500);
 
-					var diagram = ReadImpl(file);
-					diagram.Apply(diagrams.Add);
-					//Thread.Sleep(500);
+				processed++;
+				if (progress != null)
+					progress.Report(new ReadDiagramsProgress(processed, numberOfFiles, diagram));
+			}
 
-					processed++;
-					if (progress != null)
-						progress.Report(new ReadDiagramsProgress(processed, numberOfFiles, diagram));
-				}
-
-				return diagrams;
-
-			}, cancellationToken, TaskCreationOptions.None, _scheduler);
+			return diagrams;
 		}
 
 		/// <see cref="IDiagramIOService.ReadAsync"/>
-		public Task<Diagram> ReadAsync(FileInfo file)
+		public async Task<Diagram> ReadAsync(FileInfo file)
 		{
-			return Task.Factory.StartNew(() => ReadImpl(file).GetOrElse(() => { throw new InvalidDiagramFileException(file); }),
-				CancellationToken.None,
-				TaskCreationOptions.None,
-				_scheduler);
+			var diagram = await ReadFileAsync(file).ConfigureAwait(false);
+			return diagram.GetOrElse(() => { throw new InvalidDiagramFileException(file); });
 		}
 
-		private static Option<Diagram> ReadImpl(FileInfo file)
+		private static async Task<Option<Diagram>> ReadFileAsync(FileInfo file)
 		{
 			string content;
 			using (var reader = new StreamReader(file.OpenRead()))
-				content = reader.ReadToEnd();
+				content = await reader.ReadToEndAsync().ConfigureAwait(false);
 
 			if (!String.IsNullOrWhiteSpace(content))
 			{

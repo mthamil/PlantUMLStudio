@@ -156,4 +156,7 @@
   <data name="ContextMenu_Code_Paste" xml:space="preserve">
     <value>Paste</value>
   </data>
+  <data name="Progress_DiagramLoadCanceled" xml:space="preserve">
+    <value>Diagram loading canceled.</value>
+  </data>
 </root>

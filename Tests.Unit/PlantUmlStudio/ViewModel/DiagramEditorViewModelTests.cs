@@ -482,11 +482,11 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			// Assert.
 			Assert.Equal(2, tasks.Count);
-			AssertThat.Throws<OperationCanceledException>(tasks[0]);
+			AssertThat.Throws<OperationCanceledException>(() => tasks[0]);
 			Assert.Equal(TaskStatus.Canceled, tasks[0].Status);
 
 			killSwitch = true;
-			AssertThat.DoesNotThrow(tasks[1]);
+			AssertThat.DoesNotThrow(() => tasks[1]);
 			Assert.Equal(TaskStatus.RanToCompletion, tasks[1].Status);
 		}
 

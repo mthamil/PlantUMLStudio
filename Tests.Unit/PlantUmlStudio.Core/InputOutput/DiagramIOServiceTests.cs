@@ -100,7 +100,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			var file = new FileInfo(Path.Combine(currentDirectory.FullName, "invalid.puml"));
 
 			// Act/Assert.
-			AssertThat.Throws<InvalidDiagramFileException>(diagramIO.ReadAsync(file));
+			AssertThat.Throws<InvalidDiagramFileException>(() => diagramIO.ReadAsync(file));
 		}
 
 		[Fact]
@@ -149,7 +149,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, tcs.Token, progress.Object);
 
 			// Assert.
-			AssertThat.Throws<TaskCanceledException>(readTask);
+			AssertThat.Throws<TaskCanceledException>(() => readTask);
 			Assert.True(readTask.IsCanceled);
 		}
 

@@ -135,23 +135,32 @@ namespace Tests.Unit
 		}
 
 		/// <summary>
-		/// Asserts that a specific exception should be thrown by the given code.
+		/// Asserts that a specific exception should be thrown by the given asynchronous code.
 		/// </summary>
 		/// <typeparam name="TException">The type of exception that should be thrown</typeparam>
-		/// <param name="task">The task that should throw the exception</param>
+		/// <param name="task">The code producing the task that should throw the exception</param>
 		/// <returns>The exception if it was thrown</returns>
-		public static TException Throws<TException>(Task task) where TException : Exception
+		public static TException Throws<TException>(Func<Task> task) where TException : Exception
 		{
-			return Assert.Throws<TException>(() => task.GetAwaiter().GetResult());
+			Exception exception = Record.Exception(() => task().GetAwaiter().GetResult());
+
+			var exceptionType = typeof(TException);
+			if (exception == null)
+				throw new ThrowsException(exceptionType);
+
+			if (!exceptionType.Equals(exception.GetType()))
+				throw new ThrowsException(exceptionType, exception);
+
+			return (TException)exception;
 		}
 
 		/// <summary>
-		/// Asserts that the given code does not thrown any exceptions.
+		/// Asserts that the given asynchronous code does not throw any exceptions.
 		/// </summary>
-		/// <param name="task">The task that should not throw an exception</param>
-		public static void DoesNotThrow(Task task)
+		/// <param name="task">The code producing the task that should not throw an exception</param>
+		public static void DoesNotThrow(Func<Task> task)
 		{
-			var exception = Record.Exception(() => task.Wait());
+			var exception = Record.Exception(() => task().GetAwaiter().GetResult());
 			if (exception != null)
 				throw new DoesNotThrowException(exception);
 		}

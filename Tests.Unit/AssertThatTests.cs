@@ -351,7 +351,7 @@ namespace Tests.Unit
 		{
 			// Act/Assert.
 			Assert.DoesNotThrow(() =>
-				AssertThat.Throws<ArgumentException>(Task.Factory.StartNew(() => 
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() => 
 					{ 
 						throw new ArgumentException(); 
 					}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
@@ -362,7 +362,7 @@ namespace Tests.Unit
 		{
 			// Act/Assert.
 			var expected = Assert.Throws<ThrowsException>(() =>
-				AssertThat.Throws<ArgumentException>(Task.Factory.StartNew(() =>
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() =>
 				{
 					string.Empty.GetType();
 				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
@@ -376,7 +376,7 @@ namespace Tests.Unit
 		{
 			// Act/Assert.
 			var expected = Assert.Throws<ThrowsException>(() =>
-				AssertThat.Throws<ArgumentException>(Task.Factory.StartNew(() =>
+				AssertThat.Throws<ArgumentException>(() => Task.Factory.StartNew(() =>
 				{
 					throw new ArgumentOutOfRangeException();
 				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
@@ -390,7 +390,7 @@ namespace Tests.Unit
 		{
 			// Act/Assert.
 			Assert.DoesNotThrow(() => 
-				AssertThat.DoesNotThrow(Task.Factory.StartNew(() =>
+				AssertThat.DoesNotThrow(() => Task.Factory.StartNew(() =>
 				{
 					 string.Empty.GetType();
 				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));
@@ -401,7 +401,7 @@ namespace Tests.Unit
 		{
 			// Act/Assert.
 			var expected = Assert.Throws<DoesNotThrowException>(() => 
-				AssertThat.DoesNotThrow(Task.Factory.StartNew(() =>
+				AssertThat.DoesNotThrow(() => Task.Factory.StartNew(() =>
 				{
 					throw new ArgumentNullException();
 				}, CancellationToken.None, TaskCreationOptions.None, new SynchronousTaskScheduler())));

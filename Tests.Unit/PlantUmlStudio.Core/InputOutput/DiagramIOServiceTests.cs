@@ -114,7 +114,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			        .Callback((ReadDiagramsProgress p) => progressData.Add(p));
 
 			// Act.
-			var diagrams = await diagramIO.ReadDiagramsAsync(currentDirectory, CancellationToken.None, progress.Object);
+			var diagrams = await diagramIO.ReadDiagramsAsync(currentDirectory, progress.Object, CancellationToken.None);
 
 			// Assert.
 			Assert.Single(diagrams);
@@ -146,7 +146,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			tcs.Cancel();
 
 			// Act.
-			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, tcs.Token, progress.Object);
+			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, progress.Object, tcs.Token);
 
 			// Assert.
 			AssertThat.Throws<TaskCanceledException>(() => readTask);

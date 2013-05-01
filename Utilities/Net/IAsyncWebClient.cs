@@ -31,9 +31,8 @@ namespace Utilities.Net
 		/// </summary>
 		/// <param name="address">The URI of the resource to download.</param>
 		/// <param name="fileName">The name of the file to be placed on the local computer.</param>
-		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <param name="progress">An optional progress reporter</param>
-		/// 
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <exception cref="T:System.Net.WebException">
 		/// The URI formed by combining <see cref="P:System.Net.WebClient.BaseAddress"/> and <paramref name="address"/> 
 		/// is invalid.-or- An error occurred while downloading the resource. 
@@ -44,24 +43,24 @@ namespace Utilities.Net
 		/// </exception>
 		/// 
 		/// <returns>A task representing the asynchronous operation</returns>
-		Task DownloadFileAsync(Uri address, string fileName, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+		Task DownloadFileAsync(Uri address, string fileName, IProgress<DownloadProgressChangedEventArgs> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Asynchronously downloads the specified resource as a System.Byte array.
 		/// </summary>
 		/// <param name="address">The URI of the resource to download</param>
-		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <param name="progress">An optional progress reporter</param>
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <returns>A task representing the downloaded data</returns>
-		Task<byte[]> DownloadDataAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+		Task<byte[]> DownloadDataAsync(Uri address, IProgress<DownloadProgressChangedEventArgs> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Asynchronously downloads the specified resource as a string.
 		/// </summary>
 		/// <param name="address">The URI of the resource to download</param>
-		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <param name="progress">An optional progress reporter</param>
+		/// <param name="cancellationToken">Allows downloads to be cancelled</param>
 		/// <returns>A task representing the downloaded data</returns>
-		Task<string> DownloadStringAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress = null);
+		Task<string> DownloadStringAsync(Uri address, IProgress<DownloadProgressChangedEventArgs> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

@@ -53,7 +53,7 @@ namespace PlantUmlStudio.Core.InputOutput
 		#region Implementation of IDiagramIOService
 
 		/// <see cref="IDiagramIOService.ReadDiagramsAsync"/>
-		public async Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, CancellationToken cancellationToken, IProgress<ReadDiagramsProgress> progress)
+		public async Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<ReadDiagramsProgress> progress, CancellationToken cancellationToken)
 		{
 			var files = await Task.Factory.StartNew(() => directory.GetFiles(FileFilter),
 				cancellationToken, TaskCreationOptions.None, _scheduler).ConfigureAwait(false);

@@ -255,7 +255,7 @@ namespace PlantUmlStudio.ViewModel
 
 				try
 				{
-					await _diagramIO.ReadDiagramsAsync(DiagramLocation, cts.Token, readProgress);
+					await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress, cts.Token);
 					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
 				}
 				catch (OperationCanceledException)

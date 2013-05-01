@@ -125,7 +125,7 @@ namespace PlantUmlStudio.Core
 			// Scrape the PlantUML downloads page for the latest version number.
 			using (var client = new WebClient())
 			{
-				var downloadPage = await client.Async().DownloadStringAsync(VersionLocation, cancellationToken).ConfigureAwait(false);
+				var downloadPage = await client.Async().DownloadStringAsync(VersionLocation, cancellationToken: cancellationToken).ConfigureAwait(false);
 				var match = RemoteVersionMatchingPattern.Match(downloadPage);
 				if (match.Success)
 				{

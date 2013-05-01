@@ -40,7 +40,7 @@ namespace Utilities.Net
 		#region Implementation of IAsyncWebClient
 
 		/// <see cref="IAsyncWebClient.DownloadFileAsync"/>
-		public Task DownloadFileAsync(Uri address, string fileName, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		public Task DownloadFileAsync(Uri address, string fileName, IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
 		{
 			cancellationToken.Register(() => _webClient.CancelAsync());
 
@@ -69,7 +69,7 @@ namespace Utilities.Net
 		}
 
 		/// <see cref="IAsyncWebClient.DownloadDataAsync"/>
-		public Task<byte[]> DownloadDataAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		public Task<byte[]> DownloadDataAsync(Uri address, IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
 		{
 			cancellationToken.Register(() => _webClient.CancelAsync());
 
@@ -98,7 +98,7 @@ namespace Utilities.Net
 		}
 
 		/// <see cref="IAsyncWebClient.DownloadStringAsync"/>
-		public Task<string> DownloadStringAsync(Uri address, CancellationToken cancellationToken, IProgress<DownloadProgressChangedEventArgs> progress)
+		public Task<string> DownloadStringAsync(Uri address, IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
 		{
 			cancellationToken.Register(() => _webClient.CancelAsync());
 

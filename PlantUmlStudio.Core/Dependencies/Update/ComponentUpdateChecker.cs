@@ -71,7 +71,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 			using (var webClient = new WebClient())
 			{
 				var temp = new FileInfo(LocalLocation.FullName + ".tmp");
-				await webClient.Async().DownloadFileAsync(RemoteLocation, temp.FullName, cancellationToken, progress).ConfigureAwait(false);
+				await webClient.Async().DownloadFileAsync(RemoteLocation, temp.FullName, progress, cancellationToken).ConfigureAwait(false);
 				LocalLocation.Delete();
 				await temp.CopyToAsync(LocalLocation, false, cancellationToken).ConfigureAwait(false);
 				temp.Delete();

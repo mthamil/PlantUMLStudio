@@ -31,10 +31,10 @@ namespace PlantUmlStudio.Core.InputOutput
 		/// Asynchronously loads all diagram files from a directory.
 		/// </summary>
 		/// <param name="directory">The directory to load from</param>
-		/// <param name="cancellationToken">Optionally allows cancellation of diagram reading</param>
 		/// <param name="progress">An optional progress reporter</param>
+		/// <param name="cancellationToken">Optionally allows cancellation of diagram reading</param>
 		/// <returns>A task with the loaded diagrams</returns>
-		Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, CancellationToken cancellationToken = default(CancellationToken), IProgress<ReadDiagramsProgress> progress = null);
+		Task<IEnumerable<Diagram>> ReadDiagramsAsync(DirectoryInfo directory, IProgress<ReadDiagramsProgress> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		/// Asynchronously reads a single diagram from a file.

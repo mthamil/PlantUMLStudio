@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using Autofac;
 using PlantUmlStudio.Container;
 using PlantUmlStudio.Properties;
-using Utilities.Controls;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -56,12 +53,10 @@ namespace PlantUmlStudio
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			Current.DispatcherUnhandledException += Application_DispatcherUnhandledException;
-			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            _errorHandler = new UnhandledErrorHandler(Current, Dispatcher);
 
 			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterModule<CoreModule>();
-			containerBuilder.RegisterModule<PresentationModule>();
+			containerBuilder.RegisterModule<BootstrapModule>();
 			_container = containerBuilder.Build();
 		}
 
@@ -109,53 +104,6 @@ namespace PlantUmlStudio
 			return true;
 		}
 
-		void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-		{
-			e.Handled = true;
-			uiDispatcher.Invoke(() => ShowMessageBox(e.Exception));
-		}
-
-		void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-		{
-			e.SetObserved();
-			uiDispatcher.BeginInvoke(new Action(() => ShowMessageBox(e.Exception)));
-		}
-
-		private static void ShowMessageBox(Exception exception)
-		{
-			var messageBox = new ScrollableMessageBox
-			{
-				Buttons = MessageBoxButton.YesNo,
-				Title = "Application Error",
-				Caption =
-@"An application error occurred. If this error occurs again there may be a more serious malfunction in the application, and it should be closed.
-
-Do you want to exit the application?
-(Warning: If you click Yes the application will close, if you click No the application will continue)",
-
-				Message = String.Format("{0}{1}{2}{3}{4}{5}",
-				exception.GetType().Name,
-				Environment.NewLine,
-				exception.Message,
-				Environment.NewLine,
-				exception.StackTrace,
-				exception.InnerException != null
-										? String.Format("{0}{1}{2}{3}{4}",
-											exception.InnerException.GetType().Name,
-											Environment.NewLine,
-											exception.InnerException.Message,
-											Environment.NewLine,
-											exception.InnerException.StackTrace)
-										: string.Empty)
-			};
-
-			messageBox.ShowDialog();
-			if (messageBox.DialogResult.HasValue && messageBox.DialogResult.Value)
-			{
-				Current.Shutdown();
-			}
-		}
-
-		private readonly Dispatcher uiDispatcher = Dispatcher.CurrentDispatcher;
+        private static UnhandledErrorHandler _errorHandler;
 	}
 }

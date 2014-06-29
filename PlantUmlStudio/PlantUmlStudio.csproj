@@ -115,6 +115,7 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
+    <Compile Include="Container\BootstrapModule.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\RegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Model\Snippets\CodeSnippet.cs" />
     <Compile Include="Model\Snippets\SnippetProvider.cs" />
     <Compile Include="Model\Snippets\SnippetParser.cs" />
+    <Compile Include="UnhandledErrorHandler.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AutoFacViewModelLocator.cs" />
     <Compile Include="ViewModel\CodeEditorViewModel.cs" />

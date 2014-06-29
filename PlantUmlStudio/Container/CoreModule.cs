@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 
 using System;
 using System.IO;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlStudio.Configuration;
@@ -24,7 +23,6 @@ using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
-using PlantUmlStudio.Core.Security;
 using PlantUmlStudio.Properties;
 using Utilities.Chronology;
 using Utilities.InputOutput;
@@ -46,14 +44,11 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<SystemClock>().As<IClock>()
 			       .SingleInstance();
 
-			builder.Register(c => WindowsIdentity.GetCurrent());
-			builder.RegisterType<WindowsPrincipal>().As<IPrincipal>();
-
-			builder.Register(c => new DotNetSettings(
-				        Settings.Default,
-				        new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlStudio\samples\"))))
-			       .As<ISettings>()
-			       .SingleInstance();
+            builder.Register(c => new DotNetSettings(
+                        Settings.Default,
+                        new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlStudio\samples\"))))
+                   .As<ISettings>()
+                   .SingleInstance();
 
 			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
 			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()
@@ -87,9 +82,6 @@ namespace PlantUmlStudio.Container
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()
 			       .OnActivating(c => c.Instance.FileFilter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
-
-			builder.RegisterType<WindowsSecurityService>().As<ISecurityService>()
-			       .SingleInstance();
 		}
 	}
 }

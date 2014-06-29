@@ -14,20 +14,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System.Security.Principal;
 using Autofac;
+using PlantUmlStudio.Core.Security;
 
 namespace PlantUmlStudio.Container
 {
     /// <summary>
-    /// Module responsible for kicking off all other registrations.
+    /// Registers security-related functionality.
     /// </summary>
-    public class BootstrapModule : Module
+    public class SecurityModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<CoreModule>();
-            builder.RegisterModule<SecurityModule>();
-            builder.RegisterModule<PresentationModule>();
+            builder.Register(c => WindowsIdentity.GetCurrent());
+
+            builder.RegisterType<WindowsPrincipal>().As<IPrincipal>();
+
+            builder.RegisterType<WindowsSecurityService>().As<ISecurityService>()
+                   .SingleInstance();
         }
     }
 }

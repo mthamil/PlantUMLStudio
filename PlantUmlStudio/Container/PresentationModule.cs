@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
+using Autofac.Core;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -90,11 +91,9 @@ namespace PlantUmlStudio.Container
 					return HighlightingLoader.Load(reader, c.Resolve<IHighlightingDefinitionReferenceResolver>());
 			}).SingleInstance();
 
-			builder.Register(c => new CodeEditorViewModel(
-				                      c.ResolveNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"),
-				                      c.Resolve<IHighlightingDefinition>(),
-				                      c.Resolve<SnippetsMenu>(),
-				                      c.Resolve<IClipboard>())).As<ICodeEditor>()
+			builder.RegisterType<CodeEditorViewModel>()
+                   .WithParameter(ResolvedParameter.ForNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"))              
+                   .As<ICodeEditor>()
 			       .OnActivating(c =>
 			       {
 				       c.Instance.Options.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;

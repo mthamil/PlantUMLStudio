@@ -60,23 +60,43 @@ namespace Utilities.Controls.Behaviors
 
 		private static void SetButtonVisibility(Window window, bool isVisible)
 		{
-			long visibilityFlag = isVisible ? WS_SYSMENU : ~WS_SYSMENU;
+            long visibilityFlag = isVisible ? NativeMethods.WS_SYSMENU : ~NativeMethods.WS_SYSMENU;
 
 			var hwnd = new WindowInteropHelper(window).Handle;
-			SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & visibilityFlag);
+		    var newFlagValue = new IntPtr((long)NativeMethods.GetWindowLongPtr(hwnd, NativeMethods.GWL_STYLE) & visibilityFlag);
+            NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWL_STYLE, newFlagValue);
 		}
 
-		#region Win32 imports
+	    private static class NativeMethods
+	    {
+	        public const int GWL_STYLE = -16;
+            public const long WS_SYSMENU = 0x00080000L;
 
-		private const int GWL_STYLE = -16;
-		private const long WS_SYSMENU = 0x00080000L;
+            public static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex)
+            {
+                return IntPtr.Size == 4 
+                    ? GetWindowLongPtr32(hWnd, nIndex) 
+                    : GetWindowLongPtr64(hWnd, nIndex);
+            }
 
-		[DllImport("user32.dll", SetLastError = true)]
-		private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+	        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
+            static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 
-		[DllImport("user32.dll")]
-		private static extern int SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
+            [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
+            static extern IntPtr GetWindowLongPtr32(IntPtr hWnd, int nIndex);
 
-		#endregion
+            public static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+            {
+                return IntPtr.Size == 4 
+                    ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) 
+                    : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
+            }
+
+	        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+            static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+            [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+            static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+	    }
 	}
 }

@@ -783,6 +783,11 @@
             Gets/Sets the (text) column number.
             </summary>
     </member>
+    <member name="M:ICSharpCode.AvalonEdit.TextViewPosition.CompareTo(ICSharpCode.AvalonEdit.TextViewPosition)">
+      <summary>Compares the current object with another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>A value that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the <paramref name="other" /> parameter.Zero This object is equal to <paramref name="other" />. Greater than zero This object is greater than <paramref name="other" />. </returns>
+    </member>
     <member name="M:ICSharpCode.AvalonEdit.TextViewPosition.Equals(ICSharpCode.AvalonEdit.TextViewPosition)">
       <summary>
             Equality test.
@@ -796,6 +801,18 @@
     <member name="M:ICSharpCode.AvalonEdit.TextViewPosition.GetHashCode">
       <summary>Returns the hash code for this instance.</summary>
       <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+    </member>
+    <member name="P:ICSharpCode.AvalonEdit.TextViewPosition.IsAtEndOfLine">
+      <summary>
+            When word-wrap is enabled and a line is wrapped at a position where there is no space character;
+            then both the end of the first TextLine and the beginning of the second TextLine
+            refer to the same position in the document, and also have the same visual column.
+            In this case, the IsAtEndOfLine property is used to distinguish between the two cases:
+            the value <c>true</c> indicates that the position refers to the end of the previous TextLine;
+            the value <c>false</c> indicates that the position refers to the beginning of the next TextLine.
+            
+            If this position is not at such a wrapping position, the value of this property has no effect.
+            </summary>
     </member>
     <member name="P:ICSharpCode.AvalonEdit.TextViewPosition.Line">
       <summary>
@@ -3193,10 +3210,20 @@
     <member name="M:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.#ctor">
       <summary>Initializes a new instance of the <see cref="T:ICSharpCode.AvalonEdit.Editing.LineNumberMargin" /> class</summary>
     </member>
+    <member name="F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.emSize">
+      <summary>
+        <p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;summary&gt; documentation for "F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.emSize"]</p>
+      </summary>
+    </member>
     <member name="M:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.HitTestCore(System.Windows.Media.PointHitTestParameters)">
       <summary> Implements <see cref="M:System.Windows.Media.Visual.HitTestCore(System.Windows.Media.PointHitTestParameters)" /> to supply base element hit testing behavior (returning <see cref="T:System.Windows.Media.HitTestResult" />). </summary>
       <param name="hitTestParameters">Describes the hit test to perform, including the initial hit point.</param>
       <returns>Results of the test, including the evaluated point.</returns>
+    </member>
+    <member name="F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.maxLineNumberLength">
+      <summary>
+        <p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;summary&gt; documentation for "F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.maxLineNumberLength"]</p>
+      </summary>
     </member>
     <member name="M:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.MeasureOverride(System.Windows.Size)">
       <summary>When overridden in a derived class, measures the size in layout required for child elements and determines a size for the <see cref="T:System.Windows.FrameworkElement" />-derived class. </summary>
@@ -3235,6 +3262,11 @@
       <param name="sender">Object that originated the event.</param>
       <param name="e">Event data.</param>
       <returns>true if the listener handled the event. It is considered an error by the <see cref="T:System.Windows.WeakEventManager" /> handling in WPF to register a listener for an event that the listener does not handle. Regardless, the method should return false if it receives an event that it does not recognize or handle.</returns>
+    </member>
+    <member name="F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.typeface">
+      <summary>
+        <p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;summary&gt; documentation for "F:ICSharpCode.AvalonEdit.Editing.LineNumberMargin.typeface"]</p>
+      </summary>
     </member>
     <member name="T:ICSharpCode.AvalonEdit.Editing.RectangleSelection">
       <summary>
@@ -6790,6 +6822,11 @@
             Gets the text line containing the specified visual column.
             </summary>
     </member>
+    <member name="M:ICSharpCode.AvalonEdit.Rendering.VisualLine.GetTextLine(System.Int32,System.Boolean)">
+      <summary>
+            Gets the text line containing the specified visual column.
+            </summary>
+    </member>
     <member name="M:ICSharpCode.AvalonEdit.Rendering.VisualLine.GetTextLineByVisualYPosition(System.Double)">
       <summary>
             Gets a TextLine by the visual position.
@@ -6812,6 +6849,24 @@
             </summary>
       <returns>Distance in device-independent pixels
             from the top of the document to the top of the specified text line.</returns>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Rendering.VisualLine.GetTextViewPosition(System.Windows.Point,System.Boolean)">
+      <summary>
+            Gets the text view position from the specified visual position.
+            If the position is within a character, it is rounded to the next character boundary.
+            </summary>
+      <param name="visualPosition">The position in WPF device-independent pixels relative
+            to the top left corner of the document.</param>
+      <param name="allowVirtualSpace">Controls whether positions in virtual space may be returned.</param>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Rendering.VisualLine.GetTextViewPositionFloor(System.Windows.Point,System.Boolean)">
+      <summary>
+            Gets the text view position from the specified visual position.
+            If the position is inside a character, the position in front of the character is returned.
+            </summary>
+      <param name="visualPosition">The position in WPF device-independent pixels relative
+            to the top left corner of the document.</param>
+      <param name="allowVirtualSpace">Controls whether positions in virtual space may be returned.</param>
     </member>
     <member name="M:ICSharpCode.AvalonEdit.Rendering.VisualLine.GetVisualColumn(System.Int32)">
       <summary>
@@ -7448,6 +7503,42 @@
             Returns the baseline of the text.
             </summary>
     </member>
+    <member name="T:ICSharpCode.AvalonEdit.Search.DropDownButton">
+      <summary>
+            A button that opens a drop-down menu when clicked.
+            </summary>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Search.DropDownButton.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:ICSharpCode.AvalonEdit.Search.DropDownButton" /> class</summary>
+    </member>
+    <member name="P:ICSharpCode.AvalonEdit.Search.DropDownButton.DropDownContent">
+      <summary>
+            Gets/Sets the popup that is used as drop-down content.
+            </summary>
+    </member>
+    <member name="F:ICSharpCode.AvalonEdit.Search.DropDownButton.DropDownContentProperty">
+      <summary>
+            Identifies the <see cref="P:ICSharpCode.AvalonEdit.Search.DropDownButton.DropDownContent" /> dependency property.
+            </summary>
+    </member>
+    <member name="P:ICSharpCode.AvalonEdit.Search.DropDownButton.IsDropDownContentOpen">
+      <summary>
+            Gets whether the drop-down is opened.
+            </summary>
+    </member>
+    <member name="F:ICSharpCode.AvalonEdit.Search.DropDownButton.IsDropDownContentOpenProperty">
+      <summary>
+            Identifies the <see cref="P:ICSharpCode.AvalonEdit.Search.DropDownButton.IsDropDownContentOpen" /> dependency property.
+            </summary>
+    </member>
+    <member name="F:ICSharpCode.AvalonEdit.Search.DropDownButton.IsDropDownContentOpenPropertyKey">
+      <summary>
+            The key that identifies the <see cref="P:ICSharpCode.AvalonEdit.Search.DropDownButton.IsDropDownContentOpen" /> dependency property.
+            </summary>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Search.DropDownButton.OnClick">
+      <summary>Raises the <see cref="E:System.Windows.Controls.Primitives.ButtonBase.Click" /> routed event. </summary>
+    </member>
     <member name="T:ICSharpCode.AvalonEdit.Search.ISearchResult">
       <summary>
             Represents a search result.
@@ -7636,6 +7727,16 @@
             Moves to the previous occurrence in the file.
             </summary>
     </member>
+    <member name="M:ICSharpCode.AvalonEdit.Search.SearchPanel.Install(ICSharpCode.AvalonEdit.Editing.TextArea)">
+      <summary>
+            Creates a SearchPanel and installs it to the TextArea.
+            </summary>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Search.SearchPanel.Install(ICSharpCode.AvalonEdit.TextEditor)">
+      <summary>
+            Creates a SearchPanel and installs it to the TextEditor's TextArea.
+            </summary>
+    </member>
     <member name="P:ICSharpCode.AvalonEdit.Search.SearchPanel.IsClosed">
       <summary>
             Gets whether the Panel is already closed.
@@ -7702,6 +7803,11 @@
     <member name="F:ICSharpCode.AvalonEdit.Search.SearchPanel.SearchPatternProperty">
       <summary>
             Dependency property for <see cref="P:ICSharpCode.AvalonEdit.Search.SearchPanel.SearchPattern" />.
+            </summary>
+    </member>
+    <member name="M:ICSharpCode.AvalonEdit.Search.SearchPanel.Uninstall">
+      <summary>
+            Removes the SearchPanel from the TextArea.
             </summary>
     </member>
     <member name="P:ICSharpCode.AvalonEdit.Search.SearchPanel.UseRegex">

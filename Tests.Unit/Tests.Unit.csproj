@@ -64,9 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.0.2\lib\net40\Autofac.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=4.3.1.9429, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.4.2.9744, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AvalonEdit.4.3.1.9430\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <HintPath>..\packages\AvalonEdit.4.4.2.9744\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

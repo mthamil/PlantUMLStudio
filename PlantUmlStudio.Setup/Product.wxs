@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   
 	<Product Id="*" Name="PlantUML Studio" Language="1033" Version="2.0.0.0" Manufacturer="Matt Hamilton" UpgradeCode="51D909D7-1787-445A-9111-39F63411BDBD">
@@ -7,40 +7,40 @@
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
 		<MediaTemplate EmbedCab="yes"/>
-    <PropertyRef Id="NETFRAMEWORK45"/>
+        <PropertyRef Id="NETFRAMEWORK45"/>
     
-    <Condition Message="This application requires .NET Framework v4.5. Please install the .NET Framework then run this installer again.">
-      Installed OR NETFRAMEWORK45
-    </Condition>
+        <Condition Message="This application requires .NET Framework v4.5. Please install the .NET Framework then run this installer again.">
+          Installed OR NETFRAMEWORK45
+        </Condition>
 
-		<Feature Id="ApplicationFeature" Title="PlantUmlStudio.Setup" Level="1">
-			<ComponentGroupRef Id="ApplicationComponents"/>
-      <ComponentGroupRef Id="HighlightingDefinitions"/>
-      <ComponentGroupRef Id="CopyrightFiles"/>
-      <ComponentRef Id="PlantUmlLib"/>
-      <ComponentGroupRef Id="SnippetsGroup"/>
-		</Feature>
+        <Feature Id="ApplicationFeature" Title="PlantUmlStudio.Setup" Level="1">
+          <ComponentGroupRef Id="ApplicationComponents"/>
+          <ComponentGroupRef Id="HighlightingDefinitions"/>
+          <ComponentGroupRef Id="CopyrightFiles"/>
+          <ComponentRef Id="PlantUmlLib"/>
+          <ComponentGroupRef Id="SnippetsGroup"/>
+        </Feature>
 	</Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
       
-			<Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLDIR" Name="PlantUML Studio">
-          <Directory Id="PlantUmlDir" Name="PlantUML"/>
-        </Directory>
-      </Directory>
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="PlantUML Studio">
+                  <Directory Id="PlantUmlDir" Name="PlantUML"/>
+                </Directory>
+            </Directory>
 
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="ProgramMenuDir" Name="PlantUML Studio"/>
-      </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuDir" Name="PlantUML Studio"/>
+            </Directory>
 
 		</Directory>
 	</Fragment>
 
 	<Fragment>
     
-		<ComponentGroup Id="ApplicationComponents" Directory="INSTALLDIR">
+    <ComponentGroup Id="ApplicationComponents" Directory="INSTALLDIR">
       
       <Component Id="ApplicationExecutable" Guid="9D0395E4-F422-4DB1-9275-C50A5B38DD89">
         <File Id="PlantUmlStudioExe" Name="$(var.PlantUmlStudio.TargetFileName)" Source="$(var.PlantUmlStudio.TargetPath)" KeyPath="yes">

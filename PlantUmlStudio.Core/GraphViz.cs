@@ -56,17 +56,18 @@ namespace PlantUmlStudio.Core
 		public string Name { get { return GraphVizExecutable.Name; } }
 
 		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
-		public async Task<string> GetCurrentVersionAsync()
+		public async Task<string> GetCurrentVersionAsync(CancellationToken cancellationToken)
 		{
 			var result = await Task.Factory.FromProcess(
 				executable: GraphVizExecutable.FullName,
 				arguments: "-V",
-				input: Stream.Null
+				input: Stream.Null,
+                cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 
 			// For some reason output is written to standard error.
 			var output = Encoding.Default.GetString(
-				await result.Error.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
+                await result.Error.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}

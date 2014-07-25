@@ -35,7 +35,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
-			component.Setup(c => c.GetCurrentVersionAsync())
+			component.Setup(c => c.GetCurrentVersionAsync(It.IsAny<CancellationToken>()))
 			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
@@ -84,7 +84,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
-			component.Setup(c => c.GetCurrentVersionAsync())
+            component.Setup(c => c.GetCurrentVersionAsync(It.IsAny<CancellationToken>()))
 			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))

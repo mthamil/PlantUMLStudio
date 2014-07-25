@@ -86,18 +86,19 @@ namespace PlantUmlStudio.Core
 		public string Name { get { return PlantUmlJar.Name; } }
 
 		/// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
-		public async Task<string> GetCurrentVersionAsync()
+		public async Task<string> GetCurrentVersionAsync(CancellationToken cancellationToken)
 		{
 			var result = await Task.Factory.FromProcess(
 				executable: "java",
 				arguments: String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
-				input: Stream.Null
+				input: Stream.Null, 
+                cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Error, CancellationToken.None).ConfigureAwait(false);
+            await HandleErrorStream(result.Error, cancellationToken).ConfigureAwait(false);
 
 			var output = Encoding.Default.GetString(
-				await result.Output.Async().ReadAllBytesAsync(CancellationToken.None).ConfigureAwait(false));
+                await result.Output.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
 			var match = LocalVersionMatchingPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
@@ -119,7 +120,7 @@ namespace PlantUmlStudio.Core
 		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
 		public override async Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
 		{
-			string currentVersion = await GetCurrentVersionAsync().ConfigureAwait(false);
+            string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
 
 			// Scrape the PlantUML downloads page for the latest version number.
 			using (var client = new HttpClient())

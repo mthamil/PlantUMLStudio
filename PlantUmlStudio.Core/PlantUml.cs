@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -31,7 +31,6 @@ using Utilities;
 using Utilities.Chronology;
 using Utilities.Concurrency.Processes;
 using Utilities.InputOutput;
-using Utilities.Net;
 
 namespace PlantUmlStudio.Core
 {
@@ -123,10 +122,11 @@ namespace PlantUmlStudio.Core
 			string currentVersion = await GetCurrentVersionAsync().ConfigureAwait(false);
 
 			// Scrape the PlantUML downloads page for the latest version number.
-			using (var client = new WebClient())
+			using (var client = new HttpClient())
 			{
-				var downloadPage = await client.Async().DownloadStringAsync(VersionLocation, cancellationToken: cancellationToken).ConfigureAwait(false);
-				var match = RemoteVersionMatchingPattern.Match(downloadPage);
+                var response = await client.GetAsync(VersionLocation, cancellationToken).ConfigureAwait(false);
+                var downloadPage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var match = RemoteVersionMatchingPattern.Match(downloadPage);
 				if (match.Success)
 				{
 					string remoteVersion = match.Groups["version"].Value;

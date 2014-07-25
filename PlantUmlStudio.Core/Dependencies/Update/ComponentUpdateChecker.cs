@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,12 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities;
 using Utilities.Chronology;
 using Utilities.InputOutput;
-using Utilities.Net;
 
 namespace PlantUmlStudio.Core.Dependencies.Update
 {
@@ -66,15 +66,17 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 				// Make a backup in case the new version has issues.
 				var backupFile = new FileInfo(String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", LocalLocation.FullName, _clock.Now));
 				await LocalLocation.CopyToAsync(backupFile, true, cancellationToken).ConfigureAwait(false);
+                LocalLocation.Delete();
 			}
 
-			using (var webClient = new WebClient())
+			using (var client = new HttpClient())
 			{
-				var temp = new FileInfo(LocalLocation.FullName + ".tmp");
-				await webClient.Async().DownloadFileAsync(RemoteLocation, temp.FullName, progress, cancellationToken).ConfigureAwait(false);
-				LocalLocation.Delete();
-				await temp.CopyToAsync(LocalLocation, false, cancellationToken).ConfigureAwait(false);
-				temp.Delete();
+			    var response = await client.GetAsync(RemoteLocation, cancellationToken).ConfigureAwait(false);
+                using (var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                using (var destination = LocalLocation.Open(FileMode.OpenOrCreate))
+			    {
+			        await source.CopyToAsync(destination).ConfigureAwait(false);
+			    }
 			}
         }
 

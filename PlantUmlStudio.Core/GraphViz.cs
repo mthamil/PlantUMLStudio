@@ -15,8 +15,11 @@
 //  limitations under the License.
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -34,18 +37,42 @@ namespace PlantUmlStudio.Core
 	/// </summary>
 	public class GraphViz : IExternalComponent
 	{
+	    /// <summary>
+		/// Initializes a new instance of <see cref="GraphViz"/>.
+		/// </summary>
+        /// <param name="httpClient">Used for web requests</param>
+        public GraphViz(HttpClient httpClient)
+		{
+		    _httpClient = httpClient;
+		}
+
 		#region Implementation of IComponentUpdateChecker
 
 		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
-		public Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
+		public async Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
 		{
-			return Task.FromResult(Option<string>.None());
+            string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
+
+            // Scrape the GraphViz news page for the latest release version.
+            var response = await _httpClient.GetAsync(VersionSource, cancellationToken).ConfigureAwait(false);
+            var newsPage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+		    var match = RemoteVersionPattern.Match(newsPage);
+            if (match.Success)
+            {
+                string remoteVersion = match.Groups["version"].Value;
+                bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+                if (versionsNotEqual)
+                    return remoteVersion;
+            }
+
+			return Option<string>.None();
 		}
 
 		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
 		public Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
 		{
-			throw new NotSupportedException();
+            Process.Start(DownloadLocation.ToString());
+		    return Task.FromResult<object>(null);
 		}
 
 		#endregion
@@ -68,7 +95,7 @@ namespace PlantUmlStudio.Core
 			// For some reason output is written to standard error.
 			var output = Encoding.Default.GetString(
                 await result.Error.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
-			var match = LocalVersionMatchingPattern.Match(output);
+			var match = LocalVersionPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
 
@@ -82,6 +109,23 @@ namespace PlantUmlStudio.Core
 		/// <summary>
 		/// Pattern used to extract the current version.
 		/// </summary>
-		public Regex LocalVersionMatchingPattern { get; set; }
+		public Regex LocalVersionPattern { get; set; }
+
+        /// <summary>
+        /// The location of the latest GraphViz version number.
+        /// </summary>
+        public Uri VersionSource { get; set; }
+
+        /// <summary>
+        /// Pattern used to find the latest version.
+        /// </summary>
+        public Regex RemoteVersionPattern { get; set; }
+
+        /// <summary>
+        /// Where downloads are located.
+        /// </summary>
+        public Uri DownloadLocation { get; set; }
+
+        private readonly HttpClient _httpClient;
 	}
 }

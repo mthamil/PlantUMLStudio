@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlStudio.Configuration;
@@ -44,6 +45,9 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<SystemClock>().As<IClock>()
 			       .SingleInstance();
 
+		    builder.RegisterType<HttpClient>()
+		           .SingleInstance();
+
             builder.Register(c => new DotNetSettings(
                         Settings.Default,
                         new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlStudio\samples\"))))
@@ -65,7 +69,11 @@ namespace PlantUmlStudio.Container
 			       .OnActivating(c =>
 			       {
 				       c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
-				       c.Instance.LocalVersionMatchingPattern = c.Context.Resolve<ISettings>().GraphVizLocalVersionPattern;
+
+				       c.Instance.LocalVersionPattern = c.Context.Resolve<ISettings>().GraphVizLocalVersionPattern;
+                       c.Instance.DownloadLocation = c.Context.Resolve<ISettings>().GraphVizDownloadLocation;
+                       c.Instance.VersionSource = c.Context.Resolve<ISettings>().GraphVizVersionSource;
+                       c.Instance.RemoteVersionPattern = c.Context.Resolve<ISettings>().GraphVizRemoteVersionPattern;
 			       });
 
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IExternalComponent>()
@@ -73,11 +81,12 @@ namespace PlantUmlStudio.Container
 			       {
 				       c.Instance.PlantUmlJar = c.Context.Resolve<ISettings>().PlantUmlJar;
 				       c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
-				       c.Instance.LocalVersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
-				       c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
-				       c.Instance.RemoteLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
-				       c.Instance.VersionLocation = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
-				       c.Instance.RemoteVersionMatchingPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
+                       c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
+
+				       c.Instance.LocalVersionPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
+				       c.Instance.DownloadLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
+				       c.Instance.VersionSource = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
+				       c.Instance.RemoteVersionPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
 			       });
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()

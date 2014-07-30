@@ -40,17 +40,18 @@ namespace PlantUmlStudio.Core
 	public class PlantUml : ComponentUpdateChecker, IExternalComponent, IDiagramCompiler
 	{
 		/// <summary>
-		/// Initializes the PlantUML wrapper.
+		/// Initializes a new PlantUML wrapper.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
 		/// <param name="renderers">Responsible for converting data to an image</param>
-		public PlantUml(IClock clock, IIndex<ImageFormat, IDiagramRenderer> renderers) 
-			: base(clock)
+		/// <param name="httpClient">Used for web requests</param>
+		public PlantUml(IClock clock, IIndex<ImageFormat, IDiagramRenderer> renderers, HttpClient httpClient) 
+			: base(clock, httpClient)
 		{
-			_renderers = renderers;
+		    _renderers = renderers;
 		}
 
-		/// <see cref="IDiagramCompiler.CompileToImageAsync"/>
+	    /// <see cref="IDiagramCompiler.CompileToImageAsync"/>
 		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken)
 		{
 			var result = await Task.Factory.FromProcess(
@@ -99,7 +100,7 @@ namespace PlantUmlStudio.Core
 
 			var output = Encoding.Default.GetString(
                 await result.Output.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
-			var match = LocalVersionMatchingPattern.Match(output);
+			var match = LocalVersionPattern.Match(output);
 			return match.Groups["version"].Value;
 		}
 
@@ -110,31 +111,28 @@ namespace PlantUmlStudio.Core
 		/// <summary>
 		/// The location of the latest PlantUML version number.
 		/// </summary>
-		public Uri VersionLocation { get; set; }
+		public Uri VersionSource { get; set; }
 
 		/// <summary>
 		/// Pattern used to find the latest version.
 		/// </summary>
-		public Regex RemoteVersionMatchingPattern { get; set; }
+		public Regex RemoteVersionPattern { get; set; }
 
 		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
 		public override async Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
 		{
             string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
 
-			// Scrape the PlantUML downloads page for the latest version number.
-			using (var client = new HttpClient())
+			// Scrape the PlantUML release feed for the latest version number.
+            var response = await HttpClient.GetAsync(VersionSource, cancellationToken).ConfigureAwait(false);
+            var newsFeed = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var match = RemoteVersionPattern.Match(newsFeed);
+			if (match.Success)
 			{
-                var response = await client.GetAsync(VersionLocation, cancellationToken).ConfigureAwait(false);
-                var downloadPage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                var match = RemoteVersionMatchingPattern.Match(downloadPage);
-				if (match.Success)
-				{
-					string remoteVersion = match.Groups["version"].Value;
-					bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
-					if (versionsNotEqual)
-						return remoteVersion;
-				}
+				string remoteVersion = match.Groups["version"].Value;
+				bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+				if (versionsNotEqual)
+					return remoteVersion;
 			}
 			
 			return Option<string>.None();
@@ -165,7 +163,7 @@ namespace PlantUmlStudio.Core
 		/// <summary>
 		/// Pattern used to extract the current version.
 		/// </summary>
-		public Regex LocalVersionMatchingPattern { get; set; }
+		public Regex LocalVersionPattern { get; set; }
 
 		private readonly IIndex<ImageFormat, IDiagramRenderer> _renderers;
 	}

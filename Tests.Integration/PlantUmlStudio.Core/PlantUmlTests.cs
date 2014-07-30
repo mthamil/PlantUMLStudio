@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
@@ -20,7 +21,7 @@ namespace Tests.Integration.PlantUmlStudio.Core
 			var renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
 			renderers.Setup(r => r[ImageFormat.PNG]).Returns(new BitmapRenderer());
 
-			var plantUml = new PlantUml(new Mock<IClock>().Object, renderers.Object)
+			var plantUml = new PlantUml(new Mock<IClock>().Object, renderers.Object, new HttpClient())
 			{
 				PlantUmlJar = new FileInfo(Settings.Default.PlantUmlLocation),
 				GraphVizExecutable = new FileInfo(Settings.Default.GraphVizLocation)

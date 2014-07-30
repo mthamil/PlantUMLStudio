@@ -69,11 +69,16 @@ namespace PlantUmlStudio.Configuration
 			GraphVizExecutable = new FileInfo(_settings.GraphVizLocation);
 			PlantUmlJar = new FileInfo(_settings.PlantUmlLocation);
 
+            GraphVizDownloadLocation = settings.GraphVizDownloadLocation;
+            GraphVizVersionSource = settings.GraphVizVersionSource;
+            GraphVizRemoteVersionPattern = new Regex(settings.GraphVizRemoteVersionPattern);
 			GraphVizLocalVersionPattern = new Regex(settings.GraphVizLocalVersionPattern);
-			PlantUmlDownloadLocation = settings.DownloadUrl;
+
+			PlantUmlDownloadLocation = settings.PlantUmlDownloadLocation;
 			PlantUmlVersionSource = settings.PlantUmlVersionSource;
 			PlantUmlRemoteVersionPattern = new Regex(settings.PlantUmlRemoteVersionPattern);
 			PlantUmlLocalVersionPattern = new Regex(settings.PlantUmlLocalVersionPattern);
+
 			DiagramFileExtension = settings.PlantUmlFileExtension;
 			PlantUmlHighlightingDefinition = new FileInfo(settings.PlantUmlHighlightingDefinition);
 		}
@@ -199,7 +204,16 @@ namespace PlantUmlStudio.Configuration
 		/// <see cref="ISettings.GraphVizLocalVersionPattern"/>
 		public Regex GraphVizLocalVersionPattern { get; private set; }
 
-		/// <see cref="ISettings.PlantUmlJar"/>
+        /// <see cref="ISettings.GraphVizDownloadLocation"/>
+	    public Uri GraphVizDownloadLocation { get; private set; }
+
+        /// <see cref="ISettings.GraphVizVersionSource"/>
+	    public Uri GraphVizVersionSource { get; private set; }
+
+        /// <see cref="ISettings.GraphVizRemoteVersionPattern"/>
+	    public Regex GraphVizRemoteVersionPattern { get; private set; }
+
+	    /// <see cref="ISettings.PlantUmlJar"/>
 		public FileInfo PlantUmlJar { get; set; }
 
 		/// <see cref="ISettings.PlantUmlDownloadLocation"/>

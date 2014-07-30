@@ -32,25 +32,35 @@ namespace PlantUmlStudio.Core.Dependencies.Update
     public class ComponentUpdateChecker : IComponentUpdateChecker
 	{
 		/// <summary>
-		/// Initializes a new update checker.
+		/// Initializes a new <see cref="ComponentUpdateChecker"/>.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
-		public ComponentUpdateChecker(IClock clock)
+        /// <param name="httpClient">Used for web requests</param>
+		public ComponentUpdateChecker(IClock clock, HttpClient httpClient)
 		{
-			_clock = clock;
+		    _clock = clock;
+		    _httpClient = httpClient;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// The location to download updates from.
 		/// </summary>
-		public Uri RemoteLocation { get; set; }
+		public Uri DownloadLocation { get; set; }
 
 		/// <summary>
 		/// The local location of the file to update.
 		/// </summary>
 		public FileInfo LocalLocation { get; set; }
 
-		#region IComponentUpdateChecker Members
+        /// <summary>
+        /// Used for web requests.
+        /// </summary>
+	    protected HttpClient HttpClient
+	    {
+	        get { return _httpClient; }
+	    }
+
+	    #region IComponentUpdateChecker Members
 
 		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
 		public virtual Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
@@ -69,19 +79,17 @@ namespace PlantUmlStudio.Core.Dependencies.Update
                 LocalLocation.Delete();
 			}
 
-			using (var client = new HttpClient())
+            var response = await HttpClient.GetAsync(DownloadLocation, cancellationToken).ConfigureAwait(false);
+            using (var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+            using (var destination = LocalLocation.Open(FileMode.OpenOrCreate))
 			{
-			    var response = await client.GetAsync(RemoteLocation, cancellationToken).ConfigureAwait(false);
-                using (var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                using (var destination = LocalLocation.Open(FileMode.OpenOrCreate))
-			    {
-			        await source.CopyToAsync(destination).ConfigureAwait(false);
-			    }
+			    await source.CopyToAsync(destination).ConfigureAwait(false);
 			}
         }
 
 		#endregion IComponentUpdateChecker Members
 
 		private readonly IClock _clock;
-    }
+	    private readonly HttpClient _httpClient;
+	}
 }

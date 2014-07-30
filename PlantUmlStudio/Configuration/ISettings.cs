@@ -102,6 +102,21 @@ namespace PlantUmlStudio.Configuration
 		/// </summary>
 		Regex GraphVizLocalVersionPattern { get; }
 
+        /// <summary>
+        /// The URL where GraphViz can be downloaded.
+        /// </summary>
+        Uri GraphVizDownloadLocation { get; }
+
+        /// <summary>
+        /// The location where information about the latest GraphViz version can be found.
+        /// </summary>
+        Uri GraphVizVersionSource { get; }
+
+        /// <summary>
+        /// The pattern used to find the latest GraphViz version at GraphVizVersionSource.
+        /// </summary>
+        Regex GraphVizRemoteVersionPattern { get; }
+
 		/// <summary>
 		/// The PlantUML jar.
 		/// </summary>

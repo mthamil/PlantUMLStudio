@@ -75,6 +75,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -115,7 +116,6 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
-    <Compile Include="Container\BootstrapModule.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\RegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />

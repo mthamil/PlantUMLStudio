@@ -56,7 +56,7 @@ namespace PlantUmlStudio
             _errorHandler = new UnhandledErrorHandler(Current, Dispatcher);
 
 			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterModule<BootstrapModule>();
+			containerBuilder.RegisterAssemblyModules(typeof(App).Assembly);
 			_container = containerBuilder.Build();
 		}
 

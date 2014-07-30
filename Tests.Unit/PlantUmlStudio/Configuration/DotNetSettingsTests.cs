@@ -38,11 +38,16 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			Assert.Equal(Path.GetFullPath(settings.PlantUmlHighlightingDefinition), appSettings.PlantUmlHighlightingDefinition.FullName);
 
 			Assert.Equal(settings.GraphVizLocalVersionPattern, appSettings.GraphVizLocalVersionPattern.ToString());
+            Assert.Equal(settings.GraphVizRemoteVersionPattern, appSettings.GraphVizRemoteVersionPattern.ToString());
+
+            Assert.Equal(settings.GraphVizVersionSource, appSettings.GraphVizVersionSource);
+            Assert.Equal(settings.GraphVizDownloadLocation, appSettings.GraphVizDownloadLocation);
+
 			Assert.Equal(settings.PlantUmlLocalVersionPattern, appSettings.PlantUmlLocalVersionPattern.ToString());
 			Assert.Equal(settings.PlantUmlRemoteVersionPattern, appSettings.PlantUmlRemoteVersionPattern.ToString());
 
 			Assert.Equal(settings.PlantUmlVersionSource, appSettings.PlantUmlVersionSource);
-			Assert.Equal(settings.DownloadUrl, appSettings.PlantUmlDownloadLocation);
+			Assert.Equal(settings.PlantUmlDownloadLocation, appSettings.PlantUmlDownloadLocation);
 
 			Assert.Equal(settings.PlantUmlFileExtension, appSettings.DiagramFileExtension);
 

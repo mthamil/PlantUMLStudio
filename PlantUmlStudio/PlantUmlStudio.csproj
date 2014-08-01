@@ -117,9 +117,10 @@
     <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
     <Compile Include="Container\CoreModule.cs" />
-    <Compile Include="Container\RegistrationExtensions.cs" />
     <Compile Include="Container\PresentationModule.cs" />
     <Compile Include="Container\SecurityModule.cs" />
+    <Compile Include="Container\Support\NonPublicConstructorFinder.cs" />
+    <Compile Include="Container\Support\RegistrationExtensions.cs" />
     <Compile Include="Converters\DiagramTabNameConverter.cs" />
     <Compile Include="DesignTimeData\DesignTimeDiagramExplorer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />

@@ -20,6 +20,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
 using PlantUmlStudio.Configuration;
+using PlantUmlStudio.Container.Support;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Imaging;
@@ -48,11 +49,14 @@ namespace PlantUmlStudio.Container
 		    builder.RegisterType<HttpClient>()
 		           .SingleInstance();
 
-            builder.Register(c => new DotNetSettings(
-                        Settings.Default,
-                        new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"PlantUmlStudio\samples\"))))
-                   .As<ISettings>()
-                   .SingleInstance();
+		    builder.RegisterType<DotNetSettings>()
+                   .FindConstructorsWith(new NonPublicConstructorFinder())
+		           .WithParameter(TypedParameter.From(Settings.Default))
+		           .WithParameter(TypedParameter.From(new DirectoryInfo(
+		                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+		                             @"PlantUmlStudio\samples\"))))
+		           .As<ISettings>()
+		           .SingleInstance();
 
 			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
 			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()

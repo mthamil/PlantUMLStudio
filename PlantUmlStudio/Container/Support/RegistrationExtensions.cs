@@ -20,7 +20,7 @@ using Autofac;
 using Autofac.Builder;
 using Utilities.Reflection;
 
-namespace PlantUmlStudio.Container
+namespace PlantUmlStudio.Container.Support
 {
 	/// <summary>
 	/// Provides additional registration helpers.

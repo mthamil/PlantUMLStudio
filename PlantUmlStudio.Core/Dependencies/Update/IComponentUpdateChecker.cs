@@ -27,6 +27,12 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 	/// </summary>
 	public interface IComponentUpdateChecker
 	{
+        /// <summary>
+        /// Asynchronously retrieves a dependency's current version.
+        /// </summary>
+        /// <returns>A string representing the version</returns>
+        Task<string> GetCurrentVersionAsync(CancellationToken cancellationToken = default(CancellationToken));
+
 		/// <summary>
 		/// Determines whether an update is available for a dependency.
 		/// </summary>

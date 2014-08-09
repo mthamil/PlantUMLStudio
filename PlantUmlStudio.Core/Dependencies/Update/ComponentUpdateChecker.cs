@@ -15,9 +15,11 @@
 //  limitations under the License.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities;
@@ -29,14 +31,14 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 	/// <summary>
 	/// Checks for and downloads updates of third party components.
 	/// </summary>
-    public class ComponentUpdateChecker : IComponentUpdateChecker
+    public abstract class ComponentUpdateChecker : IComponentUpdateChecker
 	{
 		/// <summary>
 		/// Initializes a new <see cref="ComponentUpdateChecker"/>.
 		/// </summary>
 		/// <param name="clock">The system clock</param>
         /// <param name="httpClient">Used for web requests</param>
-		public ComponentUpdateChecker(IClock clock, HttpClient httpClient)
+		protected ComponentUpdateChecker(IClock clock, HttpClient httpClient)
 		{
 		    _clock = clock;
 		    _httpClient = httpClient;
@@ -53,6 +55,16 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		public FileInfo LocalLocation { get; set; }
 
         /// <summary>
+        /// The location of the latest component version number.
+        /// </summary>
+        public Uri VersionSource { get; set; }
+
+        /// <summary>
+        /// Pattern used to find the latest version.
+        /// </summary>
+        public Regex RemoteVersionPattern { get; set; }
+
+        /// <summary>
         /// Used for web requests.
         /// </summary>
 	    protected HttpClient HttpClient
@@ -62,14 +74,31 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 
 	    #region IComponentUpdateChecker Members
 
-		/// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
-		public virtual Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
+	    /// <see cref="IComponentUpdateChecker.GetCurrentVersionAsync"/>
+	    public abstract Task<string> GetCurrentVersionAsync(CancellationToken cancellationToken);
+
+	    /// <see cref="IComponentUpdateChecker.HasUpdateAsync"/>
+        public virtual async Task<Option<string>> HasUpdateAsync(CancellationToken cancellationToken)
         {
-			return Task.FromResult(Option<string>.None());
+            // Download the location of the latest release version.
+            var response = await HttpClient.GetAsync(VersionSource, cancellationToken).ConfigureAwait(false);
+            var updateSource = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var match = RemoteVersionPattern.Match(updateSource);
+            if (match.Success)
+            {
+                string remoteVersion = match.Groups["version"].Value;
+                string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
+
+                bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+                if (versionsNotEqual)
+                    return remoteVersion;
+            }
+
+            return Option<string>.None();
         }
 
 		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
-        public async Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
+        public virtual async Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
         {
 			if (LocalLocation.Exists)
 			{

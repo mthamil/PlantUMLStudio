@@ -16,6 +16,7 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlStudio.Core.Dependencies;
@@ -68,7 +69,15 @@ namespace PlantUmlStudio.ViewModel
 				PercentComplete = 100
 			};
 
-			CurrentVersion = await _externalComponent.GetCurrentVersionAsync();
+		    try
+		    {
+                CurrentVersion = await _externalComponent.GetCurrentVersionAsync();
+		    }
+		    catch (FileNotFoundException)
+		    {
+		        CurrentVersion = "Not Available";
+		    }
+			
 			VersionProgress.PercentComplete = null;
 		}
 

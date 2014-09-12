@@ -16,7 +16,7 @@
 
 using System;
 using System.ComponentModel;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace Utilities.Mvvm.Commands
 {

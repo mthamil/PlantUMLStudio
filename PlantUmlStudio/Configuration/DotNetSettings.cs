@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Properties;
 using Utilities.InputOutput;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Utilities.Reflection;
 
 namespace PlantUmlStudio.Configuration
@@ -31,7 +31,7 @@ namespace PlantUmlStudio.Configuration
 	/// <summary>
 	/// An adapter around the generated .NET Settings class.
 	/// </summary>
-	public class DotNetSettings : PropertyChangedNotifier<ISettings>, ISettings
+	public class DotNetSettings : ObservableObject<ISettings>, ISettings
 	{
 		internal DotNetSettings(Settings settings, DirectoryInfo defaultDiagramLocation)
 			: this()

@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Utilities.Mvvm;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

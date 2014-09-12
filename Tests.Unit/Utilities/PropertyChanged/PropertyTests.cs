@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Xunit;
 
 namespace Tests.Unit.Utilities.PropertyChanged
 {
-	public class PropertyTests : PropertyChangedNotifier
+	public class PropertyTests : ObservableObject
 	{
 		[Fact]
 		public void Test_PropertyChanged()

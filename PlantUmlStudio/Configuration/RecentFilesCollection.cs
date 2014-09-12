@@ -21,14 +21,14 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using Utilities.InputOutput;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.Configuration
 {
 	/// <summary>
 	/// Manages a collection of recent files.
 	/// </summary>
-	public class RecentFilesCollection : PropertyChangedNotifier, INotifyCollectionChanged, ICollection<FileInfo>
+	public class RecentFilesCollection : ObservableObject, INotifyCollectionChanged, ICollection<FileInfo>
 	{
 		/// <summary>
 		/// Initializes a new recent files collection.

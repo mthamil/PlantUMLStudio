@@ -15,7 +15,7 @@
 //  limitations under the License.
 
 using System;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

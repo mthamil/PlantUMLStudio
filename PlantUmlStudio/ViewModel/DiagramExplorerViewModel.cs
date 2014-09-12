@@ -32,7 +32,7 @@ using Utilities.Concurrency;
 using Utilities.InputOutput;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

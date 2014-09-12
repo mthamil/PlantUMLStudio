@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Utilities.Controls.Behaviors;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Xunit;
 
 namespace Tests.Unit.Utilities.Controls.Behaviors
@@ -45,7 +45,7 @@ namespace Tests.Unit.Utilities.Controls.Behaviors
 			Assert.Equal(childView, TreeViewBindableSelectedItemBehavior.GetBindableSelectedItem(treeView));
 		}
 
-		public class TestViewModel : PropertyChangedNotifier
+		public class TestViewModel : ObservableObject
 		{
 			public TestViewModel()
 			{
@@ -61,7 +61,7 @@ namespace Tests.Unit.Utilities.Controls.Behaviors
 			private readonly Property<bool> _isSelected;
 		}
 
-		public class SelectedItemWatcher : PropertyChangedNotifier
+		public class SelectedItemWatcher : ObservableObject
 		{
 			public SelectedItemWatcher()
 			{

@@ -18,7 +18,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using Autofac;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

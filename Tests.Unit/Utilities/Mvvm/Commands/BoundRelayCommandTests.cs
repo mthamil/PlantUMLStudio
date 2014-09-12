@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Xunit;
 
 namespace Tests.Unit.Utilities.Mvvm.Commands

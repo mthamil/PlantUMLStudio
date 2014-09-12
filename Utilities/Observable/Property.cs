@@ -21,7 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Utilities.Reflection;
 
-namespace Utilities.PropertyChanged
+namespace Utilities.Observable
 {
 	/// <summary>
 	/// Allows convenient creation of Property objects.

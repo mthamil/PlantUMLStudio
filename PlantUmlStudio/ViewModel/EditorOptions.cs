@@ -14,14 +14,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {
 	/// <summary>
 	/// Contains various text editor options.
 	/// </summary>
-	public class EditorOptions : PropertyChangedNotifier
+	public class EditorOptions : ObservableObject
 	{
 		/// <summary>
 		/// Initializes new <see cref="EditorOptions"/>.

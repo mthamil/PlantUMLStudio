@@ -20,7 +20,7 @@ using System.Windows.Input;
 using PlantUmlStudio.Configuration;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

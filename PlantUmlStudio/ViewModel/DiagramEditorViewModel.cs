@@ -35,7 +35,7 @@ using Utilities.Chronology;
 using Utilities.Concurrency;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Utilities.Reflection;
 
 namespace PlantUmlStudio.ViewModel

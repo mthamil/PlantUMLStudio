@@ -20,14 +20,14 @@ using System.IO;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Core.Imaging;
 using Utilities.InputOutput;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.Core
 {
 	/// <summary>
 	/// Represents a diagram.
 	/// </summary>
-    public class Diagram : PropertyChangedNotifier
+    public class Diagram : ObservableObject
     {
 		/// <summary>
 		/// Initializes a new diagram.

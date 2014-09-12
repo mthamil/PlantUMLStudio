@@ -16,7 +16,7 @@
 
 using System;
 using Utilities.Mvvm;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

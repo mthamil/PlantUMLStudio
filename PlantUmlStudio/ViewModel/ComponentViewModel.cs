@@ -24,7 +24,7 @@ using PlantUmlStudio.Core.Security;
 using PlantUmlStudio.ViewModel.Notifications;
 using Utilities.Mvvm;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

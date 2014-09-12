@@ -20,7 +20,7 @@ using System.Linq;
 using System.Windows.Media;
 using PlantUmlStudio.Core;
 using Utilities.Mvvm;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Utilities.Reflection;
 
 namespace PlantUmlStudio.ViewModel

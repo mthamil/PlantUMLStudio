@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Utilities.Mvvm.Commands;
-using Utilities.PropertyChanged;
+using Utilities.Observable;
 using Xunit;
 using Xunit.Extensions;
 
@@ -148,7 +148,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 					.Executes(() => { }));
 		}
 
-		private class TestParent : PropertyChangedNotifier
+		private class TestParent : ObservableObject
 		{
 			public TestParent()
 			{
@@ -171,7 +171,7 @@ namespace Tests.Unit.Utilities.Mvvm.Commands
 			private readonly Property<ObservableCollection<TestItem>> _items;
 		}
 
-		private class TestItem : PropertyChangedNotifier
+		private class TestItem : ObservableObject
 		{
 			public TestItem()
 			{

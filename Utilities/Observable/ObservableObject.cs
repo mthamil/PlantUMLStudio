@@ -19,12 +19,12 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using Utilities.Reflection;
 
-namespace Utilities.PropertyChanged
+namespace Utilities.Observable
 {
-	/// <summary>
-	/// A base implementation of INotifyPropertyChanged.
-	/// </summary>
-	public abstract class PropertyChangedNotifier : INotifyPropertyChanged
+    /// <summary>
+    /// Base class for objects that notify observers about changes to their state.
+    /// </summary>
+	public abstract class ObservableObject : INotifyPropertyChanged
 	{
 		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -41,11 +41,11 @@ namespace Utilities.PropertyChanged
 		}
 	}
 
-	/// <summary>
-	/// A base implementation of INotifyPropertyChanged that uses static polymorphism to
-	/// safely reference property names.
-	/// </summary>
-	public abstract class PropertyChangedNotifier<T> : PropertyChangedNotifier
+    /// <summary>
+    /// Base class for objects that notify observers about changes to their state that uses static polymorphism to
+    /// safely reference property names.
+    /// </summary>
+	public abstract class ObservableObject<T> : ObservableObject
 	{
 		/// <summary>
 		/// Raises the property changed event.

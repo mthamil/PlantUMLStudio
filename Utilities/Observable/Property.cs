@@ -209,6 +209,6 @@ namespace Utilities.Observable
 		private V _value;
 		private readonly Action<string> _propertyChangedRaiser;
 		private readonly IEnumerable<string> _dependentPropertyNames;
-		private readonly Func<V, V, bool> _equalityComparison = (x, y) => Object.Equals(x, y);
+		private readonly Func<V, V, bool> _equalityComparison = (x, y) => EqualityComparer<V>.Default.Equals(x, y);
 	}
 }

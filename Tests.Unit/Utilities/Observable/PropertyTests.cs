@@ -4,7 +4,7 @@ using System.ComponentModel;
 using Utilities.Observable;
 using Xunit;
 
-namespace Tests.Unit.Utilities.PropertyChanged
+namespace Tests.Unit.Utilities.Observable
 {
 	public class PropertyTests : ObservableObject
 	{

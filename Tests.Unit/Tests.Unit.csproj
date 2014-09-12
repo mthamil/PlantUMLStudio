@@ -179,7 +179,7 @@
     <Compile Include="Utilities\Mvvm\Commands\DependentBoundRelayCommandTests.cs" />
     <Compile Include="Utilities\Mvvm\Commands\RelayCommandTests.cs" />
     <Compile Include="Utilities\OptionTests.cs" />
-    <Compile Include="Utilities\PropertyChanged\PropertyTests.cs" />
+    <Compile Include="Utilities\Observable\PropertyTests.cs" />
     <Compile Include="Utilities\Reflection\ReflectionExtensionsTests.cs" />
     <Compile Include="Utilities\Reflection\ReflectTests.cs" />
     <Compile Include="Utilities\WeakEventHandlerTests.cs" />

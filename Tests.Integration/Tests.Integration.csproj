@@ -65,7 +65,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlantUmlStudio.Core\PlantUmlStudio.Core.csproj">
       <Project>{f8e4ad9f-72f7-4205-803b-e3b242d32e5c}</Project>

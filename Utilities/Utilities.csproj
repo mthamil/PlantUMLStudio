@@ -109,7 +109,7 @@
     <Compile Include="DisposableExtensions.cs" />
     <Compile Include="InputOutput\AsyncStream.cs" />
     <Compile Include="InputOutput\DirectoryMonitor.cs" />
-    <Compile Include="InputOutput\FileInfoPathEqualityComparer.cs" />
+    <Compile Include="InputOutput\FileSystemInfoPathEqualityComparer.cs" />
     <Compile Include="InputOutput\FileInfoExtensions.cs" />
     <Compile Include="InputOutput\FileSystemWatcherAdapter.cs" />
     <Compile Include="InputOutput\IDirectoryMonitor.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="Net\AsyncWebClient.cs" />
     <Compile Include="Net\IAsyncWebClient.cs" />
     <Compile Include="Net\WebClientExtensions.cs" />
+    <Compile Include="Observable\PropertyBuilderExtensions.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Observable\Property.cs" />

@@ -39,21 +39,26 @@ namespace Utilities.Observable
 			if (localEvent != null)
 				localEvent(this, new PropertyChangedEventArgs(propertyName));
 		}
-	}
 
-    /// <summary>
-    /// Base class for objects that notify observers about changes to their state that uses static polymorphism to
-    /// safely reference property names.
-    /// </summary>
-	public abstract class ObservableObject<T> : ObservableObject
-	{
-		/// <summary>
-		/// Raises the property changed event.
-		/// </summary>
-		/// <param name="property">The property that changed</param>
-		protected void OnPropertyChanged(Expression<Func<T, object>> property)
-		{
-			OnPropertyChanged(Reflect.PropertyOf(property).Name);
-		}
+        /// <summary>
+        /// Raises the property changed event.
+        /// </summary>
+        /// <param name="property">A lambda expression referencing the property that changed</param>
+        protected void OnPropertyChanged<T>(Expression<Func<T, object>> property)
+        {
+            var localEvent = PropertyChanged;
+            if (localEvent != null)
+                localEvent(this, new PropertyChangedEventArgs(Reflect.PropertyOf(property).Name));
+        }
+
+        /// <summary>
+        /// Raises the property changed event.
+        /// </summary>
+        /// <param name="instance">An instance of the type the property is declared on (used for inference)</param>
+        /// <param name="property">A lambda expression referencing the property that changed</param>
+        protected void OnPropertyChanged<T>(T instance, Expression<Func<T, object>> property)
+        {
+            OnPropertyChanged(property);
+        }
 	}
 }

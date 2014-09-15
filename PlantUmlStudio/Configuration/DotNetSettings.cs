@@ -31,7 +31,7 @@ namespace PlantUmlStudio.Configuration
 	/// <summary>
 	/// An adapter around the generated .NET Settings class.
 	/// </summary>
-	public class DotNetSettings : ObservableObject<ISettings>, ISettings
+	public class DotNetSettings : ObservableObject, ISettings
 	{
 		internal DotNetSettings(Settings settings, DirectoryInfo defaultDiagramLocation)
 			: this()
@@ -86,13 +86,11 @@ namespace PlantUmlStudio.Configuration
 		private DotNetSettings()
 		{
 			_lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation, OnPropertyChanged)
-										   .EqualWhen((oldValue, newValue) => CheckEquality(oldValue, newValue, 
-											   (x, y) => x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase)));
+                                           .EqualWhen(FileSystemInfoPathEqualityComparer.Instance.Equals);
 
 			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
 			_openFiles = Property.New(this, p => p.OpenFiles, OnPropertyChanged)
-								 .EqualWhen((oldValue, newValue) => CheckEquality(oldValue, newValue, 
-									 (x, y) => x.SequenceEqual(y, FileInfoPathEqualityComparer.Instance)));
+                                 .SequenceEqualWhen(FileSystemInfoPathEqualityComparer.Instance);
 
 			_recentFiles = new RecentFilesCollection();
 			_recentFiles.PropertyChanged += recentFiles_PropertyChanged;
@@ -264,27 +262,11 @@ namespace PlantUmlStudio.Configuration
 			_settings.Save();
 		}
 
-		/// <summary>
-		/// Performs an equality check between two referene objects. This method handles reference
-		/// equality and null checks and then defers to the given custom comparison.
-		/// </summary>
-		private static bool CheckEquality<T>(T x, T y, Func<T, T, bool> comparison)
-			where T : class
-		{
-			if (ReferenceEquals(x, y))
-				return true;
-
-			if (x == null || y == null)
-				return false;
-
-			return comparison(x, y);
-		}
-
 		void recentFiles_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			// Relay the property change.
-			if (e.PropertyName == maxRecentFilesCountName)
-				OnPropertyChanged(p => p.MaximumRecentFiles);
+			if (e.PropertyName == MaxRecentFilesCountName)
+				OnPropertyChanged(this, p => p.MaximumRecentFiles);
 		}
 
 		private readonly Property<DirectoryInfo> _lastDiagramLocation;
@@ -304,6 +286,6 @@ namespace PlantUmlStudio.Configuration
 
 		private readonly Settings _settings;
 
-		private static readonly string maxRecentFilesCountName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
+		private static readonly string MaxRecentFilesCountName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
 	}
 }

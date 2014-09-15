@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Core.Imaging;
@@ -36,7 +35,7 @@ namespace PlantUmlStudio.Core
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
 			_imageFile = Property.New(this, p => p.ImageFile, OnPropertyChanged)
-			                     .EqualWhen(fileComparer.Equals);
+                                 .EqualWhen(FileSystemInfoPathEqualityComparer.Instance.Equals);
 
 			_content.Value = string.Empty;
 		}
@@ -127,7 +126,7 @@ namespace PlantUmlStudio.Core
 			if (other == null)
 				return false;
 
-			return fileComparer.Equals(other.File, File);
+            return FileSystemInfoPathEqualityComparer.Instance.Equals(other.File, File);
         }
 
 		/// <see cref="object.GetHashCode"/>
@@ -144,7 +143,5 @@ namespace PlantUmlStudio.Core
 			RegexOptions.Multiline |
 			RegexOptions.IgnorePatternWhitespace |
 			RegexOptions.Compiled);
-
-		private static IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
     }
 }

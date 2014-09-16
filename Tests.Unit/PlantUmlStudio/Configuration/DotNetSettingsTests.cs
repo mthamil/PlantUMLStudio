@@ -200,7 +200,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 				appSettings.OpenFiles.Add(file);
 
 			// Assert.
-			AssertThat.SequenceEqual(appSettings.OpenFiles, files, FileInfoPathEqualityComparer.Instance);
+			AssertThat.SequenceEqual(appSettings.OpenFiles, files, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]

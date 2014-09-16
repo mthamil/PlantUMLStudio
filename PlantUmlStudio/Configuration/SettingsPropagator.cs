@@ -89,6 +89,6 @@ namespace PlantUmlStudio.Configuration
 			{ Reflect.PropertyOf<ISettings>(s => s.AllowScrollingBelowContent).Name, (ed, s) => ed.CodeEditor.Options.AllowScrollingBelowContent = s.AllowScrollingBelowContent }
 		};
 
-		private static readonly IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
+		private static readonly IEqualityComparer<FileInfo> fileComparer = FileSystemInfoPathEqualityComparer.Instance;
 	}
 }

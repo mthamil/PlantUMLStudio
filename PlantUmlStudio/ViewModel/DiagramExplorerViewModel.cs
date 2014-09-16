@@ -382,6 +382,6 @@ namespace PlantUmlStudio.ViewModel
 		private readonly ISettings _settings;
 		private readonly TaskScheduler _uiScheduler;
 
-		private static readonly IEqualityComparer<FileInfo> fileComparer = FileInfoPathEqualityComparer.Instance;
+		private static readonly IEqualityComparer<FileInfo> fileComparer = FileSystemInfoPathEqualityComparer.Instance;
 	}
 }

@@ -73,7 +73,7 @@ namespace PlantUmlStudio.Configuration
 		/// <param name="item">The file to add</param>
 		public void Add(FileInfo item)
 		{
-			var existingFile = _recentFiles.SingleOrDefault(f => FileInfoPathEqualityComparer.Instance.Equals(f, item));
+			var existingFile = _recentFiles.SingleOrDefault(f => FileSystemInfoPathEqualityComparer.Instance.Equals(f, item));
 			if (existingFile != null)
 				_recentFiles.Remove(existingFile);
 
@@ -97,7 +97,7 @@ namespace PlantUmlStudio.Configuration
 		/// <returns>True if the file is contained</returns>
 		public bool Contains(FileInfo item)
 		{
-			return _recentFiles.Contains(item, FileInfoPathEqualityComparer.Instance);
+			return _recentFiles.Contains(item, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		/// <summary>

@@ -307,7 +307,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			foreach (var diagram in diagrams)
 				diagramIO.Verify(io => io.ReadAsync(It.Is<FileInfo>(f => f.FullName == diagram.FullName)));
 
-			AssertThat.SequenceEqual(diagrams, args.Select(arg => arg.RequestedPreview.Diagram.File), FileInfoPathEqualityComparer.Instance);
+			AssertThat.SequenceEqual(diagrams, args.Select(arg => arg.RequestedPreview.Diagram.File), FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Theory]

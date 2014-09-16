@@ -27,7 +27,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 				recentFiles.Add(inputFile);
 			
 			// Assert.
-			AssertThat.SequenceEqual(expectedFiles, recentFiles, FileInfoPathEqualityComparer.Instance);
+			AssertThat.SequenceEqual(expectedFiles, recentFiles, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]
@@ -57,7 +57,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			recentFiles.MaximumCount = 1;
 
 			// Assert.
-			AssertThat.SequenceEqual(new[] { new FileInfo(@"C:\file3") }, recentFiles, FileInfoPathEqualityComparer.Instance);
+			AssertThat.SequenceEqual(new[] { new FileInfo(@"C:\file3") }, recentFiles, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]

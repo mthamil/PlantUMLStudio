@@ -201,7 +201,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 
 			// Assert.
 			Assert.Single(settings.Object.RecentFiles);
-			Assert.Equal(settings.Object.RecentFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+			Assert.Equal(settings.Object.RecentFiles.Single(), diagram.File, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Theory]
@@ -219,7 +219,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 
 			// Assert.
 			Assert.Single(settings.Object.OpenFiles);
-			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]
@@ -235,7 +235,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 
 			// Assert.
 			Assert.Single(settings.Object.OpenFiles);
-			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileInfoPathEqualityComparer.Instance);
+			Assert.Equal(settings.Object.OpenFiles.Single(), diagram.File, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Theory]
@@ -272,7 +272,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			}
 
 			// Assert.
-			AssertThat.SequenceEqual(settings.Object.OpenFiles, files, FileInfoPathEqualityComparer.Instance);
+			AssertThat.SequenceEqual(settings.Object.OpenFiles, files, FileSystemInfoPathEqualityComparer.Instance);
 		}
 
 		[Fact]

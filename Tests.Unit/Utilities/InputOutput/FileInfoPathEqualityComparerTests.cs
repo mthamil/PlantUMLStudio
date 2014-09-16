@@ -52,6 +52,6 @@ namespace Tests.Unit.Utilities.InputOutput
 			Assert.Equal(expected, actual);
 		}
 
-		private readonly FileInfoPathEqualityComparer comparer = new FileInfoPathEqualityComparer();
+		private readonly FileSystemInfoPathEqualityComparer comparer = new FileSystemInfoPathEqualityComparer();
 	}
 }

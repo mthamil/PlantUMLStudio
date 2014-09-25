@@ -34,8 +34,8 @@ namespace PlantUmlStudio.Core
 		public Diagram()
 		{
 			_content = Property.New(this, p => p.Content, OnPropertyChanged);
-			_imageFile = Property.New(this, p => p.ImageFile, OnPropertyChanged)
-                                 .EqualWhen(FileSystemInfoPathEqualityComparer.Instance.Equals);
+		    _imageFile = Property.New(this, p => p.ImageFile, OnPropertyChanged)
+		                         .UsingPathEquality();
 
 			_content.Value = string.Empty;
 		}

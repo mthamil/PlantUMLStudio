@@ -85,12 +85,12 @@ namespace PlantUmlStudio.Configuration
 
 		private DotNetSettings()
 		{
-			_lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation, OnPropertyChanged)
-                                           .EqualWhen(FileSystemInfoPathEqualityComparer.Instance.Equals);
+		    _lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation, OnPropertyChanged)
+		                                   .UsingPathEquality();
 
 			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
 			_openFiles = Property.New(this, p => p.OpenFiles, OnPropertyChanged)
-                                 .SequenceEqualWhen(FileSystemInfoPathEqualityComparer.Instance);
+                                 .UsingSequenceEquality(FileSystemInfoPathEqualityComparer.Instance);
 
 			_recentFiles = new RecentFilesCollection();
 			_recentFiles.PropertyChanged += recentFiles_PropertyChanged;

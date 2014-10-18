@@ -69,17 +69,6 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Behaviors\AvalonEdit\BindableOptions.cs" />
-    <Compile Include="Behaviors\AvalonEdit\BindableScrollOffsetBehavior.cs" />
-    <Compile Include="Behaviors\AvalonEdit\Folding\FoldedRegionDefinition.cs" />
-    <Compile Include="Behaviors\AvalonEdit\Folding\FoldingStrategyBehavior.cs" />
-    <Compile Include="Behaviors\AvalonEdit\Folding\PatternBasedFoldingStrategy.cs" />
-    <Compile Include="Behaviors\AvalonEdit\Folding\PlantUmlFoldRegions.cs" />
-    <Compile Include="Behaviors\AvalonEdit\AddLineTransformers.cs" />
-    <Compile Include="Behaviors\AvalonEdit\HighlightCurrentLine.cs" />
-    <Compile Include="Behaviors\AvalonEdit\CurrentLineHighlighter.cs" />
-    <Compile Include="Behaviors\AvalonEdit\SelectionManagement.cs" />
-    <Compile Include="Behaviors\AvalonEdit\ContentIndexBehavior.cs" />
     <Compile Include="Behaviors\Clickable\BindableClick.cs" />
     <Compile Include="Behaviors\Clickable\BindableClickAction.cs" />
     <Compile Include="Behaviors\CollectionViewSourceFilter.cs" />

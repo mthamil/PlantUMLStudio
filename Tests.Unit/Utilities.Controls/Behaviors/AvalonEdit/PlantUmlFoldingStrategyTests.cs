@@ -2,7 +2,7 @@
 using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
-using Utilities.Controls.Behaviors.AvalonEdit.Folding;
+using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using Xunit;
 using Xunit.Extensions;
 

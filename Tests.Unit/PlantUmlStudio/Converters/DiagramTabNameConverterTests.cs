@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
-using PlantUmlStudio.Converters;
+using PlantUmlStudio.Controls.Converters;
 using Xunit;
 using Xunit.Extensions;
 

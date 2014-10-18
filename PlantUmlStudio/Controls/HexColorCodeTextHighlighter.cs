@@ -7,7 +7,7 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace PlantUmlStudio.View
+namespace PlantUmlStudio.Controls
 {
 	/// <summary>
 	/// Makes textual occurences of a color, ie. #FF0000, appear as that color.

@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Behavior that adds highlighting for the line an editor's cursor is on.

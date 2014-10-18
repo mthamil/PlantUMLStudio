@@ -20,7 +20,7 @@ using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// A behavior that allows binding of scroll offset information.

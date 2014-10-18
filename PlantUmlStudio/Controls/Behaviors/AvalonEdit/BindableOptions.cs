@@ -23,7 +23,7 @@ using ICSharpCode.AvalonEdit;
 using Utilities.Collections;
 using Utilities.Reflection;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Provides bindable properties for <see cref="TextEditorOptions"/>.

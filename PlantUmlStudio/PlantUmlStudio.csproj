@@ -121,7 +121,19 @@
     <Compile Include="Container\SecurityModule.cs" />
     <Compile Include="Container\Support\NonPublicConstructorFinder.cs" />
     <Compile Include="Container\Support\RegistrationExtensions.cs" />
-    <Compile Include="Converters\DiagramTabNameConverter.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\AddLineTransformers.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\BindableOptions.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\BindableScrollOffsetBehavior.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\ContentIndexBehavior.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\CurrentLineHighlighter.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldedRegionDefinition.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldingStrategyBehavior.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\PatternBasedFoldingStrategy.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\PlantUmlFoldRegions.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\HighlightCurrentLine.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\SelectionManagement.cs" />
+    <Compile Include="Controls\Converters\DiagramTabNameConverter.cs" />
+    <Compile Include="Controls\HexColorCodeTextHighlighter.cs" />
     <Compile Include="DesignTimeData\DesignTimeDiagramExplorer.cs" />
     <Compile Include="Model\Snippets\ISnippetParser.cs" />
     <Compile Include="Model\Snippets\CodeSnippet.cs" />
@@ -168,7 +180,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AboutViewResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="View\HexColorCodeTextHighlighter.cs" />
     <Compile Include="View\DiagramEditorView.xaml.cs">
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>
     </Compile>

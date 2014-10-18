@@ -5,17 +5,18 @@
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:avalon="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit;assembly=Utilities.Controls" 
+    xmlns:avalon="clr-namespace:PlantUmlStudio.Controls.Behaviors.AvalonEdit"
     xmlns:convert="clr-namespace:Utilities.Controls.Converters;assembly=Utilities.Controls" 
     xmlns:MultiKey="clr-namespace:Utilities.Controls.MultiKey;assembly=Utilities.Controls" 
     xmlns:utilcmd="clr-namespace:Utilities.Controls.Commands;assembly=Utilities.Controls"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:split="clr-namespace:Utilities.Controls.Behaviors.GridSplitterExpanderSupport;assembly=Utilities.Controls"
-    xmlns:folding="clr-namespace:Utilities.Controls.Behaviors.AvalonEdit.Folding;assembly=Utilities.Controls"
+    xmlns:folding="clr-namespace:PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding"
     xmlns:Imaging="clr-namespace:PlantUmlStudio.Core.Imaging;assembly=PlantUmlStudio.Core"
     xmlns:Markup="clr-namespace:Utilities.Controls.Markup;assembly=Utilities.Controls"
     xmlns:vw="clr-namespace:PlantUmlStudio.View" 
     xmlns:cmd="clr-namespace:PlantUmlStudio.ViewModel.Commands"
+    xmlns:controls="clr-namespace:PlantUmlStudio.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
     FocusManager.FocusedElement="{Binding ElementName=ContentEditor}"
@@ -71,7 +72,7 @@
                                                     SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <avalon:AddLineTransformers>
-                            <vw:HexColorCodeTextHighlighter/>
+                            <controls:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>
                         <avalon:HighlightCurrentLine IsEnabled="{Binding CodeEditor.Options.HighlightCurrentLine}" />
                     </i:Interaction.Behaviors>

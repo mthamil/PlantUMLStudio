@@ -17,7 +17,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Contains PlantUML syntax fold region definitions.

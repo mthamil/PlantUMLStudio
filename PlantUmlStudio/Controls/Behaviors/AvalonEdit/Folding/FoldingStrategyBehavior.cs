@@ -24,7 +24,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Behavior for managing a text editor's folding strategy.

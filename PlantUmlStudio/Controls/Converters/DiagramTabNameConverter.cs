@@ -19,7 +19,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace PlantUmlStudio.Converters
+namespace PlantUmlStudio.Controls.Converters
 {
 	/// <summary>
 	/// Constructs a diagram's tab name.

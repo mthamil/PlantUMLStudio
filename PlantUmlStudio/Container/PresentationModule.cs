@@ -27,6 +27,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using PlantUmlStudio.Configuration;
 using PlantUmlStudio.Container.Support;
+using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Model.Snippets;
@@ -34,7 +35,6 @@ using PlantUmlStudio.ViewModel;
 using PlantUmlStudio.ViewModel.Notifications;
 using Utilities.Chronology;
 using Utilities.Clipboard;
-using Utilities.Controls.Behaviors.AvalonEdit.Folding;
 
 namespace PlantUmlStudio.Container
 {

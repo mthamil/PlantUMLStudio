@@ -21,7 +21,7 @@ using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Manages a TextEditor's bindable selection-related properties.

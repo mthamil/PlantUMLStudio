@@ -19,7 +19,7 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Renderer that highlights the line an editor's cursor is currently on.

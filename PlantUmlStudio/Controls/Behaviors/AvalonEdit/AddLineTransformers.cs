@@ -6,7 +6,7 @@ using System.Windows.Markup;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Rendering;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	/// <summary>
 	/// Behavior that enables adding <see cref="IVisualLineTransformer"/>s to a <see cref="TextEditor"/>'s

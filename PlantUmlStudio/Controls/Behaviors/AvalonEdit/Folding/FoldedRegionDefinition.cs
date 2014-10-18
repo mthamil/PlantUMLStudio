@@ -14,7 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Defines the start and end patterns of a fold region.

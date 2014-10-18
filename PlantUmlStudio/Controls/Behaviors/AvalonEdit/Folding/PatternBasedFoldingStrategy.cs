@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Utilities.Controls.Behaviors.AvalonEdit.Folding
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
 	/// <summary>
 	/// Creates folding regions based on start and end pattern definitions.

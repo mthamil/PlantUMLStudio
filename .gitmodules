@@ -1,0 +1,3 @@
+[submodule "SharpEssentials"]
+	path = SharpEssentials
+	url = https://github.com/mthamil/SharpEssentials.git

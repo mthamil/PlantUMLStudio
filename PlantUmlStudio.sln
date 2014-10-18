@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantUmlStudio", "PlantUmlStudio\PlantUmlStudio.csproj", "{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{573D5F8C-4C19-42C3-B84B-BC585008B505}"
@@ -30,6 +32,14 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PlantUmlStudio.Setup", "PlantUmlStudio.Setup\PlantUmlStudio.Setup.wixproj", "{8B0F862D-A3AF-4FA1-B745-11323E7A58E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{06FB4163-C837-4E71-9901-0C8233BC3E58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharpEssentials", "SharpEssentials", "{4681C230-55F0-4759-A38C-4D97CCC91F3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials", "SharpEssentials\SharpEssentials\SharpEssentials.csproj", "{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials.Controls", "SharpEssentials\SharpEssentials.Controls\SharpEssentials.Controls.csproj", "{E17C0821-BA25-4341-B147-B52304CC6A9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials.Testing", "SharpEssentials\SharpEssentials.Testing\SharpEssentials.Testing.csproj", "{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,8 +123,43 @@ Global
 		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{06FB4163-C837-4E71-9901-0C8233BC3E58}.Release|x86.ActiveCfg = Release|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427}.Release|x86.ActiveCfg = Release|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E17C0821-BA25-4341-B147-B52304CC6A9A}.Release|x86.ActiveCfg = Release|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7249E0DB-11B3-45ED-AEDC-3A88D76FE427} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
+		{E17C0821-BA25-4341-B147-B52304CC6A9A} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
+		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
 	EndGlobalSection
 EndGlobal

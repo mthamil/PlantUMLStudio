@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Tests.Unit.Utilities.Controls.Behaviors.AvalonEdit
+namespace Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	public class StubFoldingStrategy : AbstractFoldingStrategy
 	{

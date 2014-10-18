@@ -6,7 +6,7 @@ using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using Xunit;
 using Xunit.Extensions;
 
-namespace Tests.Unit.Utilities.Controls.Behaviors.AvalonEdit
+namespace Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	public class PlantUmlFoldingStrategyTests
 	{

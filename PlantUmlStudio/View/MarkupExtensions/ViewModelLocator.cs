@@ -17,7 +17,7 @@
 using System;
 using System.Windows.Markup;
 using PlantUmlStudio.ViewModel;
-using Utilities.Controls.Markup;
+using SharpEssentials.Controls.Markup;
 
 namespace PlantUmlStudio.View.MarkupExtensions
 {

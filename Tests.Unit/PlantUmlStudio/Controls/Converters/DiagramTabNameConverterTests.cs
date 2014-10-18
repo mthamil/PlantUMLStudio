@@ -5,7 +5,7 @@ using PlantUmlStudio.Controls.Converters;
 using Xunit;
 using Xunit.Extensions;
 
-namespace Tests.Unit.PlantUmlStudio.Converters
+namespace Tests.Unit.PlantUmlStudio.Controls.Converters
 {
 	public class DiagramTabNameConverterTests
 	{

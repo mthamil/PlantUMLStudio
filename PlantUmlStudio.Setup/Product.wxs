@@ -63,8 +63,8 @@
         <File Id="UtilitiesDll" Name="$(var.Utilities.TargetFileName)" Source="$(var.Utilities.TargetPath)" KeyPath="yes"/>
       </Component>
 
-      <Component Id="ControlsUtilitiesLib" Guid="ED98CB99-92A5-4F3A-992C-B408D4BDDBAA">
-        <File Id="ControlsUtilitiesDll" Name="$(var.Utilities.Controls.TargetFileName)" Source="$(var.Utilities.Controls.TargetPath)" KeyPath="yes"/>
+      <Component Id="SharpEssentialsControlsLib" Guid="ED98CB99-92A5-4F3A-992C-B408D4BDDBAA">
+        <File Id="SharpEssentialsControlsDll" Name="$(var.SharpEssentials.Controls.TargetFileName)" Source="$(var.SharpEssentials.Controls.TargetPath)" KeyPath="yes"/>
       </Component>
 
       <Component Id="AvalonEditLib" Guid="1C90DA3F-9452-4DCD-84D7-50756A7C5A36">

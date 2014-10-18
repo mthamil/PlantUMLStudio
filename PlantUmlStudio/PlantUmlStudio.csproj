@@ -544,9 +544,9 @@
       <Project>{F8E4AD9F-72F7-4205-803B-E3B242D32E5C}</Project>
       <Name>PlantUmlStudio.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities.Controls\Utilities.Controls.csproj">
-      <Project>{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA}</Project>
-      <Name>Utilities.Controls</Name>
+    <ProjectReference Include="..\SharpEssentials\SharpEssentials.Controls\SharpEssentials.Controls.csproj">
+      <Project>{e17c0821-ba25-4341-b147-b52304cc6a9a}</Project>
+      <Name>SharpEssentials.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{573D5F8C-4C19-42C3-B84B-BC585008B505}</Project>

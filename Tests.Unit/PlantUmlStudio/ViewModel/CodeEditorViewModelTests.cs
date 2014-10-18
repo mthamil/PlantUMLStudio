@@ -3,7 +3,7 @@ using System.Linq;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Moq;
 using PlantUmlStudio.ViewModel;
-using Tests.Unit.Utilities.Controls.Behaviors.AvalonEdit;
+using Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit;
 using Utilities.Clipboard;
 using Xunit;
 

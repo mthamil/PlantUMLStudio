@@ -11,6 +11,8 @@
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <Name>PlantUmlStudio.Setup</Name>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -20,8 +22,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <CompilerAdditionalOptions>"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlStudio\PlantUmlStudio.Setup\bin\Release\Snippets.wxs" -dSnippetsSource="C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlStudio\PlantUmlStudio\bin\Release\snippets"</CompilerAdditionalOptions>
-    <LinkerAdditionalOptions>"C:\Users\mhamilt\Documents\Visual Studio 2010\Projects\PlantUmlStudio\PlantUmlStudio.Setup\obj\Release\Snippets.wixobj"</LinkerAdditionalOptions>
+    <CompilerAdditionalOptions>"bin\Release\Snippets.wxs" -dSnippetsSource="..\PlantUmlStudio\bin\Release\snippets"</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>"obj\Release\Snippets.wixobj"</LinkerAdditionalOptions>
     <DefineConstants>
     </DefineConstants>
   </PropertyGroup>

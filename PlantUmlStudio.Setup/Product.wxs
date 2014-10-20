@@ -59,8 +59,8 @@
         <File Id="CoreDll" Name="$(var.PlantUmlStudio.Core.TargetFileName)" Source="$(var.PlantUmlStudio.Core.TargetPath)" KeyPath="yes"/>
       </Component>
 
-      <Component Id="UtilitiesLib" Guid="944C2166-C650-4EE3-9181-C4D8E38889A2">
-        <File Id="UtilitiesDll" Name="$(var.Utilities.TargetFileName)" Source="$(var.Utilities.TargetPath)" KeyPath="yes"/>
+      <Component Id="SharpEssentialsLib" Guid="944C2166-C650-4EE3-9181-C4D8E38889A2">
+        <File Id="SharpEssentialsDll" Name="$(var.SharpEssentials.TargetFileName)" Source="$(var.SharpEssentials.TargetPath)" KeyPath="yes"/>
       </Component>
 
       <Component Id="SharpEssentialsControlsLib" Guid="ED98CB99-92A5-4F3A-992C-B408D4BDDBAA">

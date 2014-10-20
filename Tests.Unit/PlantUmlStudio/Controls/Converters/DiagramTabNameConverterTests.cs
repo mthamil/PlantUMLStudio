@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using PlantUmlStudio.Controls.Converters;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

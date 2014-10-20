@@ -7,6 +7,7 @@ using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
 using Moq;
 using PlantUmlStudio.Controls;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

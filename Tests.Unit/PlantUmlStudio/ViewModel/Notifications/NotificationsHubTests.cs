@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using PlantUmlStudio.ViewModel.Notifications;
+using SharpEssentials.Testing;
 using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel.Notifications

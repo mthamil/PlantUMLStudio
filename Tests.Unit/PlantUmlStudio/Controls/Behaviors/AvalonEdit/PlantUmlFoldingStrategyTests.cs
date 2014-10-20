@@ -3,6 +3,7 @@ using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

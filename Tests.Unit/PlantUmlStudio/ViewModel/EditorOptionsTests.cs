@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using PlantUmlStudio.ViewModel;
+using SharpEssentials.Testing;
 using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel

@@ -24,7 +24,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Utilities.Controls;component/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SharpEssentials.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             

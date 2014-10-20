@@ -10,8 +10,9 @@ using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.ViewModel;
 using PlantUmlStudio.ViewModel.Notifications;
-using Utilities.Concurrency;
-using Utilities.InputOutput;
+using SharpEssentials.Concurrency;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

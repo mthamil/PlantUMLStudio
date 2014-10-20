@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using Autofac;
 using Autofac.Builder;
-using Utilities.Reflection;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Container.Support
 {

@@ -548,9 +548,9 @@
       <Project>{e17c0821-ba25-4341-b147-b52304cc6a9a}</Project>
       <Name>SharpEssentials.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{573D5F8C-4C19-42C3-B84B-BC585008B505}</Project>
-      <Name>Utilities</Name>
+    <ProjectReference Include="..\SharpEssentials\SharpEssentials\SharpEssentials.csproj">
+      <Project>{573d5f8c-4c19-42c3-b84b-bc585008b505}</Project>
+      <Name>SharpEssentials</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

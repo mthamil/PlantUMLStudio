@@ -18,7 +18,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities;
+using SharpEssentials;
 
 namespace PlantUmlStudio.Core.Dependencies.Update
 {

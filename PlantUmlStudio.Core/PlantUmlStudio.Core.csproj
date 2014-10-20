@@ -103,13 +103,13 @@
     <Compile Include="Security\WindowsSecurityService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{573D5F8C-4C19-42C3-B84B-BC585008B505}</Project>
-      <Name>Utilities</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\SharpEssentials\SharpEssentials\SharpEssentials.csproj">
+      <Project>{573d5f8c-4c19-42c3-b84b-bc585008b505}</Project>
+      <Name>SharpEssentials</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

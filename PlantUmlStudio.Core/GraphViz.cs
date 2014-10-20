@@ -25,9 +25,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Dependencies.Update;
-using Utilities.Chronology;
-using Utilities.Concurrency.Processes;
-using Utilities.InputOutput;
+using SharpEssentials.Chronology;
+using SharpEssentials.Concurrency.Processes;
+using SharpEssentials.InputOutput;
 
 namespace PlantUmlStudio.Core
 {
@@ -55,7 +55,7 @@ namespace PlantUmlStudio.Core
 
         #region Implementation of IComponentUpdateChecker
 
-        /// <see cref="IExternalComponent.GetCurrentVersionAsync"/>
+        /// <see cref="IComponentUpdateChecker.GetCurrentVersionAsync"/>
         public override async Task<string> GetCurrentVersionAsync(CancellationToken cancellationToken)
         {
             if (!GraphVizExecutable.Exists)

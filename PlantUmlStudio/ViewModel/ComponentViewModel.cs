@@ -22,9 +22,9 @@ using System.Windows.Input;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Security;
 using PlantUmlStudio.ViewModel.Notifications;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

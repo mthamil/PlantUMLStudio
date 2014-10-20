@@ -15,7 +15,7 @@
 //  limitations under the License.
 
 using ICSharpCode.AvalonEdit;
-using Utilities.Mvvm.Commands;
+using SharpEssentials.Controls.Mvvm.Commands;
 
 namespace PlantUmlStudio.ViewModel.Commands
 {

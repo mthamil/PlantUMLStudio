@@ -27,12 +27,12 @@ using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.Properties;
 using PlantUmlStudio.ViewModel.Notifications;
-using Utilities.Collections;
-using Utilities.Concurrency;
-using Utilities.InputOutput;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
+using SharpEssentials.Collections;
+using SharpEssentials.Concurrency;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

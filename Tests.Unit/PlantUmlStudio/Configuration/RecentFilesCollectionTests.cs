@@ -2,7 +2,8 @@
 using System.IO;
 using System.Linq;
 using PlantUmlStudio.Configuration;
-using Utilities.InputOutput;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

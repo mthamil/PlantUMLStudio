@@ -22,9 +22,9 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities;
-using Utilities.Chronology;
-using Utilities.InputOutput;
+using SharpEssentials;
+using SharpEssentials.Chronology;
+using SharpEssentials.InputOutput;
 
 namespace PlantUmlStudio.Core.Dependencies.Update
 {

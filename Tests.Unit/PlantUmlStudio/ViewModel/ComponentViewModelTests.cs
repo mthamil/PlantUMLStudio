@@ -6,8 +6,9 @@ using Moq;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Security;
 using PlantUmlStudio.ViewModel;
-using Utilities;
-using Utilities.Concurrency;
+using SharpEssentials;
+using SharpEssentials.Concurrency;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

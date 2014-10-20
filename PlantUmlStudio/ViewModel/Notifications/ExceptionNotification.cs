@@ -16,7 +16,7 @@
 
 using System;
 using System.Linq;
-using Utilities.Diagnostics;
+using SharpEssentials.Diagnostics;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

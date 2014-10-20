@@ -15,8 +15,8 @@
 //  limitations under the License.
 
 using System;
-using Utilities.Mvvm;
-using Utilities.Observable;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

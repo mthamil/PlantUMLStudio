@@ -18,8 +18,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
-using Utilities.Mvvm;
-using Utilities.Observable;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

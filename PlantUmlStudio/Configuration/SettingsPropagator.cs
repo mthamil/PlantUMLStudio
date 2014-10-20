@@ -20,9 +20,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using PlantUmlStudio.ViewModel;
-using Utilities.Collections;
-using Utilities.InputOutput;
-using Utilities.Reflection;
+using SharpEssentials.Collections;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Configuration
 {

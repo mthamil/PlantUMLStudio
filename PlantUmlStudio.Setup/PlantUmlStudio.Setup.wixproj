@@ -49,14 +49,14 @@
     </ProjectReference>
     <ProjectReference Include="..\SharpEssentials\SharpEssentials.Controls\SharpEssentials.Controls.csproj">
       <Name>SharpEssentials.Controls</Name>
-      <Project>{e17c0821-ba25-4341-b147-b52304cc6a9a}</Project>
+      <Project>{3be8d9dc-ddc3-47d8-848f-68cf43026cca}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Name>Utilities</Name>
+    <ProjectReference Include="..\SharpEssentials\SharpEssentials\SharpEssentials.csproj">
+      <Name>SharpEssentials</Name>
       <Project>{573d5f8c-4c19-42c3-b84b-bc585008b505}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

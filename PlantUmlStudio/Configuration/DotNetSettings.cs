@@ -22,9 +22,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Properties;
-using Utilities.InputOutput;
-using Utilities.Observable;
-using Utilities.Reflection;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Observable;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Configuration
 {

@@ -26,9 +26,9 @@ using Autofac.Features.Indexed;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Dependencies.Update;
 using PlantUmlStudio.Core.Imaging;
-using Utilities.Chronology;
-using Utilities.Concurrency.Processes;
-using Utilities.InputOutput;
+using SharpEssentials.Chronology;
+using SharpEssentials.Concurrency.Processes;
+using SharpEssentials.InputOutput;
 
 namespace PlantUmlStudio.Core
 {

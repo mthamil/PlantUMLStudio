@@ -18,7 +18,7 @@ using System;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Snippets;
 using PlantUmlStudio.Model.Snippets;
-using Utilities.Mvvm.Commands;
+using SharpEssentials.Controls.Mvvm.Commands;
 
 namespace PlantUmlStudio.ViewModel
 {

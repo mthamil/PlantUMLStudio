@@ -15,7 +15,7 @@
 //  limitations under the License.
 
 using System;
-using Utilities.Observable;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {
@@ -33,8 +33,8 @@ namespace PlantUmlStudio.ViewModel.Notifications
 		public ProgressNotification()
 		{
 			_hasDiscreteProgress = Property.New(this, p => p.HasDiscreteProgress, OnPropertyChanged);
-			_percentComplete = Property.New(this, p => p.PercentComplete, OnPropertyChanged)
-				.AlsoChanges(p => p.InProgress);
+		    _percentComplete = Property.New(this, p => p.PercentComplete, OnPropertyChanged)
+		                               .AlsoChanges(p => p.InProgress);
 		}
 
 		/// <see cref="IProgressNotification.HasDiscreteProgress"/>

@@ -14,7 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using Utilities.Mvvm.Commands;
+using SharpEssentials.Controls.Mvvm.Commands;
 
 namespace PlantUmlStudio.ViewModel.Commands
 {

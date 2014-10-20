@@ -13,8 +13,9 @@ using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.ViewModel;
 using PlantUmlStudio.ViewModel.Notifications;
-using Utilities.Chronology;
-using Utilities.Concurrency;
+using SharpEssentials.Chronology;
+using SharpEssentials.Concurrency;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

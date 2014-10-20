@@ -22,10 +22,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PlantUmlStudio.Core;
-using Utilities.Collections;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
+using SharpEssentials.Collections;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

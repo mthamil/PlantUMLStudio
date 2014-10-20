@@ -18,8 +18,8 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Core.Imaging;
-using Utilities.InputOutput;
-using Utilities.Observable;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.Core
 {

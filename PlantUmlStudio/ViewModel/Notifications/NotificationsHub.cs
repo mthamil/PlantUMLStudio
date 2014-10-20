@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Utilities.Mvvm;
-using Utilities.Observable;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel.Notifications
 {

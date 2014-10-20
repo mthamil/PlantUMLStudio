@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using PlantUmlStudio.Core.Dependencies;
-using Utilities.Mvvm;
+using SharpEssentials.Controls.Mvvm;
 
 namespace PlantUmlStudio.ViewModel
 {

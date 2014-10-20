@@ -26,8 +26,8 @@ using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.Properties;
-using Utilities.Chronology;
-using Utilities.InputOutput;
+using SharpEssentials.Chronology;
+using SharpEssentials.InputOutput;
 
 namespace PlantUmlStudio.Container
 {

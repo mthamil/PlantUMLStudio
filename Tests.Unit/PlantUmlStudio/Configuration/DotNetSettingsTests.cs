@@ -5,8 +5,9 @@ using System.IO;
 using System.Linq;
 using PlantUmlStudio.Configuration;
 using PlantUmlStudio.Properties;
-using Utilities.Collections;
-using Utilities.InputOutput;
+using SharpEssentials.Collections;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

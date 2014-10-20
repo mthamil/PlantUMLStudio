@@ -19,9 +19,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
 using PlantUmlStudio.Core;
-using Utilities.Mvvm;
-using Utilities.Observable;
-using Utilities.Reflection;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Observable;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {

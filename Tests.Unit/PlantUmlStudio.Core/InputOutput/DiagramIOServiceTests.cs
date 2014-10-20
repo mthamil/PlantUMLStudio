@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.InputOutput;
-using Utilities;
-using Utilities.Concurrency;
-using Utilities.InputOutput;
+using SharpEssentials;
+using SharpEssentials.Concurrency;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Testing;
 using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.Core.InputOutput

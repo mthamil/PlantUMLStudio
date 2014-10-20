@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Utilities.Mvvm;
+using SharpEssentials.Controls.Mvvm;
 
 namespace PlantUmlStudio.ViewModel
 {

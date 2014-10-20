@@ -21,12 +21,12 @@ using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
-using Utilities;
-using Utilities.Clipboard;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
-using Utilities.Reflection;
+using SharpEssentials;
+using SharpEssentials.Clipboard;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {

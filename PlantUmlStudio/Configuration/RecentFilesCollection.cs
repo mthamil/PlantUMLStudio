@@ -20,8 +20,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using Utilities.InputOutput;
-using Utilities.Observable;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.Configuration
 {

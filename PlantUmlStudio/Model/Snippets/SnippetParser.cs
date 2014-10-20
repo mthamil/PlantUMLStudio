@@ -20,7 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Snippets;
-using Utilities.InputOutput;
+using SharpEssentials.InputOutput;
 
 namespace PlantUmlStudio.Model.Snippets
 {

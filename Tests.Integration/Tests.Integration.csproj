@@ -73,9 +73,9 @@
       <Project>{f8e4ad9f-72f7-4205-803b-e3b242d32e5c}</Project>
       <Name>PlantUmlStudio.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
+    <ProjectReference Include="..\SharpEssentials\SharpEssentials\SharpEssentials.csproj">
       <Project>{573d5f8c-4c19-42c3-b84b-bc585008b505}</Project>
-      <Name>Utilities</Name>
+      <Name>SharpEssentials</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -20,8 +20,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
-using Utilities.Collections;
-using Utilities.Reflection;
+using SharpEssentials.Collections;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {

@@ -30,13 +30,13 @@ using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.Properties;
 using PlantUmlStudio.ViewModel.Notifications;
-using Utilities;
-using Utilities.Chronology;
-using Utilities.Concurrency;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
-using Utilities.Reflection;
+using SharpEssentials;
+using SharpEssentials.Chronology;
+using SharpEssentials.Concurrency;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
+using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {

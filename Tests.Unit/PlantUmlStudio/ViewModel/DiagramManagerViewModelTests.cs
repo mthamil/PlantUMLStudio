@@ -8,8 +8,9 @@ using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.ViewModel;
-using Utilities.Collections;
-using Utilities.Concurrency;
+using SharpEssentials.Collections;
+using SharpEssentials.Concurrency;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

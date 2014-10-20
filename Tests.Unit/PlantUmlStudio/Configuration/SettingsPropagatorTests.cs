@@ -7,7 +7,8 @@ using Moq;
 using PlantUmlStudio.Configuration;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.ViewModel;
-using Utilities.InputOutput;
+using SharpEssentials.InputOutput;
+using SharpEssentials.Testing;
 using Xunit;
 using Xunit.Extensions;
 

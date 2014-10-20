@@ -17,7 +17,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Utilities.Mvvm.Commands;
+using SharpEssentials.Controls.Mvvm.Commands;
 
 namespace PlantUmlStudio.ViewModel.Commands
 {

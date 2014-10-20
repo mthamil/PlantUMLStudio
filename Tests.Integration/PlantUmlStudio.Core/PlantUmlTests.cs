@@ -7,7 +7,7 @@ using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using Tests.Integration.Properties;
-using Utilities.Chronology;
+using SharpEssentials.Chronology;
 using Xunit;
 
 namespace Tests.Integration.PlantUmlStudio.Core

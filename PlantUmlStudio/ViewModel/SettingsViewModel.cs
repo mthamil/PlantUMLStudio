@@ -18,9 +18,9 @@ using System;
 using System.Collections.Specialized;
 using System.Windows.Input;
 using PlantUmlStudio.Configuration;
-using Utilities.Mvvm;
-using Utilities.Mvvm.Commands;
-using Utilities.Observable;
+using SharpEssentials.Controls.Mvvm;
+using SharpEssentials.Controls.Mvvm.Commands;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

@@ -18,7 +18,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using Autofac;
-using Utilities.Observable;
+using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {

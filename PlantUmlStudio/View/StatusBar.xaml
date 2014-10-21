@@ -93,7 +93,7 @@
                     </Button.Style>
                 </Button>
 
-                <ctrl:MVVMMessageBox
+                <ctrl:MessageBox
                     Message="{Binding LatestNotification.Message}"
                     Trigger="{Binding ElementName=MoreInfoButton, Path=(Clickable:BindableClick.IsClicked)}"
                     Caption="View Notification"

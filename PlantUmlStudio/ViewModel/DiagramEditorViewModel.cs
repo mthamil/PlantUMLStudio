@@ -238,9 +238,7 @@ namespace PlantUmlStudio.ViewModel
 				Message = String.Format(CultureInfo.CurrentCulture, Resources.Progress_SavingDiagram, Diagram.File.Name) 
 			});
 
-			var saveTask = _diagramIO.SaveAsync(Diagram, makeBackup)
-				.Then(() => _compiler.CompileToFileAsync(Diagram.File, ImageFormat));
-
+            var saveTask = UpdateDiagramAsync(makeBackup);
 			saveTask.ContinueWith(t =>
 			{
 				if (t.IsFaulted && t.Exception != null)
@@ -264,6 +262,12 @@ namespace PlantUmlStudio.ViewModel
 
 			return saveTask;
 		}
+
+	    private async Task UpdateDiagramAsync(bool makeBackup)
+	    {
+            await _diagramIO.SaveAsync(Diagram, makeBackup).ConfigureAwait(false);
+	        await _compiler.CompileToFileAsync(Diagram.File, ImageFormat).ConfigureAwait(false);
+	    }
 
 		/// <see cref="IDiagramEditor.Saved"/>
 		public event EventHandler Saved;

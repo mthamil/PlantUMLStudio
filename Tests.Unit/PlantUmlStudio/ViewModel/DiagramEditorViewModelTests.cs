@@ -301,10 +301,10 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-					 .Returns(Tasks.FromException(new InvalidOperationException()));
+					 .Returns(Tasks.FromException(new InvalidOperationException("Save didn't work!")));
 
 			// Act.
-			editor.SaveCommand.Execute(null);
+            AssertThat.Throws<InvalidOperationException>(async () => await editor.SaveAsync());
 
 			// Assert.
 			Assert.True(editor.IsIdle);

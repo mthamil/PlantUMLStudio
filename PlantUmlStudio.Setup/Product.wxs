@@ -73,7 +73,6 @@
 
       <Component Id="AutofacLib" Guid="D2C221D7-5A6A-402A-B8C3-6ECFD4D1DA4C">
         <File Id="AutofacDll" Name="Autofac.dll" Source="$(var.PlantUmlStudio.TargetDir)Autofac.dll" KeyPath="yes"/>
-        <File Id="AutofacConfigDll" Name="Autofac.Configuration.dll" Source="$(var.PlantUmlStudio.TargetDir)Autofac.Configuration.dll"/>
       </Component>
 
       <Component Id="InteractivityLib" Guid="C38215DF-D656-4E5E-B045-AD4674306309">

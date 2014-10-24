@@ -27,6 +27,13 @@
     <DefineConstants>
     </DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <CompilerAdditionalOptions>"bin\Package\Snippets.wxs" -dSnippetsSource="..\PlantUmlStudio\bin\Package\snippets"</CompilerAdditionalOptions>
+    <LinkerAdditionalOptions>"obj\Package\Snippets.wixobj"</LinkerAdditionalOptions>
+    <DefineConstants />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
   </ItemGroup>
@@ -73,21 +80,6 @@
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>
     <PreBuildEvent>"%25WIX%25\bin\heat.exe" dir "$(SolutionDir)PlantUmlStudio\$(OutDir)snippets" -gg -g1 -sfrag -dr INSTALLDIR -var var.SnippetsSource -cg SnippetsGroup -out Snippets.wxs</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|x86' ">
-    <CompilerAdditionalOptions>"bin\Package\Snippets.wxs" -dSnippetsSource="..\PlantUmlStudio\bin\Package\snippets"</CompilerAdditionalOptions>
-    <LinkerAdditionalOptions>"obj\Package\Snippets.wixobj"</LinkerAdditionalOptions>
-    <DefineConstants />
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|AnyCPU' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Package|Any CPU' ">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -43,10 +43,12 @@ before_build:
 #       tests configuration       #
 #---------------------------------#
 
-test:
-  assemblies:
-    - Tests.Unit.dll
+#test:
+#  assemblies:
+#    - Tests.Unit.dll
 
+test_script:
+  - xunit.console "C:\projects\plantumlstudio\Tests.Unit\bin\Package\Tests.Unit.dll"
 
 #---------------------------------#
 #      artifacts configuration    #

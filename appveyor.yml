@@ -48,7 +48,7 @@ before_build:
 #    - Tests.Unit.dll
 
 test_script:
-  - xunit.console "C:\projects\plantumlstudio\Tests.Unit\bin\Package\Tests.Unit.dll"
+  - xunit.console.clr4 "C:\projects\plantumlstudio\Tests.Unit\bin\Package\Tests.Unit.dll"
 
 #---------------------------------#
 #      artifacts configuration    #

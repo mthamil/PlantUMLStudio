@@ -117,29 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelDiagramRefreshButton" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="AboutContextMenuItem" xml:space="preserve">
+    <value>About</value>
   </data>
-  <data name="CurrentDiagramLocationLabel" xml:space="preserve">
-    <value>Location:</value>
+  <data name="CopyContextMenuItem" xml:space="preserve">
+    <value>Copy</value>
   </data>
-  <data name="DeletePreviewContextMenuItem" xml:space="preserve">
-    <value>Delete</value>
+  <data name="CutContextMenuItem" xml:space="preserve">
+    <value>Cut</value>
   </data>
-  <data name="OpenPreviewContextMenuItem" xml:space="preserve">
-    <value>Open</value>
+  <data name="EditContextMenuHeader" xml:space="preserve">
+    <value>_Edit</value>
   </data>
-  <data name="RefreshDiagramsButton" xml:space="preserve">
-    <value>Refresh Diagram List</value>
+  <data name="ExitContextMenuItem" xml:space="preserve">
+    <value>E_xit</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>PlantUML Studio</value>
+  <data name="FileContextMenuHeader" xml:space="preserve">
+    <value>_File</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Enter a path in the location text box to load the diagrams from that directory.
-Or, just click on File -&gt; New to start working on a new diagram.</value>
+  <data name="HelpContextMenuHeader" xml:space="preserve">
+    <value>_Help</value>
   </data>
-  <data name="WelcomeMessageTitle" xml:space="preserve">
-    <value>Welcome to PlantUML Studio</value>
+  <data name="NewContextMenuItem" xml:space="preserve">
+    <value>_New...</value>
+  </data>
+  <data name="OpenContextMenuItem" xml:space="preserve">
+    <value>_Open...</value>
+  </data>
+  <data name="OptionsContextMenuItem" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="OutliningContextMenuHeader" xml:space="preserve">
+    <value>Outlining</value>
+  </data>
+  <data name="PasteContextMenuItem" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="RecentFilesContextMenuItem" xml:space="preserve">
+    <value>Recent Files</value>
+  </data>
+  <data name="RedoContextMenuItem" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="SaveAllContextMenuItem" xml:space="preserve">
+    <value>Save_All</value>
+  </data>
+  <data name="SaveContextMenuItem" xml:space="preserve">
+    <value>_Save</value>
+  </data>
+  <data name="ToggleAllOutliningMenuItem" xml:space="preserve">
+    <value>Toggle All Outlining</value>
+  </data>
+  <data name="ToolsContextMenuHeader" xml:space="preserve">
+    <value>_Tools</value>
+  </data>
+  <data name="UndoContextMenuItem" xml:space="preserve">
+    <value>Undo</value>
   </data>
 </root>

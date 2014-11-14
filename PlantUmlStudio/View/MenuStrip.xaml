@@ -11,7 +11,7 @@
              xmlns:click="clr-namespace:SharpEssentials.Controls.Behaviors.Clickable;assembly=SharpEssentials.Controls"
              xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
              xmlns:vw="clr-namespace:PlantUmlStudio.View"
-             LocalizeExtension.DefaultResxName="PlantUmlStudio.View.MainWindowResources" Language="{UICulture}"
+             LocalizeExtension.DefaultResxName="PlantUmlStudio.View.MenuStripResources" Language="{UICulture}"
              mc:Ignorable="d" 
              d:DesignWidth="500">
     

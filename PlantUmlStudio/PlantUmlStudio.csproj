@@ -210,6 +210,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\MenuStripResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MenuStripResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\MenuStrip.xaml.cs">
       <DependentUpon>MenuStrip.xaml</DependentUpon>
     </Compile>
@@ -281,6 +286,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MainWindowResources.Designer.cs</LastGenOutput>
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MenuStripResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MenuStripResources.Designer.cs</LastGenOutput>
+      <DependentUpon>MenuStrip.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SettingsViewResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

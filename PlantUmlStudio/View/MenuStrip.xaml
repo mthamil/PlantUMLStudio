@@ -1,0 +1,214 @@
+﻿<UserControl x:Class="PlantUmlStudio.View.MenuStrip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:xtn="clr-namespace:PlantUmlStudio.View.MarkupExtensions" 
+             xmlns:ctrl="clr-namespace:SharpEssentials.Controls;assembly=SharpEssentials.Controls"
+             xmlns:utilcmd="clr-namespace:SharpEssentials.Controls.Commands;assembly=SharpEssentials.Controls" 
+             xmlns:utilconvert="clr-namespace:SharpEssentials.Controls.Converters;assembly=SharpEssentials.Controls" 
+             xmlns:click="clr-namespace:SharpEssentials.Controls.Behaviors.Clickable;assembly=SharpEssentials.Controls"
+             xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
+             xmlns:vw="clr-namespace:PlantUmlStudio.View"
+             LocalizeExtension.DefaultResxName="PlantUmlStudio.View.MainWindowResources" Language="{UICulture}"
+             mc:Ignorable="d" 
+             d:DesignWidth="500">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SharpEssentials.Controls;component/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <utilconvert:OrConverter x:Key="OrConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <StackPanel HorizontalAlignment="Stretch">
+        <Menu IsMainMenu="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" >
+            <!--Background="#B4BFD1">-->
+            <Menu.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#C5CFDE" Offset="0.0"/>
+                    <!--<GradientStop Color="#C0CAD9" Offset="0.2"/>-->
+                    <GradientStop Color="#BCC6D7" Offset="0.5"/>
+                    <!--<GradientStop Color="#B6C1D3" Offset="0.8"/>-->
+                    <GradientStop Color="#B6C1D3" Offset="1"/>
+                </LinearGradientBrush>
+            </Menu.Background>
+
+            <MenuItem Header="{Localize FileContextMenuHeader}">
+                <MenuItem Header="{Localize NewContextMenuItem}" Name="NewDiagramMenuItem">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <click:BindableClickAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource NewDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="{Localize OpenContextMenuItem}" Name="OpenDiagramMenuItem">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <click:BindableClickAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource OpenDocumentIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator/>
+
+                <MenuItem Header="{Localize SaveContextMenuItem}" Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource SaveIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Localize SaveAllContextMenuItem}" Command="{Binding SaveAllCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource SaveAllIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator/>
+
+                <MenuItem Header="{Localize RecentFilesContextMenuItem}" ItemsSource="{Binding Source={xtn:ViewModelLocator {x:Type vm:RecentFilesMenuViewModel}}, Path=ViewModel.Files}">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FullName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.Explorer.OpenDiagramCommand}"/>
+                            <Setter Property="CommandParameter" Value="{Binding FullName, Converter={StaticResource UriConverter}}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+
+                <Separator/>
+
+                <MenuItem Header="{Localize ExitContextMenuItem}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                    <MenuItem.Command>
+                        <utilcmd:CloseWindowCommand/>
+                    </MenuItem.Command>
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource CancelIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="{Localize EditContextMenuHeader}">
+                <MenuItem Header="{Localize UndoContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.UndoCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource UndoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Localize RedoContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.RedoCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource RedoIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="{Localize CutContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.CutCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Localize CopyContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.CopyCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Localize PasteContextMenuItem}" Command="{Binding OpenDiagram.CodeEditor.PasteCommand, FallbackValue={StaticResource NullCommand}}">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource PasteIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="{Localize ToolsContextMenuHeader}">
+                <MenuItem Header="{Localize OptionsContextMenuItem}">
+                    <MenuItem.Command>
+                        <utilcmd:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
+                                                           Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
+                    </MenuItem.Command>
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource OptionsIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="{Localize HelpContextMenuHeader}">
+                <MenuItem Header="{Localize AboutContextMenuItem}">
+                    <MenuItem.Command>
+                        <utilcmd:OpenDialogCommand Type="{x:Type vw:AboutView}" 
+                                                           Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
+                    </MenuItem.Command>
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource AboutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="22" >
+            <Menu.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#C5CFDE" Offset="0.0"/>
+                    <GradientStop Color="#BCC6D7" Offset="0.5"/>
+                    <GradientStop Color="#B6C1D3" Offset="1"/>
+                </LinearGradientBrush>
+            </Menu.Background>
+
+            <MenuItem Command="{Binding OpenDiagram.SaveCommand, FallbackValue={StaticResource NullCommand}}" ToolTip="Save diagram.">
+                <MenuItem.Header>
+                    <StackPanel>
+                        <Image Source="{StaticResource SaveIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Command="{Binding SaveAllCommand}" ToolTip="Save all modified diagrams.">
+                <MenuItem.Header>
+                    <StackPanel>
+                        <Image Source="{StaticResource SaveAllIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Command="{Binding OpenDiagram.RefreshCommand}" ToolTip="Force diagram re-render.">
+                <MenuItem.Header>
+                    <StackPanel>
+                        <Image Source="{StaticResource RefreshIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+        </Menu>
+
+        <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
+                               AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                               InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
+                               Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
+                               Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(click:BindableClick.IsClicked)}"/>
+
+        <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.AddNewDiagramCommand, Mode=OneWay}"
+                               AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                               InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
+                               Mode="Save" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
+            <ctrl:FileSystemPicker.Trigger>
+                <MultiBinding Converter="{StaticResource OrConverter}">
+                    <Binding ElementName="NewDiagramMenuItem" Path="(click:BindableClick.IsClicked)"/>
+                </MultiBinding>
+            </ctrl:FileSystemPicker.Trigger>
+        </ctrl:FileSystemPicker>
+    </StackPanel>
+    
+</UserControl>

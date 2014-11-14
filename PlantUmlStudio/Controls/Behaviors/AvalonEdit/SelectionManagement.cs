@@ -311,16 +311,16 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 			behavior.UpdateIndex((int)e.NewValue);
 		}
 
-		private bool _lastStartUpdateFromControl;
-		private bool _lastStartUpdateFromBinding;
+        //private bool _lastStartUpdateFromControl;
+        //private bool _lastStartUpdateFromBinding;
 
-		private bool _lastLengthUpdateFromControl;
-		private bool _lastLengthUpdateFromBinding;
+        //private bool _lastLengthUpdateFromControl;
+        //private bool _lastLengthUpdateFromBinding;
 
-		private bool _lastIndexUpdateFromControl;
-		private bool _lastIndexUpdateFromBinding;
+        //private bool _lastIndexUpdateFromControl;
+        //private bool _lastIndexUpdateFromBinding;
 
-		private bool _dataContextChanged;
+        //private bool _dataContextChanged;
 		private bool _canUpdateIndex;
 		private bool _canUpdateSelection;
 	}

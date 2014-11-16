@@ -178,7 +178,7 @@
                                         <ColumnDefinition Width="30" />                                    
                                     </Grid.ColumnDefinitions>
                       
-                                    <TextBox Grid.Column="0" x:Name="DiagramLocationTextBox"  Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
+                                    <TextBox Grid.Column="0" Height="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Foreground="Gray" 
                                              attached:TextBoxWatermark.Watermark="Path for diagrams..." Template="{StaticResource WatermarkTextBox}"
                                              Text="{Binding DiagramLocation, Converter={StaticResource DirectoryInfoConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -387,8 +387,7 @@
                 </TabControl>
         
                 <!-- This is the welcome panel -->
-                <Border x:Name="WelcomePanel" 
-                        Grid.Column="2" 
+                <Border Grid.Column="2" 
                         HorizontalAlignment="Stretch" 
                         VerticalAlignment="Stretch"
                         BorderBrush="{x:Null}" 

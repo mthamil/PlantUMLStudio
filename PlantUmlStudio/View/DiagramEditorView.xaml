@@ -140,7 +140,7 @@
                                           HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
                                           Background="White" >
             
-                                <Image x:Name="DiagramImage" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Top" 
                                        Source="{Binding DiagramImage, Mode=OneWay}" 
                                        Stretch="None">
               

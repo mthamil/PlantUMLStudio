@@ -20,7 +20,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using Autofac;
-using PlantUmlStudio.Container;
 using PlantUmlStudio.Properties;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;

@@ -41,7 +41,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		protected ComponentUpdateChecker(IClock clock, HttpClient httpClient)
 		{
 		    _clock = clock;
-		    _httpClient = httpClient;
+		    HttpClient = httpClient;
 		}
 
 	    /// <summary>
@@ -67,10 +67,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
         /// <summary>
         /// Used for web requests.
         /// </summary>
-	    protected HttpClient HttpClient
-	    {
-	        get { return _httpClient; }
-	    }
+	    protected HttpClient HttpClient { get; }
 
 	    #region IComponentUpdateChecker Members
 
@@ -119,6 +116,5 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		#endregion IComponentUpdateChecker Members
 
 		private readonly IClock _clock;
-	    private readonly HttpClient _httpClient;
 	}
 }

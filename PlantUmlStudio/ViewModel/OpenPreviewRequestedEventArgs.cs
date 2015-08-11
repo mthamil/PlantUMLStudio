@@ -35,6 +35,6 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The preview to open for editing.
 		/// </summary>
-		public PreviewDiagramViewModel RequestedPreview { get; private set; }
+		public PreviewDiagramViewModel RequestedPreview { get; }
 	}
 }

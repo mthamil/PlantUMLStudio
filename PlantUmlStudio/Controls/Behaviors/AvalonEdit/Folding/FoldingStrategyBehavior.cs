@@ -121,11 +121,10 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		/// The FoldingStrategy property.
 		/// </summary>
 		public static readonly DependencyProperty FoldingStrategyProperty =
-			DependencyProperty.Register(
-			"FoldingStrategy",
-			typeof(AbstractFoldingStrategy),
-			typeof(FoldingStrategyBehavior),
-			new UIPropertyMetadata(null, OnFoldingStrategyChanged));
+			DependencyProperty.Register(nameof(FoldingStrategy),
+			    typeof(AbstractFoldingStrategy),
+			    typeof(FoldingStrategyBehavior),
+			    new UIPropertyMetadata(null, OnFoldingStrategyChanged));
 
 		private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{

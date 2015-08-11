@@ -30,7 +30,7 @@ namespace PlantUmlStudio.ViewModel.Commands
 		/// Creates a new command.
 		/// </summary>
 		public CopyImageCommand()
-			: base(bitmap => Clipboard.SetImage(bitmap)) { }
+			: base(Clipboard.SetImage) { }
 	}
 
 	/// <summary>
@@ -42,7 +42,7 @@ namespace PlantUmlStudio.ViewModel.Commands
 		/// Creates a new command.
 		/// </summary>
 		public CopyTextCommand()
-			: base(text => Clipboard.SetText(text)) { }
+			: base(Clipboard.SetText) { }
 	}
 
 	/// <summary>

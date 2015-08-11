@@ -128,8 +128,8 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			public string StartToken { get; set; }
 			public string EndToken { get; set; }
 
-			public int StartOffset { get; private set; }
-			public string StartLine { get; private set; }
+			public int StartOffset { get; }
+			public string StartLine { get; }
 		}
 	}
 }

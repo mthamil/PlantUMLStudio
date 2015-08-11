@@ -118,12 +118,9 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Whether the current diagram location is valid.
 		/// </summary>
-		public bool IsDiagramLocationValid
-		{
-			get { return DiagramLocation != null && DiagramLocation.Exists; }
-		}
+		public bool IsDiagramLocationValid => DiagramLocation != null && DiagramLocation.Exists;
 
-		/// <summary>
+	    /// <summary>
 		/// The currently selected preview diagram.
 		/// </summary>
 		public PreviewDiagramViewModel CurrentPreviewDiagram
@@ -133,15 +130,12 @@ namespace PlantUmlStudio.ViewModel
 		}
 
 		/// <see cref="IDiagramExplorer.PreviewDiagrams"/>
-		public ICollection<PreviewDiagramViewModel> PreviewDiagrams
-		{
-			get { return _previewDiagrams.Value; }
-		}
+		public ICollection<PreviewDiagramViewModel> PreviewDiagrams => _previewDiagrams.Value;
 
-		/// <summary>
+	    /// <summary>
 		/// Opens a preview for editing.
 		/// </summary>
-		public ICommand RequestOpenPreviewCommand { get; private set; }
+		public ICommand RequestOpenPreviewCommand { get; }
 
 		private void RequestOpenPreview(PreviewDiagramViewModel preview)
 		{
@@ -153,9 +147,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnOpenPreviewRequested(PreviewDiagramViewModel preview)
 		{
-			var localEvent = OpenPreviewRequested;
-			if (localEvent != null)
-				localEvent(this, new OpenPreviewRequestedEventArgs(preview));
+            OpenPreviewRequested?.Invoke(this, new OpenPreviewRequestedEventArgs(preview));
 		}
 
 		/// <see cref="IDiagramExplorer.DiagramDeleted"/>
@@ -163,15 +155,13 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnDiagramDeleted(Diagram deletedDiagram)
 		{
-			var localEvent = DiagramDeleted;
-			if (localEvent != null)
-				localEvent(this, new DiagramDeletedEventArgs(deletedDiagram));
+            DiagramDeleted?.Invoke(this, new DiagramDeletedEventArgs(deletedDiagram));
 		}
 
 		/// <summary>
 		/// Adds a new diagram with a given URI.
 		/// </summary>
-		public ICommand AddNewDiagramCommand { get; private set; }
+		public ICommand AddNewDiagramCommand { get; }
 
 		private async Task AddNewDiagramAsync(Uri newDiagramUri)
 		{
@@ -194,7 +184,7 @@ namespace PlantUmlStudio.ViewModel
 				await _diagramIO.SaveAsync(newDiagram, false);
 				var refreshedDiagram = await _diagramIO.ReadAsync(newDiagram.File);
 
-				var preview = PreviewDiagrams.SingleOrDefault(p => fileComparer.Equals(p.Diagram.File, refreshedDiagram.File));
+				var preview = PreviewDiagrams.SingleOrDefault(p => FileComparer.Equals(p.Diagram.File, refreshedDiagram.File));
 				if (preview == null)
 				{
 					preview = _previewDiagramFactory(refreshedDiagram);
@@ -224,7 +214,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command that loads diagrams from the current diagram location.
 		/// </summary>
-		public ICommand LoadDiagramsCommand { get; private set; }
+		public ICommand LoadDiagramsCommand { get; }
 
 		private async Task LoadDiagramsAsync()
 		{
@@ -286,7 +276,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command to delete a diagram.
 		/// </summary>
-		public ICommand DeleteDiagramCommand { get; private set; }
+		public ICommand DeleteDiagramCommand { get; }
 
 		private async Task DeleteDiagramAsync(PreviewDiagramViewModel preview)
 		{
@@ -304,7 +294,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command to open a diagram.
 		/// </summary>
-		public ICommand OpenDiagramCommand { get; private set; }
+		public ICommand OpenDiagramCommand { get; }
 
 		/// <see cref="IDiagramExplorer.OpenDiagramAsync"/>
 		public async Task<Diagram> OpenDiagramAsync(Uri diagramPath)
@@ -312,7 +302,7 @@ namespace PlantUmlStudio.ViewModel
 			var fileToOpen = new FileInfo(diagramPath.LocalPath);
 
 			Diagram diagram;
-			var preview = PreviewDiagrams.SingleOrDefault(p => fileComparer.Equals(p.Diagram.File, fileToOpen));
+			var preview = PreviewDiagrams.SingleOrDefault(p => FileComparer.Equals(p.Diagram.File, fileToOpen));
 			if (preview == null)
 			{
 				diagram = await _diagramIO.ReadAsync(fileToOpen);
@@ -340,7 +330,7 @@ namespace PlantUmlStudio.ViewModel
 		void diagramIO_DiagramFileDeleted(object sender, DiagramFileDeletedEventArgs e)
 		{
 			Task.Factory.StartNew(() => 
-				PreviewDiagrams.FirstOrNone(pd => fileComparer.Equals(pd.Diagram.File, e.DeletedDiagramFile)).Apply(existingPreview =>
+				PreviewDiagrams.FirstOrNone(pd => FileComparer.Equals(pd.Diagram.File, e.DeletedDiagramFile)).Apply(existingPreview =>
 				{
 					OnDiagramDeleted(existingPreview.Diagram);
 					PreviewDiagrams.Remove(existingPreview);
@@ -353,7 +343,7 @@ namespace PlantUmlStudio.ViewModel
 			Task.Factory.StartNew(async () =>
 			{
 				// Make sure a preview doesn't already exist for the file and make sure the current directory still matches.
-				bool previewExists = PreviewDiagrams.Select(pd => pd.Diagram.File).Contains(e.NewDiagramFile, fileComparer);
+				bool previewExists = PreviewDiagrams.Select(pd => pd.Diagram.File).Contains(e.NewDiagramFile, FileComparer);
 				if (!previewExists && e.NewDiagramFile.Directory.FullName.Trim('\\') == DiagramLocation.FullName.Trim('\\'))
 				{
 					var newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
@@ -382,6 +372,6 @@ namespace PlantUmlStudio.ViewModel
 		private readonly ISettings _settings;
 		private readonly TaskScheduler _uiScheduler;
 
-		private static readonly IEqualityComparer<FileInfo> fileComparer = FileSystemInfoPathEqualityComparer.Instance;
+		private static readonly IEqualityComparer<FileInfo> FileComparer = FileSystemInfoPathEqualityComparer.Instance;
 	}
 }

@@ -38,8 +38,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The LineTransformers dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LineTransformersProperty =
-			DependencyProperty.Register(
-				"LineTransformers", 
+			DependencyProperty.Register(nameof(LineTransformers), 
 				typeof(Collection<IVisualLineTransformer>), 
 				typeof(AddLineTransformers), 
 				new PropertyMetadata(new Collection<IVisualLineTransformer>()));

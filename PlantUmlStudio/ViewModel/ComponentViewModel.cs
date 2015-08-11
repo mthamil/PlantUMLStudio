@@ -156,23 +156,17 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Whether current permissions allow an update.
 		/// </summary>
-		public bool HasUpdatePermission
-		{
-			get { return _securityService.HasAdminPriviledges(); }
-		}
+		public bool HasUpdatePermission => _securityService.HasAdminPriviledges();
 
-		/// <summary>
+	    /// <summary>
 		/// Whether an update can be performed.
 		/// </summary>
-		public bool CanUpdate
-		{
-			get { return HasAvailableUpdate.HasValue && HasAvailableUpdate.Value && HasUpdatePermission; }
-		}
+		public bool CanUpdate => HasAvailableUpdate.HasValue && HasAvailableUpdate.Value && HasUpdatePermission;
 
-		/// <summary>
+	    /// <summary>
 		/// Command to update a component.
 		/// </summary>
-		public ICommand UpdateCommand { get; private set; }
+		public ICommand UpdateCommand { get; }
 
 		private async Task UpdateAsync()
 		{

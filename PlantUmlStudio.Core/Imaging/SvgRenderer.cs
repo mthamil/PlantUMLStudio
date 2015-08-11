@@ -32,7 +32,7 @@ namespace PlantUmlStudio.Core.Imaging
 			if (diagram.ImageFile == null || !diagram.ImageFile.Exists)
 				return null;
 
-			using (var converter = new FileSvgReader(settings))
+			using (var converter = new FileSvgReader(_settings))
 			{
 				var drawingGroup = converter.Read(diagram.ImageFile.FullName);
 				return CreateFrozenDrawing(drawingGroup);
@@ -43,7 +43,7 @@ namespace PlantUmlStudio.Core.Imaging
 		public ImageSource Render(Stream imageData)
 		{
 			using (var reader = new StreamReader(imageData))
-			using (var converter = new FileSvgReader(settings))
+			using (var converter = new FileSvgReader(_settings))
 			{
 				var drawingGroup = converter.Read(reader);
 				return CreateFrozenDrawing(drawingGroup);
@@ -61,6 +61,6 @@ namespace PlantUmlStudio.Core.Imaging
 			return drawing;
 		}
 
-		private readonly WpfDrawingSettings settings = new WpfDrawingSettings();
+		private readonly WpfDrawingSettings _settings = new WpfDrawingSettings();
 	}
 }

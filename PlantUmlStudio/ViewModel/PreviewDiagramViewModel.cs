@@ -21,7 +21,6 @@ using System.Windows.Media;
 using PlantUmlStudio.Core;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Observable;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {
@@ -66,25 +65,24 @@ namespace PlantUmlStudio.ViewModel
 		private static string CreatePreview(string content)
 		{
 			// Select first few lines, but skip initial whitespace.
-			var lines = content.Trim().Split(delimiters, maxPreviewLines + 1);
-			return String.Join("\n", lines.Take(Math.Min(maxPreviewLines, lines.Length)));
+			var lines = content.Trim().Split(Delimiters, MaxPreviewLines + 1);
+			return String.Join("\n", lines.Take(Math.Min(MaxPreviewLines, lines.Length)));
 		}
 
 		void Diagram_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == contentPropertyName)
+			if (e.PropertyName == nameof(Diagram.Content))
 				CodePreview = CreatePreview(Diagram.Content);
 		}
-		private static readonly string contentPropertyName = Reflect.PropertyOf<Diagram>(p => p.Content).Name;
 
 		/// <summary>
 		/// The underlying diagram.
 		/// </summary>
-		public Diagram Diagram { get; private set; }
+		public Diagram Diagram { get; }
 
 		private readonly Property<ImageSource> _imagePreview;
 		private readonly Property<string> _codePreview;
-		private static readonly char[] delimiters = new [] { '\n' };
-		private const int maxPreviewLines = 5;
+		private static readonly char[] Delimiters = { '\n' };
+		private const int MaxPreviewLines = 5;
 	}
 }

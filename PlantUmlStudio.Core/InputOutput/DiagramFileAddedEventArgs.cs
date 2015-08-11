@@ -36,6 +36,6 @@ namespace PlantUmlStudio.Core.InputOutput
 		/// <summary>
 		/// The new diagram file.
 		/// </summary>
-		public FileInfo NewDiagramFile { get; private set; }
+		public FileInfo NewDiagramFile { get; }
 	}
 }

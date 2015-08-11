@@ -36,7 +36,6 @@ using SharpEssentials.Concurrency;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
 using SharpEssentials.Observable;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {
@@ -57,7 +56,8 @@ namespace PlantUmlStudio.ViewModel
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
 		/// <param name="uiScheduler">A task scheduler for executing UI tasks</param>
-		public DiagramEditorViewModel(Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
+		public DiagramEditorViewModel(
+            Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
 			IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
 			ITimer autoSaveTimer, ITimer refreshTimer, TaskScheduler uiScheduler)
 		{
@@ -90,9 +90,9 @@ namespace PlantUmlStudio.ViewModel
 			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
 			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
 
-			_saveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
-			_refreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
-			_closeCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
+			SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
+			RefreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
+			CloseCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.
@@ -189,20 +189,14 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Whether an editor's content can currently be saved.
 		/// </summary>
-		public bool CanSave
-		{
-			get { return CodeEditor.IsModified && IsIdle; }
-		}
+		public bool CanSave => CodeEditor.IsModified && IsIdle;
 
-		/// <summary>
+	    /// <summary>
 		/// Command that saves a diagram's changes.
 		/// </summary>
-		public ICommand SaveCommand
-		{
-			get { return _saveCommand; }
-		}
+		public ICommand SaveCommand { get; }
 
-		/// <see cref="IDiagramEditor.SaveAsync"/>
+	    /// <see cref="IDiagramEditor.SaveAsync"/>
 		public Task SaveAsync()
 		{
 			_autoSaveTimer.TryStop();
@@ -274,9 +268,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnSaved()
 		{
-			var localEvent = Saved;
-			if (localEvent != null)
-				localEvent(this, EventArgs.Empty);
+            Saved?.Invoke(this, EventArgs.Empty);
 		}
 
 		async void autoSaveTimerElapsed(object sender, EventArgs e)
@@ -287,20 +279,14 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Whether a diagram's image can currently be refreshed.
 		/// </summary>
-		public bool CanRefresh
-		{
-			get { return IsIdle; }
-		}
+		public bool CanRefresh => IsIdle;
 
-		/// <summary>
+	    /// <summary>
 		/// Refreshes a diagram's image without saving.
 		/// </summary>
-		public ICommand RefreshCommand
-		{
-			get { return _refreshCommand; }
-		}
+		public ICommand RefreshCommand { get; }
 
-		/// <see cref="IDiagramEditor.RefreshAsync"/>
+	    /// <see cref="IDiagramEditor.RefreshAsync"/>
 		public async Task RefreshAsync()
 		{
 			if (_saveExecuting)
@@ -351,20 +337,14 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Whether an editor can currently be closed.
 		/// </summary>
-		public bool CanClose
-		{
-			get { return IsIdle; }
-		}
+		public bool CanClose => IsIdle;
 
-		/// <summary>
+	    /// <summary>
 		/// Command that closes a diagram editor.
 		/// </summary>
-		public ICommand CloseCommand
-		{
-			get { return _closeCommand; }
-		}
+		public ICommand CloseCommand { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Closes a diagram editor.
 		/// </summary>
 		public void Close()
@@ -384,9 +364,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnClosing(CancelEventArgs cancelArgs)
 		{
-			var localEvent = Closing;
-			if (localEvent != null)
-				localEvent(this, cancelArgs);
+            Closing?.Invoke(this, cancelArgs);
 		}
 
 		/// <see cref="IDiagramEditor.Closed"/>
@@ -394,9 +372,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnClosed()
 		{
-			var localEvent = Closed;
-			if (localEvent != null)
-				localEvent(this, EventArgs.Empty);
+            Closed?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -406,7 +382,7 @@ namespace PlantUmlStudio.ViewModel
 
 		void codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == modifiedPropertyName)
+			if (e.PropertyName == nameof(CodeEditorViewModel.IsModified))
 			{
 				if (AutoSave)
 				{
@@ -416,18 +392,15 @@ namespace PlantUmlStudio.ViewModel
 						_autoSaveTimer.TryStop();
 				}
 
-				OnPropertyChanged(canSavePropertyName);	// boooo
+				OnPropertyChanged(nameof(CanSave));	// boooo
 			}
-			else if (e.PropertyName == contentPropertyName)
+			else if (e.PropertyName == nameof(CodeEditorViewModel.Content))
 			{
 				// After a code change, reset the refresh timer.
 				_refreshTimer.TryStop();
 				_refreshTimer.TryStart();
 			}
 		}
-		private static readonly string modifiedPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.IsModified).Name;
-		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.Content).Name;
-		private static readonly string canSavePropertyName = Reflect.PropertyOf<DiagramEditorViewModel>(p => p.CanSave).Name;
 
 		private void CleanUpTimers()
 		{
@@ -443,23 +416,19 @@ namespace PlantUmlStudio.ViewModel
 		{
 			CleanUpTimers();
 			var disposableSaveTimer = _autoSaveTimer as IDisposable;
-			disposableSaveTimer.DisposeSafely();
+			disposableSaveTimer?.Dispose();
 
 			var disposableRefreshTimer = _refreshTimer as IDisposable;
-			disposableRefreshTimer.DisposeSafely();
+			disposableRefreshTimer?.Dispose();
 
 			var disposableCodeEditor = CodeEditor as IDisposable;
-			disposableCodeEditor.DisposeSafely();
+			disposableCodeEditor?.Dispose();
 		}
 
 		private bool _firstSaveAfterOpen;
 		private bool _saveExecuting;
 
-		private readonly ICommand _saveCommand;
-		private readonly ICommand _refreshCommand;
-		private readonly ICommand _closeCommand;
-
-		private readonly IDictionary<Task, CancellationTokenSource> _refreshCancellations = new ConcurrentDictionary<Task, CancellationTokenSource>();
+	    private readonly IDictionary<Task, CancellationTokenSource> _refreshCancellations = new ConcurrentDictionary<Task, CancellationTokenSource>();
 
 		private readonly Property<bool> _autoSave;
 		private readonly Property<TimeSpan> _autoSaveInterval;

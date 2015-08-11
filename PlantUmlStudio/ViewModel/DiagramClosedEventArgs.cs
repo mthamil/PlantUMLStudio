@@ -36,6 +36,6 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The diagram that was closed.
 		/// </summary>
-		public Diagram Diagram { get; private set; }
+		public Diagram Diagram { get; }
 	}
 }

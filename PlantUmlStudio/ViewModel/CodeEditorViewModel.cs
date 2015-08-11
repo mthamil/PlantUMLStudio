@@ -26,7 +26,6 @@ using SharpEssentials.Clipboard;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
 using SharpEssentials.Observable;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.ViewModel
 {
@@ -70,17 +69,17 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The editor folding strategy.
 		/// </summary>
-		public AbstractFoldingStrategy FoldingStrategy { get; private set; }
+		public AbstractFoldingStrategy FoldingStrategy { get; }
 
 		/// <summary>
 		/// The code highlighting definition.
 		/// </summary>
-		public IHighlightingDefinition HighlightingDefinition { get; private set; }
+		public IHighlightingDefinition HighlightingDefinition { get; }
 
 		/// <summary>
 		/// The available code snippets.
 		/// </summary>
-		public IEnumerable<MenuViewModel> Snippets { get; private set; }
+		public IEnumerable<MenuViewModel> Snippets { get; }
 
 		/// <summary>
 		/// The text document representing diagram code.
@@ -114,16 +113,14 @@ namespace PlantUmlStudio.ViewModel
 
 		void UndoStack_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == isOriginalFilePropertyName)
+			if (e.PropertyName == nameof(UndoStack.IsOriginalFile))
 				_isModified.Value = !Document.UndoStack.IsOriginalFile;
 		}
-		private static readonly string isOriginalFilePropertyName = Reflect.PropertyOf<UndoStack>(p => p.IsOriginalFile).Name;
 
 		void Document_Changed(object sender, DocumentChangeEventArgs e)
 		{
-			OnPropertyChanged(contentPropertyName);
+			OnPropertyChanged(nameof(Content));
 		}
-		private static readonly string contentPropertyName = Reflect.PropertyOf<CodeEditorViewModel>(p => p.Content).Name;
 
 		/// <summary>
 		/// The current index into the content.
@@ -183,7 +180,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Copies selected text.
 		/// </summary>
-		public ICommand CopyCommand { get; private set; }
+		public ICommand CopyCommand { get; }
 
 		private void Copy()
 		{
@@ -197,7 +194,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Cuts selected text.
 		/// </summary>
-		public ICommand CutCommand { get; private set; }
+		public ICommand CutCommand { get; }
 
 		private void Cut()
 		{
@@ -212,7 +209,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Pastes text.
 		/// </summary>
-		public ICommand PasteCommand { get; private set; }
+		public ICommand PasteCommand { get; }
 
 		private void Paste()
 		{
@@ -232,12 +229,12 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Undoes the last operation.
 		/// </summary>
-		public ICommand UndoCommand { get; private set; }
+		public ICommand UndoCommand { get; }
 
 		/// <summary>
 		/// Redoes the last operation.
 		/// </summary>
-		public ICommand RedoCommand { get; private set; }
+		public ICommand RedoCommand { get; }
 
 		/// <see cref="DisposableBase.OnDisposing"/>
 		protected override void OnDisposing()

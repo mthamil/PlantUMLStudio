@@ -23,7 +23,7 @@ namespace PlantUmlStudio.Model.Snippets
 	/// </summary>
 	public class CodeSnippet
 	{
-		/// <summary>
+	    /// <summary>
 		/// Creates a new snippet.
 		/// </summary>
 		/// <param name="name">The name of the snippet</param>
@@ -36,19 +36,19 @@ namespace PlantUmlStudio.Model.Snippets
 			Code = code;
 		}
 
-		/// <summary>
-		/// The name of the category.
-		/// </summary>
-		public string Name { get; private set; }
+	    /// <summary>
+	    /// The name of the category.
+	    /// </summary>
+	    public string Name { get; }
 
-		/// <summary>
-		/// The snippet category.
-		/// </summary>
-		public string Category { get; private set; }
+	    /// <summary>
+	    /// The snippet category.
+	    /// </summary>
+	    public string Category { get; }
 
 		/// <summary>
 		/// The snippet code.
 		/// </summary>
-		public Snippet Code { get; private set; }
+		public Snippet Code { get; }
 	}
 }

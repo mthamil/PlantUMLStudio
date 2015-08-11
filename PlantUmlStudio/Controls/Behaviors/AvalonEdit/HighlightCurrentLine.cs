@@ -41,15 +41,15 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 
 		private void Enable()
 		{
-			currentLineHighlighter = new CurrentLineHighlighter(AssociatedObject.TextArea);
-			AssociatedObject.TextArea.TextView.BackgroundRenderers.Add(currentLineHighlighter);
+			_currentLineHighlighter = new CurrentLineHighlighter(AssociatedObject.TextArea);
+			AssociatedObject.TextArea.TextView.BackgroundRenderers.Add(_currentLineHighlighter);
 			AssociatedObject.TextArea.Caret.PositionChanged += Caret_PositionChanged;
 		}
 
 		private void Disable()
 		{
-			AssociatedObject.TextArea.TextView.BackgroundRenderers.Remove(currentLineHighlighter);
-			currentLineHighlighter = null;
+			AssociatedObject.TextArea.TextView.BackgroundRenderers.Remove(_currentLineHighlighter);
+			_currentLineHighlighter = null;
 			AssociatedObject.TextArea.Caret.PositionChanged -= Caret_PositionChanged;
 		}
 
@@ -71,8 +71,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The <see cref="IsEnabled"/> dependency property.
 		/// </summary>
 		public static readonly DependencyProperty IsEnabledProperty =
-			DependencyProperty.Register(
-				"IsEnabled", 
+			DependencyProperty.Register(nameof(IsEnabled), 
 				typeof(bool), 
 				typeof(HighlightCurrentLine), 
 				new PropertyMetadata(default(bool), OnIsEnabledChanged));
@@ -89,6 +88,6 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 				behavior.Disable();
 		}
 
-		private IBackgroundRenderer currentLineHighlighter;
+		private IBackgroundRenderer _currentLineHighlighter;
 	}
 }

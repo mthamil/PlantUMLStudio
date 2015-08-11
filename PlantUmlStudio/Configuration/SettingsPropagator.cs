@@ -22,7 +22,6 @@ using System.Linq;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials.Collections;
 using SharpEssentials.InputOutput;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Configuration
 {
@@ -50,7 +49,7 @@ namespace PlantUmlStudio.Configuration
 
 		private void settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			editorUpdates.TryGetValue(e.PropertyName).Apply(update =>
+			EditorUpdates.TryGetValue(e.PropertyName).Apply(update =>
 			{
 				foreach (var editor in _diagramManager.OpenDiagrams)
 					update(editor, _settings);
@@ -61,13 +60,14 @@ namespace PlantUmlStudio.Configuration
 		{
 			_settings.RecentFiles.Add(e.Diagram.File);
 
-			_settings.OpenFiles.FirstOrNone(file => fileComparer.Equals(file, e.Diagram.File)).Apply(file => 
-				_settings.OpenFiles.Remove(file));
+		    _settings.OpenFiles
+		             .FirstOrNone(file => FileComparer.Equals(file, e.Diagram.File))
+		             .Apply(file => _settings.OpenFiles.Remove(file));
 		}
 
 		private void diagramManager_DiagramOpened(object sender, DiagramOpenedEventArgs e)
 		{
-			if (!_settings.OpenFiles.Contains(e.Diagram.File, fileComparer))
+			if (!_settings.OpenFiles.Contains(e.Diagram.File, FileComparer))
 				_settings.OpenFiles.Add(e.Diagram.File);
 		}
 
@@ -77,18 +77,18 @@ namespace PlantUmlStudio.Configuration
 		/// <summary>
 		/// A mapping of settings property names to the changes that should be applied to diagram editors if such a setting changes.
 		/// </summary>
-		private static readonly IDictionary<string, Action<IDiagramEditor, ISettings>> editorUpdates = new Dictionary<string, Action<IDiagramEditor, ISettings>>
+		private static readonly IDictionary<string, Action<IDiagramEditor, ISettings>> EditorUpdates = new Dictionary<string, Action<IDiagramEditor, ISettings>>
 		{
-			{ Reflect.PropertyOf<ISettings>(s => s.AutoSaveEnabled).Name, (ed, s) => ed.AutoSave = s.AutoSaveEnabled },
-			{ Reflect.PropertyOf<ISettings>(s => s.AutoSaveInterval).Name, (ed, s) => ed.AutoSaveInterval = s.AutoSaveInterval },
-			{ Reflect.PropertyOf<ISettings>(s => s.HighlightCurrentLine).Name, (ed, s) => ed.CodeEditor.Options.HighlightCurrentLine = s.HighlightCurrentLine },
-			{ Reflect.PropertyOf<ISettings>(s => s.ShowLineNumbers).Name, (ed, s) => ed.CodeEditor.Options.ShowLineNumbers = s.ShowLineNumbers },
-			{ Reflect.PropertyOf<ISettings>(s => s.EnableVirtualSpace).Name, (ed, s) => ed.CodeEditor.Options.EnableVirtualSpace = s.EnableVirtualSpace },
-			{ Reflect.PropertyOf<ISettings>(s => s.EnableWordWrap).Name, (ed, s) => ed.CodeEditor.Options.EnableWordWrap = s.EnableWordWrap },
-			{ Reflect.PropertyOf<ISettings>(s => s.EmptySelectionCopiesEntireLine).Name, (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine },
-			{ Reflect.PropertyOf<ISettings>(s => s.AllowScrollingBelowContent).Name, (ed, s) => ed.CodeEditor.Options.AllowScrollingBelowContent = s.AllowScrollingBelowContent }
+			{ nameof(ISettings.AutoSaveEnabled),                (ed, s) => ed.AutoSave = s.AutoSaveEnabled },
+			{ nameof(ISettings.AutoSaveInterval),               (ed, s) => ed.AutoSaveInterval = s.AutoSaveInterval },
+			{ nameof(ISettings.HighlightCurrentLine),           (ed, s) => ed.CodeEditor.Options.HighlightCurrentLine = s.HighlightCurrentLine },
+			{ nameof(ISettings.ShowLineNumbers),                (ed, s) => ed.CodeEditor.Options.ShowLineNumbers = s.ShowLineNumbers },
+			{ nameof(ISettings.EnableVirtualSpace),             (ed, s) => ed.CodeEditor.Options.EnableVirtualSpace = s.EnableVirtualSpace },
+			{ nameof(ISettings.EnableWordWrap),                 (ed, s) => ed.CodeEditor.Options.EnableWordWrap = s.EnableWordWrap },
+			{ nameof(ISettings.EmptySelectionCopiesEntireLine), (ed, s) => ed.CodeEditor.Options.EmptySelectionCopiesEntireLine = s.EmptySelectionCopiesEntireLine },
+			{ nameof(ISettings.AllowScrollingBelowContent),     (ed, s) => ed.CodeEditor.Options.AllowScrollingBelowContent = s.AllowScrollingBelowContent }
 		};
 
-		private static readonly IEqualityComparer<FileInfo> fileComparer = FileSystemInfoPathEqualityComparer.Instance;
+		private static readonly IEqualityComparer<FileInfo> FileComparer = FileSystemInfoPathEqualityComparer.Instance;
 	}
 }

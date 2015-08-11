@@ -28,12 +28,12 @@ namespace PlantUmlStudio.ViewModel
 	public class SnippetViewModel : MenuViewModel
 	{
 		public SnippetViewModel(CodeSnippet codeSnippet)
+            : base(codeSnippet.Name)
 		{
 			if (codeSnippet == null) 
-				throw new ArgumentNullException("codeSnippet");
+				throw new ArgumentNullException(nameof(codeSnippet));
 
 			_snippet = codeSnippet.Code;
-			Name = codeSnippet.Name;
 			Command = new RelayCommand<TextEditor>(Insert);
 		}
 

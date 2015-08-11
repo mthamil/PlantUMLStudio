@@ -70,8 +70,7 @@ namespace PlantUmlStudio.Core.InputOutput
 				//Thread.Sleep(500);
 
 				processed++;
-				if (progress != null)
-					progress.Report(new ReadDiagramsProgress(processed, numberOfFiles, diagram));
+			    progress?.Report(new ReadDiagramsProgress(processed, numberOfFiles, diagram));
 			}
 
 			return diagrams;
@@ -93,7 +92,7 @@ namespace PlantUmlStudio.Core.InputOutput
 			if (!String.IsNullOrWhiteSpace(content))
 			{
 				// Check that the given file's content appears to be a plantUML diagram.
-				Match match = diagramStartPattern.Match(content);
+				Match match = DiagramStartPattern.Match(content);
 				if (match.Success && match.Groups.Count > 1)
 				{
 					var diagram = new Diagram
@@ -151,9 +150,7 @@ namespace PlantUmlStudio.Core.InputOutput
 
 		private void OnDiagramFileAdded(FileInfo newDiagramFile)
 		{
-			var localEvent = DiagramFileAdded;
-			if (localEvent != null)
-				localEvent(this, new DiagramFileAddedEventArgs(newDiagramFile));
+            DiagramFileAdded?.Invoke(this, new DiagramFileAddedEventArgs(newDiagramFile));
 		}
 
 		/// <see cref="IDiagramIOService.DiagramFileDeleted"/>
@@ -161,9 +158,7 @@ namespace PlantUmlStudio.Core.InputOutput
 
 		private void OnDiagramFileDeleted(FileInfo deletedDiagramFile)
 		{
-			var localEvent = DiagramFileDeleted;
-			if (localEvent != null)
-				localEvent(this, new DiagramFileDeletedEventArgs(deletedDiagramFile));
+            DiagramFileDeleted?.Invoke(this, new DiagramFileDeletedEventArgs(deletedDiagramFile));
 		}
 
 		#endregion
@@ -181,7 +176,7 @@ namespace PlantUmlStudio.Core.InputOutput
 		private readonly TaskScheduler _scheduler;
 		private readonly IDirectoryMonitor _monitor;
 
-		private static readonly Regex diagramStartPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)", 
+		private static readonly Regex DiagramStartPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)", 
 			RegexOptions.IgnoreCase |
 			RegexOptions.Multiline |
 			RegexOptions.IgnorePatternWhitespace |

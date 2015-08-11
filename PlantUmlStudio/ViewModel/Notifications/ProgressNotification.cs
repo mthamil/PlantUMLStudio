@@ -45,12 +45,9 @@ namespace PlantUmlStudio.ViewModel.Notifications
 		}
 
 		/// <see cref="IProgressNotification.InProgress"/>
-		public bool InProgress
-		{
-			get { return PercentComplete.HasValue; }
-		}
+		public bool InProgress => PercentComplete.HasValue;
 
-		/// <see cref="IProgressNotification.PercentComplete"/>
+	    /// <see cref="IProgressNotification.PercentComplete"/>
 		public int? PercentComplete
 		{
 			get { return _percentComplete.Value; }

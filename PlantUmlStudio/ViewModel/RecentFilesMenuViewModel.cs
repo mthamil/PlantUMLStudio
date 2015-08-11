@@ -33,6 +33,6 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The recent files collection.
 		/// </summary>
-		public ICollection<FileInfo> Files { get; private set; }
+		public ICollection<FileInfo> Files { get; }
 	}
 }

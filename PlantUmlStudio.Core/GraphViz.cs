@@ -49,9 +49,9 @@ namespace PlantUmlStudio.Core
 		#region Implementation of IExternalComponent
 
 		/// <see cref="IExternalComponent.Name"/>
-		public string Name { get { return GraphVizExecutable.Name; } }
+		public string Name => GraphVizExecutable.Name;
 
-		#endregion
+	    #endregion
 
         #region Implementation of IComponentUpdateChecker
 

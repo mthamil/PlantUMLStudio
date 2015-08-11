@@ -69,7 +69,7 @@ namespace PlantUmlStudio.Core
 			if (String.IsNullOrEmpty(Content))
 				return false;
 
-			var match = diagramImagePathPattern.Match(Content);
+			var match = DiagramImagePathPattern.Match(Content);
 			if (match.Success && match.Groups.Count > 1)
 			{
 				string imageFileName = match.Groups[1].Value;
@@ -113,7 +113,7 @@ namespace PlantUmlStudio.Core
 			set
 			{
 				if (value == null)
-					throw new ArgumentNullException("value");
+					throw new ArgumentNullException(nameof(value));
 
 				_content.Value = value; 
 			}
@@ -138,7 +138,7 @@ namespace PlantUmlStudio.Core
 		private readonly Property<string> _content;
 		private readonly Property<FileInfo> _imageFile;
 
-		private static readonly Regex diagramImagePathPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)",
+		private static readonly Regex DiagramImagePathPattern = new Regex(@"@startuml\s*(?:"")*([^\r\n""]*)",
 			RegexOptions.IgnoreCase |
 			RegexOptions.Multiline |
 			RegexOptions.IgnorePatternWhitespace |

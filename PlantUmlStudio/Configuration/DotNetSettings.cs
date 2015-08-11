@@ -24,7 +24,6 @@ using System.Text.RegularExpressions;
 using PlantUmlStudio.Properties;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Observable;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Configuration
 {
@@ -128,12 +127,9 @@ namespace PlantUmlStudio.Configuration
 		}
 
 		/// <see cref="ISettings.RecentFiles"/>
-		public ICollection<FileInfo> RecentFiles 
-		{
-			get { return _recentFiles; }
-		}
+		public ICollection<FileInfo> RecentFiles => _recentFiles;
 
-		/// <see cref="ISettings.MaximumRecentFiles"/>
+	    /// <see cref="ISettings.MaximumRecentFiles"/>
 		public int MaximumRecentFiles
 		{
 			get { return _recentFiles.MaximumCount; }
@@ -200,37 +196,37 @@ namespace PlantUmlStudio.Configuration
 		public FileInfo GraphVizExecutable { get; set; }
 
 		/// <see cref="ISettings.GraphVizLocalVersionPattern"/>
-		public Regex GraphVizLocalVersionPattern { get; private set; }
+		public Regex GraphVizLocalVersionPattern { get; }
 
         /// <see cref="ISettings.GraphVizDownloadLocation"/>
-	    public Uri GraphVizDownloadLocation { get; private set; }
+	    public Uri GraphVizDownloadLocation { get; }
 
         /// <see cref="ISettings.GraphVizVersionSource"/>
-	    public Uri GraphVizVersionSource { get; private set; }
+	    public Uri GraphVizVersionSource { get; }
 
         /// <see cref="ISettings.GraphVizRemoteVersionPattern"/>
-	    public Regex GraphVizRemoteVersionPattern { get; private set; }
+	    public Regex GraphVizRemoteVersionPattern { get; }
 
 	    /// <see cref="ISettings.PlantUmlJar"/>
 		public FileInfo PlantUmlJar { get; set; }
 
 		/// <see cref="ISettings.PlantUmlDownloadLocation"/>
-		public Uri PlantUmlDownloadLocation { get; private set; }
+		public Uri PlantUmlDownloadLocation { get; }
 
 		/// <see cref="ISettings.PlantUmlVersionSource"/>
-		public Uri PlantUmlVersionSource { get; private set; }
+		public Uri PlantUmlVersionSource { get; }
 
 		/// <see cref="ISettings.PlantUmlRemoteVersionPattern"/>
-		public Regex PlantUmlRemoteVersionPattern { get; private set; }
+		public Regex PlantUmlRemoteVersionPattern { get; }
 
 		/// <see cref="ISettings.PlantUmlLocalVersionPattern"/>
-		public Regex PlantUmlLocalVersionPattern { get; private set; }
+		public Regex PlantUmlLocalVersionPattern { get; }
 
 		/// <see cref="ISettings.DiagramFileExtension"/>
-		public string DiagramFileExtension { get; private set; }
+		public string DiagramFileExtension { get; }
 
 		/// <see cref="ISettings.PlantUmlHighlightingDefinition"/>
-		public FileInfo PlantUmlHighlightingDefinition { get; private set; }
+		public FileInfo PlantUmlHighlightingDefinition { get; }
 
 		/// <see cref="ISettings.Save"/>
 		public void Save()
@@ -265,7 +261,7 @@ namespace PlantUmlStudio.Configuration
 		void recentFiles_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			// Relay the property change.
-			if (e.PropertyName == MaxRecentFilesCountName)
+			if (e.PropertyName == nameof(RecentFilesCollection.MaximumCount))
 				OnPropertyChanged(this, p => p.MaximumRecentFiles);
 		}
 
@@ -285,7 +281,5 @@ namespace PlantUmlStudio.Configuration
 		private readonly Property<bool> _allowScrollingBelowContent;
 
 		private readonly Settings _settings;
-
-		private static readonly string MaxRecentFilesCountName = Reflect.PropertyOf<RecentFilesCollection>(p => p.MaximumCount).Name;
 	}
 }

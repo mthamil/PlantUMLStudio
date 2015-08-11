@@ -40,7 +40,7 @@ namespace PlantUmlStudio.ViewModel
 				MenuViewModel category;
 				if (!categories.TryGetValue(snippet.Category, out category))
 				{
-					category = new MenuViewModel { Name = snippet.Category };
+					category = new MenuViewModel(snippet.Category);
 					categories[category.Name] = category;
 				}
 

@@ -100,11 +100,10 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The ScrollOffset property.
 		/// </summary>
 		public static readonly DependencyProperty ScrollOffsetProperty =
-			DependencyProperty.Register(
-			"ScrollOffset",
-			typeof(Vector),
-			typeof(BindableScrollOffsetBehavior),
-			new UIPropertyMetadata(new Vector(-1, -1), OnScrollOffsetChanged));
+			DependencyProperty.Register(nameof(ScrollOffset),
+			    typeof(Vector),
+			    typeof(BindableScrollOffsetBehavior),
+			    new UIPropertyMetadata(new Vector(-1, -1), OnScrollOffsetChanged));
 
 		private static void OnScrollOffsetChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{

@@ -36,6 +36,6 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The deleted diagram.
 		/// </summary>
-		public Diagram DeletedDiagram { get; private set; }
+		public Diagram DeletedDiagram { get; }
 	}
 }

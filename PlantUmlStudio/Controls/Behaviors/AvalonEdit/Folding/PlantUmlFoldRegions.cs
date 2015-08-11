@@ -29,7 +29,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		/// <see cref="IEnumerable{T}.GetEnumerator"/>
 		public IEnumerator<FoldedRegionDefinition> GetEnumerator()
 		{
-			return regions.GetEnumerator();
+			return Regions.GetEnumerator();
 		}
 
 		/// <see cref="IEnumerable.GetEnumerator"/>
@@ -40,7 +40,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 
 		#endregion
 
-		private static readonly IList<FoldedRegionDefinition> regions = new List<FoldedRegionDefinition>
+		private static readonly IList<FoldedRegionDefinition> Regions = new List<FoldedRegionDefinition>
 		{
 			{ new FoldedRegionDefinition(@"(^|\s+)note (left|right|top|bottom|over)([^\S\n]+.*)?$",													@"(^|\s+)end note($|\s+)") },
 			{ new FoldedRegionDefinition(@"(^|\s+)package[^\S\n]+[^{]+$",																			@"(^|\s+)end package($|\s+)") },

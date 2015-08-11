@@ -192,17 +192,14 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command that executes a Save operation.
 		/// </summary>
-		public ICommand SaveCommand { get; private set; }
+		public ICommand SaveCommand { get; }
 
 		/// <summary>
 		/// Whether a save can currently be performed.
 		/// </summary>
-		public bool CanSave
-		{
-			get { return !_isSaving; }
-		}
+		public bool CanSave => !_isSaving;
 
-		/// <summary>
+	    /// <summary>
 		/// Saves settings changes.
 		/// </summary>
 		public void Save()

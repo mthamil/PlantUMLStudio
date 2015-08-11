@@ -36,6 +36,6 @@ namespace PlantUmlStudio.Core.InputOutput
 		/// <summary>
 		/// The deleted diagram.
 		/// </summary>
-		public FileInfo DeletedDiagramFile { get; private set; }
+		public FileInfo DeletedDiagramFile { get; }
 	}
 }

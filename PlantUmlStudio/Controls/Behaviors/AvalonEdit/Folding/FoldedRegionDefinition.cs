@@ -35,11 +35,11 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		/// <summary>
 		/// The fold region start pattern.
 		/// </summary>
-		public string StartPattern { get; private set; }
+		public string StartPattern { get; }
 
 		/// <summary>
 		/// The fold region end pattern.
 		/// </summary>
-		public string EndPattern { get; private set; }
+		public string EndPattern { get; }
 	}
 }

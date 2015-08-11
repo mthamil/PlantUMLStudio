@@ -123,27 +123,19 @@ namespace PlantUmlStudio.Configuration
 		/// <summary>
 		/// The number of recent files.
 		/// </summary>
-		public int Count
-		{
-			get { return _recentFiles.Count; }
-		}
+		public int Count => _recentFiles.Count;
 
-		/// <summary>
+	    /// <summary>
 		/// Always returns false.
 		/// </summary>
-		public bool IsReadOnly
-		{
-			get { return false; }
-		}
+		public bool IsReadOnly => false;
 
-		/// <see cref="INotifyCollectionChanged.CollectionChanged"/>
+	    /// <see cref="INotifyCollectionChanged.CollectionChanged"/>
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		private void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
 		{
-			var localEvent = CollectionChanged;
-			if (localEvent != null)
-				localEvent(this, args);
+            CollectionChanged?.Invoke(this, args);
 		}
 
 		private readonly Property<int> _maximumCount;

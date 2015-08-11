@@ -36,12 +36,9 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		}
 
 		/// <see cref="IBackgroundRenderer.Layer"/>
-		public KnownLayer Layer
-		{
-			get { return KnownLayer.Background; }
-		}
+		public KnownLayer Layer => KnownLayer.Background;
 
-		/// <see cref="IBackgroundRenderer.Draw"/>
+	    /// <see cref="IBackgroundRenderer.Draw"/>
 		public void Draw(TextView textView, DrawingContext drawingContext)
 		{
 			if (textView.Document == null)

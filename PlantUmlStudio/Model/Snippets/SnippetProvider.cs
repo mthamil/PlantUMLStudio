@@ -33,9 +33,9 @@ namespace PlantUmlStudio.Model.Snippets
 		/// <summary>
 		/// The available snippets.
 		/// </summary>
-		public IEnumerable<CodeSnippet> Snippets { get { return _snippets; } }
+		public IEnumerable<CodeSnippet> Snippets => _snippets;
 
-		/// <summary>
+	    /// <summary>
 		/// Loads snippets from the snippet location.
 		/// If the snippet location is invalid, nothing is done.
 		/// </summary>

@@ -44,12 +44,9 @@ namespace PlantUmlStudio.ViewModel
 		/// Gets a value indicating whether the control is in design mode
 		/// (running in Blend or Visual Studio).
 		/// </summary>
-		public static bool IsInDesignMode
-		{
-			get { return _isInDesignMode.Value; }
-		}
+		public static bool IsInDesignMode => _isInDesignMode.Value;
 
-		/// <summary>
+	    /// <summary>
 		/// Holds the intance of the runtime version of the ViewModel that is instantiated only when application is really running by retrieving the instance from IOC container
 		/// </summary>
 		protected TViewModel RuntimeViewModel
@@ -74,15 +71,9 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Gets current ViewModel instance so if we are in designer its <see cref="DesigntimeViewModel"/> and if its runtime then its <see cref="RuntimeViewModel"/>.
 		/// </summary>
-		public TViewModel ViewModel
-		{
-			get
-			{
-				return IsInDesignMode ? DesigntimeViewModel : RuntimeViewModel;
-			}
-		}
+		public TViewModel ViewModel => IsInDesignMode ? DesigntimeViewModel : RuntimeViewModel;
 
-		/// <summary>
+	    /// <summary>
 		/// Holds the instance of the design-time version of the ViewModel that is instantiated only when application is opened in IDE designer (VisualStudio, Blend etc).
 		/// </summary>
 		public TViewModel DesigntimeViewModel
@@ -98,14 +89,12 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnPropertyChanged(string propertyName)
 		{
-			var localEvent = PropertyChanged;
-			if (localEvent != null)
-				localEvent(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#endregion
 
-		private static Lazy<bool> _isInDesignMode = new Lazy<bool>(() => (bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue));
+		private static readonly Lazy<bool> _isInDesignMode = new Lazy<bool>(() => (bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue));
 		private readonly Property<TViewModel> _runTimeViewModel;
 		private readonly Property<TViewModel> _designTimeViewModel;
 		private readonly string _name;

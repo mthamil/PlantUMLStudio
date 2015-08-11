@@ -28,9 +28,10 @@ namespace PlantUmlStudio.ViewModel
 	/// </summary>
 	public class MenuViewModel : ViewModelBase
 	{
-		public MenuViewModel()
+		public MenuViewModel(string name)
 		{
 			_name = Property.New(this, p => p.Name, OnPropertyChanged);
+		    Name = name;
 
 			SubMenu = new ObservableCollection<MenuViewModel>();
 		}
@@ -41,7 +42,7 @@ namespace PlantUmlStudio.ViewModel
 		public string Name 
 		{
 			get { return _name.Value; }
-			set { _name.Value = value; }
+			private set { _name.Value = value; }
 		}
 
 		/// <summary>
@@ -57,7 +58,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Any menu children.
 		/// </summary>
-		public ICollection<MenuViewModel> SubMenu { get; private set; }
+		public ICollection<MenuViewModel> SubMenu { get; }
 
 		/// <see cref="object.Equals(object)"/>
 		public override bool Equals(object obj)

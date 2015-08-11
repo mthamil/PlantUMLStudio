@@ -82,9 +82,9 @@ namespace PlantUmlStudio.Core
 		#region Implementation of IExternalComponent
 
 		/// <see cref="IExternalComponent.Name"/>
-		public string Name { get { return PlantUmlJar.Name; } }
+		public string Name => PlantUmlJar.Name;
 
-		#endregion
+	    #endregion
 
 		#region Implementation of IComponentUpdateChecker
 
@@ -96,7 +96,7 @@ namespace PlantUmlStudio.Core
 
             var result = await Task.Factory.FromProcess(
                 executable: "java",
-                arguments: String.Format(@"-jar ""{0}"" -version", PlantUmlJar.FullName),
+                arguments: $@"-jar ""{PlantUmlJar.FullName}"" -version",
                 input: Stream.Null,
                 cancellationToken: cancellationToken
             ).ConfigureAwait(false);

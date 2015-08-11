@@ -21,7 +21,6 @@ using System.Windows;
 using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using SharpEssentials.Collections;
-using SharpEssentials.Reflection;
 
 namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
@@ -56,8 +55,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The EnableVirtualSpace dependency property.
 		/// </summary>
 		public static readonly DependencyProperty EnableVirtualSpaceProperty =
-			DependencyProperty.Register(
-				"EnableVirtualSpace", 
+			DependencyProperty.Register(nameof(EnableVirtualSpace), 
 				typeof(bool), 
 				typeof(BindableOptions),
 				new FrameworkPropertyMetadata(default(bool),
@@ -77,8 +75,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The CutCopyWholeLine dependency property.
 		/// </summary>
 		public static readonly DependencyProperty CutCopyWholeLineProperty =
-			DependencyProperty.Register(
-				"CutCopyWholeLine", 
+			DependencyProperty.Register(nameof(CutCopyWholeLine), 
 				typeof(bool), 
 				typeof(BindableOptions), 
 				new FrameworkPropertyMetadata(default(bool), 
@@ -99,8 +96,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		/// The AllowScrollBelowDocument dependency property.
 		/// </summary>
 		public static readonly DependencyProperty AllowScrollBelowDocumentProperty =
-			DependencyProperty.Register(
-				"AllowScrollBelowDocument", 
+			DependencyProperty.Register(nameof(AllowScrollBelowDocument), 
 				typeof(bool), 
 				typeof(BindableOptions), 
 				new FrameworkPropertyMetadata(default(bool),
@@ -114,14 +110,14 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 
 		void TextEditor_OptionChanged(object sender, PropertyChangedEventArgs e)
 		{
-			optionsUpdateMap.TryGetValue(e.PropertyName).Apply(update => update(this, AssociatedObject.Options));
+			OptionsUpdateMap.TryGetValue(e.PropertyName).Apply(update => update(this, AssociatedObject.Options));
 		}
 
-		private static readonly IDictionary<string, Action<BindableOptions, TextEditorOptions>> optionsUpdateMap = new Dictionary<string, Action<BindableOptions, TextEditorOptions>>
+		private static readonly IDictionary<string, Action<BindableOptions, TextEditorOptions>> OptionsUpdateMap = new Dictionary<string, Action<BindableOptions, TextEditorOptions>>
 		{
-			{ Reflect.PropertyOf<TextEditorOptions>(p => p.EnableVirtualSpace).Name, (bo, to) => bo.EnableVirtualSpace = to.EnableVirtualSpace },
-			{ Reflect.PropertyOf<TextEditorOptions>(p => p.CutCopyWholeLine).Name, (bo, to) => bo.CutCopyWholeLine = to.CutCopyWholeLine },
-			{ Reflect.PropertyOf<TextEditorOptions>(p => p.AllowScrollBelowDocument).Name, (bo, to) => bo.AllowScrollBelowDocument = to.AllowScrollBelowDocument }
+			{ nameof(EnableVirtualSpace), (bo, to) => bo.EnableVirtualSpace = to.EnableVirtualSpace },
+			{ nameof(CutCopyWholeLine), (bo, to) => bo.CutCopyWholeLine = to.CutCopyWholeLine },
+			{ nameof(AllowScrollBelowDocument), (bo, to) => bo.AllowScrollBelowDocument = to.AllowScrollBelowDocument }
 		};
 	}
 }

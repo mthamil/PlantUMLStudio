@@ -61,7 +61,7 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<FileSystemWatcherAdapter>().As<IFileSystemWatcher>();
 			builder.RegisterType<DirectoryMonitor>().As<IDirectoryMonitor>()
 			       .WithProperty(p => p.FileCreationWaitTimeout, TimeSpan.FromSeconds(2))
-			       .OnActivating(c => c.Instance.Filter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
+                   .ApplySettings((settings, instance) => instance.Filter = "*" + settings.DiagramFileExtension);
 
 			builder.RegisterType<BitmapRenderer>().As<IDiagramRenderer>()
 			       .Keyed<IDiagramRenderer>(ImageFormat.PNG);
@@ -70,31 +70,31 @@ namespace PlantUmlStudio.Container
 				   .Keyed<IDiagramRenderer>(ImageFormat.SVG);
 
 			builder.RegisterType<GraphViz>().As<IExternalComponent>()
-			       .OnActivating(c =>
-			       {
-				       c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
+                   .ApplySettings((settings, instance) =>
+                   {
+                       instance.GraphVizExecutable = settings.GraphVizExecutable;
 
-				       c.Instance.LocalVersionPattern = c.Context.Resolve<ISettings>().GraphVizLocalVersionPattern;
-                       c.Instance.DownloadLocation = c.Context.Resolve<ISettings>().GraphVizDownloadLocation;
-                       c.Instance.VersionSource = c.Context.Resolve<ISettings>().GraphVizVersionSource;
-                       c.Instance.RemoteVersionPattern = c.Context.Resolve<ISettings>().GraphVizRemoteVersionPattern;
-			       });
+                       instance.LocalVersionPattern = settings.GraphVizLocalVersionPattern;
+                       instance.DownloadLocation = settings.GraphVizDownloadLocation;
+                       instance.VersionSource = settings.GraphVizVersionSource;
+                       instance.RemoteVersionPattern = settings.GraphVizRemoteVersionPattern;
+                   });
 
 			builder.RegisterType<PlantUml>().As<IDiagramCompiler, IExternalComponent>()
-			       .OnActivating(c =>
-			       {
-				       c.Instance.PlantUmlJar = c.Context.Resolve<ISettings>().PlantUmlJar;
-				       c.Instance.GraphVizExecutable = c.Context.Resolve<ISettings>().GraphVizExecutable;
-                       c.Instance.LocalLocation = c.Context.Resolve<ISettings>().PlantUmlJar;
+                   .ApplySettings((settings, instance) =>
+                   {
+                       instance.PlantUmlJar = settings.PlantUmlJar;
+                       instance.GraphVizExecutable = settings.GraphVizExecutable;
+                       instance.LocalLocation = settings.PlantUmlJar;
 
-				       c.Instance.LocalVersionPattern = c.Context.Resolve<ISettings>().PlantUmlLocalVersionPattern;
-				       c.Instance.DownloadLocation = c.Context.Resolve<ISettings>().PlantUmlDownloadLocation;
-				       c.Instance.VersionSource = c.Context.Resolve<ISettings>().PlantUmlVersionSource;
-				       c.Instance.RemoteVersionPattern = c.Context.Resolve<ISettings>().PlantUmlRemoteVersionPattern;
-			       });
+                       instance.LocalVersionPattern = settings.PlantUmlLocalVersionPattern;
+                       instance.DownloadLocation = settings.PlantUmlDownloadLocation;
+                       instance.VersionSource = settings.PlantUmlVersionSource;
+                       instance.RemoteVersionPattern = settings.PlantUmlRemoteVersionPattern;
+                   });
 
 			builder.RegisterType<DiagramIOService>().As<IDiagramIOService>()
-			       .OnActivating(c => c.Instance.FileFilter = "*" + c.Context.Resolve<ISettings>().DiagramFileExtension);
+                   .ApplySettings((settings, instance) => instance.FileFilter = "*" + settings.DiagramFileExtension);
 		}
 	}
 }

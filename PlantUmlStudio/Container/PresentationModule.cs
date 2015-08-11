@@ -92,36 +92,37 @@ namespace PlantUmlStudio.Container
 					return HighlightingLoader.Load(reader, c.Resolve<IHighlightingDefinitionReferenceResolver>());
 			}).SingleInstance();
 
-			builder.RegisterType<CodeEditorViewModel>()
-                   .WithParameter(ResolvedParameter.ForNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"))              
-                   .As<ICodeEditor>()
-			       .OnActivating(c =>
-			       {
-				       c.Instance.Options.HighlightCurrentLine = c.Context.Resolve<ISettings>().HighlightCurrentLine;
-				       c.Instance.Options.ShowLineNumbers = c.Context.Resolve<ISettings>().ShowLineNumbers;
-				       c.Instance.Options.EnableVirtualSpace = c.Context.Resolve<ISettings>().EnableVirtualSpace;
-				       c.Instance.Options.EnableWordWrap = c.Context.Resolve<ISettings>().EnableWordWrap;
-				       c.Instance.Options.EmptySelectionCopiesEntireLine = c.Context.Resolve<ISettings>().EmptySelectionCopiesEntireLine;
-			       });
+		    builder.RegisterType<CodeEditorViewModel>()
+		           .WithParameter(ResolvedParameter.ForNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"))
+		           .As<ICodeEditor>()
+		           .ApplySettings((settings, instance) =>
+		           {
+		               instance.Options.HighlightCurrentLine = settings.HighlightCurrentLine;
+		               instance.Options.ShowLineNumbers = settings.ShowLineNumbers;
+		               instance.Options.EnableVirtualSpace = settings.EnableVirtualSpace;
+		               instance.Options.EnableWordWrap = settings.EnableWordWrap;
+		               instance.Options.EmptySelectionCopiesEntireLine = settings.EmptySelectionCopiesEntireLine;
+		           });
 
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "autoSaveTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>())
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>(TypedParameter.From(TimeSpan.FromSeconds(2))))
 				   .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
-			       .OnActivating(c =>
-			       {
-				       c.Instance.AutoSave = c.Context.Resolve<ISettings>().AutoSaveEnabled;
-				       c.Instance.AutoSaveInterval = c.Context.Resolve<ISettings>().AutoSaveInterval;
-			       });
+                   .ApplySettings((settings, instance) =>
+                   {
+                       instance.AutoSave = settings.AutoSaveEnabled;
+                       instance.AutoSaveInterval = settings.AutoSaveInterval;
+                   })
+                   .ExternallyOwned();
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
 			       .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
 			       .WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
-			       .OnActivating(c =>
-			       {
-				       c.Instance.DiagramLocation = c.Context.Resolve<ISettings>().LastDiagramLocation;
-				       c.Instance.FileExtension = c.Context.Resolve<ISettings>().DiagramFileExtension;
-			       })
+                   .ApplySettings((settings, instance) =>
+                   {
+                       instance.DiagramLocation = settings.LastDiagramLocation;
+                       instance.FileExtension = settings.DiagramFileExtension;
+                   })
 			       .OnActivated(c => c.Instance.OpenDiagramFilesAsync(c.Context.Resolve<ISettings>().RememberOpenFiles
 				                                                          ? c.Context.Resolve<ISettings>().OpenFiles
 				                                                          : Enumerable.Empty<FileInfo>()));

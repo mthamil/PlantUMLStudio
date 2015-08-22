@@ -47,6 +47,42 @@ namespace PlantUmlStudio.Container.Support
 		}
 
         /// <summary>
+        /// Configures a constructor parameter based on the given value. The provided value's type
+        /// must match the constructor argument's type.
+        /// </summary>
+        /// <typeparam name="TLimit">Registration limit type.</typeparam>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TStyle">Registration style.</typeparam>
+        /// <typeparam name="TValue">The type of the constructor parameter and the argument being provided.</typeparam>
+        /// <param name="registration">The registration to configure.</param>
+        /// <param name="valueProvider">The value provider.</param>
+        /// <returns>A registration builder allowing further configuration of the component.</returns>
+        public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> WithParameter<TLimit, TReflectionActivatorData, TStyle, TValue>(
+                this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration, 
+                Func<IComponentContext, TValue> valueProvider) where TReflectionActivatorData : ReflectionActivatorData
+        {
+            return registration.WithParameter((p, c) => p.ParameterType == typeof(TValue), (p, c) => valueProvider(c));
+        }
+
+        /// <summary>
+        /// Configures a constructor parameter based on the given value. The provided value's type
+        /// must match the constructor argument's type.
+        /// </summary>
+        /// <typeparam name="TLimit">Registration limit type.</typeparam>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TStyle">Registration style.</typeparam>
+        /// <typeparam name="TValue">The type of the constructor parameter and the argument being provided.</typeparam>
+        /// <param name="registration">The registration to configure.</param>
+        /// <param name="valueProvider">The value provider.</param>
+        /// <returns>A registration builder allowing further configuration of the component.</returns>
+        public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> WithParameter<TLimit, TReflectionActivatorData, TStyle, TValue>(
+                this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration,
+                Func<TValue> valueProvider) where TReflectionActivatorData : ReflectionActivatorData
+        {
+            return registration.WithParameter(c => valueProvider());
+        }
+
+        /// <summary>
         /// Provides a more convenient way to configure an instance using application settings.
         /// </summary>
         /// <typeparam name="TLimit">Registration limit type.</typeparam>

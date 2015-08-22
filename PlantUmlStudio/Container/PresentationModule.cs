@@ -107,7 +107,7 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<DiagramEditorViewModel>().As<IDiagramEditor>()
 			       .WithParameter((p, c) => p.Name == "autoSaveTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>())
 			       .WithParameter((p, c) => p.Name == "refreshTimer", (p, c) => c.Resolve<DispatcherTimerAdapter>(TypedParameter.From(TimeSpan.FromSeconds(2))))
-				   .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
+                   .WithParameter(TaskScheduler.FromCurrentSynchronizationContext)
                    .ApplySettings((settings, instance) =>
                    {
                        instance.AutoSave = settings.AutoSaveEnabled;
@@ -116,7 +116,7 @@ namespace PlantUmlStudio.Container
                    .ExternallyOwned();
 
 			builder.RegisterType<DiagramExplorerViewModel>().As<IDiagramExplorer>()
-			       .WithParameter((p, c) => p.ParameterType == typeof(TaskScheduler), (p, c) => TaskScheduler.FromCurrentSynchronizationContext())
+                   .WithParameter(TaskScheduler.FromCurrentSynchronizationContext)
 			       .WithProperty(d => d.NewDiagramTemplate, "@startuml \"{0}\"\n\n\n@enduml")
                    .ApplySettings((settings, instance) =>
                    {
@@ -138,7 +138,7 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<SettingsViewModel>();
 
 			builder.RegisterType<RecentFilesMenuViewModel>()
-			       .WithParameter((p, c) => p.ParameterType == typeof(ICollection<FileInfo>), (p, c) => c.Resolve<ISettings>().RecentFiles);
+			       .WithParameter(c => c.Resolve<ISettings>().RecentFiles);
 		}
 	}
 }

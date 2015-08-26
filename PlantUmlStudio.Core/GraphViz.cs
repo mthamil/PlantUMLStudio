@@ -79,7 +79,7 @@ namespace PlantUmlStudio.Core
         public override Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
         {
             Process.Start(DownloadLocation.ToString());
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         #endregion

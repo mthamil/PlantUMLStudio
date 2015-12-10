@@ -3,7 +3,6 @@ using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.Core
 {

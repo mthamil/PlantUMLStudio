@@ -3,16 +3,14 @@ using System.Linq;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
-using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit
 {
 	public class PlantUmlFoldingStrategyTests
 	{
 		[Theory]
-		[PropertyData("FoldingTestData")]
+		[MemberData(nameof(FoldingTestData))]
 		public void Test_CreateNewFoldings(string input, IList<NewFolding> expected)
 		{
 			// Arrange.
@@ -38,7 +36,7 @@ namespace Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit
 		{
 			get
 			{
-				return new TheoryDataSet<string, IList<NewFolding>>
+				return new TheoryData<string, IList<NewFolding>>
 				{
 					{ 
 @"note left

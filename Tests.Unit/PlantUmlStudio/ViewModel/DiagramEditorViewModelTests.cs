@@ -17,7 +17,6 @@ using SharpEssentials.Chronology;
 using SharpEssentials.Concurrency;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {
@@ -269,10 +268,10 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-			         .Returns(Tasks.FromSuccess());
+			         .Returns(Task.CompletedTask);
 
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
-			        .Returns(Tasks.FromSuccess());
+			        .Returns(Task.CompletedTask);
 
 			editor.ImageFormat = ImageFormat.SVG;
 
@@ -288,7 +287,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_SaveCommand_SaveUnuccessful()
+		public async Task Test_SaveCommand_SaveUnuccessful()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -301,10 +300,10 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-					 .Returns(Tasks.FromException(new InvalidOperationException("Save didn't work!")));
+					 .Returns(Task.FromException(new InvalidOperationException("Save didn't work!")));
 
 			// Act.
-            AssertThat.Throws<InvalidOperationException>(async () => await editor.SaveAsync());
+            await Assert.ThrowsAsync<InvalidOperationException>(() => editor.SaveAsync());
 
 			// Assert.
 			Assert.True(editor.IsIdle);
@@ -327,10 +326,10 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-			         .Returns(Tasks.FromSuccess());
+			         .Returns(Task.CompletedTask);
 
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
-			        .Returns(Tasks.FromSuccess());
+			        .Returns(Task.CompletedTask);
 
 			await editor.SaveAsync();
 
@@ -363,10 +362,10 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.IsModified = true;
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-					 .Returns(Tasks.FromSuccess());
+					 .Returns(Task.CompletedTask);
 
 			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
-					.Returns(Tasks.FromSuccess());
+					.Returns(Task.CompletedTask);
 
 			// Act.
 			await editor.SaveAsync();
@@ -405,7 +404,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
-					.Returns(Tasks.FromException<ImageSource>(new PlantUmlException()));
+					.Returns(Task.FromException<ImageSource>(new PlantUmlException()));
 
 			// Act.
 			await editor.RefreshAsync();
@@ -451,7 +450,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 		[Fact]
 		[Synchronous]
-		public void Test_ImageFormat_Change_CancelsOtherRefreshTasks()
+		public async Task Test_ImageFormat_Change_CancelsOtherRefreshTasks()
 		{
 			// Arrange.
 			diagram.File = new FileInfo("TestFile.puml");
@@ -483,11 +482,11 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			// Assert.
 			Assert.Equal(2, tasks.Count);
-			AssertThat.Throws<OperationCanceledException>(() => tasks[0]);
+			await Assert.ThrowsAsync<OperationCanceledException>(() => tasks[0]);
 			Assert.Equal(TaskStatus.Canceled, tasks[0].Status);
 
 			killSwitch = true;
-			AssertThat.DoesNotThrow(() => tasks[1]);
+			await tasks[1];
 			Assert.Equal(TaskStatus.RanToCompletion, tasks[1].Status);
 		}
 

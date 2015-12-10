@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantUmlStudio", "PlantUmlStudio\PlantUmlStudio.csproj", "{8E43D75B-59E0-43F2-9200-5D1AE9DAD3FF}"
 EndProject
@@ -40,6 +40,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials.Testing", "SharpEssentials\SharpEssentials.Testing\SharpEssentials.Testing.csproj", "{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials.Tests.Unit", "SharpEssentials\SharpEssentials.Tests.Unit\SharpEssentials.Tests.Unit.csproj", "{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpEssentials.Testing.Controls", "SharpEssentials\SharpEssentials.Testing.Controls\SharpEssentials.Testing.Controls.csproj", "{B667A48F-C77C-4612-82DC-DF701509DA08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,6 +193,24 @@ Global
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Debug|x86.Build.0 = Debug|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|Any CPU.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|Any CPU.Build.0 = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|Mixed Platforms.Build.0 = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|x86.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Package|x86.Build.0 = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|x86.ActiveCfg = Release|Any CPU
+		{B667A48F-C77C-4612-82DC-DF701509DA08}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,5 +220,6 @@ Global
 		{3BE8D9DC-DDC3-47D8-848F-68CF43026CCA} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
 		{03BBCD92-4B36-4C97-8FA4-F2A26B81C04A} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
 		{4AB0FC65-635E-46C2-B821-5B8C74DB7C8F} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
+		{B667A48F-C77C-4612-82DC-DF701509DA08} = {4681C230-55F0-4759-A38C-4D97CCC91F3B}
 	EndGlobalSection
 EndGlobal

@@ -7,10 +7,8 @@ using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Security;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials;
-using SharpEssentials.Concurrency;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {
@@ -64,7 +62,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
 			component.Setup(c => c.DownloadLatestAsync(It.IsAny<IProgress<DownloadProgressChangedEventArgs>>(), It.IsAny<CancellationToken>()))
-			         .Returns(Tasks.FromSuccess());
+			         .Returns(Task.CompletedTask);
 
 			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 

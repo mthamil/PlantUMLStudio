@@ -8,7 +8,6 @@ using PlantUmlStudio.Configuration;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {

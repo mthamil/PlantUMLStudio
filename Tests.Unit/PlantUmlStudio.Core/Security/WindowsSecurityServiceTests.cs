@@ -2,7 +2,6 @@
 using Moq;
 using PlantUmlStudio.Core.Security;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.Core.Security
 {

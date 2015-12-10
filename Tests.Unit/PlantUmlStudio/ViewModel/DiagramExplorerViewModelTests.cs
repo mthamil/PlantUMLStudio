@@ -14,7 +14,6 @@ using SharpEssentials.Concurrency;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {
@@ -23,7 +22,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		public DiagramExplorerViewModelTests()
 		{
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-			         .Returns(Tasks.FromSuccess());
+			         .Returns(Task.CompletedTask);
 
 			settings.SetupProperty(s => s.LastDiagramLocation);
 
@@ -77,7 +76,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.ReadDiagramsAsync(It.IsAny<DirectoryInfo>(), It.IsAny<IProgress<ReadDiagramsProgress>>(), It.IsAny<CancellationToken>()))
-			         .Returns(Tasks.FromException<IEnumerable<Diagram>>(new AggregateException()));
+			         .Returns(Task.FromException<IEnumerable<Diagram>>(new AggregateException()));
 
 			// Act.
 			explorer.DiagramLocation = diagramLocation;
@@ -183,7 +182,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			string newDiagramFilePath = Path.Combine(diagramLocation.FullName, "new-diagram.puml");
 
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
-			         .Returns(Tasks.FromException(new InvalidOperationException()));
+			         .Returns(Task.FromException(new InvalidOperationException()));
 
 			explorer.DiagramLocation = diagramLocation;
 			explorer.NewDiagramTemplate = "New Diagram";
@@ -203,7 +202,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Theory]
-		[PropertyData("CanRequestOpenPreviewData")]
+		[MemberData(nameof(CanRequestOpenPreviewData))]
 		public void Test_CanRequestOpenPreview(bool expected, PreviewDiagramViewModel preview)
 		{
 			// Act.
@@ -217,7 +216,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			get
 			{
-				return new TheoryDataSet<bool, PreviewDiagramViewModel>
+				return new TheoryData<bool, PreviewDiagramViewModel>
 				{
 					{ false, null },
 					{ true, new PreviewDiagramViewModel(new Diagram()) }
@@ -312,7 +311,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Theory]
-		[PropertyData("CanDeleteDiagramData")]
+		[MemberData(nameof(CanDeleteDiagramData))]
 		public void Test_CanDeleteDiagram(bool expected, PreviewDiagramViewModel preview)
 		{
 			// Act.
@@ -326,7 +325,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			get
 			{
-				return new TheoryDataSet<bool, PreviewDiagramViewModel>
+				return new TheoryData<bool, PreviewDiagramViewModel>
 				{
 					{ false, null },
 					{ true, new PreviewDiagramViewModel(new Diagram()) }
@@ -339,7 +338,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.DeleteAsync(It.IsAny<Diagram>()))
-			         .Returns(Tasks.FromSuccess());
+			         .Returns(Task.CompletedTask);
 
 			var preview = new PreviewDiagramViewModel(new Diagram { File = new FileInfo("TestFile") });
 			explorer.PreviewDiagrams.Add(preview);

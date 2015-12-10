@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using PlantUmlStudio.Controls.Converters;
-using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.Controls.Converters
 {
@@ -23,7 +21,7 @@ namespace Tests.Unit.PlantUmlStudio.Controls.Converters
 		}
 
 		[Theory]
-		[PropertyData("InvalidData")]
+		[MemberData(nameof(InvalidData))]
 		public void Test_Convert_InvalidArguments(object[] values)
 		{
 			// Act.
@@ -37,7 +35,7 @@ namespace Tests.Unit.PlantUmlStudio.Controls.Converters
 		{
 			get
 			{
-				return new TheoryDataSet<object[]>
+				return new TheoryData<object[]>
 				{
 					null,
 					new object[] { "test", true, 1 },

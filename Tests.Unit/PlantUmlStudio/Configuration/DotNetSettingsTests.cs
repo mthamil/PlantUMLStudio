@@ -9,7 +9,6 @@ using SharpEssentials.Collections;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.Configuration
 {

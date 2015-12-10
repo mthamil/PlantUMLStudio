@@ -30,19 +30,17 @@ using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
 using PlantUmlStudio.Properties;
 using PlantUmlStudio.ViewModel.Notifications;
-using SharpEssentials;
 using SharpEssentials.Chronology;
-using SharpEssentials.Concurrency;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
 using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {
-	/// <summary>
-	/// Represents a diagram editor.
-	/// </summary>
-	public class DiagramEditorViewModel : ViewModelBase, IDiagramEditor
+    /// <summary>
+    /// Represents a diagram editor.
+    /// </summary>
+    public class DiagramEditorViewModel : ViewModelBase, IDiagramEditor
 	{
 		/// <summary>
 		/// Initializes a new diagram editor.
@@ -202,7 +200,7 @@ namespace PlantUmlStudio.ViewModel
 			_autoSaveTimer.TryStop();
 
 			if (_saveExecuting)
-				return Tasks.FromSuccess();
+				return Task.CompletedTask;
 
 			_saveExecuting = true;
 			IsIdle = false;

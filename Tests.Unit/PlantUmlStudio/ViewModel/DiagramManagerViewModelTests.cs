@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials.Collections;
-using SharpEssentials.Concurrency;
 using SharpEssentials.Testing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {
@@ -108,7 +107,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			var editor = new Mock<IDiagramEditor>();
 			editor.SetupGet(e => e.Diagram).Returns(diagram);
-			editor.Setup(e => e.SaveAsync()).Returns(Tasks.FromSuccess());
+			editor.Setup(e => e.SaveAsync()).Returns(Task.CompletedTask);
 
 			var diagramManager = CreateManager(d => editor.Object);
 			diagramManager.OpenDiagramCommand.Execute(diagramPreview);
@@ -347,14 +346,14 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			var modifiedEditors = Mocks.Of<IDiagramEditor>()
 			                           .Where(e => e.CanSave == true &&
-			                                       e.SaveAsync() == Tasks.FromSuccess())
+			                                       e.SaveAsync() == Task.CompletedTask)
 			                           .Take(2)
 									   .Tee(e => diagramManager.OpenDiagrams.Add(e))
 									   .ToList();
 
 			var unmodifiedEditor =
 				Mock.Of<IDiagramEditor>(e => e.CanSave == false &&
-				                             e.SaveAsync() == Tasks.FromSuccess());
+				                             e.SaveAsync() == Task.CompletedTask);
 				
 			diagramManager.OpenDiagrams.Add(unmodifiedEditor);
 			

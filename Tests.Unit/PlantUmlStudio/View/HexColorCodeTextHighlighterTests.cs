@@ -8,8 +8,8 @@ using ICSharpCode.AvalonEdit.Utils;
 using Moq;
 using PlantUmlStudio.Controls;
 using SharpEssentials.Testing;
+using SharpEssentials.Testing.Controls.WPF;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.View
 {
@@ -28,7 +28,7 @@ namespace Tests.Unit.PlantUmlStudio.View
 		{
 			get
 			{
-				return new TheoryDataSet<string, Color, IList<Tuple<int, int>>>
+				return new TheoryData<string, Color, IList<Tuple<int, int>>>
 				{
 					{ @"[#ABCD01]", Color.FromRgb(0xAB, 0xCD, 0x01), new[] { Tuple.Create(0, 1), Tuple.Create(1, 7), Tuple.Create(8, 1) } },
 					{ @"<color:#FF0012> ", Color.FromRgb(0xFF, 0x00, 0x12), new[] { Tuple.Create(0, 7), Tuple.Create(7, 7), Tuple.Create(14, 2) } }
@@ -36,8 +36,8 @@ namespace Tests.Unit.PlantUmlStudio.View
 			}
 		}
 
-		[Theory]
-		[PropertyData("TransformData")]
+		[WpfTheory]
+		[MemberData(nameof(TransformData))]
 		public void Test_Transform(string inputText, Color expectedColor, IList<Tuple<int, int>> expectedTextRuns)
 		{
 			// Arrange.

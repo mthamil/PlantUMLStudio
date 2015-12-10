@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials.Testing;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {
@@ -13,7 +13,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		{
 			get
 			{
-				return new TheoryDataSet<Expression<Func<EditorOptions, bool>>, Action<EditorOptions, bool>>
+				return new TheoryData<Expression<Func<EditorOptions, bool>>, Action<EditorOptions, bool>>
 				{
 					{ p => p.HighlightCurrentLine, (e, v) => e.HighlightCurrentLine = v },
 					{ p => p.ShowLineNumbers, (e, v) => e.ShowLineNumbers = v },
@@ -26,7 +26,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Theory]
-		[PropertyData("PropertiesData")]
+		[MemberData(nameof(PropertiesData))]
 		public void Test_Property_Changes(Expression<Func<EditorOptions, bool>> getter, Action<EditorOptions, bool> setter)
 		{
 			// Act/Assert.

@@ -1,7 +1,6 @@
 using PlantUmlStudio.Core;
 using PlantUmlStudio.ViewModel;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
 {

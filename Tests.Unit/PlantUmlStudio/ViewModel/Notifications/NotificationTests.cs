@@ -1,6 +1,5 @@
 ﻿using PlantUmlStudio.ViewModel.Notifications;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel.Notifications
 {

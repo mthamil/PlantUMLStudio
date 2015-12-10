@@ -10,7 +10,6 @@ using PlantUmlStudio.Core.InputOutput;
 using SharpEssentials;
 using SharpEssentials.Concurrency;
 using SharpEssentials.InputOutput;
-using SharpEssentials.Testing;
 using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
@@ -95,13 +94,13 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 		}
 
 		[Fact]
-		public void Test_ReadAsync_InvalidDiagram()
+		public async Task Test_ReadAsync_InvalidDiagram()
 		{
 			// Arrange.
 			var file = new FileInfo(Path.Combine(currentDirectory.FullName, "invalid.puml"));
 
 			// Act/Assert.
-			AssertThat.Throws<InvalidDiagramFileException>(() => diagramIO.ReadAsync(file));
+			await Assert.ThrowsAsync<InvalidDiagramFileException>(() => diagramIO.ReadAsync(file));
 		}
 
 		[Fact]
@@ -137,7 +136,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 		}
 
 		[Fact]
-		public void Test_ReadDiagramsAsync_Cancelled()
+		public async Task Test_ReadDiagramsAsync_Cancelled()
 		{
 			// Arrange.
 			var progress = new Mock<IProgress<ReadDiagramsProgress>>();
@@ -150,7 +149,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			var readTask = diagramIO.ReadDiagramsAsync(currentDirectory, progress.Object, tcs.Token);
 
 			// Assert.
-			AssertThat.Throws<TaskCanceledException>(() => readTask);
+			await Assert.ThrowsAsync<TaskCanceledException>(() => readTask);
 			Assert.True(readTask.IsCanceled);
 		}
 

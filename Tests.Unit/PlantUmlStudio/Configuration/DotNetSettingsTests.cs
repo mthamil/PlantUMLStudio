@@ -173,7 +173,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 		{
 			// Arrange.
 			settings.OpenFiles = new StringCollection();
-			settings.OpenFiles.AddRange(new [] { @"C:\file1", @"C:\file2" });
+			settings.OpenFiles.AddRange(new[] { @"C:\file1", @"C:\file2" });
 
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
 
@@ -191,7 +191,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 		{
 			// Arrange.
 			settings.OpenFiles = new StringCollection();
-			var files = new[] { new FileInfo(@"C:\fileC"), new FileInfo(@"C:\fileA"), new FileInfo(@"C:\fileB") };
+			var files = new[] { @"C:\fileC", @"C:\fileA", @"C:\fileB" }.Select(f => new FileInfo(f)).ToList();
 
 			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
 

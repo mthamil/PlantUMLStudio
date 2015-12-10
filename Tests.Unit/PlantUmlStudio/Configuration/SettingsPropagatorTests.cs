@@ -36,7 +36,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.AutoSaveEnabled, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("AutoSaveEnabled"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.AutoSaveEnabled)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -57,7 +57,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.AutoSaveInterval, TimeSpan.FromSeconds(30));
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("AutoSaveInterval"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.AutoSaveInterval)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -78,7 +78,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.HighlightCurrentLine, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("HighlightCurrentLine"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.HighlightCurrentLine)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -99,7 +99,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.ShowLineNumbers, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("ShowLineNumbers"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.ShowLineNumbers)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -120,7 +120,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.EnableVirtualSpace, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EnableVirtualSpace"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.EnableVirtualSpace)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -141,7 +141,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.EnableWordWrap, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EnableWordWrap"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.EnableWordWrap)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -162,7 +162,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.EmptySelectionCopiesEntireLine, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("EmptySelectionCopiesEntireLine"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.EmptySelectionCopiesEntireLine)));
 
 			// Assert.
 			foreach (var editor in editors)
@@ -183,7 +183,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.SetupProperty(s => s.AllowScrollingBelowContent, true);
 
 			// Act.
-			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs("AllowScrollingBelowContent"));
+			settings.Raise(s => s.PropertyChanged += null, new PropertyChangedEventArgs(nameof(ISettings.AllowScrollingBelowContent)));
 
 			// Assert.
 			foreach (var editor in editors)

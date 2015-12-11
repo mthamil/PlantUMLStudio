@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 using System;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -86,7 +85,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
                 string remoteVersion = match.Groups["version"].Value;
                 string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
 
-                bool versionsNotEqual = String.Compare(remoteVersion, currentVersion, true, CultureInfo.InvariantCulture) != 0;
+                bool versionsNotEqual = !String.Equals(remoteVersion, currentVersion, StringComparison.OrdinalIgnoreCase);
                 if (versionsNotEqual)
                     return remoteVersion;
             }
@@ -100,7 +99,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 			if (LocalLocation.Exists)
 			{
 				// Make a backup in case the new version has issues.
-				var backupFile = new FileInfo(String.Format("{0}_{1:yyyyMMdd_HHmmss}.bak", LocalLocation.FullName, _clock.Now));
+				var backupFile = new FileInfo($"{LocalLocation.FullName}_{_clock.Now:yyyyMMdd_HHmmss}.bak");
 				await LocalLocation.CopyToAsync(backupFile, true, cancellationToken).ConfigureAwait(false);
                 LocalLocation.Delete();
 			}

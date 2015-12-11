@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using PlantUmlStudio.Core.Utilities;
 
 namespace PlantUmlStudio.Core.Imaging
 {
@@ -37,19 +38,20 @@ namespace PlantUmlStudio.Core.Imaging
 			}
 
 			var bitmap = new BitmapImage();
-			bitmap.BeginInit();
-			bitmap.UriSource = imageUri;
+		    using (bitmap.BeginInitialize())
+		    {
+                bitmap.UriSource = imageUri;
 
-			// OMAR: Trick #6
-			// Unless we use this option, the image file is locked and cannot be modified.
-			// Looks like WPF holds read lock on the images. Very bad.
-			bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                // OMAR: Trick #6
+                // Unless we use this option, the image file is locked and cannot be modified.
+                // Looks like WPF holds read lock on the images. Very bad.
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
 
-			// Unless we use this option, an image cannot be refreshed. It loads from 
-			// cache. Looks like WPF caches every image it loads in memory. Very bad.
-			bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-
-			bitmap.EndInit();
+                // Unless we use this option, an image cannot be refreshed. It loads from 
+                // cache. Looks like WPF caches every image it loads in memory. Very bad.
+                bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            }
+           
 			return bitmap;
 		}
 
@@ -57,9 +59,9 @@ namespace PlantUmlStudio.Core.Imaging
 		public ImageSource Render(Stream imageData)
 		{
 			var bitmap = new BitmapImage();
-			bitmap.BeginInit();
-			bitmap.StreamSource = imageData;
-			bitmap.EndInit();
+		    using (bitmap.BeginInitialize())
+                bitmap.StreamSource = imageData;
+           
 			bitmap.Freeze();
 			return bitmap;
 		}

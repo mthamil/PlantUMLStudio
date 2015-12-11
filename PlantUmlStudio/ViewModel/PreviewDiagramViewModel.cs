@@ -34,15 +34,18 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		/// <param name="diagram">The underlying diagram</param>
 		public PreviewDiagramViewModel(Diagram diagram)
+            : this()
 		{
 			Diagram = diagram;
-
-			_imagePreview = Property.New(this, p => p.ImagePreview, OnPropertyChanged);
-			_codePreview = Property.New(this, p => p.CodePreview, OnPropertyChanged);
-
 			CodePreview = CreatePreview(Diagram.Content);
 			Diagram.PropertyChanged += Diagram_PropertyChanged;
 		}
+
+	    private PreviewDiagramViewModel()
+	    {
+            _imagePreview = Property.New(this, p => p.ImagePreview);
+            _codePreview = Property.New(this, p => p.CodePreview);
+        }
 
 		/// <summary>
 		/// The diagram image preview.

@@ -54,12 +54,16 @@ namespace PlantUmlStudio.ViewModel
 		/// <param name="autoSaveTimer">Determines how soon after a change a diagram will be autosaved</param>
 		/// <param name="refreshTimer">Determines how long after the last code modification was made to automatically refresh a diagram's image</param>
 		/// <param name="uiScheduler">A task scheduler for executing UI tasks</param>
-		public DiagramEditorViewModel(
-            Diagram diagram, ICodeEditor codeEditor, INotifications notifications,
-			IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, IDiagramIOService diagramIO, IDiagramCompiler compiler, 
-			ITimer autoSaveTimer, ITimer refreshTimer, TaskScheduler uiScheduler)
+		public DiagramEditorViewModel(Diagram diagram, 
+                                      ICodeEditor codeEditor, 
+                                      INotifications notifications,
+			                          IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, 
+                                      IDiagramIOService diagramIO, 
+                                      IDiagramCompiler compiler, 
+			                          ITimer autoSaveTimer, 
+                                      ITimer refreshTimer, 
+                                      TaskScheduler uiScheduler) : this()
 		{
-			_diagram = Property.New(this, p => p.Diagram, OnPropertyChanged);
 			Diagram = diagram;
 
 			_notifications = notifications;
@@ -74,23 +78,9 @@ namespace PlantUmlStudio.ViewModel
 			CodeEditor.Content = Diagram.Content;
 			CodeEditor.PropertyChanged += codeEditor_PropertyChanged;	// Subscribe after setting the content the first time.
 
-			_imageFormat = Property.New(this, p => p.ImageFormat, OnPropertyChanged);
 			ImageFormat = Diagram.ImageFormat;
 
-			_diagramImage = Property.New(this, p => p.DiagramImage, OnPropertyChanged);
-
-			_isIdle = Property.New(this, p => p.IsIdle, OnPropertyChanged)
-			                  .AlsoChanges(p => p.CanSave)
-			                  .AlsoChanges(p => p.CanRefresh)
-			                  .AlsoChanges(p => p.CanClose);
 			IsIdle = true;
-
-			_autoSave = Property.New(this, p => p.AutoSave, OnPropertyChanged);
-			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
-
-			SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
-			RefreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
-			CloseCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
 
 			// The document has been opened first time. So, any changes
 			// made to the document will require creating a backup.
@@ -100,10 +90,29 @@ namespace PlantUmlStudio.ViewModel
 			_refreshTimer.Elapsed += refreshTimer_Elapsed;
 		}
 
-		/// <summary>
-		/// Whether an editor is currently busy with some task.
-		/// </summary>
-		public bool IsIdle
+        private DiagramEditorViewModel()
+        {
+            _diagram = Property.New(this, p => p.Diagram);
+            _imageFormat = Property.New(this, p => p.ImageFormat);
+            _diagramImage = Property.New(this, p => p.DiagramImage);
+
+            _isIdle = Property.New(this, p => p.IsIdle)
+                              .AlsoChanges(p => p.CanSave)
+                              .AlsoChanges(p => p.CanRefresh)
+                              .AlsoChanges(p => p.CanClose);
+
+            _autoSave = Property.New(this, p => p.AutoSave);
+            _autoSaveInterval = Property.New(this, p => p.AutoSaveInterval);
+
+            SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
+            RefreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
+            CloseCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
+        }
+
+        /// <summary>
+        /// Whether an editor is currently busy with some task.
+        /// </summary>
+        public bool IsIdle
 		{
 			get { return _isIdle.Value; }
 			set { _isIdle.Value = value; }

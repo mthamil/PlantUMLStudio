@@ -35,7 +35,7 @@ namespace PlantUmlStudio.Configuration
 		/// </summary>
 		public RecentFilesCollection()
 		{
-			_maximumCount = Property.New(this, p => p.MaximumCount, OnPropertyChanged);
+			_maximumCount = Property.New(this, p => p.MaximumCount);
 			_recentFiles.CollectionChanged += (o, e) => OnCollectionChanged(e);	// Relay event.
 		}
 

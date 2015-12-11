@@ -38,19 +38,23 @@ namespace PlantUmlStudio.ViewModel
 			_externalComponent = externalComponent;
 			_securityService = securityService;
 
-			_name = Property.New(this, p => p.Name, OnPropertyChanged);
+			_name = Property.New(this, p => p.Name);
 			Name = externalComponent.Name;
 
-			_currentVersion = Property.New(this, p => p.CurrentVersion, OnPropertyChanged);
-			_versionProgress = Property.New(this, p => p.VersionProgress, OnPropertyChanged);
+			_currentVersion = Property.New(this, p => p.CurrentVersion);
+			_versionProgress = Property.New(this, p => p.VersionProgress);
 
-			_hasAvailableUpdate = Property.New(this, p => p.HasAvailableUpdate, OnPropertyChanged)
+			_hasAvailableUpdate = Property.New(this, p => p.HasAvailableUpdate)
 			                              .AlsoChanges(p => p.CanUpdate);
-			_latestVersion = Property.New(this, p => p.LatestVersion, OnPropertyChanged);
-			_updateProgress = Property.New(this, p => p.UpdateProgress, OnPropertyChanged);
+			_latestVersion = Property.New(this, p => p.LatestVersion);
+			_updateProgress = Property.New(this, p => p.UpdateProgress);
 
-			UpdateCommand = Command.For(this).DependsOn(p => p.CanUpdate).Asynchronously().Executes(UpdateAsync);
-			_updateCompleted = Property.New(this, p => UpdateCompleted, OnPropertyChanged);
+		    UpdateCommand = Command.For(this)
+		                           .DependsOn(p => p.CanUpdate)
+		                           .Asynchronously()
+		                           .Executes(UpdateAsync);
+
+			_updateCompleted = Property.New(this, p => UpdateCompleted);
 		}
 
 		/// <summary>

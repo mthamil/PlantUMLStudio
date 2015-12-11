@@ -26,18 +26,18 @@ namespace PlantUmlStudio.ViewModel
 	/// Used to retrieve specific view models from an application container. 
 	/// </summary>
 	/// <typeparam name="TViewModel">The specific type of ViewModel to access</typeparam>
-	public class AutofacViewModelLocator<TViewModel> : INotifyPropertyChanged where TViewModel : class
+	public class AutofacViewModelLocator<TViewModel> : ObservableObject where TViewModel : class
 	{
 		public AutofacViewModelLocator(Autofac.IContainer container, string name)
 		{
 			_name = name;
 			_container = container;
 
-			_runTimeViewModel = Property.New(this, p => p.RuntimeViewModel, OnPropertyChanged)
-				.AlsoChanges(p => p.ViewModel);
+		    _runTimeViewModel = Property.New(this, p => p.RuntimeViewModel)
+		                                .AlsoChanges(p => p.ViewModel);
 
-			_designTimeViewModel = Property.New(this, p => p.DesigntimeViewModel, OnPropertyChanged)
-				.AlsoChanges(p => p.ViewModel);
+		    _designTimeViewModel = Property.New(this, p => p.DesigntimeViewModel)
+		                                   .AlsoChanges(p => p.ViewModel);
 		}
 
 		/// <summary>
@@ -81,18 +81,6 @@ namespace PlantUmlStudio.ViewModel
 			get { return _designTimeViewModel.Value; }
 			set { _designTimeViewModel.Value = value; }
 		}
-
-		#region INotifyPropertyChanged Members
-
-		/// <see cref="INotifyPropertyChanged.PropertyChanged"/>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
 
 		private static readonly Lazy<bool> _isInDesignMode = new Lazy<bool>(() => (bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue));
 		private readonly Property<TViewModel> _runTimeViewModel;

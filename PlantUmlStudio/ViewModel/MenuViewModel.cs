@@ -30,10 +30,8 @@ namespace PlantUmlStudio.ViewModel
 	{
 		public MenuViewModel(string name)
 		{
-			_name = Property.New(this, p => p.Name, OnPropertyChanged);
+			_name = Property.New(this, p => p.Name);
 		    Name = name;
-
-			SubMenu = new ObservableCollection<MenuViewModel>();
 		}
 
 		/// <summary>
@@ -58,10 +56,10 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Any menu children.
 		/// </summary>
-		public ICollection<MenuViewModel> SubMenu { get; }
+		public ICollection<MenuViewModel> SubMenu { get; } = new ObservableCollection<MenuViewModel>();
 
-		/// <see cref="object.Equals(object)"/>
-		public override bool Equals(object obj)
+        /// <see cref="object.Equals(object)"/>
+        public override bool Equals(object obj)
 		{
 			var other = obj as MenuViewModel;
 			if (other == null)

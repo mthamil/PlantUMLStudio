@@ -41,9 +41,11 @@ namespace PlantUmlStudio.ViewModel
 	/// </summary>
 	public class DiagramExplorerViewModel : ViewModelBase, IDiagramExplorer
 	{
-		public DiagramExplorerViewModel(INotifications notifications, IDiagramIOService diagramIO, 
-			Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, ISettings settings, TaskScheduler uiScheduler)
-				: this()
+		public DiagramExplorerViewModel(INotifications notifications, 
+                                        IDiagramIOService diagramIO, 
+			                            Func<Diagram, PreviewDiagramViewModel> previewDiagramFactory, 
+                                        ISettings settings, 
+                                        TaskScheduler uiScheduler) : this()
 		{
 			_notifications = notifications;
 			_diagramIO = diagramIO;
@@ -60,15 +62,15 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		protected DiagramExplorerViewModel()
 		{
-			_previewDiagrams = Property.New(this, p => PreviewDiagrams, OnPropertyChanged);
+			_previewDiagrams = Property.New(this, p => PreviewDiagrams);
 			_previewDiagrams.Value = new ObservableCollection<PreviewDiagramViewModel>();
 
-			_currentPreviewDiagram = Property.New(this, p => p.CurrentPreviewDiagram, OnPropertyChanged);
+			_currentPreviewDiagram = Property.New(this, p => p.CurrentPreviewDiagram);
 
-			_diagramLocation = Property.New(this, p => p.DiagramLocation, OnPropertyChanged)
+			_diagramLocation = Property.New(this, p => p.DiagramLocation)
 			                           .AlsoChanges(p => p.IsDiagramLocationValid);
 
-			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams, OnPropertyChanged);
+			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams);
 
 			LoadDiagramsCommand = Command.For(this).DependsOn(p => p.IsDiagramLocationValid).Asynchronously().Executes(LoadDiagramsAsync);
 			AddNewDiagramCommand = new AsyncRelayCommand<Uri>(AddNewDiagramAsync);
@@ -79,7 +81,7 @@ namespace PlantUmlStudio.ViewModel
 				catch (Exception e) { _notifications.Notify(new ExceptionNotification(e)); }
 			});
 			DeleteDiagramCommand = new AsyncRelayCommand<PreviewDiagramViewModel>(DeleteDiagramAsync, preview => preview != null);
-			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand, OnPropertyChanged);
+			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand);
 		}
 
 		/// <summary>

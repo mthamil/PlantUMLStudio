@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Properties;
+using SharpEssentials.Collections;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Observable;
 
@@ -50,9 +51,11 @@ namespace PlantUmlStudio.Configuration
 			_recentFiles.MaximumCount = settings.MaximumRecentFiles;
 			if (settings.RecentFiles != null)
 			{
-				var recentFiles = settings.RecentFiles.Cast<string>().Reverse().Select(fileName => new FileInfo(fileName));
-				foreach (var recentFile in recentFiles)
-					_recentFiles.Add(recentFile);
+			    settings.RecentFiles
+			            .Cast<string>()
+			            .Reverse()
+			            .Select(fileName => new FileInfo(fileName))
+			            .AddTo(_recentFiles);
 			}
 
 			AutoSaveEnabled = settings.AutoSaveEnabled;
@@ -84,25 +87,25 @@ namespace PlantUmlStudio.Configuration
 
 		private DotNetSettings()
 		{
-		    _lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation, OnPropertyChanged)
+		    _lastDiagramLocation = Property.New(this, p => p.LastDiagramLocation)
 		                                   .UsingPathEquality();
 
-			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
-			_openFiles = Property.New(this, p => p.OpenFiles, OnPropertyChanged)
+			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles);
+			_openFiles = Property.New(this, p => p.OpenFiles)
                                  .UsingSequenceEquality(FileSystemInfoPathEqualityComparer.Instance);
 
 			_recentFiles = new RecentFilesCollection();
 			_recentFiles.PropertyChanged += recentFiles_PropertyChanged;
 
-			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
-			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
+			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled);
+			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval);
 
-			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
-			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
-			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
-			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
-			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
-			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
+			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine);
+			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers);
+			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace);
+			_enableWordWrap = Property.New(this, p => p.EnableWordWrap);
+			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine);
+			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent);
 		}
 
 		/// <see cref="ISettings.LastDiagramLocation"/>

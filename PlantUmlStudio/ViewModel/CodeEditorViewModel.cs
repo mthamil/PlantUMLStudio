@@ -21,7 +21,6 @@ using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
-using SharpEssentials;
 using SharpEssentials.Clipboard;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
@@ -37,34 +36,39 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, IHighlightingDefinition highlightingDefinition, IEnumerable<MenuViewModel> snippets,
-			IClipboard clipboard)
+		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, 
+                                   IHighlightingDefinition highlightingDefinition, 
+                                   IEnumerable<MenuViewModel> snippets,
+			                       IClipboard clipboard) : this()
 		{
 			_clipboard = clipboard;
 			FoldingStrategy = foldingStrategy;
 			HighlightingDefinition = highlightingDefinition;
 			Snippets = snippets;
-			Options = new EditorOptions();
 
-			_contentIndex = Property.New(this, p => p.ContentIndex, OnPropertyChanged);
-			_contentIndex.Value = 0;
+            _contentIndex.Value = 0;
+        }
 
-			_selectionStart = Property.New(this, p => p.SelectionStart, OnPropertyChanged);
-			_selectionLength = Property.New(this, p => p.SelectionLength, OnPropertyChanged);
+	    private CodeEditorViewModel()
+	    {
+            _contentIndex = Property.New(this, p => p.ContentIndex);
 
-			_document = Property.New(this, p => p.Document, OnPropertyChanged);
+            _selectionStart = Property.New(this, p => p.SelectionStart);
+            _selectionLength = Property.New(this, p => p.SelectionLength);
 
-			_scrollOffset = Property.New(this, p => p.ScrollOffset, OnPropertyChanged);
+            _document = Property.New(this, p => p.Document);
 
-			_isModified = Property.New(this, p => IsModified, OnPropertyChanged);
+            _scrollOffset = Property.New(this, p => p.ScrollOffset);
 
-			UndoCommand = new RelayCommand(() => Document.UndoStack.Undo(), () => Document.UndoStack.CanUndo);
-			RedoCommand = new RelayCommand(() => Document.UndoStack.Redo(), () => Document.UndoStack.CanRedo);
+            _isModified = Property.New(this, p => IsModified);
 
-			CopyCommand = new RelayCommand(Copy);
-			CutCommand = new RelayCommand(Cut);
-			PasteCommand = new RelayCommand(Paste, () => _clipboard.ContainsText);
-		}
+            UndoCommand = new RelayCommand(() => Document.UndoStack.Undo(), () => Document.UndoStack.CanUndo);
+            RedoCommand = new RelayCommand(() => Document.UndoStack.Redo(), () => Document.UndoStack.CanRedo);
+
+            CopyCommand = new RelayCommand(Copy);
+            CutCommand = new RelayCommand(Cut);
+            PasteCommand = new RelayCommand(Paste, () => _clipboard.ContainsText);
+        }
 
 		/// <summary>
 		/// The editor folding strategy.
@@ -159,7 +163,7 @@ namespace PlantUmlStudio.ViewModel
 		}
 
 		/// <see cref="ICodeEditor.Options"/>
-		public EditorOptions Options { get; private set; }
+		public EditorOptions Options { get; } = new EditorOptions();
 
 		/// <summary>
 		/// Whether content has been modified since the last save.

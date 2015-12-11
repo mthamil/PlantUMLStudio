@@ -35,28 +35,30 @@ namespace PlantUmlStudio.ViewModel
 	public class DiagramManagerViewModel : ViewModelBase, IDiagramManager
 	{
 		public DiagramManagerViewModel(IDiagramExplorer explorer, Func<Diagram, IDiagramEditor> editorFactory)
+            : this()
 		{
 			_explorer = explorer;
 			_editorFactory = editorFactory;
-
-			_openDiagrams = Property.New(this, p => OpenDiagrams, OnPropertyChanged);
-			_openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
-
-			_openDiagram = Property.New(this, p => p.OpenDiagram, OnPropertyChanged);
-
-			_closingDiagram = Property.New(this, p => p.ClosingDiagram, OnPropertyChanged);
-
-			SaveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
-			OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
-			CloseCommand = new RelayCommand(Close);
-			SaveAllCommand = Command.For(this)
-			                        .DependsOnCollection(p => p.OpenDiagrams)
-			                        .When(c => c.Any(p => p.CanSave))
-									.Asynchronously()
-			                        .Executes(SaveAllAsync);
-
 			_explorer.OpenPreviewRequested += explorer_OpenPreviewRequested;
 		}
+
+	    private DiagramManagerViewModel()
+	    {
+            _openDiagrams = Property.New(this, p => OpenDiagrams);
+            _openDiagrams.Value = new ObservableCollection<IDiagramEditor>();
+
+            _openDiagram = Property.New(this, p => p.OpenDiagram);
+            _closingDiagram = Property.New(this, p => p.ClosingDiagram);
+
+            SaveClosingDiagramCommand = new RelayCommand(() => _editorsNeedingSaving.Add(ClosingDiagram));
+            OpenDiagramCommand = new RelayCommand<PreviewDiagramViewModel>(OpenDiagramForEdit, d => d != null);
+            CloseCommand = new RelayCommand(Close);
+            SaveAllCommand = Command.For(this)
+                                    .DependsOnCollection(p => p.OpenDiagrams)
+                                    .When(c => c.Any(p => p.CanSave))
+                                    .Asynchronously()
+                                    .Executes(SaveAllAsync);
+        }
 
 		private void explorer_OpenPreviewRequested(object sender, OpenPreviewRequestedEventArgs e)
 		{
@@ -85,7 +87,7 @@ namespace PlantUmlStudio.ViewModel
 		public void OpenDiagramForEdit(PreviewDiagramViewModel diagram)
 		{
 			if (diagram == null)
-				throw new ArgumentNullException("diagram");
+				throw new ArgumentNullException(nameof(diagram));
 
 			OpenDiagram = OpenDiagrams.FirstOrNone(d => d.Diagram.Equals(diagram.Diagram)).GetOrElse(() =>
 			{
@@ -105,9 +107,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnDiagramOpened(Diagram diagram)
 		{
-			var localEvent = DiagramOpened;
-			if (localEvent != null)
-				localEvent(this, new DiagramOpenedEventArgs(diagram));
+            DiagramOpened?.Invoke(this, new DiagramOpenedEventArgs(diagram));
 		}
 
 		/// <see cref="IDiagramManager.DiagramClosed"/>
@@ -115,9 +115,7 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnDiagramClosed(Diagram diagram)
 		{
-			var localEvent = DiagramClosed;
-			if (localEvent != null)
-				localEvent(this, new DiagramClosedEventArgs(diagram));
+            DiagramClosed?.Invoke(this, new DiagramClosedEventArgs(diagram));
 		}
 
 		/// <summary>
@@ -230,20 +228,15 @@ namespace PlantUmlStudio.ViewModel
 
 		private void OnClosing()
 		{
-			var localEvent = Closing;
-			if (localEvent != null)
-				Closing(this, EventArgs.Empty);
+            Closing?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Diagram previews.
 		/// </summary>
-		public IDiagramExplorer Explorer
-		{
-			get { return _explorer; }
-		}
+		public IDiagramExplorer Explorer => _explorer;
 
-		private readonly Property<IDiagramEditor> _openDiagram;
+	    private readonly Property<IDiagramEditor> _openDiagram;
 		private readonly Property<ICollection<IDiagramEditor>> _openDiagrams;
 		private readonly Property<IDiagramEditor> _closingDiagram;
 

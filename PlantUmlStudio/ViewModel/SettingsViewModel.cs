@@ -30,27 +30,9 @@ namespace PlantUmlStudio.ViewModel
 	public class SettingsViewModel : ViewModelBase
 	{
 		public SettingsViewModel(ISettings settings)
+            : this()
 		{
 			_settings = settings;
-
-			_rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles, OnPropertyChanged);
-			_maximumRecentFiles = Property.New(this, p => p.MaximumRecentFiles, OnPropertyChanged);
-
-			_autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled, OnPropertyChanged);
-			_autoSaveInterval = Property.New(this, p => p.AutoSaveInterval, OnPropertyChanged);
-			
-			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
-			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
-			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
-			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
-			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
-			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
-
-			_canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles, OnPropertyChanged);
-			_saveCompleted = Property.New(this, p => p.SaveCompleted, OnPropertyChanged);
-
-			ClearRecentFilesCommand = Command.For(this).DependsOn(p => p.CanClearRecentFiles).Executes(ClearRecentFiles);
-			SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Executes(Save);
 
 			RememberOpenFiles = _settings.RememberOpenFiles;
 			MaximumRecentFiles = _settings.MaximumRecentFiles;
@@ -70,6 +52,28 @@ namespace PlantUmlStudio.ViewModel
 			if (recentFilesChanged != null)
 				recentFilesChanged.CollectionChanged += recentFilesChanged_CollectionChanged;
 		}
+
+	    private SettingsViewModel()
+	    {
+            _rememberOpenFiles = Property.New(this, p => p.RememberOpenFiles);
+            _maximumRecentFiles = Property.New(this, p => p.MaximumRecentFiles);
+
+            _autoSaveEnabled = Property.New(this, p => p.AutoSaveEnabled);
+            _autoSaveInterval = Property.New(this, p => p.AutoSaveInterval);
+
+            _highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine);
+            _showLineNumbers = Property.New(this, p => p.ShowLineNumbers);
+            _enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace);
+            _enableWordWrap = Property.New(this, p => p.EnableWordWrap);
+            _emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine);
+            _allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent);
+
+            _canClearRecentFiles = Property.New(this, p => p.CanClearRecentFiles);
+            _saveCompleted = Property.New(this, p => p.SaveCompleted);
+
+            ClearRecentFilesCommand = Command.For(this).DependsOn(p => p.CanClearRecentFiles).Executes(ClearRecentFiles);
+            SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Executes(Save);
+        }
 
 		/// <summary>
 		/// Whether to remember the files that were open when the application closes.

@@ -28,12 +28,12 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		public EditorOptions()
 		{
-			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine, OnPropertyChanged);
-			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers, OnPropertyChanged);
-			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace, OnPropertyChanged);
-			_enableWordWrap = Property.New(this, p => p.EnableWordWrap, OnPropertyChanged);
-			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine, OnPropertyChanged);
-			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent, OnPropertyChanged);
+			_highlightCurrentLine = Property.New(this, p => p.HighlightCurrentLine);
+			_showLineNumbers = Property.New(this, p => p.ShowLineNumbers);
+			_enableVirtualSpace = Property.New(this, p => p.EnableVirtualSpace);
+			_enableWordWrap = Property.New(this, p => p.EnableWordWrap);
+			_emptySelectionCopiesEntireLine = Property.New(this, p => p.EmptySelectionCopiesEntireLine);
+			_allowScrollingBelowContent = Property.New(this, p => p.AllowScrollingBelowContent);
 		}
 
 		/// <summary>

@@ -73,12 +73,9 @@ namespace PlantUmlStudio.ViewModel
 		}
 
 		/// <see cref="IDiagramManager.OpenDiagrams"/>
-		public ICollection<IDiagramEditor> OpenDiagrams
-		{
-			get { return _openDiagrams.Value; }
-		}
+		public ICollection<IDiagramEditor> OpenDiagrams => _openDiagrams.Value;
 
-		/// <summary>
+	    /// <summary>
 		/// Command to open a diagram for editing.
 		/// </summary>
 		public ICommand OpenDiagramCommand { get; private set; }

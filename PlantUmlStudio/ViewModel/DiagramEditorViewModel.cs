@@ -385,7 +385,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The code content editor.
 		/// </summary>
-		public ICodeEditor CodeEditor { get; private set; }
+		public ICodeEditor CodeEditor { get; }
 
 		void codeEditor_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -418,18 +418,12 @@ namespace PlantUmlStudio.ViewModel
 			_refreshTimer.TryStop();
 		}
 
-		/// <see cref="DisposableBase.OnDisposing"/>
 		protected override void OnDisposing()
 		{
 			CleanUpTimers();
-			var disposableSaveTimer = _autoSaveTimer as IDisposable;
-			disposableSaveTimer?.Dispose();
-
-			var disposableRefreshTimer = _refreshTimer as IDisposable;
-			disposableRefreshTimer?.Dispose();
-
-			var disposableCodeEditor = CodeEditor as IDisposable;
-			disposableCodeEditor?.Dispose();
+			(_autoSaveTimer as IDisposable)?.Dispose();
+			(_refreshTimer as IDisposable)?.Dispose();
+			(CodeEditor as IDisposable)?.Dispose();
 		}
 
 		private bool _firstSaveAfterOpen;

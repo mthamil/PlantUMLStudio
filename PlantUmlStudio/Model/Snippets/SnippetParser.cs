@@ -62,7 +62,7 @@ namespace PlantUmlStudio.Model.Snippets
 			return new CodeSnippet(name, category, root);
 		}
 
-		private static void ParseCodeLine(string line, Snippet root, IDictionary<string, SnippetReplaceableTextElement> symbols)
+		private static void ParseCodeLine(string line, SnippetContainerElement root, IDictionary<string, SnippetReplaceableTextElement> symbols)
 		{
 			var matchResult = ReplaceableTokenPattern.Matches(line);
 			var matches = matchResult.Cast<Match>().Where(m => m.Success).OrderBy(m => m.Index).ToArray();

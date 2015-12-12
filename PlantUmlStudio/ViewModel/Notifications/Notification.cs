@@ -38,10 +38,10 @@ namespace PlantUmlStudio.ViewModel.Notifications
 
 		protected Notification()
 		{
-			_summary = Property.New(this, p => p.Summary, OnPropertyChanged);
-			_hasMoreInfo = Property.New(this, p => p.HasMoreInfo, OnPropertyChanged);
-			_message = Property.New(this, p => p.Message, OnPropertyChanged);
-			_severity = Property.New(this, p => p.Severity, OnPropertyChanged);
+			_summary = Property.New(this, p => p.Summary);
+			_hasMoreInfo = Property.New(this, p => p.HasMoreInfo);
+			_message = Property.New(this, p => p.Message);
+			_severity = Property.New(this, p => p.Severity);
 		}
 
 		/// <summary>

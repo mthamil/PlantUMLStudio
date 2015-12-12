@@ -30,21 +30,18 @@ namespace PlantUmlStudio.ViewModel.Notifications
 	{
 		public NotificationsHub()
 		{
-			_notifications = Property.New(this, p => p.Notifications as ICollection<Notification>, OnPropertyChanged);
+			_notifications = Property.New(this, p => p.Notifications as ICollection<Notification>);
 			_notifications.Value = new ObservableCollection<Notification>();
 
-			_latestNotification = Property.New(this, p => p.LatestNotification, OnPropertyChanged);
+			_latestNotification = Property.New(this, p => p.LatestNotification);
 		}
 
 		/// <summary>
 		/// All application notifications.
 		/// </summary>
-		public IEnumerable<Notification> Notifications
-		{
-			get { return _notifications.Value; }
-		}
+		public IEnumerable<Notification> Notifications => _notifications.Value;
 
-		/// <summary>
+	    /// <summary>
 		/// Adds a notification.
 		/// </summary>
 		/// <param name="notification">The new notification</param>

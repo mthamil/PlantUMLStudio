@@ -32,8 +32,8 @@ namespace PlantUmlStudio.ViewModel.Notifications
 
 		public ProgressNotification()
 		{
-			_hasDiscreteProgress = Property.New(this, p => p.HasDiscreteProgress, OnPropertyChanged);
-		    _percentComplete = Property.New(this, p => p.PercentComplete, OnPropertyChanged)
+			_hasDiscreteProgress = Property.New(this, p => p.HasDiscreteProgress);
+		    _percentComplete = Property.New(this, p => p.PercentComplete)
 		                               .AlsoChanges(p => p.InProgress);
 		}
 

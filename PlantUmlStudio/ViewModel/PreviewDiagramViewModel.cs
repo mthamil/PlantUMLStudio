@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
 using PlantUmlStudio.Core;
+using SharpEssentials.Collections;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Observable;
 
@@ -69,7 +70,7 @@ namespace PlantUmlStudio.ViewModel
 		{
 			// Select first few lines, but skip initial whitespace.
 			var lines = content.Trim().Split(Delimiters, MaxPreviewLines + 1);
-			return String.Join("\n", lines.Take(Math.Min(MaxPreviewLines, lines.Length)));
+			return lines.Take(Math.Min(MaxPreviewLines, lines.Length)).ToDelimitedString("\n");
 		}
 
 		void Diagram_PropertyChanged(object sender, PropertyChangedEventArgs e)

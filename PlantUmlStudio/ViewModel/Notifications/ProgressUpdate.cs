@@ -16,6 +16,7 @@
 
 using System;
 using System.Linq;
+using SharpEssentials.Collections;
 using SharpEssentials.Diagnostics;
 
 namespace PlantUmlStudio.ViewModel.Notifications
@@ -46,7 +47,7 @@ namespace PlantUmlStudio.ViewModel.Notifications
 		/// <param name="exception">The exception that caused termination of progress</param>
 		public static ProgressUpdate Failed(Exception exception)
 		{
-			string message = String.Join(Environment.NewLine, exception.GetExceptionChain().Select(e => e.Message));
+			string message = exception.GetExceptionChain().Select(e => e.Message).ToDelimitedString(Environment.NewLine);
 			return new ProgressUpdate { PercentComplete = null, Message = message, IsFinished = true };
 		}
 

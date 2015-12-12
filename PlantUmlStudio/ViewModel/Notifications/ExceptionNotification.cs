@@ -16,6 +16,7 @@
 
 using System;
 using System.Linq;
+using SharpEssentials.Collections;
 using SharpEssentials.Diagnostics;
 
 namespace PlantUmlStudio.ViewModel.Notifications
@@ -33,7 +34,7 @@ namespace PlantUmlStudio.ViewModel.Notifications
 		{
 			_exception = exception;
 
-			Message = String.Join(Environment.NewLine, exception.GetExceptionChain().Select(e => e.Message));
+			Message = exception.GetExceptionChain().Select(e => e.Message).ToDelimitedString(Environment.NewLine);
 			Severity = Severity.Critical;
 		}
 

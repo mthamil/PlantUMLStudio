@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
+using SharpEssentials.Collections;
 
 namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
@@ -37,8 +38,8 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			int counter = 1;
 			_tokens = foldRegions.ToDictionary(region => counter++.ToString(), region => region);
 
-			_startTokens = new Regex(String.Join("|", _tokens.Select(t => String.Format(@"(?<{0}>{1})", t.Key, t.Value.StartPattern))),
-				RegexOptions.ExplicitCapture);
+		    _startTokens = new Regex(_tokens.Select(t => $"(?<{t.Key}>{t.Value.StartPattern})").ToDelimitedString("|"),
+		                             RegexOptions.ExplicitCapture);
 		}
 
 		#region Overrides of AbstractFoldingStrategy

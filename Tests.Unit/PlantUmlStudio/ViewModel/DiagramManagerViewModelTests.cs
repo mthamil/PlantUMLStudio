@@ -376,7 +376,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			var diagramManager = CreateManager(d => null);
 
 			modified.Select(value => Mock.Of<IDiagramEditor>(e => e.CanSave == value))
-			        .AddTo(diagramManager.OpenDiagrams);
+			        .ToSink(diagramManager.OpenDiagrams);
 
 			// Act.
 			bool actual = diagramManager.SaveAllCommand.CanExecute(null);

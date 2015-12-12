@@ -55,7 +55,7 @@ namespace PlantUmlStudio.Configuration
 			            .Cast<string>()
 			            .Reverse()
 			            .Select(fileName => new FileInfo(fileName))
-			            .AddTo(_recentFiles);
+			            .ToSink(_recentFiles);
 			}
 
 			AutoSaveEnabled = settings.AutoSaveEnabled;

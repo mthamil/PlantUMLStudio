@@ -25,7 +25,6 @@ using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
-using PlantUmlStudio.Properties;
 using SharpEssentials.Chronology;
 using SharpEssentials.InputOutput;
 

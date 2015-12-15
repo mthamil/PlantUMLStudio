@@ -41,19 +41,17 @@ namespace PlantUmlStudio.Configuration
 
 			RememberOpenFiles = settings.RememberOpenFiles;
 			OpenFiles = new List<FileInfo>(
-				settings.OpenFiles == null 
-					? Enumerable.Empty<FileInfo>() 
-					: settings.OpenFiles.Cast<string>().Select(fileName => new FileInfo(fileName)));
+				settings.OpenFiles?
+                        .Cast<string>()
+                        .Select(fileName => new FileInfo(fileName)) ?? Enumerable.Empty<FileInfo>());
 
-			_recentFiles.MaximumCount = settings.MaximumRecentFiles;
-			if (settings.RecentFiles != null)
-			{
-			    settings.RecentFiles
-			            .Cast<string>()
-			            .Reverse()
-			            .Select(fileName => new FileInfo(fileName))
-			            .ToSink(_recentFiles);
-			}
+            _recentFiles.MaximumCount = settings.MaximumRecentFiles;
+
+			settings.RecentFiles?
+			        .Cast<string>()
+			        .Reverse()
+			        .Select(fileName => new FileInfo(fileName))
+			        .ToSink(_recentFiles);
 
 			AutoSaveEnabled = settings.AutoSaveEnabled;
 			AutoSaveInterval = settings.AutoSaveInterval;

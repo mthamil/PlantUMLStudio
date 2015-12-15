@@ -125,6 +125,7 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\RecentFilesCollection.cs" />
     <Compile Include="Configuration\SettingsPropagator.cs" />
+    <Compile Include="Configuration\SpecialFolderTokenReplacer.cs" />
     <Compile Include="Container\CoreModule.cs" />
     <Compile Include="Container\PresentationModule.cs" />
     <Compile Include="Container\SecurityModule.cs" />

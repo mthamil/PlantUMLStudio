@@ -1,9 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PlantUmlStudio.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PlantUmlStudio.Configuration" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="LastPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&lt;MyDocuments&gt;\PlantUmlStudio\samples</Value>
     </Setting>
     <Setting Name="GraphVizLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">dot.exe</Value>

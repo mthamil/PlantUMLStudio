@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
@@ -48,12 +47,10 @@ namespace PlantUmlStudio.Container
 		    builder.RegisterType<HttpClient>()
 		           .SingleInstance();
 
+		    builder.Register(c => Settings.Default);
+
 		    builder.RegisterType<DotNetSettings>()
                    .FindConstructorsWith(new NonPublicConstructorFinder())
-		           .WithParameter(TypedParameter.From(Settings.Default))
-		           .WithParameter(TypedParameter.From(new DirectoryInfo(
-		                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-		                             @"PlantUmlStudio\samples\"))))
 		           .As<ISettings>()
 		           .SingleInstance();
 

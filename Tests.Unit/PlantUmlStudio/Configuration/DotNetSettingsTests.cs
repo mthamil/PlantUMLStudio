@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using PlantUmlStudio.Configuration;
-using PlantUmlStudio.Properties;
 using SharpEssentials.Collections;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Testing;
@@ -28,11 +27,14 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.EnableWordWrap = true;
 			settings.EmptySelectionCopiesEntireLine = true;
 			settings.AllowScrollingBelowContent = true;
+		    settings.LastPath = @"C:\";
 
-			// Act.
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+            // Act.
+            var appSettings = new DotNetSettings(settings);
 
 			// Assert.
+            Assert.Equal(settings.LastPath, appSettings.LastDiagramLocation.FullName);
+
 			Assert.Equal(settings.GraphVizLocation, appSettings.GraphVizExecutable.FullName);
 			Assert.Equal(Path.GetFullPath(settings.PlantUmlLocation), appSettings.PlantUmlJar.FullName);
 			Assert.Equal(Path.GetFullPath(settings.PlantUmlHighlightingDefinition), appSettings.PlantUmlHighlightingDefinition.FullName);
@@ -68,7 +70,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 		public void Test_Save()
 		{
 			// Arrange.
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"))
+			var appSettings = new DotNetSettings(settings)
 			{
 				RememberOpenFiles = true,
 				OpenFiles = new List<FileInfo> { new FileInfo(@"C:\openFile1"), new FileInfo(@"C:\openFile2") },
@@ -80,8 +82,9 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 				EnableVirtualSpace = true,
 				EnableWordWrap = true,
 				EmptySelectionCopiesEntireLine = false,
-				AllowScrollingBelowContent = true
-			};
+				AllowScrollingBelowContent = true,
+                LastDiagramLocation = new DirectoryInfo(@"C:\")
+            };
 
 			appSettings.RecentFiles.AddRange(new FileInfo(@"C:\recentFile1"), new FileInfo(@"C:\recentFile2"));
 
@@ -101,13 +104,14 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			Assert.Equal(true, settings.EnableWordWrap);
 			Assert.Equal(false, settings.EmptySelectionCopiesEntireLine);
 			Assert.Equal(true, settings.AllowScrollingBelowContent);
+            Assert.Equal(@"C:\", settings.LastPath);
 		}
 
 		[Fact]
 		public void Test_Save_OpenFiles_EvenWhen_OpenFilesNotRemembered()
 		{
 			// Arrange.
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"))
+			var appSettings = new DotNetSettings(settings)
 			{
 				RememberOpenFiles = false,
 				OpenFiles = new List<FileInfo> { new FileInfo(@"C:\openFile1"), new FileInfo(@"C:\openFile2") },
@@ -120,31 +124,13 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			AssertThat.SequenceEqual(settings.OpenFiles.Cast<string>(), new[] { @"C:\openFile1", @"C:\openFile2" });
 		}
 
-		[Theory]
-		[InlineData(@"C:\", "")]
-		[InlineData(@"C:\", null)]
-		[InlineData(@"C:\Diagrams", @"C:\Diagrams")]
-		public void Test_LastDiagramLocation_Initialization(string expected, string lastPath)
-		{
-			// Arrange.
-			settings.LastPath = lastPath;
-
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
-
-			// Act.
-			var actual = appSettings.LastDiagramLocation.FullName;
-
-			// Assert.
-			Assert.Equal(expected, actual);
-		}
-
 		[Fact]
 		public void Test_OpenFiles_Initialization_WhenNull()
 		{
 			// Arrange.
 			settings.OpenFiles = null;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.OpenFiles;
@@ -159,7 +145,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.OpenFiles = new StringCollection();
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.OpenFiles;
@@ -175,7 +161,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.OpenFiles = new StringCollection();
 			settings.OpenFiles.AddRange(new[] { @"C:\file1", @"C:\file2" });
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.OpenFiles;
@@ -193,7 +179,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.OpenFiles = new StringCollection();
 			var files = new[] { @"C:\fileC", @"C:\fileA", @"C:\fileB" }.Select(f => new FileInfo(f)).ToList();
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			foreach (var file in files)
@@ -209,7 +195,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.RecentFiles = null;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.RecentFiles;
@@ -224,7 +210,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.RecentFiles = new StringCollection();
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.RecentFiles;
@@ -240,7 +226,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			settings.RecentFiles = new StringCollection();
 			settings.RecentFiles.AddRange(new[] { @"C:\file1", @"C:\file2" });
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act.
 			var actual = appSettings.RecentFiles;
@@ -257,7 +243,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.LastPath = @"C:\Initial";
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings, 
@@ -273,7 +259,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.RememberOpenFiles = true;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -289,7 +275,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.OpenFiles = new StringCollection { @"C:\file1" };
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -305,7 +291,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.MaximumRecentFiles = 5;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -321,7 +307,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.AutoSaveEnabled = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -337,7 +323,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.AutoSaveInterval = TimeSpan.FromSeconds(0);
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -353,7 +339,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.HighlightCurrentLine = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -369,7 +355,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.ShowLineNumbers = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -385,7 +371,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.EnableVirtualSpace = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -401,7 +387,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.EnableWordWrap = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -417,7 +403,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.EmptySelectionCopiesEntireLine = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,
@@ -433,7 +419,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
 			// Arrange.
 			settings.AllowScrollingBelowContent = false;
 
-			var appSettings = new DotNetSettings(settings, new DirectoryInfo(@"C:\"));
+			var appSettings = new DotNetSettings(settings);
 
 			// Act/Assert.
 			AssertThat.PropertyChanged(appSettings,

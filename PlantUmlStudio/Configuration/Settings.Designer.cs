@@ -25,7 +25,7 @@ namespace PlantUmlStudio.Configuration {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<MyDocuments>\\PlantUmlStudio\\samples")]
         public string LastPath {
             get {
                 return ((string)(this["LastPath"]));

@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using PlantUmlStudio.Properties;
 using SharpEssentials.Collections;
 using SharpEssentials.InputOutput;
 using SharpEssentials.Observable;
@@ -33,14 +32,12 @@ namespace PlantUmlStudio.Configuration
 	/// </summary>
 	public class DotNetSettings : ObservableObject, ISettings
 	{
-		internal DotNetSettings(Settings settings, DirectoryInfo defaultDiagramLocation)
+		internal DotNetSettings(Settings settings)
 			: this()
 		{
 			_settings = settings;
 
-			LastDiagramLocation = String.IsNullOrEmpty(_settings.LastPath)
-				? defaultDiagramLocation
-				: new DirectoryInfo(_settings.LastPath);
+			LastDiagramLocation = new DirectoryInfo(_tokenReplacer.Parse(_settings.LastPath));
 
 			RememberOpenFiles = settings.RememberOpenFiles;
 			OpenFiles = new List<FileInfo>(
@@ -284,5 +281,6 @@ namespace PlantUmlStudio.Configuration
 		private readonly Property<bool> _allowScrollingBelowContent;
 
 		private readonly Settings _settings;
+        private readonly SpecialFolderTokenReplacer _tokenReplacer = new SpecialFolderTokenReplacer();
 	}
 }

@@ -44,7 +44,7 @@ namespace PlantUmlStudio.Core
 		/// <param name="renderers">Responsible for converting data to an image</param>
 		/// <param name="httpClient">Used for web requests</param>
 		public PlantUml(IClock clock, IIndex<ImageFormat, IDiagramRenderer> renderers, HttpClient httpClient) 
-			: base(clock, httpClient)
+			: base(clock, httpClient, StringComparer.OrdinalIgnoreCase)
 		{
 		    _renderers = renderers;
 		}
@@ -109,7 +109,7 @@ namespace PlantUmlStudio.Core
             return match.Groups["version"].Value;
         }
 
-		#endregion
+	    #endregion
 
 		private static async Task HandleErrorStream(Stream errorStream, CancellationToken cancellationToken)
 		{

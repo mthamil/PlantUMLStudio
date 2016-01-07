@@ -42,7 +42,7 @@ namespace PlantUmlStudio.Core
         /// <param name="clock">The system clock</param>
         /// <param name="httpClient">Used for web requests</param>
         public GraphViz(IClock clock, HttpClient httpClient) 
-            : base(clock, httpClient)
+            : base(clock, httpClient, new NormalizingVersionComparer())
 	    {
 		}
 
@@ -75,7 +75,7 @@ namespace PlantUmlStudio.Core
             return match.Groups["version"].Value;
         }
 
-        /// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
+	    /// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
         public override Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
         {
             Process.Start(DownloadLocation.ToString());

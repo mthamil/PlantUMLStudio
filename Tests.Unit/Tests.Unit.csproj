@@ -134,6 +134,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="PlantUmlStudio.Core\Dependencies\Update\NormalizingVersionComparerTests.cs" />
     <Compile Include="PlantUmlStudio.Core\DiagramTests.cs" />
     <Compile Include="PlantUmlStudio.Core\InputOutput\DiagramIOServiceTests.cs" />
     <Compile Include="PlantUmlStudio.Core\Security\WindowsSecurityServiceTests.cs" />

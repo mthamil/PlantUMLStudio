@@ -15,6 +15,7 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -35,11 +36,13 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		/// <summary>
 		/// Initializes a new <see cref="ComponentUpdateChecker"/>.
 		/// </summary>
-		/// <param name="clock">The system clock</param>
-        /// <param name="httpClient">Used for web requests</param>
-		protected ComponentUpdateChecker(IClock clock, HttpClient httpClient)
+		/// <param name="clock">The system clock.</param>
+        /// <param name="httpClient">Used for web requests.</param>
+        /// <param name="versionComparer">Used to determine the equality of a component's versions.</param>
+		protected ComponentUpdateChecker(IClock clock, HttpClient httpClient, IEqualityComparer<string> versionComparer)
 		{
 		    _clock = clock;
+		    _versionComparer = versionComparer;
 		    HttpClient = httpClient;
 		}
 
@@ -85,7 +88,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
                 string remoteVersion = match.Groups["version"].Value;
                 string currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(false);
 
-                bool versionsNotEqual = !String.Equals(remoteVersion, currentVersion, StringComparison.OrdinalIgnoreCase);
+                bool versionsNotEqual = !_versionComparer.Equals(remoteVersion, currentVersion);
                 if (versionsNotEqual)
                     return remoteVersion;
             }
@@ -93,7 +96,7 @@ namespace PlantUmlStudio.Core.Dependencies.Update
             return Option<string>.None();
         }
 
-		/// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
+        /// <see cref="IComponentUpdateChecker.DownloadLatestAsync"/>
         public virtual async Task DownloadLatestAsync(IProgress<DownloadProgressChangedEventArgs> progress, CancellationToken cancellationToken)
         {
 			if (LocalLocation.Exists)
@@ -115,5 +118,6 @@ namespace PlantUmlStudio.Core.Dependencies.Update
 		#endregion IComponentUpdateChecker Members
 
 		private readonly IClock _clock;
+	    private readonly IEqualityComparer<string> _versionComparer;
 	}
 }

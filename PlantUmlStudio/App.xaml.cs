@@ -20,7 +20,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using Autofac;
-using PlantUmlStudio.Properties;
+using PlantUmlStudio.Configuration;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -55,53 +55,72 @@ namespace PlantUmlStudio
             _errorHandler = new UnhandledErrorHandler(Current, Dispatcher);
 
 			var containerBuilder = new ContainerBuilder();
-			containerBuilder.RegisterAssemblyModules(typeof(App).Assembly);
+			containerBuilder.RegisterAssemblyModules(GetType().Assembly);
 			_container = containerBuilder.Build();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			if (_container != null)
-				_container.Dispose();
+		    _container?.Dispose();
 		}
 
-		/// <summary>
+        /// <summary>
 		/// The application's IoC container.
 		/// </summary>
-		public static IContainer Container { get { return _container; } }
-		private static IContainer _container;
+		public static IContainer Container => _container;
+        private static IContainer _container;
 
 		private static bool CheckGraphViz()
 		{
-			string graphVizPath = Settings.Default.GraphVizLocation;
-			if (String.IsNullOrEmpty(graphVizPath))
-				graphVizPath = Environment.GetEnvironmentVariable("GRAPHVIZ_DOT");
+		    var graphVizPath = new Func<string>[]
+		                       {
+		                           () => Settings.Default.GraphVizLocation,
+		                           () => Environment.GetEnvironmentVariable("GRAPHVIZ_DOT"),
+		                           () => $@"{Environment.GetEnvironmentVariable("PATH")?
+                                                        .Split(';')
+                                                        .FirstOrDefault(p => p.ToLower().Contains("graphviz"))}\dot.exe",
+		                           CheckInstallDir
+		                       }
+                               .Select(c => c())
+		                       .FirstOrDefault(p => !String.IsNullOrEmpty(p) && File.Exists(p));
 
-			if (String.IsNullOrEmpty(graphVizPath) || !File.Exists(graphVizPath))
-			{
-				// See if graphviz is there in environment PATH
-				string envPath = Environment.GetEnvironmentVariable("PATH");
-				using (var dialog = new OpenFileDialog
-				{
-					FileName = "dot.exe",
-					DefaultExt = ".exe",
-					Filter = "dot.exe|dot.exe",
-					InitialDirectory = envPath.Split(';').FirstOrDefault(p => p.ToLower().Contains("graphviz"))
-				})
-				{
-					if (dialog.ShowDialog() == DialogResult.OK)
-					{
-						Settings.Default.GraphVizLocation = dialog.FileName;
-						Settings.Default.Save();
-						return true;
-					}
-				}
+		    if (graphVizPath != null)
+                return true;
 
-				return false;
-			}
+		    using (var dialog = new OpenFileDialog
+		                        {
+		                            FileName = "dot.exe",
+		                            DefaultExt = ".exe",
+		                            Filter = "dot.exe|dot.exe"
+		                        })
+		    {
+		        if (dialog.ShowDialog() == DialogResult.OK)
+		        {
+		            Settings.Default.GraphVizLocation = dialog.FileName;
+		            Settings.Default.Save();
+		            return true;
+		        }
+		    }
 
-			return true;
+		    return false;
 		}
+
+        private static string CheckInstallDir()
+        {
+            var installDir = Directory.GetDirectories(@"C:\Program Files (x86)\", "Graphviz*").FirstOrDefault();
+            if (installDir != null)
+            {
+                var executable = Directory.GetFiles(installDir + @"\bin\", "dot.exe").FirstOrDefault();
+                if (executable != null && File.Exists(executable))
+                {
+                    Settings.Default.GraphVizLocation = executable;
+                    Settings.Default.Save();
+                    return executable;
+                }
+            }
+
+            return null;
+        }
 
         private static UnhandledErrorHandler _errorHandler;
 	}

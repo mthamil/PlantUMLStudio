@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +33,7 @@ using PlantUmlStudio.Model.Snippets;
 using PlantUmlStudio.ViewModel;
 using PlantUmlStudio.ViewModel.Notifications;
 using SharpEssentials.Chronology;
-using SharpEssentials.Clipboard;
+using SharpEssentials.Controls.Clipboard;
 
 namespace PlantUmlStudio.Container
 {

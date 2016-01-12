@@ -104,8 +104,8 @@ namespace PlantUmlStudio.ViewModel
             _autoSave = Property.New(this, p => p.AutoSave);
             _autoSaveInterval = Property.New(this, p => p.AutoSaveInterval);
 
-            SaveCommand = Command.For(this).DependsOn(p => p.CanSave).Asynchronously().Executes(SaveAsync);
-            RefreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).Asynchronously().Executes(RefreshAsync);
+            SaveCommand = Command.For(this).DependsOn(p => p.CanSave).ExecutesAsync(SaveAsync);
+            RefreshCommand = Command.For(this).DependsOn(p => p.CanRefresh).ExecutesAsync(RefreshAsync);
             CloseCommand = Command.For(this).DependsOn(p => p.CanClose).Executes(Close);
         }
 

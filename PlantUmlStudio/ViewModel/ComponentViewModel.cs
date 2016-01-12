@@ -51,8 +51,7 @@ namespace PlantUmlStudio.ViewModel
 
 		    UpdateCommand = Command.For(this)
 		                           .DependsOn(p => p.CanUpdate)
-		                           .Asynchronously()
-		                           .Executes(UpdateAsync);
+		                           .ExecutesAsync(UpdateAsync);
 
 			_updateCompleted = Property.New(this, p => UpdateCompleted);
 		}

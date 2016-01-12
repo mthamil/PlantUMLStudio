@@ -3,9 +3,9 @@ using System.Linq;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Moq;
 using PlantUmlStudio.ViewModel;
+using SharpEssentials.Controls.Clipboard;
 using SharpEssentials.Testing;
 using Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit;
-using SharpEssentials.Clipboard;
 using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel

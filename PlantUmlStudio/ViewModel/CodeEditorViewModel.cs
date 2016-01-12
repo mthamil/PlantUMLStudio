@@ -21,7 +21,7 @@ using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
-using SharpEssentials.Clipboard;
+using SharpEssentials.Controls.Clipboard;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
 using SharpEssentials.Observable;

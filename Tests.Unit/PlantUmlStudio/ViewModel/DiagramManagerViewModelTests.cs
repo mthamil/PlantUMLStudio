@@ -339,7 +339,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_SaveAllCommand()
+		public async Task Test_SaveAllCommand()
 		{
 			// Arrange.
 			var diagramManager = CreateManager(d => null);
@@ -358,7 +358,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			diagramManager.OpenDiagrams.Add(unmodifiedEditor);
 			
 			// Act.
-			diagramManager.SaveAllCommand.Execute(null);
+			await diagramManager.SaveAllCommand.ExecuteAsync(null);
 
 			// Assert.
 			modifiedEditors.ForEach(e => Mock.Get(e).Verify(ed => ed.SaveAsync()));

@@ -169,7 +169,7 @@ namespace PlantUmlStudio.ViewModel
 	    /// <summary>
 		/// Command to update a component.
 		/// </summary>
-		public ICommand UpdateCommand { get; }
+		public IAsyncCommand UpdateCommand { get; }
 
 		private async Task UpdateAsync()
 		{

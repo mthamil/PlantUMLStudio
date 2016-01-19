@@ -109,13 +109,13 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_LoadDiagramsCommand_InvalidDirectory()
+		public async Task Test_LoadDiagramsCommand_InvalidDirectory()
 		{
 			// Arrange.
 			explorer.DiagramLocation = new DirectoryInfo("test");
 
 			// Act.
-			explorer.LoadDiagramsCommand.Execute(null);
+			await explorer.LoadDiagramsCommand.ExecuteAsync(null);
 
 			// Assert.
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(
@@ -334,7 +334,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_DeleteDiagramCommand()
+		public async Task Test_DeleteDiagramCommand()
 		{
 			// Arrange.
 			diagramIO.Setup(dio => dio.DeleteAsync(It.IsAny<Diagram>()))
@@ -344,7 +344,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			explorer.PreviewDiagrams.Add(preview);
 
 			// Act.
-			explorer.DeleteDiagramCommand.Execute(preview);
+			await explorer.DeleteDiagramCommand.ExecuteAsync(preview);
 
 			// Assert.
 			Assert.Empty(explorer.PreviewDiagrams);

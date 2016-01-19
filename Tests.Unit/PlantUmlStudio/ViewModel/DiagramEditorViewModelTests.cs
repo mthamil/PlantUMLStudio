@@ -254,7 +254,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_SaveCommand_SaveSuccessful()
+		public async Task Test_SaveCommand_SaveSuccessful()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -276,7 +276,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			editor.ImageFormat = ImageFormat.SVG;
 
 			// Act.
-			editor.SaveCommand.Execute(null);
+			await editor.SaveCommand.ExecuteAsync(null);
 
 			// Assert.
 			Assert.False(codeEditor.Object.IsModified);
@@ -375,7 +375,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		public void Test_RefreshCommand_Successful()
+		public async Task Test_RefreshCommand_Successful()
 		{
 			// Arrange.
 			editor = CreateEditor();
@@ -388,7 +388,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			        .Returns(Task.FromResult<ImageSource>(result));
 
 			// Act.
-			editor.RefreshCommand.Execute(null);
+			await editor.RefreshCommand.ExecuteAsync(null);
 
 			// Assert.
 			Assert.Equal(result, editor.DiagramImage);

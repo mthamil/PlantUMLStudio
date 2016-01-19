@@ -56,8 +56,8 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		}
 
 		[Fact]
-		[Synchronous]
-		public void Test_UpdateCommand()
+        [Synchronous]
+        public async Task Test_UpdateCommand()
 		{
 			// Arrange.
 			var component = new Mock<IExternalComponent>();
@@ -67,7 +67,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			var viewModel = new ComponentViewModel(component.Object, securityService.Object);
 
 			// Act.
-			viewModel.UpdateCommand.Execute(null);
+			await viewModel.UpdateCommand.ExecuteAsync(null);
 
 			// Assert.
 			Assert.True(viewModel.UpdateCompleted);

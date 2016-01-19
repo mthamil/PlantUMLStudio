@@ -117,7 +117,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command to save all modified open diagrams.
 		/// </summary>
-		public ICommand SaveAllCommand { get; private set; }
+		public IAsyncCommand SaveAllCommand { get; private set; }
 
 		/// <see cref="IDiagramManager.SaveAllAsync"/>
 		public async Task SaveAllAsync()

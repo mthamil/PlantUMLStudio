@@ -216,7 +216,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command that loads diagrams from the current diagram location.
 		/// </summary>
-		public ICommand LoadDiagramsCommand { get; }
+		public IAsyncCommand LoadDiagramsCommand { get; }
 
 		private async Task LoadDiagramsAsync()
 		{
@@ -278,7 +278,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command to delete a diagram.
 		/// </summary>
-		public ICommand DeleteDiagramCommand { get; }
+		public IAsyncCommand DeleteDiagramCommand { get; }
 
 		private async Task DeleteDiagramAsync(PreviewDiagramViewModel preview)
 		{

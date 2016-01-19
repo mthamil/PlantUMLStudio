@@ -201,7 +201,7 @@ namespace PlantUmlStudio.ViewModel
 	    /// <summary>
 		/// Command that saves a diagram's changes.
 		/// </summary>
-		public ICommand SaveCommand { get; }
+		public IAsyncCommand SaveCommand { get; }
 
 	    /// <see cref="IDiagramEditor.SaveAsync"/>
 		public Task SaveAsync()
@@ -291,7 +291,7 @@ namespace PlantUmlStudio.ViewModel
 	    /// <summary>
 		/// Refreshes a diagram's image without saving.
 		/// </summary>
-		public ICommand RefreshCommand { get; }
+		public IAsyncCommand RefreshCommand { get; }
 
 	    /// <see cref="IDiagramEditor.RefreshAsync"/>
 		public async Task RefreshAsync()

@@ -346,7 +346,7 @@ namespace PlantUmlStudio.ViewModel
 			{
 				// Make sure a preview doesn't already exist for the file and make sure the current directory still matches.
 				bool previewExists = PreviewDiagrams.Select(pd => pd.Diagram.File).Contains(e.NewDiagramFile, FileComparer);
-				if (!previewExists && e.NewDiagramFile.Directory.FullName.Trim('\\') == DiagramLocation.FullName.Trim('\\'))
+				if (!previewExists && e.NewDiagramFile.Directory?.FullName.Trim('\\') == DiagramLocation.FullName.Trim('\\'))
 				{
 					var newlyAddedDiagram = await _diagramIO.ReadAsync(e.NewDiagramFile);
 					if (newlyAddedDiagram != null)

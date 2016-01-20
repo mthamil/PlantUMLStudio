@@ -19,7 +19,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SharpEssentials.Controls;component/Styles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/PlantUmlStudio;component/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <utilconvert:OrConverter x:Key="OrConverter"/>

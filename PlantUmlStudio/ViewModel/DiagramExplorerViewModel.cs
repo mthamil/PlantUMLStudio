@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -72,22 +73,32 @@ namespace PlantUmlStudio.ViewModel
 
 			_isLoadingDiagrams = Property.New(this, p => p.IsLoadingDiagrams);
 
-			LoadDiagramsCommand = Command.For(this).DependsOn(p => p.IsDiagramLocationValid).ExecutesAsync(LoadDiagramsAsync);
+		    LoadDiagramsCommand = Command.For(this)
+		                                 .DependsOn(p => p.IsDiagramLocationValid)
+		                                 .ExecutesAsync(d => LoadDiagramsAsync((DirectoryInfo)d));
 			AddNewDiagramCommand = new AsyncRelayCommand<Uri>(AddNewDiagramAsync);
 			RequestOpenPreviewCommand = new RelayCommand<PreviewDiagramViewModel>(RequestOpenPreview, p => p != null);
-			OpenDiagramCommand = new RelayCommand<Uri>(async uri =>
+			OpenDiagramCommand = new AsyncRelayCommand<Uri>(async uri =>
 			{
 				try { await OpenDiagramAsync(uri); }
 				catch (Exception e) { _notifications.Notify(new ExceptionNotification(e)); }
 			});
 			DeleteDiagramCommand = new AsyncRelayCommand<PreviewDiagramViewModel>(DeleteDiagramAsync, preview => preview != null);
 			_cancelLoadDiagramsCommand = Property.New(this, p => p.CancelLoadDiagramsCommand);
+
+            PropertyChanged += OnPropertyChanged;
 		}
 
-		/// <summary>
-		/// The code used for new diagrams.
-		/// </summary>
-		public string NewDiagramTemplate { get; set; }
+        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DiagramLocation))
+                await LoadDiagramsAsync(DiagramLocation);
+        }
+
+        /// <summary>
+        /// The code used for new diagrams.
+        /// </summary>
+        public string NewDiagramTemplate { get; set; }
 
 		/// <summary>
 		/// The diagram file extension.
@@ -111,8 +122,6 @@ namespace PlantUmlStudio.ViewModel
 					{
 						_diagramIO.StopMonitoring();
 					}
-
-					LoadDiagramsAsync();
 				}
 			}
 		}
@@ -218,11 +227,11 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		public IAsyncCommand LoadDiagramsCommand { get; }
 
-		private async Task LoadDiagramsAsync()
+		private async Task LoadDiagramsAsync(DirectoryInfo directory)
 		{
 			PreviewDiagrams.Clear();
 
-			if (!IsDiagramLocationValid)
+			if (directory == null || !directory.Exists)
 				return;
 
 			using (var cts = new CancellationTokenSource())
@@ -247,7 +256,7 @@ namespace PlantUmlStudio.ViewModel
 
 				try
 				{
-					await _diagramIO.ReadDiagramsAsync(DiagramLocation, readProgress, cts.Token);
+					await _diagramIO.ReadDiagramsAsync(directory, readProgress, cts.Token);
 					progress.Report(ProgressUpdate.Completed(Resources.Progress_DiagramsLoaded));
 				}
 				catch (OperationCanceledException)
@@ -296,7 +305,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// Command to open a diagram.
 		/// </summary>
-		public ICommand OpenDiagramCommand { get; }
+		public IAsyncCommand OpenDiagramCommand { get; }
 
 		/// <see cref="IDiagramExplorer.OpenDiagramAsync"/>
 		public async Task<Diagram> OpenDiagramAsync(Uri diagramPath)

@@ -111,11 +111,8 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 		[Fact]
 		public async Task Test_LoadDiagramsCommand_InvalidDirectory()
 		{
-			// Arrange.
-			explorer.DiagramLocation = new DirectoryInfo("test");
-
 			// Act.
-			await explorer.LoadDiagramsCommand.ExecuteAsync(null);
+			await explorer.LoadDiagramsCommand.ExecuteAsync(new DirectoryInfo("test"));
 
 			// Assert.
 			diagramIO.Verify(dio => dio.ReadDiagramsAsync(

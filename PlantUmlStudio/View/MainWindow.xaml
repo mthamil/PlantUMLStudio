@@ -280,6 +280,7 @@
 
                                                 <DataTrigger Binding="{Binding IsLoadingDiagrams}" Value="False">
                                                     <Setter Property="Command" Value="{Binding LoadDiagramsCommand}"/>
+                                                    <Setter Property="CommandParameter" Value="{Binding DiagramLocation}"/>
                                                     <Setter Property="Content">
                                                         <Setter.Value>
                                                             <StackPanel Orientation="Horizontal">
@@ -292,6 +293,7 @@
 
                                                 <DataTrigger Binding="{Binding IsLoadingDiagrams}" Value="True">
                                                     <Setter Property="Command" Value="{Binding CancelLoadDiagramsCommand}"/>
+                                                    <Setter Property="CommandParameter" Value="{x:Null}"/>
                                                     <Setter Property="Content">
                                                         <Setter.Value>
                                                             <StackPanel Orientation="Horizontal">

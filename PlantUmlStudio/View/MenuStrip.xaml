@@ -4,11 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
              xmlns:xtn="clr-namespace:PlantUmlStudio.View.MarkupExtensions" 
-             xmlns:ctrl="clr-namespace:SharpEssentials.Controls;assembly=SharpEssentials.Controls"
-             xmlns:utilcmd="clr-namespace:SharpEssentials.Controls.Commands;assembly=SharpEssentials.Controls" 
-             xmlns:utilconvert="clr-namespace:SharpEssentials.Controls.Converters;assembly=SharpEssentials.Controls" 
-             xmlns:click="clr-namespace:SharpEssentials.Controls.Behaviors.Clickable;assembly=SharpEssentials.Controls"
              xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
              xmlns:vw="clr-namespace:PlantUmlStudio.View"
              LocalizeExtension.DefaultResxName="PlantUmlStudio.View.MenuStripResources" Language="{UICulture}"
@@ -22,7 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/PlantUmlStudio;component/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <utilconvert:OrConverter x:Key="OrConverter"/>
+            <se:OrConverter x:Key="OrConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -43,7 +40,7 @@
                 <MenuItem Header="{Localize NewContextMenuItem}" Name="NewDiagramMenuItem">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <click:BindableClickAction/>
+                            <se:BindableClickAction/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <MenuItem.Icon>
@@ -54,7 +51,7 @@
                 <MenuItem Header="{Localize OpenContextMenuItem}" Name="OpenDiagramMenuItem">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <click:BindableClickAction/>
+                            <se:BindableClickAction/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <MenuItem.Icon>
@@ -97,7 +94,7 @@
 
                 <MenuItem Header="{Localize ExitContextMenuItem}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
                     <MenuItem.Command>
-                        <utilcmd:CloseWindowCommand/>
+                        <se:CloseWindowCommand/>
                     </MenuItem.Command>
                     <MenuItem.Icon>
                         <Image Source="{StaticResource CancelIcon_Small}" Style="{StaticResource DisableableIcon}"/>
@@ -137,8 +134,8 @@
             <MenuItem Header="{Localize ToolsContextMenuHeader}">
                 <MenuItem Header="{Localize OptionsContextMenuItem}">
                     <MenuItem.Command>
-                        <utilcmd:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
-                                                           Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
+                        <se:OpenDialogCommand Type="{x:Type vw:SettingsView}" 
+                                              Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
                     </MenuItem.Command>
                     <MenuItem.Icon>
                         <Image Source="{StaticResource OptionsIcon_Small}" Style="{StaticResource DisableableIcon}"/>
@@ -149,8 +146,8 @@
             <MenuItem Header="{Localize HelpContextMenuHeader}">
                 <MenuItem Header="{Localize AboutContextMenuItem}">
                     <MenuItem.Command>
-                        <utilcmd:OpenDialogCommand Type="{x:Type vw:AboutView}" 
-                                                           Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
+                        <se:OpenDialogCommand Type="{x:Type vw:AboutView}" 
+                                              Owner="{Binding Source={x:Static Application.Current}, Path=MainWindow}"/>
                     </MenuItem.Command>
                     <MenuItem.Icon>
                         <Image Source="{StaticResource AboutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
@@ -193,22 +190,22 @@
             </MenuItem>
         </Menu>
 
-        <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
-                               AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
-                               InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
-                               Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
-                               Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(click:BindableClick.IsClicked)}"/>
+        <se:FileSystemPicker AffirmativeCommand="{Binding Explorer.OpenDiagramCommand, Mode=OneWay}"
+                             AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                             InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
+                             Mode="Open" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagrams (*{0})|*{0}|All Files (*.*)|*.*'}"
+                             Trigger="{Binding ElementName=OpenDiagramMenuItem, Path=(se:BindableClick.IsClicked)}"/>
 
-        <ctrl:FileSystemPicker AffirmativeCommand="{Binding Explorer.AddNewDiagramCommand, Mode=OneWay}"
-                               AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
-                               InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
-                               Mode="Save" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
-            <ctrl:FileSystemPicker.Trigger>
+        <se:FileSystemPicker AffirmativeCommand="{Binding Explorer.AddNewDiagramCommand, Mode=OneWay}"
+                             AffirmativeCommandConverter="{StaticResource FileToUriConverter}"
+                             InitialLocation="{Binding Explorer.DiagramLocation, Mode=OneWay}"
+                             Mode="Save" Filter="{Binding Explorer.FileExtension, StringFormat='PlantUML Diagram Files (*{0})|*{0}'}">
+            <se:FileSystemPicker.Trigger>
                 <MultiBinding Converter="{StaticResource OrConverter}">
-                    <Binding ElementName="NewDiagramMenuItem" Path="(click:BindableClick.IsClicked)"/>
+                    <Binding ElementName="NewDiagramMenuItem" Path="(se:BindableClick.IsClicked)"/>
                 </MultiBinding>
-            </ctrl:FileSystemPicker.Trigger>
-        </ctrl:FileSystemPicker>
+            </se:FileSystemPicker.Trigger>
+        </se:FileSystemPicker>
     </StackPanel>
     
 </UserControl>

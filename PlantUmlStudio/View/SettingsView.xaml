@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:convert="clr-namespace:SharpEssentials.Controls.Converters;assembly=SharpEssentials.Controls"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:Behaviors="clr-namespace:SharpEssentials.Controls.Behaviors;assembly=SharpEssentials.Controls"
+        xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
         xmlns:xtn="clr-namespace:PlantUmlStudio.View.MarkupExtensions"
         xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
         mc:Ignorable="d"
@@ -16,14 +15,14 @@
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False" ResizeMode="NoResize"
         DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:SettingsViewModel}}, Path=ViewModel}"
-        Behaviors:WindowBehaviors.DialogResult="{Binding SaveCompleted}">
+        se:WindowBehaviors.DialogResult="{Binding SaveCompleted}">
 
     <i:Interaction.Behaviors>
-        <Behaviors:TitleBarOptions ShowButtons="False"/>
+        <se:TitleBarOptions ShowButtons="False"/>
     </i:Interaction.Behaviors>
 
     <Window.Resources>
-        <convert:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
+        <se:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
         <Style TargetType="{x:Type Button}" x:Key="ButtonStyle">
             <Setter Property="Height" Value="25"/>
             <Setter Property="Width" Value="80"/>

@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
 using Autofac.Core;
-using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using PlantUmlStudio.Configuration;
@@ -80,7 +79,7 @@ namespace PlantUmlStudio.Container
 			builder.RegisterType<PlantUmlFoldRegions>();
 
 			builder.Register(c => new PatternBasedFoldingStrategy(c.Resolve<PlantUmlFoldRegions>()))
-			       .Named<AbstractFoldingStrategy>("PlantUmlFoldingStrategy")
+			       .Named<IFoldingStrategy>("PlantUmlFoldingStrategy")
 			       .SingleInstance();
 
 			builder.Register(c => HighlightingManager.Instance).As<IHighlightingDefinitionReferenceResolver>();
@@ -92,7 +91,7 @@ namespace PlantUmlStudio.Container
 			}).SingleInstance();
 
 		    builder.RegisterType<CodeEditorViewModel>()
-		           .WithParameter(ResolvedParameter.ForNamed<AbstractFoldingStrategy>("PlantUmlFoldingStrategy"))
+		           .WithParameter(ResolvedParameter.ForNamed<IFoldingStrategy>("PlantUmlFoldingStrategy"))
 		           .As<ICodeEditor>()
 		           .ApplySettings((settings, instance) =>
 		           {

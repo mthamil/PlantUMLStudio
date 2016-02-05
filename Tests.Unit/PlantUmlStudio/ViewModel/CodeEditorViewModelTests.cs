@@ -2,10 +2,10 @@ using System.ComponentModel;
 using System.Linq;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Moq;
+using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using PlantUmlStudio.ViewModel;
 using SharpEssentials.Controls.Clipboard;
 using SharpEssentials.Testing;
-using Tests.Unit.PlantUmlStudio.Controls.Behaviors.AvalonEdit;
 using Xunit;
 
 namespace Tests.Unit.PlantUmlStudio.ViewModel
@@ -14,8 +14,11 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 	{
 		public CodeEditorViewModelTests()
 		{
-			codeEditor = new CodeEditorViewModel(new StubFoldingStrategy(), highlightingDefinition.Object, Enumerable.Empty<MenuViewModel>(),
-				clipboard.Object);
+		    codeEditor = new CodeEditorViewModel(
+		        Mock.Of<IFoldingStrategy>(),
+		        highlightingDefinition.Object,
+		        Enumerable.Empty<MenuViewModel>(),
+		        clipboard.Object);
 		}
 
 		[Fact]

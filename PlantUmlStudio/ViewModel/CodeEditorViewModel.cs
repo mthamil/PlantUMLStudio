@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using SharpEssentials.Controls.Clipboard;
 using SharpEssentials.Controls.Mvvm;
 using SharpEssentials.Controls.Mvvm.Commands;
@@ -28,15 +28,15 @@ using SharpEssentials.Observable;
 
 namespace PlantUmlStudio.ViewModel
 {
-	/// <summary>
-	/// Represents a diagram code editor based on an AvalonEdit control.
-	/// </summary>
-	public class CodeEditorViewModel : ViewModelBase, ICodeEditor
+    /// <summary>
+    /// Represents a diagram code editor based on an AvalonEdit control.
+    /// </summary>
+    public class CodeEditorViewModel : ViewModelBase, ICodeEditor
 	{
 		/// <summary>
 		/// Initializes a new code editor.
 		/// </summary>
-		public CodeEditorViewModel(AbstractFoldingStrategy foldingStrategy, 
+		public CodeEditorViewModel(IFoldingStrategy foldingStrategy, 
                                    IHighlightingDefinition highlightingDefinition, 
                                    IEnumerable<MenuViewModel> snippets,
 			                       IClipboard clipboard) : this()
@@ -73,7 +73,7 @@ namespace PlantUmlStudio.ViewModel
 		/// <summary>
 		/// The editor folding strategy.
 		/// </summary>
-		public AbstractFoldingStrategy FoldingStrategy { get; }
+		public IFoldingStrategy FoldingStrategy { get; }
 
 		/// <summary>
 		/// The code highlighting definition.

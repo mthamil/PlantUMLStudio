@@ -84,7 +84,9 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			if (_currentDocument.TryGetTarget(out document))
 			{
 				_currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
-				FoldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+
+			    int firstErrorOffset;
+                _currentFoldingManager.UpdateFoldings(FoldingStrategy.CreateNewFoldings(document, out firstErrorOffset), firstErrorOffset);
 
 				IEnumerable<NewFolding> foldings;
 				if (_documents.TryGetValue(document, out foldings))
@@ -105,15 +107,16 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			if (document != AssociatedObject.Document)
 				return;
 
-			FoldingStrategy.UpdateFoldings(_currentFoldingManager, document);
+            int firstErrorOffset;
+            _currentFoldingManager.UpdateFoldings(FoldingStrategy.CreateNewFoldings(document, out firstErrorOffset), firstErrorOffset);
 		}
 
 		/// <summary>
 		/// Gets or sets an editor folding strategy.
 		/// </summary>
-		public AbstractFoldingStrategy FoldingStrategy
+		public IFoldingStrategy FoldingStrategy
 		{
-			get { return (AbstractFoldingStrategy)GetValue(FoldingStrategyProperty); }
+			get { return (IFoldingStrategy)GetValue(FoldingStrategyProperty); }
 			set { SetValue(FoldingStrategyProperty, value); }
 		}
 
@@ -122,7 +125,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		/// </summary>
 		public static readonly DependencyProperty FoldingStrategyProperty =
 			DependencyProperty.Register(nameof(FoldingStrategy),
-			    typeof(AbstractFoldingStrategy),
+			    typeof(IFoldingStrategy),
 			    typeof(FoldingStrategyBehavior),
 			    new UIPropertyMetadata(null, OnFoldingStrategyChanged));
 

@@ -72,9 +72,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=4.4.2.9744, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AvalonEdit.4.4.2.9744\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -143,7 +143,6 @@
     <Compile Include="PlantUmlStudio\Configuration\SettingsPropagatorTests.cs" />
     <Compile Include="PlantUmlStudio\Configuration\SpecialFolderTokenReplacerTests.cs" />
     <Compile Include="PlantUmlStudio\Controls\Behaviors\AvalonEdit\PlantUmlFoldingStrategyTests.cs" />
-    <Compile Include="PlantUmlStudio\Controls\Behaviors\AvalonEdit\StubFoldingStrategy.cs" />
     <Compile Include="PlantUmlStudio\Controls\Converters\DiagramTabNameConverterTests.cs" />
     <Compile Include="PlantUmlStudio\Model\Snippets\SnippetParserTests.cs" />
     <Compile Include="PlantUmlStudio\ViewModel\CodeEditorViewModelTests.cs" />

@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 	/// <summary>
 	/// Creates folding regions based on start and end pattern definitions.
 	/// </summary>
-	public class PatternBasedFoldingStrategy : AbstractFoldingStrategy
+	public class PatternBasedFoldingStrategy : IFoldingStrategy
 	{
 		/// <summary>
 		/// Initializes a new folding strategy.
@@ -42,10 +42,10 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		                             RegexOptions.ExplicitCapture);
 		}
 
-		#region Overrides of AbstractFoldingStrategy
+		#region Implementation of IFoldingStrategy
 
-		/// <see cref="AbstractFoldingStrategy.CreateNewFoldings"/>
-		public override IEnumerable<NewFolding> CreateNewFoldings(TextDocument document, out int firstErrorOffset)
+		/// <see cref="IFoldingStrategy.CreateNewFoldings"/>
+		public IEnumerable<NewFolding> CreateNewFoldings(TextDocument document, out int firstErrorOffset)
 		{
 			firstErrorOffset = -1;
 			var foldings = new List<NewFolding>();
@@ -83,7 +83,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 					if (Regex.IsMatch(lineText, openRegions.Peek().EndToken))
 					{
 						var region = openRegions.Pop();
-						foldings.Add(new NewFolding(region.StartOffset, line.Offset + line.Length) { Name = region.StartLine + "..." });
+						foldings.Add(new NewFolding(region.StartOffset, line.Offset + line.Length) { Name = $"{region.StartLine}..." });
 					}
 				}
 			}
@@ -95,20 +95,12 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		private Tuple<FoldedRegionDefinition, Match> TryMatchStartToken(string input)
 		{
 			var matches = _startTokens.Matches(input);
-			if (matches.Count > 0 && matches[0].Success)
-			{
-				foreach (string groupName in _tokens.Keys)
-				{
-					if (matches[0].Groups[groupName].Success)
-					{
-						FoldedRegionDefinition foldDefinition;
-						_tokens.TryGetValue(groupName, out foldDefinition);
-						return Tuple.Create(foldDefinition, matches[0]);
-					}
-				}
-			}
-
-			return null;
+			return (matches.Count > 0 && matches[0].Success)
+                        ? _tokens.Keys
+			                     .Where(groupName => matches[0].Groups[groupName].Success)
+			                     .Select(groupName => Tuple.Create(_tokens.TryGetValue(groupName).Value, matches[0]))
+			                     .FirstOrDefault()
+                        : null;
 		}
 
 		private readonly IDictionary<string, FoldedRegionDefinition> _tokens;

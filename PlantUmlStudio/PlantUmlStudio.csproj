@@ -72,9 +72,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=4.4.2.9744, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AvalonEdit.4.4.2.9744\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
@@ -136,6 +136,7 @@
     <Compile Include="Controls\Behaviors\AvalonEdit\BindableScrollOffsetBehavior.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\ContentIndexBehavior.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\CurrentLineHighlighter.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\IFoldingStrategy.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldedRegionDefinition.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldingStrategyBehavior.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\PatternBasedFoldingStrategy.cs" />
@@ -310,7 +311,9 @@
     </None>
     <None Include="DesignTimeData\class.puml" />
     <None Include="DesignTimeData\sequence.puml" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PlantUML.xshd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

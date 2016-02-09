@@ -142,6 +142,7 @@
     <Compile Include="PlantUmlStudio\Configuration\RecentFilesCollectionTests.cs" />
     <Compile Include="PlantUmlStudio\Configuration\SettingsPropagatorTests.cs" />
     <Compile Include="PlantUmlStudio\Configuration\SpecialFolderTokenReplacerTests.cs" />
+    <Compile Include="PlantUmlStudio\Controls\Behaviors\AvalonEdit\FoldingManagerExtensionsTests.cs" />
     <Compile Include="PlantUmlStudio\Controls\Behaviors\AvalonEdit\PlantUmlFoldingStrategyTests.cs" />
     <Compile Include="PlantUmlStudio\Controls\Converters\DiagramTabNameConverterTests.cs" />
     <Compile Include="PlantUmlStudio\Model\Snippets\SnippetParserTests.cs" />

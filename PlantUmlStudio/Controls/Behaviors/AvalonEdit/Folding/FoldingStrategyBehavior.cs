@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
+using SharpEssentials.Weak;
 
 namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
@@ -35,20 +36,20 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		/// <see cref="Behavior.OnAttached"/>
 		protected override void OnAttached()
 		{
-			AssociatedObject.DataContextChanged += editor_DataContextChanged;
-			AssociatedObject.DocumentChanged += editor_DocumentChanged;
+			AssociatedObject.DataContextChanged += Editor_DataContextChanged;
+			AssociatedObject.DocumentChanged += Editor_DocumentChanged;
 
-			EditorDocumentChanged();
+			OnEditorDocumentChanged();
 		}
 
 		/// <see cref="Behavior.OnDetaching"/>
 		protected override void OnDetaching()
 		{
-			AssociatedObject.DataContextChanged -= editor_DataContextChanged;
-			AssociatedObject.DocumentChanged -= editor_DocumentChanged;
+			AssociatedObject.DataContextChanged -= Editor_DataContextChanged;
+			AssociatedObject.DocumentChanged -= Editor_DocumentChanged;
 		}
 
-		void editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		void Editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (_currentFoldingManager != null)
 			{
@@ -62,43 +63,40 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 				{
 					_documents.Remove(document);
 					_documents.Add(document, foldings.ToList());
-					WeakEventManager<TextDocument, DocumentChangeEventArgs>.RemoveHandler(document, "Changed", document_Changed);
+                    document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
 				}
 				FoldingManager.Uninstall(_currentFoldingManager);
 			}
 		}
 
-		void editor_DocumentChanged(object sender, EventArgs e)
+		void Editor_DocumentChanged(object sender, EventArgs e)
 		{
-			EditorDocumentChanged();
+			OnEditorDocumentChanged();
 		}
 
-		private void EditorDocumentChanged()
+		private void OnEditorDocumentChanged()
 		{
-			if (FoldingStrategy == null)
+			if (FoldingStrategy == null || AssociatedObject.Document == null)
 				return;
 
 			_currentDocument = new WeakReference<TextDocument>(AssociatedObject.Document);
+			_currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
 
-			TextDocument document;
-			if (_currentDocument.TryGetTarget(out document))
-			{
-				_currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
+			IEnumerable<NewFolding> foldings;
+		    if (_documents.TryGetValue(AssociatedObject.Document, out foldings))
+		    {
+		        _currentFoldingManager.UpdateFoldings(foldings);
+		    }
+		    else
+		    {
+		        _documents.Add(AssociatedObject.Document, Enumerable.Empty<NewFolding>());
+		        _currentFoldingManager.GenerateFoldings(AssociatedObject.Document, FoldingStrategy);
+		    }
 
-			    int firstErrorOffset;
-                _currentFoldingManager.UpdateFoldings(FoldingStrategy.CreateNewFoldings(document, out firstErrorOffset), firstErrorOffset);
-
-				IEnumerable<NewFolding> foldings;
-				if (_documents.TryGetValue(document, out foldings))
-					_currentFoldingManager.UpdateFoldings(foldings, -1);
-				else
-					_documents.Add(document, Enumerable.Empty<NewFolding>());
-
-				WeakEventManager<TextDocument, DocumentChangeEventArgs>.AddHandler(document, "Changed", document_Changed);
-			}
+		    AssociatedObject.Document.AddWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
 		}
 
-		void document_Changed(object sender, DocumentChangeEventArgs e)
+		void Document_Changed(object sender, DocumentChangeEventArgs e)
 		{
 			var document = sender as TextDocument;
 			if (document == null)
@@ -107,8 +105,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			if (document != AssociatedObject.Document)
 				return;
 
-            int firstErrorOffset;
-            _currentFoldingManager.UpdateFoldings(FoldingStrategy.CreateNewFoldings(document, out firstErrorOffset), firstErrorOffset);
+            _currentFoldingManager.GenerateFoldings(document, FoldingStrategy);
 		}
 
 		/// <summary>
@@ -132,7 +129,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
 			var behavior = (FoldingStrategyBehavior)dependencyObject;
-			behavior.EditorDocumentChanged();
+			behavior.OnEditorDocumentChanged();
 		}
 
 		private FoldingManager _currentFoldingManager;

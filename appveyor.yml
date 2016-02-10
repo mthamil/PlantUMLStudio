@@ -43,12 +43,8 @@ before_build:
 #       tests configuration       #
 #---------------------------------#
 
-#test:
-#  assemblies:
-#    - Tests.Unit.dll
-
 test_script:
-  - xunit.console.clr4 "C:\projects\plantumlstudio\Tests.Unit\bin\Package\Tests.Unit.dll"
+  - ps: '&"$($env:APPVEYOR_BUILD_FOLDER)\packages\xunit.runner.console*\tools\xunit.console.exe" "$($env:APPVEYOR_BUILD_FOLDER)\Tests.Unit\bin\$($env:CONFIGURATION)\Tests.Unit.dll" -appveyor'
 
 #---------------------------------#
 #      artifacts configuration    #

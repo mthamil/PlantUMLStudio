@@ -15,7 +15,7 @@ namespace Tests.Unit.PlantUmlStudio.Configuration
             var actual = _underTest.Parse(input);
 
             // Assert.
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
         }
 
         [Theory]

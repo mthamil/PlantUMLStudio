@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -45,20 +44,14 @@ namespace PlantUmlStudio.ViewModel
 			FoldingStrategy = foldingStrategy;
 			HighlightingDefinition = highlightingDefinition;
 			Snippets = snippets;
-
-            _contentIndex.Value = 0;
         }
 
 	    private CodeEditorViewModel()
 	    {
-            _contentIndex = Property.New(this, p => p.ContentIndex);
-
             _selectionStart = Property.New(this, p => p.SelectionStart);
             _selectionLength = Property.New(this, p => p.SelectionLength);
 
             _document = Property.New(this, p => p.Document);
-
-            _scrollOffset = Property.New(this, p => p.ScrollOffset);
 
             _isModified = Property.New(this, p => IsModified);
 
@@ -127,15 +120,6 @@ namespace PlantUmlStudio.ViewModel
 		}
 
 		/// <summary>
-		/// The current index into the content.
-		/// </summary>
-		public int ContentIndex
-		{
-			get { return _contentIndex.Value; }
-			set { _contentIndex.Value = value; }
-		}
-
-		/// <summary>
 		/// The current selection start position.
 		/// </summary>
 		public int SelectionStart
@@ -151,15 +135,6 @@ namespace PlantUmlStudio.ViewModel
 		{
 			get { return _selectionLength.Value; }
 			set { _selectionLength.Value = value; }
-		}
-
-		/// <summary>
-		/// The current scroll offset of a code editor.
-		/// </summary>
-		public Vector ScrollOffset
-		{
-			get { return _scrollOffset.Value; }
-			set { _scrollOffset.Value = value; }
 		}
 
 		/// <see cref="ICodeEditor.Options"/>
@@ -222,11 +197,11 @@ namespace PlantUmlStudio.ViewModel
 			{
 				Document.Replace(SelectionStart, SelectionLength, clipboardText);
 				SelectionLength = 0;
-				ContentIndex = ContentIndex + clipboardText.Length;
+                SelectionStart = SelectionStart + clipboardText.Length;
 			}
 			else
 			{
-				Document.Insert(ContentIndex, clipboardText);
+				Document.Insert(SelectionStart, clipboardText);
 			}
 		}
 
@@ -240,7 +215,7 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		public ICommand RedoCommand { get; }
 
-		/// <see cref="DisposableBase.OnDisposing"/>
+		/// <see cref="SharpEssentials.DisposableBase.OnDisposing"/>
 		protected override void OnDisposing()
 		{
 			if (Document != null)
@@ -250,11 +225,9 @@ namespace PlantUmlStudio.ViewModel
 			}
 		}
 
-		private readonly Property<int> _contentIndex;
 		private readonly Property<int> _selectionStart;
 		private readonly Property<int> _selectionLength; 
 		private readonly Property<TextDocument> _document;
-		private readonly Property<Vector> _scrollOffset;
 		private readonly Property<bool> _isModified;
 
 		private readonly IClipboard _clipboard;

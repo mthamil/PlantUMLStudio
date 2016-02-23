@@ -167,7 +167,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Content = "content";
 
 			clipboard.Setup(c => c.GetText()).Returns("pasted");
-			codeEditor.ContentIndex = 3;
+			codeEditor.SelectionStart = 3;
 
 			// Act.
 			codeEditor.PasteCommand.Execute(null);

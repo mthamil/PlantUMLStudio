@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +27,6 @@ namespace PlantUmlStudio.ViewModel
 		/// The content being edited.
 		/// </summary>
 		string Content { get; set; }
-
-		/// <summary>
-		/// The current index into the content.
-		/// </summary>
-		int ContentIndex { get; set; }
 
 		/// <summary>
 		/// Various text editor options.

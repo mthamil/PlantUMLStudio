@@ -24,7 +24,6 @@
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
-            <se:SecondsToTimeSpanConverter x:Key="SecondsConverter"/>
             <se:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
 
             <se:ComposingConverter x:Key="NullToVisibilityConverter">
@@ -34,10 +33,13 @@
                 </se:ComposingConverter.Converters>
             </se:ComposingConverter>
 
+            <SolidColorBrush x:Key="CurrentLineBackground" Color="#FFFFFFE0"/>
+            <Pen x:Key="CurrentLineBorder" Brush="#FFF2EAEA" Thickness="1.5"/>
+
         </ResourceDictionary>
     </UserControl.Resources>
   
-    <Border x:Name="WorkingPanel" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
+    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
         <DockPanel>
 
             <Grid Height="Auto">
@@ -47,54 +49,55 @@
                     <RowDefinition Height=".40*"/>
                 </Grid.RowDefinitions>
 
-                <avalonEdit:TextEditor Grid.Row="0" x:Name="ContentEditor" Padding="10"
-                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                       FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
-                                       FocusManager.IsFocusScope="True"
-                                       ShowLineNumbers="{Binding CodeEditor.Options.ShowLineNumbers}"
-                                       WordWrap="{Binding CodeEditor.Options.EnableWordWrap}"
-                                       IsEnabled="{Binding IsIdle}"
-                                       Document="{Binding CodeEditor.Document}"
-                                       SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}">
-                    
+                <controls:BindableTextEditor 
+                            Grid.Row="0" x:Name="ContentEditor" Padding="10"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            FontFamily="Consolas" FontSize="11pt" Background="White" Foreground="Black"
+                            FocusManager.IsFocusScope="True"
+                            IsEnabled="{Binding IsIdle}"
+                            Document="{Binding CodeEditor.Document}"
+                            SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}"
+                            ShowLineNumbers="{Binding CodeEditor.Options.ShowLineNumbers}"
+                            WordWrap="{Binding CodeEditor.Options.EnableWordWrap}"
+                            CurrentLineBackground="{StaticResource CurrentLineBackground}"
+                            CurrentLineBorder="{StaticResource CurrentLineBorder}"
+                            EnableVirtualSpace="{Binding CodeEditor.Options.EnableVirtualSpace}"
+                            CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"
+                            AllowScrollBelowDocument="{Binding CodeEditor.Options.AllowScrollingBelowContent}"
+                            HighlightCurrentLine="{Binding CodeEditor.Options.HighlightCurrentLine}">
+
                     <i:Interaction.Behaviors>
-                        <avalon:BindableOptions EnableVirtualSpace="{Binding CodeEditor.Options.EnableVirtualSpace}"
-                                                CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"
-                                                AllowScrollBelowDocument="{Binding CodeEditor.Options.AllowScrollingBelowContent}"/>
-                        <avalon:BindableScrollOffsetBehavior ScrollOffset="{Binding CodeEditor.ScrollOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <folding:FoldingStrategyBehavior FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"/>
-                        <avalon:SelectionManagement CaretIndex="{Binding CodeEditor.ContentIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                    SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                    SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <avalon:BindableSelection SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <avalon:AddLineTransformers>
                             <controls:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>
-                        <avalon:HighlightCurrentLine IsEnabled="{Binding CodeEditor.Options.HighlightCurrentLine}" />
                     </i:Interaction.Behaviors>
-                    
-                    <avalonEdit:TextEditor.InputBindings>
+
+                    <controls:BindableTextEditor.InputBindings>
                         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
                         <se:MultiKeyBinding Command="{StaticResource OpenContextMenuCommand}" 
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=avalonEdit:TextEditor}}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=controls:BindableTextEditor}}"
                                             Gesture="Ctrl+N,Ctrl+P"/>
-                    </avalonEdit:TextEditor.InputBindings>
-                    
-                    <avalonEdit:TextEditor.ContextMenu>
+                    </controls:BindableTextEditor.InputBindings>
+
+                    <controls:BindableTextEditor.ContextMenu>
                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                             <MenuItem Header="{Localize CutEditorContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CutCommand}">
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CutCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Header="{Localize CopyEditorContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CopyCommand}">
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.CopyCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="{StaticResource CopyIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Header="{Localize PasteEditorContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.PasteCommand}">
+                                      Command="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext.CodeEditor.PasteCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="{StaticResource PasteIcon_Small}" Style="{StaticResource DisableableIcon}"/>
                                 </MenuItem.Icon>
@@ -117,12 +120,12 @@
                                 </MenuItem.ItemContainerStyle>
                             </MenuItem>
                         </ContextMenu>
-                    </avalonEdit:TextEditor.ContextMenu>
-                </avalonEdit:TextEditor>
+                    </controls:BindableTextEditor.ContextMenu>
+                </controls:BindableTextEditor>
 
                 <GridSplitter Grid.Row="1" VerticalAlignment="Center" Width="Auto" Height="3"  HorizontalAlignment="Stretch" Background="#66808080"/>
 
-                <Expander Grid.Row="2" Name="ImageExpander" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White"
+                <Expander Grid.Row="2" ExpandDirection="Up" IsExpanded="True" Margin="0,0,0,0" Background="White"
                           Style="{StaticResource ExpanderStyle}">
                     <i:Interaction.Behaviors>
                         <se:GridSplitterExpanderSupportBehavior/>

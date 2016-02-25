@@ -49,27 +49,29 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			AssociatedObject.DocumentChanged -= Editor_DocumentChanged;
 		}
 
-		void Editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void Editor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (_currentFoldingManager != null)
-			{
-				// Currently the DefaultClosed property does not seem to be respected when foldings are restored.
-				var foldings = _currentFoldingManager
-					.AllFoldings
-					.Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title });
+		    if (_currentFoldingManager == null)
+                return;
 
-				TextDocument document;
-				if (_currentDocument.TryGetTarget(out document))
-				{
-					_documents.Remove(document);
-					_documents.Add(document, foldings.ToList());
-                    document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
-				}
-				FoldingManager.Uninstall(_currentFoldingManager);
-			}
+		    _currentDocument.TryGetTarget()
+		                    .Apply(document =>
+		                    {
+		                        var foldings = _currentFoldingManager
+		                            .AllFoldings
+		                            .Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title })
+		                            .ToList();
+
+		                        Foldings.Remove(document);
+		                        Foldings.Add(document, foldings);
+		                        document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
+		                    });
+
+
+		    FoldingManager.Uninstall(_currentFoldingManager);
 		}
 
-		void Editor_DocumentChanged(object sender, EventArgs e)
+		private void Editor_DocumentChanged(object sender, EventArgs e)
 		{
 			OnEditorDocumentChanged();
 		}
@@ -83,20 +85,20 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 			_currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
 
 			IEnumerable<NewFolding> foldings;
-		    if (_documents.TryGetValue(AssociatedObject.Document, out foldings))
+		    if (Foldings.TryGetValue(AssociatedObject.Document, out foldings))
 		    {
 		        _currentFoldingManager.UpdateFoldings(foldings);
 		    }
 		    else
 		    {
-		        _documents.Add(AssociatedObject.Document, Enumerable.Empty<NewFolding>());
+		        Foldings.Add(AssociatedObject.Document, Enumerable.Empty<NewFolding>());
 		        _currentFoldingManager.GenerateFoldings(AssociatedObject.Document, FoldingStrategy);
 		    }
 
 		    AssociatedObject.Document.AddWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
 		}
 
-		void Document_Changed(object sender, DocumentChangeEventArgs e)
+		private void Document_Changed(object sender, DocumentChangeEventArgs e)
 		{
 			var document = sender as TextDocument;
 			if (document == null)
@@ -118,7 +120,7 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		}
 
 		/// <summary>
-		/// The FoldingStrategy property.
+		/// The <see cref="FoldingStrategy"/> property.
 		/// </summary>
 		public static readonly DependencyProperty FoldingStrategyProperty =
 			DependencyProperty.Register(nameof(FoldingStrategy),
@@ -133,8 +135,8 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 		}
 
 		private FoldingManager _currentFoldingManager;
-		private WeakReference<TextDocument> _currentDocument;
 
-		private readonly ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>> _documents = new ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>>();
+		private static WeakReference<TextDocument> _currentDocument;
+		private static readonly ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>> Foldings = new ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>>();
 	}
 }

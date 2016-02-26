@@ -24,14 +24,7 @@ namespace PlantUmlStudio.Controls
 {
     public partial class BindableTextEditor : TextEditor
     {
-        public BindableTextEditor() : base()
-        {
-            DataContextChanged += OnDataContextChanged;
-            TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
-
-        }
-
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnDataContextChanged_Scroll(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null)
                 return;

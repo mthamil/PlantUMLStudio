@@ -27,10 +27,12 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
         /// <summary>
         /// Creates new foldings and updates a <see cref="FoldingManager"/> with them.
         /// </summary>
-        public static void GenerateFoldings(this FoldingManager manager, TextDocument document, IFoldingStrategy strategy)
+        public static IEnumerable<NewFolding> GenerateFoldings(this FoldingManager manager, TextDocument document, IFoldingStrategy strategy)
         {
             int firstErrorOffset;
-            manager.UpdateFoldings(strategy.CreateNewFoldings(document, out firstErrorOffset));
+            var newFoldings = strategy.CreateNewFoldings(document, out firstErrorOffset).ToList();
+            manager.UpdateFoldings(newFoldings);
+            return newFoldings;
         }
 
         /// <summary>

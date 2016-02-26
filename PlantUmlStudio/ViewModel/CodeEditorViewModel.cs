@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using SharpEssentials.Controls.Clipboard;
@@ -51,6 +52,8 @@ namespace PlantUmlStudio.ViewModel
             _selectionStart = Property.New(this, p => p.SelectionStart);
             _selectionLength = Property.New(this, p => p.SelectionLength);
 
+	        _currentFoldings = Property.New(this, p => p.CurrentFoldings);
+
             _document = Property.New(this, p => p.Document);
 
             _isModified = Property.New(this, p => IsModified);
@@ -67,6 +70,12 @@ namespace PlantUmlStudio.ViewModel
 		/// The editor folding strategy.
 		/// </summary>
 		public IFoldingStrategy FoldingStrategy { get; }
+
+        public IEnumerable<NewFolding> CurrentFoldings
+        {
+            get { return _currentFoldings.Value; }
+            set { _currentFoldings.Value = value; }
+        } 
 
 		/// <summary>
 		/// The code highlighting definition.
@@ -226,7 +235,8 @@ namespace PlantUmlStudio.ViewModel
 		}
 
 		private readonly Property<int> _selectionStart;
-		private readonly Property<int> _selectionLength; 
+		private readonly Property<int> _selectionLength;
+        private readonly Property<IEnumerable<NewFolding>> _currentFoldings;
 		private readonly Property<TextDocument> _document;
 		private readonly Property<bool> _isModified;
 

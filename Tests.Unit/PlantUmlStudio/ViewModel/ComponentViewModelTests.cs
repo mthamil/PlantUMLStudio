@@ -38,7 +38,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
-			         .Returns(Task.FromResult(Option<string>.Some("NewerVersion")));
+			         .Returns(Task.FromResult(Option.Some("NewerVersion")));
 
 			securityService.Setup(ss => ss.HasAdminPriviledges()).Returns(true);
 
@@ -87,7 +87,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			         .Returns(Task.FromResult("Version"));
 
 			component.Setup(c => c.HasUpdateAsync(It.IsAny<CancellationToken>()))
-			         .Returns(Task.FromResult(Option<string>.From(latestVersion)));
+			         .Returns(Task.FromResult(Option.From(latestVersion)));
 
 			securityService.Setup(ss => ss.HasAdminPriviledges()).Returns(hasPermission);
 

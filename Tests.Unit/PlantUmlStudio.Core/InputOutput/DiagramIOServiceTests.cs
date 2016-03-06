@@ -130,7 +130,7 @@ namespace Tests.Unit.PlantUmlStudio.Core.InputOutput
 			Assert.Equal(1, progressData.First().ProcessedDiagramCount);
 			Assert.Equal(2, progressData.First().TotalDiagramCount);
 
-			Assert.Equal(Option<Diagram>.None(), progressData.Last().Diagram);
+			Assert.Equal(Option.None<Diagram>(), progressData.Last().Diagram);
 			Assert.Equal(2, progressData.Last().ProcessedDiagramCount);
 			Assert.Equal(2, progressData.Last().TotalDiagramCount);
 		}

@@ -54,7 +54,7 @@ namespace PlantUmlStudio.Core.Imaging
 		/// Freezing is necessary to use an image on a different thread from that on which
 		/// it was created.
 		/// </summary>
-		private DrawingImage CreateFrozenDrawing(DrawingGroup drawingGroup)
+		private static DrawingImage CreateFrozenDrawing(DrawingGroup drawingGroup)
 		{
 			var drawing = new DrawingImage(drawingGroup);
 			drawing.Freeze();

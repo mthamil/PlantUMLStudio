@@ -126,7 +126,7 @@ namespace PlantUmlStudio.Controls
 
         private static PropertyChangedCallback CreateCallback<TValue>(Action<TextEditorOptions, TValue> update)
         {
-            return (dependencyObject, e) => update(((BindableTextEditor)dependencyObject).Options, (TValue)e.NewValue);
+            return (dependencyObject, e) => update(((ITextEditorComponent)dependencyObject).Options, (TValue)e.NewValue);
         }
 
         protected override void OnOptionChanged(PropertyChangedEventArgs e)

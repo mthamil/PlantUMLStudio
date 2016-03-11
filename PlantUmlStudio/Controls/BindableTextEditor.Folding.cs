@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
@@ -34,49 +33,43 @@ namespace PlantUmlStudio.Controls
             if (_currentFoldingManager == null)
                 return;
 
-            _currentDocument.TryGetTarget()
-                            .Apply(document =>
-                            {
-                                var foldings = _currentFoldingManager
-                                    .AllFoldings
-                                    .Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title })
-                                    .ToList();
-
-                                Foldings.Remove(document);
-                                Foldings.Add(document, foldings);
-                                document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
-                            });
-
-
             FoldingManager.Uninstall(_currentFoldingManager);
+            _currentFoldingManager = null;
         }
 
         protected override void OnDocumentChanged(EventArgs e)
         {
             base.OnDocumentChanged(e);
-            OnEditorDocumentChanged();
+            OnDocumentChangedFolding();
         }
 
-        private void OnEditorDocumentChanged()
+        private void OnDocumentChangedFolding()
         {
             if (FoldingStrategy == null || Document == null)
                 return;
 
-            _currentDocument = new WeakReference<TextDocument>(Document);
+            _currentDocument?.TryGetTarget()
+                             .Apply(document =>
+                                    document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed));
+
             _currentFoldingManager = FoldingManager.Install(TextArea);
 
-            IEnumerable<NewFolding> foldings;
-            if (Foldings.TryGetValue(Document, out foldings))
+            // Update foldings.
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                _currentFoldingManager.UpdateFoldings(foldings);
-            }
-            else
-            {
-                Foldings.Add(Document, Enumerable.Empty<NewFolding>());
-                _currentFoldingManager.GenerateFoldings(Document, FoldingStrategy);
-            }
-            //UpdateCurrentFoldings();
+                if (CurrentFoldings == null)
+                {
+                    _currentFoldingManager.GenerateFoldings(Document, FoldingStrategy);
+                }
+                else
+                {
+                    _currentFoldingManager.UpdateFoldings(CurrentFoldings);
+                }
+                UpdateCurrentFoldings();
+            }));
+                        
 
+            _currentDocument = new WeakReference<TextDocument>(Document);
             Document.AddWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
         }
 
@@ -90,7 +83,22 @@ namespace PlantUmlStudio.Controls
                 return;
 
             _currentFoldingManager.GenerateFoldings(document, FoldingStrategy);
-            //UpdateCurrentFoldings();
+            UpdateCurrentFoldings();
+        }
+
+        private void TextView_VisualLinesChanged(object sender, EventArgs e)
+        {
+            if (DataContext == null || Document == null || _currentFoldingManager == null)
+                return;
+
+            if (!_currentFoldingManager.AllFoldings.Any())
+                return;
+
+            if (!_currentFoldingManager.AllFoldings.Select(f => f.IsFolded).SequenceEqual(
+                 CurrentFoldings?.Select(f => f.DefaultClosed) ?? Enumerable.Empty<bool>()))
+            {
+                UpdateCurrentFoldings();
+            }
         }
 
         /// <summary>
@@ -114,15 +122,20 @@ namespace PlantUmlStudio.Controls
         private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             var editor = (BindableTextEditor)dependencyObject;
-            editor.OnEditorDocumentChanged();
+            editor.OnDocumentChangedFolding();
         }
 
         private void UpdateCurrentFoldings()
         {
-            CurrentFoldings = _currentFoldingManager
-                                    .AllFoldings
-                                    .Select(f => new NewFolding(f.StartOffset, f.EndOffset) { DefaultClosed = f.IsFolded, Name = f.Title })
-                                    .ToList();
+            CurrentFoldings =
+                _currentFoldingManager
+                    .AllFoldings
+                    .Select(f => new NewFolding(f.StartOffset, f.EndOffset)
+                    {
+                        DefaultClosed = f.IsFolded,
+                        Name = f.Title
+                    })
+                    .ToList();
         }
 
         public IEnumerable<NewFolding> CurrentFoldings
@@ -136,34 +149,11 @@ namespace PlantUmlStudio.Controls
                 typeof(IEnumerable<NewFolding>),
                 typeof(BindableTextEditor),
                 new FrameworkPropertyMetadata(
-                    Enumerable.Empty<NewFolding>(),
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    (d, e) => OnCurrentFoldingsChanged((BindableTextEditor)d,
-                                                       (IEnumerable<NewFolding>)e.NewValue,
-                                                       (IEnumerable<NewFolding>)e.OldValue)));
+                    null,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        private static void OnCurrentFoldingsChanged(BindableTextEditor editor, IEnumerable<NewFolding> newValue, IEnumerable<NewFolding> oldValue)
-        {
-            //if (editor.Document == null)
-            //    return;
-
-            //if (behavior.AssociatedObject.TextArea.TextView.DataContext != behavior.AssociatedObject.DataContext)
-            //    return;
-
-            //if (newValue == null)
-            //{
-            //    editor._currentFoldingManager.GenerateFoldings(editor.Document, editor.FoldingStrategy);
-            //    editor.UpdateCurrentFoldings();
-            //}
-            //else
-            //{
-            //    editor._currentFoldingManager.UpdateFoldings(newValue);
-            //}
-        }
 
         private FoldingManager _currentFoldingManager;
-
         private static WeakReference<TextDocument> _currentDocument;
-        private static readonly ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>> Foldings = new ConditionalWeakTable<TextDocument, IEnumerable<NewFolding>>();
     }
 }

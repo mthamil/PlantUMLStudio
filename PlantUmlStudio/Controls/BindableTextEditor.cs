@@ -26,6 +26,7 @@ namespace PlantUmlStudio.Controls
             TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
 
             DataContextChanged += OnDataContextChanged_Folding;
+            TextArea.TextView.VisualLinesChanged += TextView_VisualLinesChanged;
         }
     }
 }

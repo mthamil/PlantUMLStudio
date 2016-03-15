@@ -67,8 +67,8 @@
                             HighlightCurrentLine="{Binding CodeEditor.Options.HighlightCurrentLine}">
 
                     <i:Interaction.Behaviors>
-                        <avalon:BindableSelection SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <avalon:BindableSelection SelectionStart="{Binding CodeEditor.SelectionStart, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectionLength="{Binding CodeEditor.SelectionLength, UpdateSourceTrigger=PropertyChanged}"/>
                         <folding:BindableFolding FoldingStrategy="{Binding CodeEditor.FoldingStrategy}" 
                                                  CurrentFoldings="{Binding CodeEditor.CurrentFoldings}"/>
                         <avalon:AddLineTransformers>

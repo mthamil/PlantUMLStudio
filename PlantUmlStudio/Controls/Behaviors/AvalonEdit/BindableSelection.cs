@@ -57,7 +57,10 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 			DependencyProperty.Register(nameof(SelectionStart),
 			    typeof(int),
 			    typeof(BindableSelection),
-			    new UIPropertyMetadata(0, OnSelectionStartChanged));
+			    new FrameworkPropertyMetadata(
+                    0, 
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+                    OnSelectionStartChanged));
 
 		private static void OnSelectionStartChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{
@@ -86,7 +89,10 @@ namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit
 			DependencyProperty.Register(nameof(SelectionLength),
 			    typeof(int),
 			    typeof(BindableSelection),
-			    new UIPropertyMetadata(0, OnSelectionLengthChanged));
+			    new FrameworkPropertyMetadata(
+                    0, 
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+                    OnSelectionLengthChanged));
 
 		private static void OnSelectionLengthChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
 		{

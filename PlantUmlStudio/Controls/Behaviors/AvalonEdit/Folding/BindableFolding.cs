@@ -18,17 +18,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Interactivity;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
-using PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding;
 using SharpEssentials.Weak;
 
-namespace PlantUmlStudio.Controls
+namespace PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding
 {
-    public partial class BindableTextEditor : TextEditor
+    public class BindableFolding : Behavior<TextEditor>
     {
-        private void OnDataContextChanged_Folding(object sender, DependencyPropertyChangedEventArgs e)
+        protected override void OnAttached()
+        {
+            AssociatedObject.DataContextChanged += TextEditor_DataContextChanged;
+            AssociatedObject.DocumentChanged += TextEditor_DocumentChanged;
+            AssociatedObject.TextArea.TextView.VisualLinesChanged += TextView_VisualLinesChanged;
+        }
+
+        protected override void OnDetaching()
+        {
+            AssociatedObject.DataContextChanged -= TextEditor_DataContextChanged;
+            AssociatedObject.DocumentChanged -= TextEditor_DocumentChanged;
+            AssociatedObject.TextArea.TextView.VisualLinesChanged -= TextView_VisualLinesChanged;
+        }
+
+        private void TextEditor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (_currentFoldingManager == null)
                 return;
@@ -37,29 +51,28 @@ namespace PlantUmlStudio.Controls
             _currentFoldingManager = null;
         }
 
-        protected override void OnDocumentChanged(EventArgs e)
+        private void TextEditor_DocumentChanged(object sender, EventArgs e)
         {
-            base.OnDocumentChanged(e);
-            OnDocumentChangedFolding();
+            OnDocumentChanged();
         }
 
-        private void OnDocumentChangedFolding()
+        private void OnDocumentChanged()
         {
-            if (FoldingStrategy == null || Document == null)
+            if (FoldingStrategy == null || AssociatedObject.Document == null)
                 return;
 
             _currentDocument?.TryGetTarget()
                              .Apply(document =>
                                     document.RemoveWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed));
 
-            _currentFoldingManager = FoldingManager.Install(TextArea);
+            _currentFoldingManager = FoldingManager.Install(AssociatedObject.TextArea);
 
             // Update foldings.
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (CurrentFoldings == null)
                 {
-                    _currentFoldingManager.GenerateFoldings(Document, FoldingStrategy);
+                    _currentFoldingManager.GenerateFoldings(AssociatedObject.Document, FoldingStrategy);
                 }
                 else
                 {
@@ -67,10 +80,10 @@ namespace PlantUmlStudio.Controls
                 }
                 UpdateCurrentFoldings();
             }));
-                        
 
-            _currentDocument = new WeakReference<TextDocument>(Document);
-            Document.AddWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
+
+            _currentDocument = new WeakReference<TextDocument>(AssociatedObject.Document);
+            AssociatedObject.Document.AddWeakHandler<TextDocument, DocumentChangeEventArgs>(nameof(TextDocument.Changed), Document_Changed);
         }
 
         private void Document_Changed(object sender, DocumentChangeEventArgs e)
@@ -79,7 +92,7 @@ namespace PlantUmlStudio.Controls
             if (document == null)
                 return;
 
-            if (document != Document)
+            if (document != AssociatedObject.Document)
                 return;
 
             _currentFoldingManager.GenerateFoldings(document, FoldingStrategy);
@@ -88,7 +101,7 @@ namespace PlantUmlStudio.Controls
 
         private void TextView_VisualLinesChanged(object sender, EventArgs e)
         {
-            if (DataContext == null || Document == null || _currentFoldingManager == null)
+            if (AssociatedObject.DataContext == null || AssociatedObject.Document == null || _currentFoldingManager == null)
                 return;
 
             if (!_currentFoldingManager.AllFoldings.Any())
@@ -116,13 +129,13 @@ namespace PlantUmlStudio.Controls
         public static readonly DependencyProperty FoldingStrategyProperty =
             DependencyProperty.Register(nameof(FoldingStrategy),
                 typeof(IFoldingStrategy),
-                typeof(BindableTextEditor),
+                typeof(BindableFolding),
                 new PropertyMetadata(null, OnFoldingStrategyChanged));
 
         private static void OnFoldingStrategyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var editor = (BindableTextEditor)dependencyObject;
-            editor.OnDocumentChangedFolding();
+            var behavior = (BindableFolding)dependencyObject;
+            behavior.OnDocumentChanged();
         }
 
         private void UpdateCurrentFoldings()
@@ -147,7 +160,7 @@ namespace PlantUmlStudio.Controls
         public static readonly DependencyProperty CurrentFoldingsProperty =
             DependencyProperty.Register(nameof(CurrentFoldings),
                 typeof(IEnumerable<NewFolding>),
-                typeof(BindableTextEditor),
+                typeof(BindableFolding),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));

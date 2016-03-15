@@ -57,7 +57,6 @@
                             IsEnabled="{Binding IsIdle}"
                             Document="{Binding CodeEditor.Document}"
                             SyntaxHighlighting="{Binding CodeEditor.HighlightingDefinition}"
-                            FoldingStrategy="{Binding CodeEditor.FoldingStrategy}"
                             ShowLineNumbers="{Binding CodeEditor.Options.ShowLineNumbers}"
                             WordWrap="{Binding CodeEditor.Options.EnableWordWrap}"
                             CurrentLineBackground="{StaticResource CurrentLineBackground}"
@@ -65,12 +64,13 @@
                             EnableVirtualSpace="{Binding CodeEditor.Options.EnableVirtualSpace}"
                             CutCopyWholeLine="{Binding CodeEditor.Options.EmptySelectionCopiesEntireLine}"
                             AllowScrollBelowDocument="{Binding CodeEditor.Options.AllowScrollingBelowContent}"
-                            HighlightCurrentLine="{Binding CodeEditor.Options.HighlightCurrentLine}"
-                            CurrentFoldings="{Binding CodeEditor.CurrentFoldings}">
+                            HighlightCurrentLine="{Binding CodeEditor.Options.HighlightCurrentLine}">
 
                     <i:Interaction.Behaviors>
                         <avalon:BindableSelection SelectionStart="{Binding CodeEditor.SelectionStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   SelectionLength="{Binding CodeEditor.SelectionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <folding:BindableFolding FoldingStrategy="{Binding CodeEditor.FoldingStrategy}" 
+                                                 CurrentFoldings="{Binding CodeEditor.CurrentFoldings}"/>
                         <avalon:AddLineTransformers>
                             <controls:HexColorCodeTextHighlighter/>
                         </avalon:AddLineTransformers>

@@ -135,13 +135,13 @@
     <Compile Include="Container\Support\NonPublicConstructorFinder.cs" />
     <Compile Include="Container\Support\RegistrationExtensions.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\AddLineTransformers.cs" />
+    <Compile Include="Controls\Behaviors\AvalonEdit\Folding\BindableFolding.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldingManagerExtensions.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\IFoldingStrategy.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\FoldedRegionDefinition.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\PatternBasedFoldingStrategy.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\Folding\PlantUmlFoldRegions.cs" />
     <Compile Include="Controls\Behaviors\AvalonEdit\BindableSelection.cs" />
-    <Compile Include="Controls\BindableTextEditor.Folding.cs" />
     <Compile Include="Controls\BindableTextEditor.cs" />
     <Compile Include="Controls\BindableTextEditor.Scroll.cs" />
     <Compile Include="Controls\BindableTextEditor.Config.cs" />

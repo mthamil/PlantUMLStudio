@@ -346,7 +346,8 @@
                                         <Grid>
                                             <Border x:Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
                                                 <DockPanel HorizontalAlignment="Stretch">
-                                                    <TextBlock VerticalAlignment="Center" Margin="12,2,12,2">
+                                                    <TextBlock VerticalAlignment="Center" Margin="12,2,12,2"
+                                                               ToolTip="{Binding Diagram.File.FullName}">
                                                         <TextBlock.Text>
                                                             <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
                                                                 <Binding Path="Diagram.File.Name"/>

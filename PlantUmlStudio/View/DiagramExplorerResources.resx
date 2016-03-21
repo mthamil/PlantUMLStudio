@@ -117,14 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Title" xml:space="preserve">
-    <value>PlantUML Studio</value>
+  <data name="CancelDiagramRefreshButton" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Enter a path in the location text box to load the diagrams from that directory.
-Or, just click on File -&gt; New to start working on a new diagram.</value>
+  <data name="CurrentDiagramLocationLabel" xml:space="preserve">
+    <value>Location:</value>
   </data>
-  <data name="WelcomeMessageTitle" xml:space="preserve">
-    <value>Welcome to PlantUML Studio</value>
+  <data name="DeletePreviewContextMenuItem" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="OpenPreviewContextMenuItem" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="RefreshDiagramsButton" xml:space="preserve">
+    <value>Refresh Diagram List</value>
   </data>
 </root>

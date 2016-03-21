@@ -201,6 +201,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DiagramEditorViewResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="View\DiagramExplorer.xaml.cs">
+      <DependentUpon>DiagramExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DiagramExplorerResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiagramExplorerResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -245,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\DiagramExplorer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -285,6 +297,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DiagramEditorViewResources.Designer.cs</LastGenOutput>
       <DependentUpon>DiagramEditorView.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\DiagramExplorerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagramExplorerResources.Designer.cs</LastGenOutput>
+	  <DependentUpon>DiagramExplorer.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainWindowResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -22,14 +22,14 @@ namespace PlantUmlStudio.View {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class MainWindowResources {
+    internal class DiagramExplorerResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal MainWindowResources() {
+        internal DiagramExplorerResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace PlantUmlStudio.View {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlantUmlStudio.View.MainWindowResources", typeof(MainWindowResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlantUmlStudio.View.DiagramExplorerResources", typeof(DiagramExplorerResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,30 +61,47 @@ namespace PlantUmlStudio.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PlantUML Studio.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        internal static string Title {
+        internal static string CancelDiagramRefreshButton {
             get {
-                return ResourceManager.GetString("Title", resourceCulture);
+                return ResourceManager.GetString("CancelDiagramRefreshButton", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter a path in the location text box to load the diagrams from that directory.
-        ///Or, just click on File -&gt; New to start working on a new diagram..
+        ///   Looks up a localized string similar to Location:.
         /// </summary>
-        internal static string WelcomeMessage {
+        internal static string CurrentDiagramLocationLabel {
             get {
-                return ResourceManager.GetString("WelcomeMessage", resourceCulture);
+                return ResourceManager.GetString("CurrentDiagramLocationLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to PlantUML Studio.
+        ///   Looks up a localized string similar to Delete.
         /// </summary>
-        internal static string WelcomeMessageTitle {
+        internal static string DeletePreviewContextMenuItem {
             get {
-                return ResourceManager.GetString("WelcomeMessageTitle", resourceCulture);
+                return ResourceManager.GetString("DeletePreviewContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        internal static string OpenPreviewContextMenuItem {
+            get {
+                return ResourceManager.GetString("OpenPreviewContextMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Diagram List.
+        /// </summary>
+        internal static string RefreshDiagramsButton {
+            get {
+                return ResourceManager.GetString("RefreshDiagramsButton", resourceCulture);
             }
         }
     }

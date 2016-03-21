@@ -52,12 +52,14 @@ namespace PlantUmlStudio.Core
 	    /// <see cref="IDiagramCompiler.CompileToImageAsync"/>
 		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken)
 		{
-			var result = await Task.Factory.FromProcess(
+            var result = await Task.Factory.FromProcess(
 				executable: "java",
-				arguments: String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" -pipe", 
-								PlantUmlJar.FullName, 
-								imageFormat == ImageFormat.SVG ? "-tsvg" : string.Empty, 
-								GraphVizExecutable.FullName), 
+				arguments: new ArgumentsBuilder()
+                                .Arg("jar", PlantUmlJar)
+                                .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")
+                                .Arg("quiet")
+                                .Arg("graphvizdot", GraphVizExecutable)
+                                .Arg("pipe"), 
 				input: new MemoryStream(Encoding.Default.GetBytes(diagramCode)), 
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
@@ -70,13 +72,14 @@ namespace PlantUmlStudio.Core
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
 		public Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat)
 		{
-			return Task.Factory.FromProcess(
+            return Task.Factory.FromProcess(
 				executable: "java",
-				arguments: String.Format(@"-jar ""{0}"" {1} -quiet -graphvizdot ""{2}"" ""{3}""", 
-								PlantUmlJar.FullName,
-								imageFormat == ImageFormat.SVG ? "-tsvg" : string.Empty, 
-								GraphVizExecutable.FullName, 
-								diagramFile.FullName));
+				arguments: new ArgumentsBuilder()
+                                .Arg("jar", PlantUmlJar)
+                                .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")    
+                                .Arg("quiet")
+                                .Arg("graphvizdot", GraphVizExecutable)
+                                .Value(diagramFile));
 		}
 
 		#region Implementation of IExternalComponent
@@ -96,7 +99,7 @@ namespace PlantUmlStudio.Core
 
             var result = await Task.Factory.FromProcess(
                 executable: "java",
-                arguments: $@"-jar ""{PlantUmlJar.FullName}"" -version",
+                arguments: new ArgumentsBuilder().Arg("jar", PlantUmlJar).Arg("version"),
                 input: Stream.Null,
                 cancellationToken: cancellationToken
             ).ConfigureAwait(false);

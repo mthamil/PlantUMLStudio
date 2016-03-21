@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -260,7 +260,7 @@ namespace PlantUmlStudio.Configuration
 		{
 			// Relay the property change.
 			if (e.PropertyName == nameof(RecentFilesCollection.MaximumCount))
-				OnPropertyChanged(this, p => p.MaximumRecentFiles);
+				OnPropertyChanged(nameof(MaximumRecentFiles));
 		}
 
 		private readonly Property<DirectoryInfo> _lastDiagramLocation;

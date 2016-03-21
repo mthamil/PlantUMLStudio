@@ -89,6 +89,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ArgumentsBuilder.cs" />
     <Compile Include="Dependencies\IExternalComponent.cs" />
     <Compile Include="Dependencies\Update\ComponentUpdateChecker.cs" />
     <Compile Include="Dependencies\Update\IComponentUpdateChecker.cs" />

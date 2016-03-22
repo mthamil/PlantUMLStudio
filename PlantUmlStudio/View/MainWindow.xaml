@@ -37,8 +37,6 @@
                 </se:ComposingConverter.Converters>
             </se:ComposingConverter>
 
-            <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
-
         </ResourceDictionary>
     </Window.Resources>
 
@@ -91,6 +89,12 @@
                             SelectedItem="{Binding OpenDiagram}"
                             Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
 
+                    <TabControl.Resources>
+                        <ResourceDictionary>
+                            <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
+                        </ResourceDictionary>
+                    </TabControl.Resources>
+                    
                     <i:Interaction.Behaviors>
                         <se:TabWheelScrolling InvertScrollDirection="False" ScrollWrapsAround="False"/>    
                     </i:Interaction.Behaviors>

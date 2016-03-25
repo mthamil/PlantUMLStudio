@@ -7,8 +7,8 @@
              xmlns:components="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
              xmlns:design="clr-namespace:PlantUmlStudio.DesignTimeData"
-             mc:Ignorable="d" 
              LocalizeExtension.DefaultResxName="PlantUmlStudio.View.DiagramExplorerResources" Language="{UICulture}"
+             mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=design:DesignTimeDiagramExplorer, IsDesignTimeCreatable=True}">
     

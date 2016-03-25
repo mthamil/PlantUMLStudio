@@ -14,7 +14,8 @@
         Width="1300" Height="768"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:DiagramManagerViewModel}}, Path=ViewModel}">
+        DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:DiagramManagerViewModel}}, Path=ViewModel}"
+        d:DataContext="{d:DesignInstance Type=vm:DiagramManagerViewModel, IsDesignTimeCreatable=False}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">

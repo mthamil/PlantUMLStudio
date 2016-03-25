@@ -8,13 +8,15 @@
     xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
     xmlns:avalon="clr-namespace:PlantUmlStudio.Controls.Behaviors.AvalonEdit"
     xmlns:folding="clr-namespace:PlantUmlStudio.Controls.Behaviors.AvalonEdit.Folding"
-    xmlns:Imaging="clr-namespace:PlantUmlStudio.Core.Imaging;assembly=PlantUmlStudio.Core"
+    xmlns:img="clr-namespace:PlantUmlStudio.Core.Imaging;assembly=PlantUmlStudio.Core"
     xmlns:cmd="clr-namespace:PlantUmlStudio.ViewModel.Commands"
     xmlns:controls="clr-namespace:PlantUmlStudio.Controls"
+    xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
+    FocusManager.FocusedElement="{Binding ElementName=ContentEditor}"
+    LocalizeExtension.DefaultResxName="PlantUmlStudio.View.DiagramEditorViewResources" Language="{UICulture}"
     mc:Ignorable="d" 
     d:DesignHeight="462" d:DesignWidth="584"
-    FocusManager.FocusedElement="{Binding ElementName=ContentEditor}"
-    LocalizeExtension.DefaultResxName="PlantUmlStudio.View.DiagramEditorViewResources" Language="{UICulture}">
+    d:DataContext="{d:DesignInstance Type=vm:DiagramEditorViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -195,7 +197,7 @@
 
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
-                            <ComboBox ItemsSource="{se:EnumValues {x:Type Imaging:ImageFormat}}" SelectedItem="{Binding ImageFormat}" 
+                            <ComboBox ItemsSource="{se:EnumValues {x:Type img:ImageFormat}}" SelectedItem="{Binding ImageFormat}" 
                                       HorizontalContentAlignment="Stretch" ToolTip="{Localize ImageFormatComboBoxToolTip}"/>
                             
                             <Slider x:Name="ZoomSlider" Margin="10,0,0,0" Minimum="0.1" Maximum="2.0" Value="1.0" Width="50" SmallChange="0.1" LargeChange="0.2"

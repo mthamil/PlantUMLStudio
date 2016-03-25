@@ -7,7 +7,6 @@
         xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
         xmlns:xtn="clr-namespace:PlantUmlStudio.View.MarkupExtensions"
         xmlns:vm="clr-namespace:PlantUmlStudio.ViewModel"
-        mc:Ignorable="d"
         LocalizeExtension.DefaultResxName="PlantUmlStudio.View.SettingsViewResources" Language="{UICulture}"
         Title="{Localize Title}"
         Height="232" Width="437"
@@ -15,7 +14,9 @@
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False" ResizeMode="NoResize"
         DataContext="{Binding Source={xtn:ViewModelLocator {x:Type vm:SettingsViewModel}}, Path=ViewModel}"
-        se:WindowBehaviors.DialogResult="{Binding SaveCompleted}">
+        se:WindowBehaviors.DialogResult="{Binding SaveCompleted}"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel, IsDesignTimeCreatable=False}">
 
     <i:Interaction.Behaviors>
         <se:TitleBarOptions ShowButtons="False"/>

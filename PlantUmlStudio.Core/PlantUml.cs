@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,7 +50,7 @@ namespace PlantUmlStudio.Core
 		}
 
 	    /// <see cref="IDiagramCompiler.CompileToImageAsync"/>
-		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken)
+		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken)
 		{
             var result = await Task.Factory.FromProcess(
 				executable: "java",
@@ -59,8 +59,9 @@ namespace PlantUmlStudio.Core
                                 .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")
                                 .Arg("quiet")
                                 .Arg("graphvizdot", GraphVizExecutable)
+                                .Arg("charset", encoding.WebName)
                                 .Arg("pipe"), 
-				input: new MemoryStream(Encoding.Default.GetBytes(diagramCode)), 
+				input: new MemoryStream(encoding.GetBytes(diagramCode)), 
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 
@@ -70,7 +71,7 @@ namespace PlantUmlStudio.Core
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
-		public Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat)
+		public Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat, Encoding encoding)
 		{
             return Task.Factory.FromProcess(
 				executable: "java",
@@ -79,6 +80,7 @@ namespace PlantUmlStudio.Core
                                 .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")    
                                 .Arg("quiet")
                                 .Arg("graphvizdot", GraphVizExecutable)
+                                .Arg("charset", encoding.WebName)
                                 .Value(diagramFile));
 		}
 

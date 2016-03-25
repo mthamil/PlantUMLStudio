@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using SharpEssentials.Testing;
@@ -8,7 +9,20 @@ namespace Tests.Unit.PlantUmlStudio.Core
 {
 	public class DiagramTests
 	{
-		[Fact]
+        [Fact]
+        public void Test_Default_Encoding_Is_Utf8()
+        {
+            // Arrange.
+            var diagram = new Diagram();
+
+            // Act.
+            var actual = diagram.Encoding;
+
+            // Assert.
+            Assert.Equal(Encoding.UTF8, actual);
+        }
+
+        [Fact]
 		public void Test_PNG_ImageFormat_Detection()
 		{
 			// Arrange.

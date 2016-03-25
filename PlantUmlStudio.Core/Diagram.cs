@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using PlantUmlStudio.Core.Imaging;
 using SharpEssentials.InputOutput;
@@ -45,9 +46,14 @@ namespace PlantUmlStudio.Core
 		/// </summary>
         public FileInfo File { get; set; }
 
-		/// <summary>
-		/// The file where a diagram's compiled image output is stored.
-		/// </summary>
+        /// <summary>
+        /// A diagram file's encoding.
+        /// </summary>
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
+
+        /// <summary>
+        /// The file where a diagram's compiled image output is stored.
+        /// </summary>
         public FileInfo ImageFile 
 		{
 			get { return _imageFile.Value; }

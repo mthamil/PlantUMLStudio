@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 //  limitations under the License.
 
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -33,16 +34,18 @@ namespace PlantUmlStudio.Core
 		/// </summary>
 		/// <param name="diagramCode">The diagram code to compile</param>
 		/// <param name="imageFormat">The desired image format</param>
+		/// <param name="encoding">The diagram text encoding</param>
 		/// <param name="cancellationToken">An optional cancellation token</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
 
-		/// <summary>
-		/// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.
-		/// </summary>
-		/// <param name="diagramFile">The diagram file to compile</param>
-		/// <param name="imageFormat">The desired image format</param>
-		/// <returns>A Task representing the compilation operation</returns>
-		Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat);
+        /// <summary>
+        /// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.
+        /// </summary>
+        /// <param name="diagramFile">The diagram file to compile</param>
+        /// <param name="imageFormat">The desired image format</param>
+        /// <param name="encoding">The diagram file encoding</param>
+        /// <returns>A Task representing the compilation operation</returns>
+        Task CompileToFileAsync(FileInfo diagramFile, ImageFormat imageFormat, Encoding encoding);
 	}
 }

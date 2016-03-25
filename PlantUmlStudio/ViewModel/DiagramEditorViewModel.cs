@@ -267,7 +267,7 @@ namespace PlantUmlStudio.ViewModel
 	    private async Task UpdateDiagramAsync(bool makeBackup)
 	    {
             await _diagramIO.SaveAsync(Diagram, makeBackup).ConfigureAwait(false);
-	        await _compiler.CompileToFileAsync(Diagram.File, ImageFormat).ConfigureAwait(false);
+	        await _compiler.CompileToFileAsync(Diagram.File, ImageFormat, Diagram.Encoding).ConfigureAwait(false);
 	    }
 
 		/// <see cref="IDiagramEditor.Saved"/>
@@ -301,7 +301,7 @@ namespace PlantUmlStudio.ViewModel
 
 			var tcs = new CancellationTokenSource();
 
-			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, ImageFormat, tcs.Token);
+			var refreshTask = _compiler.CompileToImageAsync(CodeEditor.Content, ImageFormat, Diagram.Encoding, tcs.Token);
 			_refreshCancellations[refreshTask] = tcs;
 
 			try

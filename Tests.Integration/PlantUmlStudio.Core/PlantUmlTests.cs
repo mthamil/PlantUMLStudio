@@ -1,5 +1,6 @@
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
@@ -28,7 +29,7 @@ namespace Tests.Integration.PlantUmlStudio.Core
 			};
 
 			// Act.
-			var image = await plantUml.CompileToImageAsync(code, ImageFormat.PNG, CancellationToken.None);
+			var image = await plantUml.CompileToImageAsync(code, ImageFormat.PNG, Encoding.UTF8, CancellationToken.None);
 
 			// Assert.
 			Assert.NotNull(image);

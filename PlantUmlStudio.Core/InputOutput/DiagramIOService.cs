@@ -86,9 +86,13 @@ namespace PlantUmlStudio.Core.InputOutput
 		private static async Task<Option<Diagram>> ReadFileAsync(FileInfo file)
 		{
 			string content;
-			using (var reader = new StreamReader(file.OpenRead()))
-				content = await reader.ReadToEndAsync().ConfigureAwait(false);
-
+		    Encoding encoding;
+		    using (var reader = new StreamReader(file.OpenRead()))
+		    {
+                content = await reader.ReadToEndAsync().ConfigureAwait(false);
+		        encoding = reader.CurrentEncoding;
+		    }
+                
 			if (!String.IsNullOrWhiteSpace(content))
 			{
 				// Check that the given file's content appears to be a plantUML diagram.
@@ -98,7 +102,8 @@ namespace PlantUmlStudio.Core.InputOutput
 					var diagram = new Diagram
 					{
 						Content = content,
-						File = file
+						File = file,
+                        Encoding = encoding
 					};
 					if (diagram.TryDeduceImageFile())
 						return diagram;
@@ -114,11 +119,7 @@ namespace PlantUmlStudio.Core.InputOutput
 			if (makeBackup)
 				await diagram.File.CopyToAsync(diagram.File.FullName + ".bak", true).ConfigureAwait(false);
 
-			//Thread.Sleep(4000);
-			// Save the diagram content using UTF-8 encoding to support 
-			// various international characters, which ASCII won't support
-			// and Unicode won't make it cross platform.
-			using (var writer = new StreamWriter(diagram.File.Open(FileMode.Create, FileAccess.Write), Encoding.UTF8))
+			using (var writer = new StreamWriter(diagram.File.Open(FileMode.Create, FileAccess.Write), diagram.Encoding))
 				await writer.WriteAsync(diagram.Content).ConfigureAwait(false);
 		}
 

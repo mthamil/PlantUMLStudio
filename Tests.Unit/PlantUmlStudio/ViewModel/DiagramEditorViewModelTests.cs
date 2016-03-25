@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -270,7 +271,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 			         .Returns(Task.CompletedTask);
 
-			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>()))
 			        .Returns(Task.CompletedTask);
 
 			editor.ImageFormat = ImageFormat.SVG;
@@ -328,7 +329,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 			         .Returns(Task.CompletedTask);
 
-			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>()))
 			        .Returns(Task.CompletedTask);
 
 			await editor.SaveAsync();
@@ -364,7 +365,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			diagramIO.Setup(dio => dio.SaveAsync(It.IsAny<Diagram>(), It.IsAny<bool>()))
 					 .Returns(Task.CompletedTask);
 
-			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>()))
+			compiler.Setup(c => c.CompileToFileAsync(It.IsAny<FileInfo>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>()))
 					.Returns(Task.CompletedTask);
 
 			// Act.
@@ -384,7 +385,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 			var result = new BitmapImage();
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
 			        .Returns(Task.FromResult<ImageSource>(result));
 
 			// Act.
@@ -403,7 +404,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
 					.Returns(Task.FromException<ImageSource>(new PlantUmlException()));
 
 			// Act.
@@ -422,7 +423,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			codeEditor.Object.Content = "Diagram code goes here";
 
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
 			        .Returns(Tasks.FromCanceled<ImageSource>());
 
 			// Act.
@@ -445,7 +446,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			editor.ImageFormat = ImageFormat.SVG;
 
 			// Assert.
-			compiler.Verify(c => c.CompileToImageAsync(It.IsAny<string>(), ImageFormat.SVG, It.IsAny<CancellationToken>()));
+			compiler.Verify(c => c.CompileToImageAsync(It.IsAny<string>(), ImageFormat.SVG, It.IsAny<Encoding>(), It.IsAny<CancellationToken>()));
 		}
 
 		[Fact]
@@ -458,8 +459,8 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 			bool killSwitch = false;
 			var tasks = new List<Task>(2);
-			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<CancellationToken>()))
-			        .Returns((string content, ImageFormat format, CancellationToken token) =>
+			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
+			        .Returns((string content, ImageFormat format, Encoding encoding, CancellationToken token) =>
 			        {
 						var task = Task.Run(() => 
 						{ 

@@ -79,7 +79,7 @@ namespace PlantUmlStudio.Configuration {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://plantuml.sourceforge.net/plantumlVersionRss.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://plantuml.com/download.html")]
         public global::System.Uri PlantUmlVersionSource {
             get {
                 return ((global::System.Uri)(this["PlantUmlVersionSource"]));
@@ -88,7 +88,7 @@ namespace PlantUmlStudio.Configuration {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".*version (?<version>\\d{4,5})[\\s]+.*")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*\\(Version (?<version>\\d{4,5})\\).*")]
         public string PlantUmlRemoteVersionPattern {
             get {
                 return ((string)(this["PlantUmlRemoteVersionPattern"]));

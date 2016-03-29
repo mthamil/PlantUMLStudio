@@ -106,7 +106,7 @@ namespace PlantUmlStudio.Configuration {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".*version (?<version>\\d{4,5})[\\s].*")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*version (?<version>\\d{4,5}(beta\\d+)?)[\\s].*")]
         public string PlantUmlLocalVersionPattern {
             get {
                 return ((string)(this["PlantUmlLocalVersionPattern"]));

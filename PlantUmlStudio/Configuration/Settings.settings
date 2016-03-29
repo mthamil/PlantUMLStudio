@@ -27,7 +27,7 @@
       <Value Profile="(Default)">.\PlantUML.xshd</Value>
     </Setting>
     <Setting Name="PlantUmlLocalVersionPattern" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">.*version (?&lt;version&gt;\d{4,5})[\s].*</Value>
+      <Value Profile="(Default)">.*version (?&lt;version&gt;\d{4,5}(beta\d+)?)[\s].*</Value>
     </Setting>
     <Setting Name="GraphVizLocalVersionPattern" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.*version[\s]+(?&lt;version&gt;[\.\d]+)[\s]+.*</Value>

@@ -114,7 +114,7 @@
                                     <ControlTemplate TargetType="{x:Type TabItem}">
 
                                         <Grid>
-                                            <Border x:Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="6,6,0,0" >
+                                            <Border x:Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="0.5,0.5,0.5,0.5" CornerRadius="0,0,0,0" >
                                                 <DockPanel HorizontalAlignment="Stretch">
                                                     <TextBlock VerticalAlignment="Center" Margin="12,2,12,2"
                                                                ToolTip="{Binding Diagram.File.FullName}">

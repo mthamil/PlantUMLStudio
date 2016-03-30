@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -53,10 +54,15 @@ namespace PlantUmlStudio.ViewModel
 		/// </summary>
 		ImageSource DiagramImage { get; set; }
 
-		/// <summary>
-		/// The desired diagram image format.
-		/// </summary>
-		ImageFormat ImageFormat { get; set; }
+        /// <summary>
+        /// Any diagram compilation errors.
+        /// </summary>
+        IReadOnlyCollection<DiagramErrorViewModel> Errors { get; }
+
+        /// <summary>
+        /// The desired diagram image format.
+        /// </summary>
+        ImageFormat ImageFormat { get; set; }
 
 		/// <summary>
 		/// Whether an editor's content can currently be saved.

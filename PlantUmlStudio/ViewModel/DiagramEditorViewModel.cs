@@ -1,5 +1,5 @@
 //  PlantUML Studio
-//  Copyright 2013 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -81,13 +82,14 @@ namespace PlantUmlStudio.ViewModel
 			ImageFormat = Diagram.ImageFormat;
 
 			IsIdle = true;
+            Errors = new List<DiagramErrorViewModel>(0);
 
-			// The document has been opened first time. So, any changes
-			// made to the document will require creating a backup.
-			_firstSaveAfterOpen = true;
+            // The document has been opened first time. So, any changes
+            // made to the document will require creating a backup.
+            _firstSaveAfterOpen = true;
 
-			_autoSaveTimer.Elapsed += autoSaveTimerElapsed;
-			_refreshTimer.Elapsed += refreshTimer_Elapsed;
+			_autoSaveTimer.Elapsed += AutoSaveTimerElapsed;
+			_refreshTimer.Elapsed += RefreshTimerElapsed;
 		}
 
         private DiagramEditorViewModel()
@@ -95,7 +97,8 @@ namespace PlantUmlStudio.ViewModel
             _diagram = Property.New(this, p => p.Diagram);
             _imageFormat = Property.New(this, p => p.ImageFormat);
             _diagramImage = Property.New(this, p => p.DiagramImage);
-
+            _errors = Property.New(this, p => Errors);
+            
             _isIdle = Property.New(this, p => p.IsIdle)
                               .AlsoChanges(p => p.CanSave)
                               .AlsoChanges(p => p.CanRefresh)
@@ -176,6 +179,15 @@ namespace PlantUmlStudio.ViewModel
 			get { return _diagramImage.Value; }
 			set { _diagramImage.Value = value; }
 		}
+
+        /// <summary>
+        /// Any diagram compilation errors.
+        /// </summary>
+        public IReadOnlyCollection<DiagramErrorViewModel> Errors
+        {
+            get { return _errors.Value; }
+            private set { _errors.Value = value; }
+        }
 
 		/// <summary>
 		/// The desired diagram image format.
@@ -278,7 +290,7 @@ namespace PlantUmlStudio.ViewModel
             Saved?.Invoke(this, EventArgs.Empty);
 		}
 
-		async void autoSaveTimerElapsed(object sender, EventArgs e)
+		private async void AutoSaveTimerElapsed(object sender, EventArgs e)
 		{
 			await SaveAsync();
 		}
@@ -306,7 +318,9 @@ namespace PlantUmlStudio.ViewModel
 
 			try
 			{
-				DiagramImage = await refreshTask;
+                var result = await refreshTask;
+                result.Image.Apply(img => DiagramImage = img);
+                Errors = new List<DiagramErrorViewModel>(result.Errors.Select(error => new DiagramErrorViewModel(error)));
 			}
 			catch (OperationCanceledException)
 			{
@@ -314,11 +328,11 @@ namespace PlantUmlStudio.ViewModel
 			}
 			catch (IOException e)
 			{
-				_notifications.Notify(new ExceptionNotification(e));
+				_notifications.Error(e);
 			}
 			catch (PlantUmlException e)
 			{
-				_notifications.Notify(new ExceptionNotification(e));
+				_notifications.Error(e);
 			}
 			finally
 			{
@@ -326,7 +340,7 @@ namespace PlantUmlStudio.ViewModel
 			}	
 		}
 
-		async void refreshTimer_Elapsed(object sender, EventArgs e)
+		private async void RefreshTimerElapsed(object sender, EventArgs e)
 		{
 			_refreshTimer.TryStop();
 			await RefreshAsync();
@@ -411,10 +425,10 @@ namespace PlantUmlStudio.ViewModel
 
 		private void CleanUpTimers()
 		{
-			_autoSaveTimer.Elapsed -= autoSaveTimerElapsed;
+			_autoSaveTimer.Elapsed -= AutoSaveTimerElapsed;
 			_autoSaveTimer.TryStop();
 
-			_refreshTimer.Elapsed -= refreshTimer_Elapsed;
+			_refreshTimer.Elapsed -= RefreshTimerElapsed;
 			_refreshTimer.TryStop();
 		}
 
@@ -436,6 +450,7 @@ namespace PlantUmlStudio.ViewModel
 		private readonly Property<bool> _isIdle;
 		private readonly Property<Diagram> _diagram;
 		private readonly Property<ImageSource> _diagramImage;
+        private readonly Property<IReadOnlyCollection<DiagramErrorViewModel>> _errors;
 		private readonly Property<ImageFormat> _imageFormat;
 
 		private readonly INotifications _notifications;

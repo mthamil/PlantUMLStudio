@@ -37,7 +37,7 @@ namespace PlantUmlStudio.Core
 		/// <param name="encoding">The diagram text encoding</param>
 		/// <param name="cancellationToken">An optional cancellation token</param>
 		/// <returns>A Task representing the compilation operation</returns>
-		Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DiagramResult> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Reads the code from a diagram file, compiles it to an image, and saves the output to a file.

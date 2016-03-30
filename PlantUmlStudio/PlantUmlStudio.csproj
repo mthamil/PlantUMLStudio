@@ -160,6 +160,7 @@
     <Compile Include="ViewModel\Commands\ImageCommands.cs" />
     <Compile Include="ViewModel\Commands\NullCommand.cs" />
     <Compile Include="ViewModel\ComponentViewModel.cs" />
+    <Compile Include="ViewModel\DiagramErrorViewModel.cs" />
     <Compile Include="ViewModel\DiagramOpenedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramClosedEventArgs.cs" />
     <Compile Include="ViewModel\DiagramDeletedEventArgs.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="ViewModel\Notifications\INotifications.cs" />
     <Compile Include="ViewModel\Notifications\IProgressNotification.cs" />
     <Compile Include="ViewModel\Notifications\Notification.cs" />
+    <Compile Include="ViewModel\Notifications\NotificationsExtensions.cs" />
     <Compile Include="ViewModel\Notifications\NotificationsHub.cs" />
     <Compile Include="ViewModel\Notifications\ProgressNotification.cs" />
     <Compile Include="ViewModel\Notifications\ProgressUpdate.cs" />
@@ -301,7 +303,7 @@
     <EmbeddedResource Include="View\DiagramExplorerResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DiagramExplorerResources.Designer.cs</LastGenOutput>
-	  <DependentUpon>DiagramExplorer.xaml</DependentUpon>
+      <DependentUpon>DiagramExplorer.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainWindowResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

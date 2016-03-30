@@ -24,7 +24,7 @@
                 <ResourceDictionary Source="pack://application:,,,/SharpEssentials.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resources/Icons/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <se:OpenContextMenuCommand x:Key="OpenContextMenuCommand"/>
 
             <se:ComposingConverter x:Key="NullToVisibilityConverter">
@@ -34,12 +34,14 @@
                 </se:ComposingConverter.Converters>
             </se:ComposingConverter>
 
+            <se:GreaterThanConverter x:Key="GreaterThanConverter" Limit="0"/>
+
             <SolidColorBrush x:Key="CurrentLineBackground" Color="#FFFFFFE0"/>
             <Pen x:Key="CurrentLineBorder" Brush="#FFF2EAEA" Thickness="1.5"/>
-
+            
         </ResourceDictionary>
     </UserControl.Resources>
-  
+
     <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" CornerRadius="0,0,0,0">
         <DockPanel>
 
@@ -134,78 +136,152 @@
                         <se:GridSplitterExpanderSupportBehavior/>
                     </i:Interaction.Behaviors>
                     <Expander.Content>
-                        <Border ScrollViewer.CanContentScroll="True" 
-                                ScrollViewer.HorizontalScrollBarVisibility="Visible" 
-                                ScrollViewer.VerticalScrollBarVisibility="Visible">
-          
-                            <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanContentScroll="True" 
-                                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
-                                          Background="White" >
-            
-                                <Image HorizontalAlignment="Center" VerticalAlignment="Top" 
-                                       Source="{Binding DiagramImage, Mode=OneWay}" 
-                                       Stretch="None">
-              
-                                    <Image.ContextMenu>
-                                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                            <MenuItem Header="{Localize CopyImageContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
-                                                                                 Path=DataContext.DiagramImage}">
-                                                <MenuItem.Command>
-                                                    <cmd:CopyImageCommand/>
-                                                </MenuItem.Command>
-                                                <MenuItem.Icon>
-                                                    <Image Source="{StaticResource CopyImageIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem Header="{Localize CopyImagePathContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
-                                                                                 Path=DataContext.Diagram.ImageFile.FullName}">
-                                                <MenuItem.Command>
-                                                    <cmd:CopyTextCommand/>
-                                                </MenuItem.Command>
-                                                <!--<MenuItem.Icon>
-                                                    <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
-                                                </MenuItem.Icon>-->
-                                            </MenuItem>
-                                            <MenuItem Header="{Localize BrowseToImageContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
-                                                                                 Path=DataContext.Diagram.ImageFile.FullName}">
-                                                <MenuItem.Command>
-                                                    <cmd:BrowseToCommand/>
-                                                </MenuItem.Command>
-                                                <MenuItem.Icon>
-                                                    <Image Source="{StaticResource BrowseToImageIcon_Small}" Style="{StaticResource DisableableIcon}"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </Image.ContextMenu>
-              
-                                    <Image.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform 
-                                                ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
-                                                ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
-                                        </TransformGroup>
-                                    </Image.RenderTransform>
-              
-                                </Image>
+                        <TabControl TabStripPlacement="Bottom">
+                            <TabControl.Resources>
+                                <Style TargetType="{x:Type TabItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                                <Grid>
+                                                    <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,0,0,0" 
+                                                            Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter x:Name="Content" ContentSource="Header" 
+                                                                          HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                          RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                                          VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                                                    </Border>
+                                                </Grid>
 
-                            </ScrollViewer>
-                        </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected"  Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                                        <Setter Property="Foreground" Value="Black" />
+                                                        <Setter TargetName="Border" Property="BorderThickness" Value="1,0,1,1" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsSelected" Value="False"/>
+                                                            <Condition Property="IsMouseOver" Value="False"/>
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="#4D6082" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                        <Setter TargetName="Border" Property="Opacity" Value="1.0" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsSelected" Value="False"/>
+                                                            <Condition Property="IsMouseOver" Value="True"/>
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="#5B7199" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                        <Setter TargetName="Border" Property="Opacity" Value="1.0" />
+                                                    </MultiTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TabControl.Resources>
+
+                            <TabItem Header="{Localize ImageTabHeader, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}">
+                                <Border ScrollViewer.CanContentScroll="True" 
+                                        ScrollViewer.HorizontalScrollBarVisibility="Visible" 
+                                        ScrollViewer.VerticalScrollBarVisibility="Visible">
+
+                                    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanContentScroll="True" 
+                                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
+                                                  Background="White" >
+
+                                        <Image HorizontalAlignment="Center" VerticalAlignment="Top"
+                                               Source="{Binding DiagramImage, Mode=OneWay}"
+                                               Stretch="None">
+
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Errors.Count, Converter={StaticResource GreaterThanConverter}}"
+                                                                     Value="True">
+                                                            <Setter Property="Opacity" Value="0.5"/>
+                                                            <Setter Property="ToolTip" Value="{Localize DiagramImageErrorToolTip, 
+                                                                                                        ResxName=PlantUmlStudio.View.DiagramEditorViewResources}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+
+                                            <Image.ContextMenu>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="{Localize CopyImageContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                                         Path=DataContext.DiagramImage}">
+                                                        <MenuItem.Command>
+                                                            <cmd:CopyImageCommand/>
+                                                        </MenuItem.Command>
+                                                        <MenuItem.Icon>
+                                                            <Image Source="{StaticResource CopyImageIcon_Small}" Stretch="None" Style="{StaticResource DisableableIcon}"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem Header="{Localize CopyImagePathContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                                         Path=DataContext.Diagram.ImageFile.FullName}">
+                                                        <MenuItem.Command>
+                                                            <cmd:CopyTextCommand/>
+                                                        </MenuItem.Command>
+                                                        <!--<MenuItem.Icon>
+                                                            <Image Source="{StaticResource CutIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                        </MenuItem.Icon>-->
+                                                    </MenuItem>
+                                                    <MenuItem Header="{Localize BrowseToImageContextMenuItem, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}, 
+                                                                                         Path=DataContext.Diagram.ImageFile.FullName}">
+                                                        <MenuItem.Command>
+                                                            <cmd:BrowseToCommand/>
+                                                        </MenuItem.Command>
+                                                        <MenuItem.Icon>
+                                                            <Image Source="{StaticResource BrowseToImageIcon_Small}" Style="{StaticResource DisableableIcon}"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+
+                                            <Image.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform 
+                                                        ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" 
+                                                        ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
+                                                </TransformGroup>
+                                            </Image.RenderTransform>
+                                        </Image>
+
+                                    </ScrollViewer>
+                                </Border>
+                            </TabItem>
+
+                            <TabItem Header="{Localize ErrorTabHeader, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}">
+                                <DataGrid ItemsSource="{Binding Errors}" AutoGenerateColumns="False" IsReadOnly="True" BorderThickness="0,0,0,0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{Localize ErrorsGridDescriptionHeader, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
+                                                            Binding="{Binding Message}" Width="*"/>
+                                        <DataGridTextColumn Header="{Localize ErrorsGridLineHeader, ResxName=PlantUmlStudio.View.DiagramEditorViewResources}" 
+                                                            Binding="{Binding Line}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+
+                        </TabControl>
                     </Expander.Content>
 
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
                             <ComboBox ItemsSource="{se:EnumValues {x:Type img:ImageFormat}}" SelectedItem="{Binding ImageFormat}" 
                                       HorizontalContentAlignment="Stretch" ToolTip="{Localize ImageFormatComboBoxToolTip}"/>
-                            
+
                             <Slider x:Name="ZoomSlider" Margin="10,0,0,0" Minimum="0.1" Maximum="2.0" Value="1.0" Width="50" SmallChange="0.1" LargeChange="0.2"
                                     Visibility="{Binding DiagramImage, Converter={StaticResource NullToVisibilityConverter}}"/>
                         </StackPanel>
                     </Expander.Header>
                 </Expander>
-            
+
             </Grid>
         </DockPanel>
     </Border>

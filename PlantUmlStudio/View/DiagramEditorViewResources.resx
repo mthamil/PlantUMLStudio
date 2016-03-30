@@ -132,8 +132,23 @@
   <data name="CutEditorContextMenuItem" xml:space="preserve">
     <value>Cut</value>
   </data>
+  <data name="DiagramImageErrorToolTip" xml:space="preserve">
+    <value>This diagram contains errors.</value>
+  </data>
+  <data name="ErrorsGridDescriptionHeader" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ErrorsGridLineHeader" xml:space="preserve">
+    <value>Line</value>
+  </data>
+  <data name="ErrorTabHeader" xml:space="preserve">
+    <value>Errors</value>
+  </data>
   <data name="ImageFormatComboBoxToolTip" xml:space="preserve">
     <value>Select the diagram image output format.</value>
+  </data>
+  <data name="ImageTabHeader" xml:space="preserve">
+    <value>Output</value>
   </data>
   <data name="PasteEditorContextMenuItem" xml:space="preserve">
     <value>Paste</value>

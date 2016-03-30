@@ -94,6 +94,8 @@
     <Compile Include="Dependencies\Update\ComponentUpdateChecker.cs" />
     <Compile Include="Dependencies\Update\IComponentUpdateChecker.cs" />
     <Compile Include="Diagram.cs" />
+    <Compile Include="DiagramError.cs" />
+    <Compile Include="DiagramResult.cs" />
     <Compile Include="GraphViz.cs" />
     <Compile Include="IDiagramCompiler.cs" />
     <Compile Include="Imaging\BitmapRenderer.cs" />

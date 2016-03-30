@@ -21,12 +21,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using Autofac.Features.Indexed;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Dependencies.Update;
 using PlantUmlStudio.Core.Imaging;
+using SharpEssentials;
 using SharpEssentials.Chronology;
+using SharpEssentials.Collections;
 using SharpEssentials.Concurrency.Processes;
 using SharpEssentials.InputOutput;
 
@@ -50,14 +51,13 @@ namespace PlantUmlStudio.Core
 		}
 
 	    /// <see cref="IDiagramCompiler.CompileToImageAsync"/>
-		public async Task<ImageSource> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken)
+		public async Task<DiagramResult> CompileToImageAsync(string diagramCode, ImageFormat imageFormat, Encoding encoding, CancellationToken cancellationToken)
 		{
             var result = await Task.Factory.FromProcess(
 				executable: "java",
 				arguments: new ArgumentsBuilder()
                                 .Arg("jar", PlantUmlJar)
                                 .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")
-                                .Arg("quiet")
                                 .Arg("graphvizdot", GraphVizExecutable)
                                 .Arg("charset", encoding.WebName)
                                 .Arg("pipe"), 
@@ -65,9 +65,14 @@ namespace PlantUmlStudio.Core
 				cancellationToken: cancellationToken
 			).ConfigureAwait(false);
 
-			await HandleErrorStream(result.Error, cancellationToken).ConfigureAwait(false);
+			var diagramResult = (await HandleErrorStream(result.Error, cancellationToken)
+                .ConfigureAwait(false))
+                .Select(error => DiagramError.TryParse(error)
+                                             .Select(de => new DiagramResult(de.ToEnumerable()))    // Currently only the first error seems to be reported.
+                                             .GetOrElse(() => { throw new PlantUmlException(error); }))
+                .GetOrElse(() => new DiagramResult(_renderers[imageFormat].Render(result.Output)));
 
-			return _renderers[imageFormat].Render(result.Output);
+			return diagramResult;
 		}
 		
 		/// <see cref="IDiagramCompiler.CompileToFileAsync"/>
@@ -106,7 +111,8 @@ namespace PlantUmlStudio.Core
                 cancellationToken: cancellationToken
             ).ConfigureAwait(false);
 
-            await HandleErrorStream(result.Error, cancellationToken).ConfigureAwait(false);
+            (await HandleErrorStream(result.Error, cancellationToken).ConfigureAwait(false))
+                .Apply(error => { throw new PlantUmlException(error); });
 
             var output = Encoding.Default.GetString(
                 await result.Output.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
@@ -116,15 +122,17 @@ namespace PlantUmlStudio.Core
 
 	    #endregion
 
-		private static async Task HandleErrorStream(Stream errorStream, CancellationToken cancellationToken)
+		private static async Task<Option<string>> HandleErrorStream(Stream errorStream, CancellationToken cancellationToken)
 		{
 			if (errorStream.Length > 0)
 			{
-				string errorMessage = Encoding.Default.GetString(
-					await errorStream.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false));
-				throw new PlantUmlException(errorMessage);
+			    var errorBytes = await errorStream.Async().ReadAllBytesAsync(cancellationToken).ConfigureAwait(false);
+                var errorMessage = Encoding.Default.GetString(errorBytes);
+			    return Option.Some(errorMessage);
 			}
-		}
+
+		    return Option.None<string>();
+        }
 
 		/// <summary>
 		/// The location of the GraphViz executable.

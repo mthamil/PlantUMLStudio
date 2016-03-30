@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac.Features.Indexed;
 using Moq;
@@ -386,7 +386,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			var result = new BitmapImage();
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
-			        .Returns(Task.FromResult<ImageSource>(result));
+			        .Returns(Task.FromResult(new DiagramResult(result)));
 
 			// Act.
 			await editor.RefreshCommand.ExecuteAsync(null);
@@ -405,7 +405,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
-					.Returns(Task.FromException<ImageSource>(new PlantUmlException()));
+					.ThrowsAsync(new PlantUmlException());
 
 			// Act.
 			await editor.RefreshAsync();
@@ -424,7 +424,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 			codeEditor.Object.Content = "Diagram code goes here";
 
 			compiler.Setup(c => c.CompileToImageAsync(It.IsAny<string>(), It.IsAny<ImageFormat>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()))
-			        .Returns(Tasks.FromCanceled<ImageSource>());
+			        .Returns(Task.FromCanceled<DiagramResult>(new CancellationToken(true)));
 
 			// Act.
 			await editor.RefreshAsync();
@@ -469,7 +469,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 								token.ThrowIfCancellationRequested();
 								Thread.Sleep(100); 
 							}
-							return (ImageSource)null;
+							return new DiagramResult(Enumerable.Empty<DiagramError>());
 						}, token);
 						tasks.Add(task);
 				        return task;

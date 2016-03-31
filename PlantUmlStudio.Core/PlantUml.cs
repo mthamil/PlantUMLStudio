@@ -56,6 +56,7 @@ namespace PlantUmlStudio.Core
             var result = await Task.Factory.FromProcess(
 				executable: "java",
 				arguments: new ArgumentsBuilder()
+                                .Arg("splash:no")
                                 .Arg("jar", PlantUmlJar)
                                 .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")
                                 .Arg("graphvizdot", GraphVizExecutable)
@@ -81,6 +82,7 @@ namespace PlantUmlStudio.Core
             return Task.Factory.FromProcess(
 				executable: "java",
 				arguments: new ArgumentsBuilder()
+                                .Arg("splash:no")
                                 .Arg("jar", PlantUmlJar)
                                 .ArgIf(imageFormat == ImageFormat.SVG, "tsvg")    
                                 .Arg("quiet")
@@ -106,7 +108,10 @@ namespace PlantUmlStudio.Core
 
             var result = await Task.Factory.FromProcess(
                 executable: "java",
-                arguments: new ArgumentsBuilder().Arg("jar", PlantUmlJar).Arg("version"),
+                arguments: new ArgumentsBuilder()
+                                .Arg("splash:no")
+                                .Arg("jar", PlantUmlJar)
+                                .Arg("version"),
                 input: Stream.Null,
                 cancellationToken: cancellationToken
             ).ConfigureAwait(false);

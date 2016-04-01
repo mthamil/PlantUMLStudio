@@ -1,5 +1,5 @@
 ﻿//  PlantUML Studio
-//  Copyright 2014 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2016 Matthew Hamilton - matthamilton@live.com
 //  Copyright 2010 Omar Al Zabir - http://omaralzabir.com/ (original author)
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extras.Alternatives;
 using PlantUmlStudio.Configuration;
 using PlantUmlStudio.Container.Support;
 using PlantUmlStudio.Core;
@@ -37,7 +38,9 @@ namespace PlantUmlStudio.Container
 		/// <see cref="Module.Load"/>
 		protected override void Load(ContainerBuilder builder)
 		{
-			builder.Register(c => TaskScheduler.Default);
+		    builder.RegisterAlternativeRelationships();
+
+            builder.Register(c => TaskScheduler.Default);
 
 			builder.RegisterType<SystemTimer>().As<ITimer>();
 

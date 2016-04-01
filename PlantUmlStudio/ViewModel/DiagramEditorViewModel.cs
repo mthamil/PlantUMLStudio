@@ -25,7 +25,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using Autofac.Features.Indexed;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
 using PlantUmlStudio.Core.InputOutput;
@@ -58,7 +57,7 @@ namespace PlantUmlStudio.ViewModel
 		public DiagramEditorViewModel(Diagram diagram, 
                                       ICodeEditor codeEditor, 
                                       INotifications notifications,
-			                          IIndex<ImageFormat, IDiagramRenderer> diagramRenderers, 
+			                          IReadOnlyDictionary<ImageFormat, IDiagramRenderer> diagramRenderers, 
                                       IDiagramIOService diagramIO, 
                                       IDiagramCompiler compiler, 
 			                          ITimer autoSaveTimer, 
@@ -454,7 +453,7 @@ namespace PlantUmlStudio.ViewModel
 		private readonly Property<ImageFormat> _imageFormat;
 
 		private readonly INotifications _notifications;
-		private readonly IIndex<ImageFormat, IDiagramRenderer> _diagramRenderers;
+		private readonly IReadOnlyDictionary<ImageFormat, IDiagramRenderer> _diagramRenderers;
 		private readonly IDiagramIOService _diagramIO;
 		private readonly IDiagramCompiler _compiler;
 		private readonly ITimer _autoSaveTimer;

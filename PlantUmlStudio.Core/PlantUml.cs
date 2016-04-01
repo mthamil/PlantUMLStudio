@@ -15,13 +15,13 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.Indexed;
 using PlantUmlStudio.Core.Dependencies;
 using PlantUmlStudio.Core.Dependencies.Update;
 using PlantUmlStudio.Core.Imaging;
@@ -44,7 +44,7 @@ namespace PlantUmlStudio.Core
 		/// <param name="clock">The system clock</param>
 		/// <param name="renderers">Responsible for converting data to an image</param>
 		/// <param name="httpClient">Used for web requests</param>
-		public PlantUml(IClock clock, IIndex<ImageFormat, IDiagramRenderer> renderers, HttpClient httpClient) 
+		public PlantUml(IClock clock, IReadOnlyDictionary<ImageFormat, IDiagramRenderer> renderers, HttpClient httpClient) 
 			: base(clock, httpClient, StringComparer.OrdinalIgnoreCase)
 		{
 		    _renderers = renderers;
@@ -154,6 +154,6 @@ namespace PlantUmlStudio.Core
 		/// </summary>
 		public Regex LocalVersionPattern { get; set; }
 
-		private readonly IIndex<ImageFormat, IDiagramRenderer> _renderers;
+		private readonly IReadOnlyDictionary<ImageFormat, IDiagramRenderer> _renderers;
 	}
 }

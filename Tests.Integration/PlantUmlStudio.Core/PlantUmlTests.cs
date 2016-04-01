@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.Indexed;
 using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
@@ -19,7 +19,7 @@ namespace Tests.Integration.PlantUmlStudio.Core
 		public async Task Test_CompileDiagramFileAsync()
 		{
 			// Arrange.
-			var renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
+			var renderers = new Mock<IReadOnlyDictionary<ImageFormat, IDiagramRenderer>>();
 			renderers.Setup(r => r[ImageFormat.PNG]).Returns(new BitmapRenderer());
 
 			var plantUml = new PlantUml(new Mock<IClock>().Object, renderers.Object, new HttpClient())

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Autofac.Features.Indexed;
 using Moq;
 using PlantUmlStudio.Core;
 using PlantUmlStudio.Core.Imaging;
@@ -525,7 +524,7 @@ namespace Tests.Unit.PlantUmlStudio.ViewModel
 
 		private readonly Mock<ICodeEditor> codeEditor = new Mock<ICodeEditor>();
 		private readonly Mock<INotifications> notifications = new Mock<INotifications>();
-		private readonly Mock<IIndex<ImageFormat, IDiagramRenderer>> renderers = new Mock<IIndex<ImageFormat, IDiagramRenderer>>();
+		private readonly Mock<IReadOnlyDictionary<ImageFormat, IDiagramRenderer>> renderers = new Mock<IReadOnlyDictionary<ImageFormat, IDiagramRenderer>>();
 		private readonly Mock<IDiagramRenderer> renderer = new Mock<IDiagramRenderer>();
 		private readonly Mock<IDiagramIOService> diagramIO = new Mock<IDiagramIOService>();
 		private readonly Mock<IDiagramCompiler> compiler = new Mock<IDiagramCompiler>();

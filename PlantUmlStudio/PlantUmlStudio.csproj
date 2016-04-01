@@ -199,7 +199,7 @@
       <DependentUpon>DiagramEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DiagramEditorResources.Designer.cs">
-	  <AutoGen>True</AutoGen>
+      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DiagramEditorResources.resx</DependentUpon>
     </Compile>
@@ -296,9 +296,9 @@
       <DependentUpon>AboutView.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\DiagramEditorResources.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DiagramEditorResources.Designer.cs</LastGenOutput>
-	  <DependentUpon>DiagramEditor.xaml</DependentUpon>
+      <DependentUpon>DiagramEditor.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\DiagramExplorerResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -556,7 +556,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ChangeLog.txt" />
     <Content Include="samples\img\activity_img20.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

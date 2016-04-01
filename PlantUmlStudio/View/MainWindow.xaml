@@ -103,7 +103,7 @@
 
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
-                            <vw:DiagramEditorView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <vw:DiagramEditor HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
 

@@ -61,6 +61,15 @@ namespace PlantUmlStudio.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string TabCloseButtonToolTip {
+            get {
+                return ResourceManager.GetString("TabCloseButtonToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PlantUML Studio.
         /// </summary>
         internal static string Title {

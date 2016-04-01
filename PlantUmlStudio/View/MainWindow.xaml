@@ -19,7 +19,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding CloseCommand}" /> 
+            <i:InvokeCommandAction Command="{Binding CloseCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -43,7 +43,7 @@
 
     <Grid Background="#2B3C59">
         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="#FF000000" Margin="1,1,0,0"/>
-    
+
         <!-- First split the whole form into 3 rows, one for header, one for body and one for footer -->
         <Grid Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
             <Grid.RowDefinitions>
@@ -53,8 +53,8 @@
             </Grid.RowDefinitions>
 
             <vw:MenuStrip Grid.Row="0" HorizontalAlignment="Stretch" DataContext="{Binding}"/>
-      
-              <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
+
+            <!-- Then split the body area into 3 columns, left column for file list, middle column for the grid splitter
                    and the right column for the tabs -->
             <Grid Height="Auto" Width="Auto" Grid.Row="1" Grid.Column="0" Margin="4">
                 <Grid.ColumnDefinitions>
@@ -62,7 +62,7 @@
                     <ColumnDefinition Width="Auto" MinWidth="10" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-        
+
                 <!-- This is the left column controls -->
                 <Expander ExpandDirection="Right" IsExpanded="True" Grid.Column="0">
                     <i:Interaction.Behaviors>
@@ -88,23 +88,52 @@
                 <TabControl Grid.Column="2" Background="{x:Null}"
                             ItemsSource="{Binding OpenDiagrams}" 
                             SelectedItem="{Binding OpenDiagram}"
-                            Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}">
+                            Visibility="{Binding OpenDiagram, Converter={StaticResource NullToVisibilityConverter}}"
+                            Padding="4,0,4,4">
 
                     <TabControl.Resources>
                         <ResourceDictionary>
                             <convert:DiagramTabNameConverter x:Key="DiagramTabNameConverter" ModifiedFormat="{}{0}*"/>
                         </ResourceDictionary>
                     </TabControl.Resources>
-                    
+
                     <i:Interaction.Behaviors>
-                        <se:TabWheelScrolling InvertScrollDirection="False" ScrollWrapsAround="False"/>    
+                        <se:TabWheelScrolling InvertScrollDirection="False" ScrollWrapsAround="False"/>
                     </i:Interaction.Behaviors>
-                    
+
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="{x:Type vm:DiagramEditorViewModel}">
                             <vw:DiagramEditorView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
+
+                    <TabControl.Style>
+                        <Style TargetType="{x:Type TabControl}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </TabControl.Style>
+
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel HorizontalAlignment="Stretch">
+                                <TextBlock VerticalAlignment="Center" Margin="12,2,12,2"
+                                           ToolTip="{Binding Diagram.File.FullName}">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
+                                            <Binding Path="Diagram.File.Name"/>
+                                            <Binding Path="CodeEditor.IsModified"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button DockPanel.Dock="Right" Margin="1,1,3,1" Height="20" Width="20"
+                                        Content="X"
+                                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        Command="{Binding CloseCommand}" Style="{StaticResource TabCloseButton}" 
+                                        ToolTip="{Localize TabCloseButtonToolTip, ResxName=PlantUmlStudio.View.MainWindowResources}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
 
                     <TabControl.ItemContainerStyle>
                         <Style TargetType="{x:Type TabItem}">
@@ -112,25 +141,15 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type TabItem}">
-
                                         <Grid>
-                                            <Border x:Name="Border" Background="Gray" BorderBrush="Black" BorderThickness="0.5,0.5,0.5,0.5" CornerRadius="0,0,0,0" >
-                                                <DockPanel HorizontalAlignment="Stretch">
-                                                    <TextBlock VerticalAlignment="Center" Margin="12,2,12,2"
-                                                               ToolTip="{Binding Diagram.File.FullName}">
-                                                        <TextBlock.Text>
-                                                            <MultiBinding Converter="{StaticResource DiagramTabNameConverter}">
-                                                                <Binding Path="Diagram.File.Name"/>
-                                                                <Binding Path="CodeEditor.IsModified"/>
-                                                            </MultiBinding>
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-
-                                                    <Button DockPanel.Dock="Right" Margin="1,1,3,1"
-                                                            HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                            Command="{Binding CloseCommand}" Style="{StaticResource TabCloseButton}"
-                                                            ToolTip="Close"/>
-                                                </DockPanel>
+                                            <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" 
+                                                    BorderThickness="0.5,0.5,0,0.5" CornerRadius="0,0,0,0"
+                                                    Background="{TemplateBinding Background}" 
+                                                    Padding="0,0,0,0" Margin="1,0,0,0">
+                                                <ContentPresenter x:Name="Content" ContentSource="Header" 
+                                                                  HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                  RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                                  VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
                                             </Border>
                                         </Grid>
 
@@ -140,13 +159,25 @@
                                                 <Setter Property="Foreground" Value="Black" />
                                                 <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1" />
                                             </Trigger>
-                                            <Trigger Property="IsSelected" Value="False">
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                    <Condition Property="IsMouseOver" Value="False"/>
+                                                </MultiTrigger.Conditions>
                                                 <Setter TargetName="Border" Property="Background" Value="#44587C" />
                                                 <Setter Property="Foreground" Value="White" />
                                                 <Setter TargetName="Border" Property="Opacity" Value="1.0" />
-                                            </Trigger>
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter TargetName="Border" Property="Background" Value="#5B7199" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter TargetName="Border" Property="Opacity" Value="1.0" />
+                                            </MultiTrigger>
                                         </ControlTemplate.Triggers>
-
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -154,7 +185,7 @@
                     </TabControl.ItemContainerStyle>
 
                 </TabControl>
-        
+
                 <!-- This is the welcome panel -->
                 <Border Grid.Column="2" 
                         HorizontalAlignment="Stretch" 
@@ -177,9 +208,9 @@
                             <TextBlock Text="{Localize WelcomeMessage}" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="20" 
                                        FontFamily="Segoe UI" FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
-                    </Grid>                    
+                    </Grid>
                 </Border>
-        
+
             </Grid>
 
             <!-- This is the bottom row containing status message and progress bar -->

@@ -1,32 +1,31 @@
-﻿<Application
-    x:Class="PlantUmlStudio.App" 
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:utilconvert="clr-namespace:SharpEssentials.Controls.Converters;assembly=SharpEssentials.Controls"
-    xmlns:cmd="clr-namespace:PlantUmlStudio.ViewModel.Commands"
-    StartupUri="View/MainWindow.xaml"
-    Startup="Application_Startup"
-    Exit="Application_Exit">
+﻿<Application x:Class="PlantUmlStudio.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cmd="clr-namespace:PlantUmlStudio.ViewModel.Commands"
+             xmlns:se="https://github.com/mthamil/SharpEssentials/xaml"
+             StartupUri="View/MainWindow.xaml"
+             Startup="Application_Startup"
+             Exit="Application_Exit">
     
     <Application.Resources>
 
         <cmd:NullCommand x:Key="NullCommand"/>
         
-        <utilconvert:NegatingConverter x:Key="NotConverter"/>
+        <se:NegatingConverter x:Key="NotConverter"/>
 
-        <utilconvert:ComposingConverter x:Key="NullToVisibilityConverter">
-            <utilconvert:ComposingConverter.Converters>
-                <utilconvert:NullToFalseValueConverter/>
-                <utilconvert:BooleanToVisibilityValueConverter/>
-            </utilconvert:ComposingConverter.Converters>
-        </utilconvert:ComposingConverter>
+        <se:ComposingConverter x:Key="NullToVisibilityConverter">
+            <se:ComposingConverter.Converters>
+                <se:NullToFalseValueConverter/>
+                <se:BooleanToVisibilityValueConverter/>
+            </se:ComposingConverter.Converters>
+        </se:ComposingConverter>
 
-        <utilconvert:BooleanToVisibilityValueConverter x:Key="BoolToVisibilityConverter"/>
+        <se:BooleanToVisibilityValueConverter x:Key="BoolToVisibilityConverter"/>
 
-        <utilconvert:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>
-        <utilconvert:UriConverter x:Key="UriConverter"/>
-        <utilconvert:DirectoryInfoToUriConverter x:Key="DirectoryToUriConverter"/>
-        <utilconvert:FileInfoToUriConverter x:Key="FileToUriConverter"/>
+        <se:DirectoryInfoConverter x:Key="DirectoryInfoConverter"/>
+        <se:UriConverter x:Key="UriConverter"/>
+        <se:DirectoryInfoToUriConverter x:Key="DirectoryToUriConverter"/>
+        <se:FileInfoToUriConverter x:Key="FileToUriConverter"/>
 
         <Style x:Key="ButtonFocusVisual">
     		<Setter Property="Control.Template">
@@ -50,14 +49,11 @@
     	</LinearGradientBrush>
         
     	<SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
-        
-    	<Style x:Key="TabCloseButton" TargetType="{x:Type Button}">
-            <Setter Property="Content" Value="X"/>
+
+        <Style x:Key="TabCloseButton" TargetType="{x:Type Button}">
             <Setter Property="FontFamily" Value="Verdana"/>
             <Setter Property="FontStretch" Value="UltraExpanded"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Width" Value="20"/>
             <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
     		<Setter Property="Background" Value="Transparent"/>
     		<Setter Property="BorderBrush" Value="Transparent"/>
@@ -75,13 +71,11 @@
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 SnapsToDevicePixels="True">
-                            
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                               Margin="{TemplateBinding Padding}" 
                                               RecognizesAccessKey="True" 
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-
                         </Border>
                         
     					<ControlTemplate.Triggers>

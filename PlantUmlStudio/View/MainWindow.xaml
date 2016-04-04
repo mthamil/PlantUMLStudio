@@ -99,6 +99,7 @@
 
                     <i:Interaction.Behaviors>
                         <se:TabWheelScrolling InvertScrollDirection="False" ScrollWrapsAround="False"/>
+                        <se:ItemDragReordering/>
                     </i:Interaction.Behaviors>
 
                     <TabControl.ContentTemplate>

@@ -37,5 +37,15 @@ namespace PlantUmlStudio.ViewModel
 		/// Whether content has been modified since the last save.
 		/// </summary>
 		bool IsModified { get; set; }
+
+	    /// <summary>
+	    /// The current selection start position.
+	    /// </summary>
+	    int SelectionStart { get; set; }
+
+	    /// <summary>
+	    /// The current selection length.
+	    /// </summary>
+	    int SelectionLength { get; set; }
 	}
 }
